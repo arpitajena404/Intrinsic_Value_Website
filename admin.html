@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="onlylogo.PNG" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal | Intrinsic Value Equity Advisors</title>
+    <meta name="description" content="Secure administrative access for Intrinsic Value Equity Advisors.">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Link Stylesheet -->
+    <link rel="stylesheet" href="style.css?v=3">
+    <!-- Google Identity Services SDK -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        /* Admin-specific Premium Glassmorphic Styles */
+        .admin-page-container {
+            padding-top: calc(var(--header-height) + 2rem);
+            min-height: calc(100vh - 120px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at top right, rgba(255, 140, 0, 0.05), transparent 60%);
+            box-sizing: border-box;
+        }
+
+        /* Login Card Layout */
+        .iv-admin-login-card {
+            max-width: 420px;
+            width: 90%;
+            margin: 40px auto;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(25, 25, 25, 0.75), rgba(10, 10, 10, 0.95));
+            border: 1px solid rgba(255, 140, 0, 0.2);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), var(--glow-soft);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            text-align: center;
+            transition: all var(--transition-normal);
+            animation: fadeInCard 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInCard {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .iv-admin-login-card:hover {
+            border-color: rgba(255, 140, 0, 0.35);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), var(--glow-strong);
+        }
+
+        .iv-admin-login-card h3 {
+            margin: 0 0 12px 0;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.03em;
+        }
+
+        .iv-admin-login-card p.intro {
+            margin: 0 0 30px 0;
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Error Box */
+        .iv-admin-error-box {
+            margin-top: 20px;
+            padding: 14px 18px;
+            background: rgba(239, 83, 80, 0.08);
+            border: 1px solid rgba(239, 83, 80, 0.25);
+            border-radius: 12px;
+            color: #ef5350;
+            font-size: 13px;
+            display: none;
+            text-align: left;
+            line-height: 1.45;
+        }
+
+        /* Google Sign-in Container */
+        .iv-google-btn-container {
+            display: flex;
+            justify-content: center;
+            margin: 24px 0;
+            min-height: 40px;
+        }
+
+        /* Mock Login Section */
+        .iv-mock-login-container {
+            margin-top: 24px;
+            display: none;
+        }
+
+        .iv-mock-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            margin: 24px 0;
+        }
+
+        .iv-mock-divider::before,
+        .iv-mock-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .iv-mock-divider:not(:empty)::before {
+            margin-right: 12px;
+        }
+
+        .iv-mock-divider:not(:empty)::after {
+            margin-left: 12px;
+        }
+
+        .iv-mock-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .iv-admin-btn {
+            width: 100%;
+            padding: 13px;
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 140, 0, 0.3);
+            background: rgba(255, 140, 0, 0.03);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-family: inherit;
+            display: inline-block;
+        }
+
+        .iv-admin-btn:hover {
+            border-color: var(--accent);
+            background: rgba(255, 140, 0, 0.08);
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.15);
+            transform: translateY(-1.5px);
+        }
+
+        .iv-admin-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ----------------------------------------------------
+           LOGGED-IN CMS PORTAL DASHBOARD
+           ---------------------------------------------------- */
+        .iv-admin-dashboard-section {
+            width: 100%;
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            box-sizing: border-box;
+            animation: fadeInCard 0.5s ease-out forwards;
+        }
+
+        /* Header Layout */
+        .iv-admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 24px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .iv-admin-header-title h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.04em;
+        }
+
+        .iv-admin-header-title p {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .iv-admin-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Admin user badge */
+        .iv-admin-user-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px 6px 10px;
+            border-radius: 50px;
+            transition: all var(--transition-fast);
+        }
+
+        .iv-admin-user-badge:hover {
+            border-color: rgba(255, 140, 0, 0.2);
+            background: rgba(255, 140, 0, 0.02);
+        }
+
+        .iv-admin-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid var(--accent);
+            background: var(--bg-tertiary);
+        }
+
+        .iv-admin-user-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .iv-admin-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .iv-admin-email {
+            font-size: 10px;
+            color: var(--text-muted);
+            line-height: 1.2;
+            margin-top: 1px;
+        }
+
+        .iv-admin-logout-btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-family: inherit;
+        }
+
+        .iv-admin-logout-btn:hover {
+            border-color: rgba(239, 83, 80, 0.3);
+            background: rgba(239, 83, 80, 0.06);
+            color: #ef5350;
+            transform: translateY(-1px);
+        }
+
+        /* CMS Options Grid */
+        .iv-admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .iv-admin-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 280px;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-normal);
+        }
+
+        .iv-admin-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            opacity: 0;
+            transition: all var(--transition-normal);
+        }
+
+        .iv-admin-card:hover::before {
+            opacity: 1;
+        }
+
+        .iv-admin-card:hover {
+            border-color: rgba(255, 140, 0, 0.25);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4), var(--glow-soft);
+            transform: translateY(-4px);
+        }
+
+        .iv-admin-card-head {
+            margin-bottom: 20px;
+        }
+
+        .iv-admin-card-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        .iv-admin-card-head h4 {
+            margin: 0 0 8px 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .iv-admin-card-head p {
+            margin: 0;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .iv-admin-action-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,0.02);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .iv-admin-action-btn:hover {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: var(--text-dark);
+            border-color: transparent;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        /* ----------------------------------------------------
+           HOMEPAGE CMS EDITOR STYLES
+           ---------------------------------------------------- */
+        .iv-cms-workspace {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 5, 0.98);
+            z-index: 2000;
+            overflow-y: auto;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            padding: 40px 20px;
+            box-sizing: border-box;
+            animation: fadeInCms 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInCms {
+            from { opacity: 0; transform: scale(1.02); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .iv-cms-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.6), rgba(10, 10, 10, 0.85));
+            border: 1px solid rgba(255, 140, 0, 0.15);
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), var(--glow-soft);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 80vh;
+        }
+
+        /* Workspace Header */
+        .iv-cms-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(10px);
+        }
+
+        .iv-cms-header h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            margin: 0;
+        }
+
+        .iv-cms-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .iv-cms-close-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            font-size: 18px;
+        }
+
+        .iv-cms-close-btn:hover {
+            border-color: rgba(239, 83, 80, 0.4);
+            color: #ef5350;
+            background: rgba(239, 83, 80, 0.05);
+        }
+
+        /* Tabs Navigation */
+        .iv-cms-tabs-nav {
+            display: flex;
+            background: rgba(10, 10, 10, 0.5);
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        .iv-cms-tabs-nav::-webkit-scrollbar {
+            display: none; /* Safari and Chrome */
+        }
+
+        .iv-cms-tab-link {
+            padding: 16px 24px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .iv-cms-tab-link:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .iv-cms-tab-link.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            background: rgba(255, 140, 0, 0.03);
+        }
+
+        /* Workspace Content & Forms */
+        .iv-cms-body {
+            padding: 32px;
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: calc(85vh - 120px);
+        }
+
+        .iv-cms-tab-content {
+            display: none;
+            animation: fadeInTab 0.3s ease-out forwards;
+        }
+
+        .iv-cms-tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Controls */
+        .iv-cms-group {
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .iv-cms-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .iv-cms-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .iv-cms-label span.req {
+            color: var(--accent);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .iv-cms-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            margin-top: -4px;
+        }
+
+        .iv-cms-input, .iv-cms-select, .iv-cms-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 14px;
+            transition: all var(--transition-fast);
+            box-sizing: border-box;
+        }
+
+        .iv-cms-input:focus, .iv-cms-select:focus, .iv-cms-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 140, 0, 0.02);
+            box-shadow: 0 0 10px rgba(255, 140, 0, 0.1);
+        }
+
+        .iv-cms-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* List Repeater Components */
+        .iv-cms-repeater-container {
+            border: 1px solid var(--border-color);
+            background: rgba(15, 15, 15, 0.4);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+
+        .iv-cms-repeater-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .iv-cms-repeater-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .iv-cms-btn-add {
+            padding: 8px 16px;
+            background: rgba(255, 140, 0, 0.08);
+            border: 1px dashed var(--accent);
+            color: var(--accent);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .iv-cms-btn-add:hover {
+            background: var(--accent);
+            color: var(--text-dark);
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(255, 140, 0, 0.2);
+        }
+
+        .iv-cms-repeater-item {
+            background: rgba(25, 25, 25, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+            animation: slideInRepeater 0.3s ease-out forwards;
+        }
+
+        @keyframes slideInRepeater {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .iv-cms-repeater-item:hover {
+            border-color: var(--border-hover);
+        }
+
+        .iv-cms-btn-remove {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: 1px solid rgba(239, 83, 80, 0.2);
+            color: #ef5350;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            font-size: 12px;
+        }
+
+        .iv-cms-btn-remove:hover {
+            background: rgba(239, 83, 80, 0.1);
+            border-color: #ef5350;
+        }
+
+        /* File Upload Picker Simulation */
+        .iv-cms-file-picker {
+            display: flex;
+            gap: 10px;
+        }
+
+        .iv-cms-file-btn {
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all var(--transition-fast);
+        }
+
+        .iv-cms-file-btn:hover {
+            border-color: var(--accent);
+            background: rgba(255, 140, 0, 0.05);
+        }
+
+        /* Export Tab Styles */
+        .iv-cms-json-box {
+            background: #0d0d0d;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            color: #a9ffb4;
+            max-height: 350px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-bottom: 20px;
+        }
+
+        .iv-cms-export-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .iv-cms-alert-info {
+            background: rgba(255, 140, 0, 0.04);
+            border: 1px solid rgba(255, 140, 0, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .iv-cms-alert-info strong {
+            color: var(--text-primary);
+        }
+
+        .iv-cms-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1a1a1a;
+            border: 1px solid var(--accent);
+            color: var(--text-primary);
+            padding: 14px 24px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5), var(--glow-soft);
+            z-index: 3000;
+            font-size: 13px;
+            font-weight: 600;
+            display: none;
+            animation: toastFadeIn 0.3s ease-out;
+        }
+
+        @keyframes toastFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Shared Navigation Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Intrinsic Value Logo" class="logo-img">
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="pricing.html" class="nav-link" rel="noopener noreferrer">Service</a></li>
+                    <li><a href="about.html" class="nav-link">About Us</a></li>
+                    <li><a href="blogs.html" class="nav-link">Blogs</a></li>
+                    <li><a href="analytics/index.html" class="nav-link">Analytics</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <a href="https://api.whatsapp.com/send/?phone=917354259486&text=Hello%2C%0D%0Ai+want+to+understand+about+your+services&type=phone_number&app_absent=0" class="btn-glow" target="_blank" rel="noopener noreferrer">Contact Us</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="admin-page-container">
+
+        <!-- 1. Admin Login Card -->
+        <div id="adminLoginSection" class="iv-admin-login-card">
+            <h3>Admin Portal</h3>
+            <p class="intro">Secure login panel for Intrinsic Value Equity administrators.</p>
+
+            <!-- Google Sign-In Button -->
+            <div id="googleBtnContainer" class="iv-google-btn-container"></div>
+
+            <!-- Developer Mock Login Option -->
+            <div id="mockLoginContainer" class="iv-mock-login-container">
+                <div class="iv-mock-divider">
+                    <span>OR TEST LOCALLY</span>
+                </div>
+                <p class="iv-mock-desc">Google OAuth Client ID is not configured yet. Test the portal locally with the developer account below.</p>
+                <button id="developerMockBtn" class="iv-admin-btn">
+                    Developer Mock Login
+                </button>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="loginErrorMessage" class="iv-admin-error-box"></div>
+        </div>
+
+        <!-- 2. Admin Control Dashboard (Hidden by default) -->
+        <div id="adminDashboardSection" class="iv-admin-dashboard-section" style="display: none;">
+            
+            <!-- Dashboard Header -->
+            <div class="iv-admin-header">
+                <div class="iv-admin-header-title">
+                    <div class="iv-kicker" style="color: var(--accent); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.15em;">Admin Control Center</div>
+                    <h2>CMS Dashboard</h2>
+                    <p>Manage main website content, pricing models, articles, and SEBI disclosures.</p>
+                </div>
+                <div class="iv-admin-header-actions">
+                    <div id="adminUserBadge" class="iv-admin-user-badge">
+                        <img id="adminAvatar" src="" alt="Admin" class="iv-admin-avatar">
+                        <div class="iv-admin-user-info">
+                            <span id="adminName" class="iv-admin-name">Admin</span>
+                            <span id="adminEmail" class="iv-admin-email">admin@example.com</span>
+                        </div>
+                    </div>
+                    <button id="adminLogoutButton" class="iv-admin-logout-btn">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+
+            <!-- CMS Controls Grid -->
+            <div class="iv-admin-grid">
+                
+                <!-- Homepage CMS Manager -->
+                <div class="iv-admin-card">
+                    <div class="iv-admin-card-head">
+                        <span class="iv-admin-card-icon">🏠</span>
+                        <h4>Home page</h4>
+                        <p>Customize hero text, navigation links, video/image banner, philosophy cards, case study PDFs, team members, testimonials, and FAQs.</p>
+                    </div>
+                    <button id="openCmsBtn" class="iv-admin-action-btn">
+                        <i class="fa-solid fa-screwdriver-wrench"></i> Launch Homepage CMS
+                    </button>
+                </div>
+
+                <!-- Pricing Manager -->
+                <div class="iv-admin-card">
+                    <div class="iv-admin-card-head">
+                        <span class="iv-admin-card-icon">🏷️</span>
+                        <h4>Pricing & Plans</h4>
+                        <p>Modify subscription fee tables, duration settings, and promotional campaign tags.</p>
+                    </div>
+                    <button class="iv-admin-action-btn" onclick="alert('Pricing editor interface is coming soon.')">
+                        Edit Pricing Models
+                    </button>
+                </div>
+
+                <!-- Blogs Manager -->
+                <div class="iv-admin-card">
+                    <div class="iv-admin-card-head">
+                        <span class="iv-admin-card-icon">✍️</span>
+                        <h4>Blogs & Articles</h4>
+                        <p>Write, publish, and schedule educational value-investing articles and news releases.</p>
+                    </div>
+                    <button class="iv-admin-action-btn" onclick="alert('Blog CMS interface is coming soon.')">
+                        Manage Blog Posts
+                    </button>
+                </div>
+
+                <!-- CSV Datasets Manager -->
+                <div class="iv-admin-card">
+                    <div class="iv-admin-card-head">
+                        <span class="iv-admin-card-icon">📊</span>
+                        <h4>Analytics Datasets</h4>
+                        <p>Manage and upload stock master, sectors, and promo datasets used in the Analytics portal.</p>
+                    </div>
+                    <button class="iv-admin-action-btn" onclick="window.location.href='/analytics/admin'">
+                        Upload CSV Datasets
+                    </button>
+                </div>
+
+                <!-- Disclosures & Compliance -->
+                <div class="iv-admin-card">
+                    <div class="iv-admin-card-head">
+                        <span class="iv-admin-card-icon">⚖️</span>
+                        <h4>Legal Disclosures</h4>
+                        <p>Update SEBI-mandated warnings, disclosures, advisor registration details, and privacy policies.</p>
+                    </div>
+                    <button class="iv-admin-action-btn" onclick="alert('Legal documents manager is coming soon.')">
+                        Manage Disclosures
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- 3. Homepage CMS Workspace Overlay -->
+    <div id="homepageCmsWorkspace" class="iv-cms-workspace">
+        <div class="iv-cms-container">
+            
+            <!-- Header -->
+            <div class="iv-cms-header">
+                <div>
+                    <span class="iv-kicker" style="color: var(--accent); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;">Visual Content Manager</span>
+                    <h3>Homepage CMS Workspace</h3>
+                </div>
+                <div class="iv-cms-header-actions">
+                    <button id="cmsSaveBtn" class="iv-admin-btn" style="border-style: solid; border-color: var(--accent); background: rgba(255, 140, 0, 0.1); width: auto; padding: 10px 20px;">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Generate Config
+                    </button>
+                    <button id="closeCmsBtn" class="iv-cms-close-btn" title="Close CMS Workspace">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="iv-cms-tabs-nav">
+                <button class="iv-cms-tab-link active" data-tab="tab-hero-nav">Hero & Navigation</button>
+                <button class="iv-cms-tab-link" data-tab="tab-philosophy-news">Philosophy & News</button>
+                <button class="iv-cms-tab-link" data-tab="tab-case-studies">Case Studies</button>
+                <button class="iv-cms-tab-link" data-tab="tab-team-testimonials">Team & Reviews</button>
+                <button class="iv-cms-tab-link" data-tab="tab-footer-faqs">FAQs & Footer</button>
+                <button class="iv-cms-tab-link" data-tab="tab-export">Export & Build</button>
+            </div>
+
+            <!-- Workspace Body -->
+            <div class="iv-cms-body">
+
+                <!-- TAB 1: HERO & NAVIGATION -->
+                <div id="tab-hero-nav" class="iv-cms-tab-content active">
+                    
+                    <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Header Navigation Links</h4>
+                    <div class="iv-cms-repeater-container">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">Navigation Menu Items</span>
+                            <button type="button" id="cms-nav-add-btn" class="iv-cms-btn-add">
+                                <i class="fa-solid fa-plus"></i> Add Nav Link
+                            </button>
+                        </div>
+                        <div id="cms-nav-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 32px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Hero Section Content</h4>
+                    
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Hero Kicker Tag <span class="req">Required</span></label>
+                        <input type="text" id="cms-hero-tag" class="iv-cms-input" placeholder="e.g. SEBI Registered Research Analyst">
+                    </div>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Hero Heading HTML <span class="req">HTML Allowed</span></label>
+                        <textarea id="cms-hero-heading" class="iv-cms-textarea" style="min-height: 80px;" placeholder="Heading with HTML tags. Make sure to keep typewriter markers if editing."></textarea>
+                        <div class="iv-cms-hint">Keep <code>&lt;span class="iv-typing-container"&gt;&lt;span class="iv-typing-text"&gt;&lt;/span&gt;&lt;/span&gt;</code> intact for the dynamic typing animation.</div>
+                    </div>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Typewriter Words <span class="req">Comma Separated</span></label>
+                        <input type="text" id="cms-hero-typewriter-words" class="iv-cms-input" placeholder="e.g. Wealth Creation, Capital Growth, Portfolio Alpha">
+                        <div class="iv-cms-hint">Separate terms using commas. These terms will rotate sequentially.</div>
+                    </div>
+
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Paragraph Description 1 <span class="req">Required</span></label>
+                            <textarea id="cms-hero-desc1" class="iv-cms-textarea" style="min-height: 120px;"></textarea>
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Paragraph Description 2 <span class="req">Required</span></label>
+                            <textarea id="cms-hero-desc2" class="iv-cms-textarea" style="min-height: 120px;"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">CTA Button Text <span class="req">Required</span></label>
+                            <input type="text" id="cms-hero-cta-text" class="iv-cms-input">
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">CTA Button Link URL <span class="req">Required</span></label>
+                            <input type="text" id="cms-hero-cta-url" class="iv-cms-input">
+                        </div>
+                    </div>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">SEBI Badge text <span class="req">Required</span></label>
+                        <input type="text" id="cms-hero-sebi-badge" class="iv-cms-input">
+                    </div>
+
+                    <h5 style="margin: 24px 0 12px 0; color: var(--text-primary);">Hero Counter Statistics (Exactly 4 items)</h5>
+                    <div id="cms-hero-stats-container">
+                        <!-- 4 Stat elements populated by JS -->
+                    </div>
+
+                    <h4 style="margin: 32px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Hero Media / Visual Graphic</h4>
+                    
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Media Type <span class="req">Required</span></label>
+                            <select id="cms-hero-media-type" class="iv-cms-select">
+                                <option value="animation">Staircase CSS Animation (Default)</option>
+                                <option value="image">Static Image Banner</option>
+                                <option value="video">Background Video Loop</option>
+                            </select>
+                        </div>
+                        <div class="iv-cms-group" id="cms-hero-media-url-group">
+                            <label class="iv-cms-label">Media Source Path / URL</label>
+                            <div class="iv-cms-file-picker">
+                                <input type="text" id="cms-hero-media-url" class="iv-cms-input" style="flex-grow: 1;" placeholder="e.g. testimonials_images/banner.jpg">
+                                <button type="button" class="iv-cms-file-btn" onclick="simulateFileUpload('cms-hero-media-url', 'testimonials_images')">
+                                    <i class="fa-solid fa-file-image"></i> Select File
+                                </button>
+                            </div>
+                            <div class="iv-cms-hint">If selecting image/video, enter path or choose local file.</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- TAB 2: PHILOSOPHY & NEWS -->
+                <div id="tab-philosophy-news" class="iv-cms-tab-content">
+                    
+                    <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Investment Philosophy Section</h4>
+                    
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Section Title <span class="req">Required</span></label>
+                        <input type="text" id="cms-philosophy-title" class="iv-cms-input">
+                    </div>
+
+                    <div class="iv-cms-repeater-container">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">Philosophy Cards</span>
+                            <button type="button" id="cms-philosophy-add-btn" class="iv-cms-btn-add">
+                                <i class="fa-solid fa-plus"></i> Add Card
+                            </button>
+                        </div>
+                        <div id="cms-philosophy-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 32px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Featured Press & News</h4>
+                    
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Featured Section Title <span class="req">Required</span></label>
+                        <input type="text" id="cms-news-title" class="iv-cms-input">
+                    </div>
+
+                    <div class="iv-cms-repeater-container">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">News/Media Outlets</span>
+                            <button type="button" id="cms-news-add-btn" class="iv-cms-btn-add">
+                                <i class="fa-solid fa-plus"></i> Add Outlet
+                            </button>
+                        </div>
+                        <div id="cms-news-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- TAB 3: CASE STUDIES -->
+                <div id="tab-case-studies" class="iv-cms-tab-content">
+                    
+                    <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Case Studies Accordion</h4>
+                    
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Section Title <span class="req">Required</span></label>
+                        <input type="text" id="cms-case-title" class="iv-cms-input">
+                    </div>
+
+                    <div class="iv-cms-alert-info">
+                        <i class="fa-solid fa-circle-info" style="color: var(--accent); margin-right: 8px;"></i>
+                        <strong>Layout Constraint:</strong> A maximum of <strong>8 companies</strong> is allowed here to maintain the 4-up, 4-down grid style.
+                    </div>
+
+                    <div class="iv-cms-repeater-container">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">Company Case Studies</span>
+                            <button type="button" id="cms-case-add-btn" class="iv-cms-btn-add">
+                                <i class="fa-solid fa-plus"></i> Add Company
+                            </button>
+                        </div>
+                        <div id="cms-case-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- TAB 4: TEAM & REVIEWS -->
+                <div id="tab-team-testimonials" class="iv-cms-tab-content">
+                    
+                    <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Meet Our Team</h4>
+                    
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Team Section Title <span class="req">Required</span></label>
+                        <input type="text" id="cms-team-title" class="iv-cms-input">
+                    </div>
+
+                    <div class="iv-cms-repeater-container" style="margin-bottom: 32px;">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">Team Members</span>
+                            <button type="button" id="cms-team-add-btn" class="iv-cms-btn-add">
+                                <i class="fa-solid fa-plus"></i> Add Member
+                            </button>
+                        </div>
+                        <div id="cms-team-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 32px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Client Testimonials</h4>
+                    
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Testimonials Title <span class="req">Required</span></label>
+                        <input type="text" id="cms-testimonials-title" class="iv-cms-input">
+                    </div>
+
+                    <div class="iv-cms-repeater-container">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">Testimonial Reviews</span>
+                            <button type="button" id="cms-testimonials-add-btn" class="iv-cms-btn-add">
+                                <i class="fa-solid fa-plus"></i> Add Testimonial
+                            </button>
+                        </div>
+                        <div id="cms-testimonials-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- TAB 5: FAQS & FOOTER -->
+                <div id="tab-footer-faqs" class="iv-cms-tab-content">
+                    
+                    <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Frequently Asked Questions</h4>
+                    
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">FAQs Title <span class="req">Required</span></label>
+                        <input type="text" id="cms-faq-title" class="iv-cms-input">
+                    </div>
+
+                    <div class="iv-cms-repeater-container" style="margin-bottom: 32px;">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">FAQ Accordion List</span>
+                            <button type="button" id="cms-faq-add-btn" class="iv-cms-btn-add">
+                                <i class="fa-solid fa-plus"></i> Add FAQ
+                            </button>
+                        </div>
+                        <div id="cms-faq-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 32px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Footer Configuration</h4>
+                    
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Footer Brand Bio <span class="req">Required</span></label>
+                        <textarea id="cms-footer-desc" class="iv-cms-textarea" style="min-height: 80px;"></textarea>
+                    </div>
+
+                    <div class="iv-cms-repeater-container" style="margin-bottom: 24px;">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">Footer Quick Links</span>
+                            <button type="button" id="cms-footer-quick-add-btn" class="iv-cms-btn-add">
+                                <i class="fa-solid fa-plus"></i> Add Link
+                            </button>
+                        </div>
+                        <div id="cms-footer-quick-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="iv-cms-repeater-container" style="margin-bottom: 24px;">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">Important Compliance Links</span>
+                            <button type="button" id="cms-footer-imp-add-btn" class="iv-cms-btn-add">
+                                <i class="fa-solid fa-plus"></i> Add Link
+                            </button>
+                        </div>
+                        <div id="cms-footer-imp-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Disclaimer and Compliance Text <span class="req">Required</span></label>
+                        <textarea id="cms-footer-disclaimer" class="iv-cms-textarea" style="min-height: 100px;"></textarea>
+                    </div>
+
+                </div>
+
+                <!-- TAB 6: EXPORT & BUILD -->
+                <div id="tab-export" class="iv-cms-tab-content">
+                    
+                    <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Export Configuration & Static Compilation</h4>
+                    
+                    <div class="iv-cms-alert-info" style="border-left: 4px solid var(--accent); background: rgba(255, 140, 0, 0.02);">
+                        <p style="margin-bottom: 8px;"><strong>Steps to apply these changes to the live website:</strong></p>
+                        <ol style="margin-left: 20px; padding-left: 0; line-height: 1.6;">
+                            <li>Verify your edits across all tabs, then click the **Generate Config** button.</li>
+                            <li>Copy the resulting JSON payload from the code-block below.</li>
+                            <li>Overwrite the contents of <strong><a href="file:///c:/IV website/homepage_config.json" style="color: var(--accent); text-decoration: underline;">homepage_config.json</a></strong> with this text.</li>
+                            <li>Execute the build script by running the following command in your terminal:
+                                <code style="display:block; margin: 8px 0; padding: 10px; background: #000; border-radius: 6px; border: 1px solid #333; color: var(--accent);">node scripts/update_homepage.js</code>
+                            </li>
+                            <li>Refresh the landing page to verify that everything works as expected!</li>
+                        </ol>
+                    </div>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Generated JSON Payload <span style="font-weight: normal; color: var(--text-muted);">Config format</span></label>
+                        <div id="cmsJsonDisplay" class="iv-cms-json-box">Click "Generate Config" in the top-right to compile configuration.</div>
+                    </div>
+
+                    <div class="iv-cms-export-actions">
+                        <button type="button" id="cmsCopyJsonBtn" class="iv-admin-btn" style="width: auto; padding: 12px 24px; border-style: solid; border-color: var(--accent);">
+                            <i class="fa-solid fa-copy"></i> Copy to Clipboard
+                        </button>
+                        <button type="button" id="cmsDownloadJsonBtn" class="iv-admin-btn" style="width: auto; padding: 12px 24px;">
+                            <i class="fa-solid fa-circle-down"></i> Download JSON File
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Hidden simulated file upload selector -->
+    <input type="file" id="cmsSimulatedFilePicker" style="display: none;" onchange="handleSimulatedFileChange(this)">
+
+    <!-- Alert / Toast Popup notification -->
+    <div id="cmsToast" class="iv-cms-toast">Copied to Clipboard!</div>
+
+    <!-- Admin Logic -->
+    <script src="admin.js"></script>
+
+</body>
+
+</html>

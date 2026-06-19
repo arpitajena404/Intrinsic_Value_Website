@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const stackedSection = document.querySelector('.stacked-testimonials-section');
         // If the testimonials section is present, check if it has flow-layout, or if it will be initialized to it
         const isFlow = stackedSection ? (stackedSection.classList.contains('flow-layout') || true) : true;
-        return isFlow ? 5.3 * cachedWindowHeight : 9.3 * cachedWindowHeight;
+        return isFlow ? 4.8 * cachedWindowHeight : 9.3 * cachedWindowHeight;
     };
 
     const scrollStack = document.querySelector('.scroll-stack');
@@ -434,7 +434,7 @@ function init3DSpiral() {
             const windowHeight = cachedWindowHeight;
             const stackedSection = document.querySelector('.stacked-testimonials-section');
             const isFlow = stackedSection && stackedSection.classList.contains('flow-layout');
-            const endOffset = isFlow ? 5.3 * windowHeight : 9.3 * windowHeight; 
+            const endOffset = isFlow ? 4.8 * windowHeight : 9.3 * windowHeight; 
             return [
                 0,
                 1.0 * windowHeight,
@@ -548,13 +548,13 @@ function init3DSpiral() {
             updateScrollIndicator();
 
             // Define scroll transition checkpoints relative to viewport height with uniform gaps:
-            // Hero: 0.0 to 1.2
-            // Philosophy card spin: 1.2 to 2.4
-            // Featured logos: 2.4 to 3.0
-            // Case studies: 3.0 to 3.6
-            // Portfolio: 3.6 to 4.2
-            // Pricing: 4.2 to 4.8
-            // Testimonials: 4.8 to 5.3
+            // Hero: 0.0 to 1.0
+            // Philosophy card spin: 1.0 to 1.8
+            // Featured logos: 1.8 to 2.1
+            // Case studies: 2.1 to 2.5
+            // Portfolio: 2.5 to 3.0
+            // Pricing & Team: 3.0 to 3.5
+            // Testimonials: 3.5 to 4.8
             
             const heroFadeEnd = 1.0 * windowHeight;
 

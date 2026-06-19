@@ -6141,13 +6141,25 @@ html {
 
 /* override the general .team-card behavior inside the marquee row */
 .team-cards-row .team-card {
-    flex: 0 0 260px;
-    max-width: 260px;
-    width: 260px;
+    flex: 0 0 240px;
+    max-width: 240px;
+    width: 240px;
+    height: 270px;
+    padding: 24px 16px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
                 border-color 0.3s ease, 
                 box-shadow 0.3s ease;
+}
+
+.team-cards-row .team-avatar-wrapper {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 12px;
 }
 
 /* Edge fading effect for premium look */
