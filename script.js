@@ -208,6 +208,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize Comparison Modal
     initComparisonModal();
 
+    // Initialize Mobile Pricing Tabs
+    initMobilePricingTabs();
+
     // Initialize Stacked Testimonials
     initTestimonials();
 
@@ -2226,4 +2229,42 @@ function initPortfolioCarousel() {
     updateCarousel();
     startAutoplay();
 }
+
+// MOBILE PRICING SEGMENTED TABS CONTROLLER
+// ==========================================================================
+function initMobilePricingTabs() {
+    const tables = document.querySelectorAll('.comparison-table');
+    tables.forEach(table => {
+        // By default, set HNI Premium (plan 1) active
+        table.classList.add('show-plan-1');
+        
+        const headers = table.querySelectorAll('thead th');
+        if (headers.length < 4) return;
+        
+        const tabHni = headers[1];
+        const tabInner = headers[2];
+        const tabBiz = headers[3];
+        
+        // Add active class by default
+        tabHni.classList.add('active-plan-tab');
+        
+        const switchPlan = (planNum) => {
+            table.classList.remove('show-plan-1', 'show-plan-2', 'show-plan-3');
+            table.classList.add(`show-plan-${planNum}`);
+            
+            tabHni.classList.remove('active-plan-tab');
+            tabInner.classList.remove('active-plan-tab');
+            tabBiz.classList.remove('active-plan-tab');
+            
+            if (planNum === 1) tabHni.classList.add('active-plan-tab');
+            if (planNum === 2) tabInner.classList.add('active-plan-tab');
+            if (planNum === 3) tabBiz.classList.add('active-plan-tab');
+        };
+        
+        tabHni.addEventListener('click', () => switchPlan(1));
+        tabInner.addEventListener('click', () => switchPlan(2));
+        tabBiz.addEventListener('click', () => switchPlan(3));
+    });
+}
+
 
