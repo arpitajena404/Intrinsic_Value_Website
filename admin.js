@@ -8,7 +8,9 @@
         "harshitsaraan@gmail.com",
         "arpitajena762@gmail.com",
         "nikhilgangil333@gmail.com",
-        "info@intrinsicvalueequity.in"
+        "intrinsicvalueequity@gmail.com",
+        "gvaibhav870@gmail.com",
+        "valuemev.jayate@gmail.com"
     ];
 
     var SESSION_TIMEOUT = 15 * 60 * 1000; // 15 minutes of inactivity
