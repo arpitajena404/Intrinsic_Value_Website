@@ -5650,6 +5650,13 @@ html {
     box-shadow: 0 0 10px rgba(46, 204, 113, 0.05);
 }
 
+.status-badge.pending {
+    background-color: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.05);
+}
+
 /* Footnotes */
 .disclosure-footnotes {
     margin-top: 15px;

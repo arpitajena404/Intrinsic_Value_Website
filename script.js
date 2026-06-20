@@ -1077,13 +1077,15 @@ function init3DSpiral() {
         const spiralLinks = document.querySelectorAll('.spiral-card a');
         spiralLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
                 const modalId = link.getAttribute('href');
-                const targetModal = document.querySelector(modalId);
-                if (targetModal) {
-                    targetModal.style.display = 'flex';
-                    void targetModal.offsetWidth; // Force layout repaint
-                    targetModal.classList.add('active');
+                if (modalId && modalId.startsWith('#')) {
+                    e.preventDefault();
+                    const targetModal = document.querySelector(modalId);
+                    if (targetModal) {
+                        targetModal.style.display = 'flex';
+                        void targetModal.offsetWidth; // Force layout repaint
+                        targetModal.classList.add('active');
+                    }
                 }
             });
         });
@@ -1266,8 +1268,13 @@ function initFeaturedSection() {
         // Click to open outbound link
         card.addEventListener('click', () => {
             const url = card.getAttribute('data-link');
+            const newTab = card.getAttribute('data-new-tab') !== 'false';
             if (url) {
-                window.open(url, '_blank', 'noopener,noreferrer');
+                if (newTab) {
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                } else {
+                    window.location.href = url;
+                }
             }
         });
     });

@@ -622,6 +622,1627 @@
                 "url": "https://smartodr.in/login"
             }
         ],
-        "disclaimer": "SEBI Registration No: INH000009047. Investment in securities market are subject to market risks. Read all the related documents carefully before investing."
+        "disclaimer": "SEBI Registration No: INH000009047. Investment in securities market are subject to market risks. Read all the related documents carefully before investing.",
+        "apps": {
+            "play_store": {
+                "url": "https://play.google.com/store/apps/details?id=com.exly.intrinsicvalueequity&pli=1",
+                "new_tab": true
+            },
+            "app_store": {
+                "url": "https://apps.apple.com/in/app/intrinsic-value-equity/id6755237343",
+                "new_tab": true
+            }
+        },
+        "contact": {
+            "phones": [
+                "+91 73542 59486",
+                "+91 98064 71956"
+            ],
+            "email": "info@intrinsicvalueequity.in",
+            "address": "Floor No : 3, Office No :106, Mont vert Spectra Opp. Hotel Wadeshwar, Baner, Pune, Maharashtra PIN Code: 411045",
+            "timings": [
+                "Sat–Thursday: 8:00 AM–8:00 PM",
+                "Friday: Closed",
+                "Sat-Sun:- Open"
+            ]
+        }
+    },
+    "compliance": {
+        "years": [
+            "2022",
+            "2023",
+            "2024",
+            "2025",
+            "2026"
+        ],
+        "audits": [
+            {
+                "fy": "FY 2022-23",
+                "status": "Conducted",
+                "remarks": "N/A"
+            },
+            {
+                "fy": "FY 2023-24",
+                "status": "Conducted",
+                "remarks": "N/A"
+            },
+            {
+                "fy": "FY 2024-25",
+                "status": "Conducted",
+                "remarks": "N/A"
+            }
+        ],
+        "grievances": {
+            "2022": {
+                "Jan": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Feb": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Mar": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Apr": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "May": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Jun": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Jul": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Aug": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Sep": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Oct": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Nov": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Dec": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                }
+            },
+            "2023": {
+                "Jan": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Feb": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Mar": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Apr": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "May": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Jun": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Jul": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Aug": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Sep": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Oct": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Nov": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Dec": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                }
+            },
+            "2024": {
+                "Jan": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Feb": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Mar": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Apr": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "May": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Jun": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Jul": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Aug": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Sep": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Oct": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Nov": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Dec": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                }
+            },
+            "2025": {
+                "Jan": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Feb": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Mar": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Apr": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "May": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Jun": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Jul": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Aug": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Sep": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Oct": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Nov": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Dec": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                }
+            },
+            "2026": {
+                "May": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Jan": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Feb": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Mar": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Apr": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Jun": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Jul": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Aug": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Sep": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Oct": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Nov": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                },
+                "Dec": {
+                    "direct": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "sebi": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    },
+                    "other": {
+                        "pending_last": 0,
+                        "received": 0,
+                        "resolved": 0,
+                        "pending_total": 0,
+                        "pending_gt_3m": 0,
+                        "avg_res_time": 0
+                    }
+                }
+            }
+        }
     }
 }

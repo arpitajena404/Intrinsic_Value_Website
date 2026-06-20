@@ -6,7 +6,9 @@
     // 2. WHITELISTED ADMIN EMAILS
     var ALLOWED_ADMINS = [
         "harshitsaraan@gmail.com",
-        "arpitajena762@gmail.com"
+        "arpitajena762@gmail.com",
+        "nikhilgangil333@gmail.com",
+        "info@intrinsicvalueequity.in"
     ];
 
     var SESSION_TIMEOUT = 15 * 60 * 1000; // 15 minutes of inactivity
@@ -877,9 +879,54 @@
                                     "url": "https://smartodr.in/login"
                             }
                     ],
-                    "disclaimer": "SEBI Registration No: INH000009047. Investment in securities market are subject to market risks. Read all the related documents carefully before investing."
+                    "disclaimer": "SEBI Registration No: INH000009047. Investment in securities market are subject to market risks. Read all the related documents carefully before investing.",
+                    "apps": {
+                        "play_store": {
+                            "url": "https://play.google.com/store/apps/details?id=com.exly.intrinsicvalueequity&pli=1",
+                            "new_tab": true
+                        },
+                        "app_store": {
+                            "url": "https://apps.apple.com/in/app/intrinsic-value-equity/id6755237343",
+                            "new_tab": true
+                        }
+                    },
+                    "contact": {
+                        "phones": ["+91 73542 59486", "+91 98064 71956"],
+                        "email": "info@intrinsicvalueequity.in",
+                        "address": "Floor No : 3, Office No :106, Mont vert Spectra Opp. Hotel Wadeshwar, Baner, Pune, Maharashtra PIN Code: 411045",
+                        "timings": ["Sat–Thursday: 8:00 AM–8:00 PM", "Friday: Closed", "Sat-Sun:- Open"]
+                    }
+            },
+            "compliance": {
+                "years": ["2022", "2023", "2024", "2025", "2026"],
+                "audits": [
+                    {
+                        "fy": "FY 2022-23",
+                        "status": "Conducted",
+                        "remarks": "N/A"
+                    },
+                    {
+                        "fy": "FY 2023-24",
+                        "status": "Conducted",
+                        "remarks": "N/A"
+                    },
+                    {
+                        "fy": "FY 2024-25",
+                        "status": "Conducted",
+                        "remarks": "N/A"
+                    }
+                ],
+                "grievances": {
+                    "2026": {
+                        "May": {
+                            "direct": { "pending_last": 0, "received": 0, "resolved": 0, "pending_total": 0, "pending_gt_3m": 0, "avg_res_time": 0 },
+                            "sebi": { "pending_last": 0, "received": 0, "resolved": 0, "pending_total": 0, "pending_gt_3m": 0, "avg_res_time": 0 },
+                            "other": { "pending_last": 0, "received": 0, "resolved": 0, "pending_total": 0, "pending_gt_3m": 0, "avg_res_time": 0 }
+                        }
+                    }
+                }
             }
-    };;;
+    };
 
     // Simulated file upload configurations
     var simulatedUploadTargetId = '';
@@ -952,6 +999,12 @@
         document.getElementById('cms-hero-cta-url').value = cmsState.hero.cta_url || '';
         document.getElementById('cms-hero-sebi-badge').value = cmsState.hero.sebi_badge || '';
         
+        if (cmsState.hero.cta_new_tab) {
+            document.getElementById('cms-hero-cta-target-blank').checked = true;
+        } else {
+            document.getElementById('cms-hero-cta-target-same').checked = true;
+        }
+        
         document.getElementById('cms-hero-media-type').value = cmsState.hero.media.type || 'animation';
         document.getElementById('cms-hero-media-url').value = cmsState.hero.media.url || '';
         toggleMediaUrlField();
@@ -966,6 +1019,45 @@
         document.getElementById('cms-footer-desc').value = cmsState.footer.desc || '';
         document.getElementById('cms-footer-disclaimer').value = cmsState.footer.disclaimer || '';
 
+        // Apps
+        document.getElementById('cms-footer-play-store-url').value = cmsState.footer.apps?.play_store?.url || '';
+        if (cmsState.footer.apps?.play_store?.new_tab !== false) {
+            document.getElementById('cms-play-store-target-blank').checked = true;
+        } else {
+            document.getElementById('cms-play-store-target-same').checked = true;
+        }
+        document.getElementById('cms-footer-app-store-url').value = cmsState.footer.apps?.app_store?.url || '';
+        if (cmsState.footer.apps?.app_store?.new_tab !== false) {
+            document.getElementById('cms-app-store-target-blank').checked = true;
+        } else {
+            document.getElementById('cms-app-store-target-same').checked = true;
+        }
+
+        // Contact
+        document.getElementById('cms-footer-contact-phones').value = (cmsState.footer.contact?.phones || []).join(', ');
+        document.getElementById('cms-footer-contact-email').value = cmsState.footer.contact?.email || '';
+        document.getElementById('cms-footer-contact-address').value = cmsState.footer.contact?.address || '';
+        document.getElementById('cms-footer-contact-timings').value = (cmsState.footer.contact?.timings || []).join('\n');
+
+        // Compliance Years
+        var years = cmsState.compliance?.years || ["2022", "2023", "2024", "2025", "2026"];
+        document.getElementById('cms-regulatory-years').value = years.join(', ');
+
+        // Populate years select in Grievance Database editor
+        var yearSelectCms = document.getElementById('cms-grievance-edit-year');
+        if (yearSelectCms) {
+            yearSelectCms.innerHTML = '';
+            years.forEach(function (y) {
+                var opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = y;
+                yearSelectCms.appendChild(opt);
+            });
+            if (years.length > 0) {
+                yearSelectCms.value = years[years.length - 1];
+            }
+        }
+
         // Dynamic lists render
         renderNavMenu();
         renderHeroStats();
@@ -977,6 +1069,8 @@
         renderFaqs();
         renderFooterQuickLinks();
         renderFooterImportantLinks();
+        renderComplianceAudits();
+        renderGrievanceRecordEditor();
     }
 
     // Compile from forms to output JSON
@@ -993,6 +1087,7 @@
         cmsState.hero.desc2 = document.getElementById('cms-hero-desc2').value;
         cmsState.hero.cta_text = document.getElementById('cms-hero-cta-text').value;
         cmsState.hero.cta_url = document.getElementById('cms-hero-cta-url').value;
+        cmsState.hero.cta_new_tab = document.getElementById('cms-hero-cta-target-blank').checked;
         cmsState.hero.sebi_badge = document.getElementById('cms-hero-sebi-badge').value;
 
         cmsState.hero.media.type = document.getElementById('cms-hero-media-type').value;
@@ -1007,6 +1102,31 @@
         
         cmsState.footer.desc = document.getElementById('cms-footer-desc').value;
         cmsState.footer.disclaimer = document.getElementById('cms-footer-disclaimer').value;
+
+        // Apps
+        cmsState.footer.apps = cmsState.footer.apps || {};
+        cmsState.footer.apps.play_store = {
+            url: document.getElementById('cms-footer-play-store-url').value,
+            new_tab: document.getElementById('cms-play-store-target-blank').checked
+        };
+        cmsState.footer.apps.app_store = {
+            url: document.getElementById('cms-footer-app-store-url').value,
+            new_tab: document.getElementById('cms-app-store-target-blank').checked
+        };
+
+        // Contact
+        cmsState.footer.contact = cmsState.footer.contact || {};
+        var phonesVal = document.getElementById('cms-footer-contact-phones').value;
+        cmsState.footer.contact.phones = phonesVal.split(',').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
+        cmsState.footer.contact.email = document.getElementById('cms-footer-contact-email').value.trim();
+        cmsState.footer.contact.address = document.getElementById('cms-footer-contact-address').value;
+        var timingsVal = document.getElementById('cms-footer-contact-timings').value;
+        cmsState.footer.contact.timings = timingsVal.split('\n').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
+
+        // Compliance Years
+        cmsState.compliance = cmsState.compliance || {};
+        var yearsVal = document.getElementById('cms-regulatory-years').value;
+        cmsState.compliance.years = yearsVal.split(',').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
 
         var jsonText = JSON.stringify(cmsState, null, 4);
         var jsonDisplay = document.getElementById('cmsJsonDisplay');
@@ -1034,6 +1154,10 @@
                     <div class="iv-cms-group" style="margin-bottom: 0;">
                         <label class="iv-cms-label">Link URL</label>
                         <input type="text" class="iv-cms-input" value="${escapeHtml(link.url)}" oninput="updateNavItem(${index}, 'url', this.value)">
+                        <div class="iv-cms-radio-group">
+                            <label class="iv-cms-radio-label"><input type="radio" name="nav-target-${index}" value="same" ${!link.new_tab ? 'checked' : ''} onchange="updateNavItem(${index}, 'new_tab', false)"> Same Tab</label>
+                            <label class="iv-cms-radio-label"><input type="radio" name="nav-target-${index}" value="blank" ${link.new_tab ? 'checked' : ''} onchange="updateNavItem(${index}, 'new_tab', true)"> New Tab</label>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1049,7 +1173,7 @@
         cmsState.navigation[idx][field] = val;
     };
     document.getElementById('cms-nav-add-btn').addEventListener('click', function () {
-        cmsState.navigation.push({ text: "New Link", url: "#" });
+        cmsState.navigation.push({ text: "New Link", url: "#", new_tab: false });
         renderNavMenu();
     });
 
@@ -1110,6 +1234,10 @@
                     <div class="iv-cms-group">
                         <label class="iv-cms-label">Section anchor/link</label>
                         <input type="text" class="iv-cms-input" value="${escapeHtml(card.link)}" placeholder="e.g. #services_item1" oninput="updatePhilosophyCard(${index}, 'link', this.value)">
+                        <div class="iv-cms-radio-group">
+                            <label class="iv-cms-radio-label"><input type="radio" name="philosophy-target-${index}" value="same" ${!card.new_tab ? 'checked' : ''} onchange="updatePhilosophyCard(${index}, 'new_tab', false)"> Same Tab</label>
+                            <label class="iv-cms-radio-label"><input type="radio" name="philosophy-target-${index}" value="blank" ${card.new_tab ? 'checked' : ''} onchange="updatePhilosophyCard(${index}, 'new_tab', true)"> New Tab</label>
+                        </div>
                     </div>
                 </div>
                 <div class="iv-cms-group" style="margin-bottom: 0;">
@@ -1133,7 +1261,8 @@
             icon: "fas fa-chess",
             title: "New Philosophy Title",
             desc: "Description of the investment philosophy card.",
-            link: "#"
+            link: "#",
+            new_tab: false
         });
         renderPhilosophyCards();
     });
@@ -1162,6 +1291,10 @@
                     <div class="iv-cms-group">
                         <label class="iv-cms-label">Article URL</label>
                         <input type="text" class="iv-cms-input" value="${escapeHtml(item.link)}" oninput="updateNewsItem(${index}, 'link', this.value)">
+                        <div class="iv-cms-radio-group">
+                            <label class="iv-cms-radio-label"><input type="radio" name="news-target-${index}" value="same" ${item.new_tab === false ? 'checked' : ''} onchange="updateNewsItem(${index}, 'new_tab', false)"> Same Tab</label>
+                            <label class="iv-cms-radio-label"><input type="radio" name="news-target-${index}" value="blank" ${item.new_tab !== false ? 'checked' : ''} onchange="updateNewsItem(${index}, 'new_tab', true)"> New Tab</label>
+                        </div>
                     </div>
                     <div class="iv-cms-group">
                         <label class="iv-cms-label">Logo Path (suggested featuring_icon/ folder)</label>
@@ -1193,7 +1326,8 @@
             link: "#",
             quote: "Write quoted text here.",
             source: "Source details",
-            logo: ""
+            logo: "",
+            new_tab: true
         });
         renderNewsItems();
     });
@@ -1224,13 +1358,19 @@
             comp.reports.forEach(function (rep, rIdx) {
                 var repRandId = 'rep-url-' + cIdx + '-' + rIdx;
                 reportsHtml += `
-                    <div style="display:flex; gap:10px; margin-bottom:8px; align-items:center;">
-                        <input type="text" class="iv-cms-input" style="width:30%; font-size:12px; padding:8px 12px;" value="${escapeHtml(rep.name)}" placeholder="Report Name" oninput="updateCompanyReport(${cIdx}, ${rIdx}, 'name', this.value)">
-                        <div class="iv-cms-file-picker" style="flex-grow:1;">
-                            <input type="text" id="${repRandId}" class="iv-cms-input" style="font-size:12px; padding:8px 12px;" value="${escapeHtml(rep.url)}" placeholder="PDF Path" oninput="updateCompanyReport(${cIdx}, ${rIdx}, 'url', this.value)">
-                            <button type="button" class="iv-cms-file-btn" style="padding:8px 12px; font-size:11px;" onclick="simulateFileUpload('${repRandId}', 'CS reports')">Upload PDF</button>
+                    <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:12px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:8px;">
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <input type="text" class="iv-cms-input" style="width:30%; font-size:12px; padding:8px 12px;" value="${escapeHtml(rep.name)}" placeholder="Report Name" oninput="updateCompanyReport(${cIdx}, ${rIdx}, 'name', this.value)">
+                            <div class="iv-cms-file-picker" style="flex-grow:1;">
+                                <input type="text" id="${repRandId}" class="iv-cms-input" style="font-size:12px; padding:8px 12px;" value="${escapeHtml(rep.url)}" placeholder="PDF Path" oninput="updateCompanyReport(${cIdx}, ${rIdx}, 'url', this.value)">
+                                <button type="button" class="iv-cms-file-btn" style="padding:8px 12px; font-size:11px;" onclick="simulateFileUpload('${repRandId}', 'CS reports')">Upload PDF</button>
+                            </div>
+                            <button type="button" class="iv-cms-btn-remove" style="position:static; margin-left:5px; height:32px; width:32px; display:inline-flex;" onclick="removeCompanyReport(${cIdx}, ${rIdx})">&times;</button>
                         </div>
-                        <button type="button" class="iv-cms-btn-remove" style="position:static; margin-left:5px; height:32px; width:32px; display:inline-flex;" onclick="removeCompanyReport(${cIdx}, ${rIdx})">&times;</button>
+                        <div class="iv-cms-radio-group" style="margin-left: 31%; margin-top:2px;">
+                            <label class="iv-cms-radio-label"><input type="radio" name="report-target-${cIdx}-${rIdx}" value="same" ${rep.new_tab === false ? 'checked' : ''} onchange="updateCompanyReport(${cIdx}, ${rIdx}, 'new_tab', false)"> Same Tab</label>
+                            <label class="iv-cms-radio-label"><input type="radio" name="report-target-${cIdx}-${rIdx}" value="blank" ${rep.new_tab !== false ? 'checked' : ''} onchange="updateCompanyReport(${cIdx}, ${rIdx}, 'new_tab', true)"> New Tab</label>
+                        </div>
                     </div>
                 `;
             });
@@ -1286,7 +1426,8 @@
     window.addCompanyReport = function (cIdx) {
         cmsState.case_studies.companies[cIdx].reports.push({
             name: "Report Name",
-            url: ""
+            url: "",
+            new_tab: true
         });
         renderCaseStudies();
     };
@@ -1460,6 +1601,10 @@
                     <div class="iv-cms-group" style="margin-bottom: 0;">
                         <label class="iv-cms-label">Link URL</label>
                         <input type="text" class="iv-cms-input" value="${escapeHtml(link.url)}" oninput="updateFooterQuickLink(${index}, 'url', this.value)">
+                        <div class="iv-cms-radio-group">
+                            <label class="iv-cms-radio-label"><input type="radio" name="footer-quick-target-${index}" value="same" ${!link.new_tab ? 'checked' : ''} onchange="updateFooterQuickLink(${index}, 'new_tab', false)"> Same Tab</label>
+                            <label class="iv-cms-radio-label"><input type="radio" name="footer-quick-target-${index}" value="blank" ${link.new_tab ? 'checked' : ''} onchange="updateFooterQuickLink(${index}, 'new_tab', true)"> New Tab</label>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1475,7 +1620,7 @@
         cmsState.footer.quick_links[idx][field] = val;
     };
     document.getElementById('cms-footer-quick-add-btn').addEventListener('click', function () {
-        cmsState.footer.quick_links.push({ text: "New Link", url: "#" });
+        cmsState.footer.quick_links.push({ text: "New Link", url: "#", new_tab: false });
         renderFooterQuickLinks();
     });
 
@@ -1496,6 +1641,10 @@
                     <div class="iv-cms-group" style="margin-bottom: 0;">
                         <label class="iv-cms-label">Link URL</label>
                         <input type="text" class="iv-cms-input" value="${escapeHtml(link.url)}" oninput="updateFooterImportantLink(${index}, 'url', this.value)">
+                        <div class="iv-cms-radio-group">
+                            <label class="iv-cms-radio-label"><input type="radio" name="footer-imp-target-${index}" value="same" ${!link.new_tab ? 'checked' : ''} onchange="updateFooterImportantLink(${index}, 'new_tab', false)"> Same Tab</label>
+                            <label class="iv-cms-radio-label"><input type="radio" name="footer-imp-target-${index}" value="blank" ${link.new_tab ? 'checked' : ''} onchange="updateFooterImportantLink(${index}, 'new_tab', true)"> New Tab</label>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1511,7 +1660,7 @@
         cmsState.footer.important_info[idx][field] = val;
     };
     document.getElementById('cms-footer-imp-add-btn').addEventListener('click', function () {
-        cmsState.footer.important_info.push({ text: "New Link", url: "#" });
+        cmsState.footer.important_info.push({ text: "New Link", url: "#", new_tab: false });
         renderFooterImportantLinks();
     });
 
@@ -1561,6 +1710,134 @@
             }, 2500);
         }
     }
+
+    // 11. Compliance Audits
+    function renderComplianceAudits() {
+        var container = document.getElementById('cms-audit-list');
+        if (!container) return;
+        container.innerHTML = '';
+        (cmsState.compliance?.audits || []).forEach(function (audit, index) {
+            var div = document.createElement('div');
+            div.className = 'iv-cms-repeater-item';
+            div.innerHTML = `
+                <button type="button" class="iv-cms-btn-remove" onclick="removeComplianceAudit(${index})">&times;</button>
+                <div class="iv-cms-row" style="margin-bottom: 0;">
+                    <div class="iv-cms-group" style="margin-bottom: 0; width: 30%;">
+                        <label class="iv-cms-label">Financial Year</label>
+                        <input type="text" class="iv-cms-input" value="${escapeHtml(audit.fy)}" placeholder="e.g. FY 2025-26" oninput="updateComplianceAudit(${index}, 'fy', this.value)">
+                    </div>
+                    <div class="iv-cms-group" style="margin-bottom: 0; width: 30%;">
+                        <label class="iv-cms-label">Audit Status</label>
+                        <select class="iv-cms-select" onchange="updateComplianceAudit(${index}, 'status', this.value)">
+                            <option value="Conducted" ${audit.status === 'Conducted' ? 'selected' : ''}>Conducted</option>
+                            <option value="Pending" ${audit.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                        </select>
+                    </div>
+                    <div class="iv-cms-group" style="margin-bottom: 0; width: 40%;">
+                        <label class="iv-cms-label">Remarks, If any</label>
+                        <input type="text" class="iv-cms-input" value="${escapeHtml(audit.remarks || '')}" placeholder="e.g. N/A" oninput="updateComplianceAudit(${index}, 'remarks', this.value)">
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    window.removeComplianceAudit = function (idx) {
+        cmsState.compliance.audits.splice(idx, 1);
+        renderComplianceAudits();
+    };
+    window.updateComplianceAudit = function (idx, field, val) {
+        cmsState.compliance.audits[idx][field] = val;
+    };
+
+    // 12. Grievance Status database editor
+    window.renderGrievanceRecordEditor = function() {
+        var container = document.getElementById('cms-grievance-record-editor');
+        if (!container) return;
+        
+        var yearSelect = document.getElementById('cms-grievance-edit-year');
+        var monthSelect = document.getElementById('cms-grievance-edit-month');
+        if (!yearSelect || !monthSelect) return;
+        
+        var year = yearSelect.value;
+        var month = monthSelect.value;
+        
+        if (!year || !month) return;
+        
+        cmsState.compliance = cmsState.compliance || {};
+        cmsState.compliance.grievances = cmsState.compliance.grievances || {};
+        cmsState.compliance.grievances[year] = cmsState.compliance.grievances[year] || {};
+        cmsState.compliance.grievances[year][month] = cmsState.compliance.grievances[year][month] || {};
+        
+        var record = cmsState.compliance.grievances[year][month];
+        
+        var sources = ['direct', 'sebi', 'other'];
+        var sourceNames = {
+            'direct': 'Directly from Investors',
+            'sebi': 'SEBI (scores)',
+            'other': 'Other Sources (if any)'
+        };
+        
+        var html = '';
+        sources.forEach(function (src) {
+            record[src] = record[src] || {
+                pending_last: 0,
+                received: 0,
+                resolved: 0,
+                pending_total: 0,
+                pending_gt_3m: 0,
+                avg_res_time: 0
+            };
+            
+            var data = record[src];
+            
+            html += `
+                <div class="cms-grievance-source-card" style="border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 12px; background: rgba(255,255,255,0.02);">
+                    <strong style="color: var(--accent); font-size:13px; display:block; margin-bottom:10px;">${sourceNames[src]}</strong>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 8px;">
+                        <div>
+                           <label style="font-size:11px; color: var(--text-muted);">Pending Last Month</label>
+                           <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${data.pending_last}" oninput="updateGrievanceField('${year}', '${month}', '${src}', 'pending_last', this.value)">
+                        </div>
+                        <div>
+                           <label style="font-size:11px; color: var(--text-muted);">Received</label>
+                           <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${data.received}" oninput="updateGrievanceField('${year}', '${month}', '${src}', 'received', this.value)">
+                        </div>
+                        <div>
+                           <label style="font-size:11px; color: var(--text-muted);">Resolved</label>
+                           <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${data.resolved}" oninput="updateGrievanceField('${year}', '${month}', '${src}', 'resolved', this.value)">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                        <div>
+                           <label style="font-size:11px; color: var(--text-muted);">Total Pending</label>
+                           <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${data.pending_total}" oninput="updateGrievanceField('${year}', '${month}', '${src}', 'pending_total', this.value)">
+                        </div>
+                        <div>
+                           <label style="font-size:11px; color: var(--text-muted);">Pending > 3 Months</label>
+                           <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${data.pending_gt_3m}" oninput="updateGrievanceField('${year}', '${month}', '${src}', 'pending_gt_3m', this.value)">
+                        </div>
+                        <div>
+                           <label style="font-size:11px; color: var(--text-muted);">Avg Res Time (Days)</label>
+                           <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${data.avg_res_time}" oninput="updateGrievanceField('${year}', '${month}', '${src}', 'avg_res_time', this.value)">
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    };
+    
+    window.updateGrievanceField = function (year, month, source, field, value) {
+        cmsState.compliance = cmsState.compliance || {};
+        cmsState.compliance.grievances = cmsState.compliance.grievances || {};
+        cmsState.compliance.grievances[year] = cmsState.compliance.grievances[year] || {};
+        cmsState.compliance.grievances[year][month] = cmsState.compliance.grievances[year][month] || {};
+        cmsState.compliance.grievances[year][month][source] = cmsState.compliance.grievances[year][month][source] || {};
+        cmsState.compliance.grievances[year][month][source][field] = parseFloat(value) || 0;
+    };
 
     function initTabs() {
         var tabLinks = document.querySelectorAll('.iv-cms-tab-link');
@@ -1626,6 +1903,48 @@
         }
 
         document.getElementById('cms-hero-media-type').addEventListener('change', toggleMediaUrlField);
+
+        // Regulatory compliance events binding
+        var regYearsInput = document.getElementById('cms-regulatory-years');
+        if (regYearsInput) {
+            regYearsInput.addEventListener('input', function () {
+                var val = this.value;
+                cmsState.compliance = cmsState.compliance || {};
+                cmsState.compliance.years = val.split(',').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
+                
+                var yearSelectCms = document.getElementById('cms-grievance-edit-year');
+                if (yearSelectCms) {
+                    var prevVal = yearSelectCms.value;
+                    yearSelectCms.innerHTML = '';
+                    cmsState.compliance.years.forEach(function (y) {
+                        var opt = document.createElement('option');
+                        opt.value = y;
+                        opt.textContent = y;
+                        yearSelectCms.appendChild(opt);
+                    });
+                    if (cmsState.compliance.years.indexOf(prevVal) !== -1) {
+                        yearSelectCms.value = prevVal;
+                    } else if (cmsState.compliance.years.length > 0) {
+                        yearSelectCms.value = cmsState.compliance.years[cmsState.compliance.years.length - 1];
+                    }
+                }
+                renderGrievanceRecordEditor();
+            });
+        }
+
+        var auditAddBtn = document.getElementById('cms-audit-add-btn');
+        if (auditAddBtn) {
+            auditAddBtn.addEventListener('click', function () {
+                cmsState.compliance = cmsState.compliance || {};
+                cmsState.compliance.audits = cmsState.compliance.audits || [];
+                cmsState.compliance.audits.push({
+                    fy: "FY 2025-26",
+                    status: "Conducted",
+                    remarks: "N/A"
+                });
+                renderComplianceAudits();
+            });
+        }
     }
 
     // Initialize on DOM load

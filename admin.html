@@ -739,6 +739,31 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Radio inputs for links */
+        .iv-cms-radio-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 6px;
+            align-items: center;
+        }
+
+        .iv-cms-radio-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .iv-cms-radio-label input[type="radio"] {
+            accent-color: var(--accent);
+            cursor: pointer;
+            margin: 0;
+            width: 16px;
+            height: 16px;
+        }
     </style>
 </head>
 
@@ -970,6 +995,10 @@
                         <div class="iv-cms-group">
                             <label class="iv-cms-label">CTA Button Link URL <span class="req">Required</span></label>
                             <input type="text" id="cms-hero-cta-url" class="iv-cms-input">
+                            <div class="iv-cms-radio-group">
+                                <label class="iv-cms-radio-label"><input type="radio" name="hero-cta-target" id="cms-hero-cta-target-same" value="same"> Same Tab</label>
+                                <label class="iv-cms-radio-label"><input type="radio" name="hero-cta-target" id="cms-hero-cta-target-blank" value="blank"> New Tab</label>
+                            </div>
                         </div>
                     </div>
 
@@ -1179,6 +1208,103 @@
                     <div class="iv-cms-group">
                         <label class="iv-cms-label">Disclaimer and Compliance Text <span class="req">Required</span></label>
                         <textarea id="cms-footer-disclaimer" class="iv-cms-textarea" style="min-height: 100px;"></textarea>
+                    </div>
+
+                    <h5 style="margin: 24px 0 12px 0; color: var(--text-primary);">App Store & Play Store Links</h5>
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Google Play Store URL</label>
+                            <input type="text" id="cms-footer-play-store-url" class="iv-cms-input">
+                            <div class="iv-cms-radio-group">
+                                <label class="iv-cms-radio-label"><input type="radio" name="play-store-target" id="cms-play-store-target-same" value="same"> Same Tab</label>
+                                <label class="iv-cms-radio-label"><input type="radio" name="play-store-target" id="cms-play-store-target-blank" value="blank"> New Tab</label>
+                            </div>
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Apple App Store URL</label>
+                            <input type="text" id="cms-footer-app-store-url" class="iv-cms-input">
+                            <div class="iv-cms-radio-group">
+                                <label class="iv-cms-radio-label"><input type="radio" name="app-store-target" id="cms-app-store-target-same" value="same"> Same Tab</label>
+                                <label class="iv-cms-radio-label"><input type="radio" name="app-store-target" id="cms-app-store-target-blank" value="blank"> New Tab</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 style="margin: 24px 0 12px 0; color: var(--text-primary);">Footer Contact Information</h5>
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Phone Numbers (Comma-separated)</label>
+                            <input type="text" id="cms-footer-contact-phones" class="iv-cms-input" placeholder="e.g. +91 73542 59486, +91 98064 71956">
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Email Address</label>
+                            <input type="text" id="cms-footer-contact-email" class="iv-cms-input" placeholder="e.g. info@intrinsicvalueequity.in">
+                        </div>
+                    </div>
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Office Address</label>
+                            <textarea id="cms-footer-contact-address" class="iv-cms-textarea" style="min-height: 80px;"></textarea>
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Working Hours / Timings (One per line)</label>
+                            <textarea id="cms-footer-contact-timings" class="iv-cms-textarea" style="min-height: 80px;" placeholder="Sat–Thursday: 8:00 AM–8:00 PM&#10;Friday: Closed&#10;Sat-Sun:- Open"></textarea>
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 32px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Compliance & Regulatory Corner</h4>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Grievance Years (Comma-separated)</label>
+                        <input type="text" id="cms-regulatory-years" class="iv-cms-input" placeholder="e.g. 2022, 2023, 2024, 2025, 2026">
+                    </div>
+
+                    <!-- Dynamic Grievance Database Editor -->
+                    <div class="iv-cms-repeater-container" style="margin-bottom: 24px;">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">Grievance Status Database</span>
+                        </div>
+                        <div class="iv-cms-row" style="margin-bottom: 16px;">
+                            <div class="iv-cms-group" style="width: 50%;">
+                                <label class="iv-cms-label">Select Year</label>
+                                <select id="cms-grievance-edit-year" class="iv-cms-select" onchange="renderGrievanceRecordEditor()"></select>
+                            </div>
+                            <div class="iv-cms-group" style="width: 50%;">
+                                <label class="iv-cms-label">Select Month</label>
+                                <select id="cms-grievance-edit-month" class="iv-cms-select" onchange="renderGrievanceRecordEditor()">
+                                    <option value="Jan">Jan</option>
+                                    <option value="Feb">Feb</option>
+                                    <option value="Mar">Mar</option>
+                                    <option value="Apr">Apr</option>
+                                    <option value="May">May</option>
+                                    <option value="Jun">Jun</option>
+                                    <option value="Jul">Jul</option>
+                                    <option value="Aug">Aug</option>
+                                    <option value="Sep">Sep</option>
+                                    <option value="Oct">Oct</option>
+                                    <option value="Nov">Nov</option>
+                                    <option value="Dec">Dec</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Inputs for selected record -->
+                        <div id="cms-grievance-record-editor">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Compliance Audits repeater -->
+                    <div class="iv-cms-repeater-container" style="margin-bottom: 24px;">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">Compliance Audit History</span>
+                            <button type="button" id="cms-audit-add-btn" class="iv-cms-btn-add">
+                                <i class="fa-solid fa-plus"></i> Add Financial Year
+                            </button>
+                        </div>
+                        <div id="cms-audit-list">
+                            <!-- Populated by JS -->
+                        </div>
                     </div>
 
                 </div>
