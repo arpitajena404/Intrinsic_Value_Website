@@ -1,0 +1,5 @@
+# Disable parent directory rewrite rules from interfering with this subdomain
+RewriteEngine On
+
+# Ensure index.html is served as the default page
+DirectoryIndex index.html
