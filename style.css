@@ -3032,10 +3032,10 @@ html {
 /* Company Button Trigger */
 .btn-company-trigger {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 16px;
+    justify-content: flex-start;
+    gap: 12px;
     width: 100%;
     height: 100%;
     background: transparent;
@@ -3049,11 +3049,7 @@ html {
     user-select: none;
     position: relative;
     z-index: 1;
-    
-    /* Sideways vertical writing mode for collapsed state */
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    white-space: nowrap;
+    padding: 20px 8px;
 }
 
 .company-card-wrapper:hover .btn-company-trigger {
@@ -3069,15 +3065,109 @@ html {
     border-right: 1px solid rgba(255, 140, 0, 0.2);
     color: #ffffff;
     box-shadow: none;
+    padding: 15px 4px;
+}
+
+/* 1/3 Logo Area & 2/3 Name Area */
+.company-trigger-logo-area {
+    height: 30%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.company-trigger-name-area {
+    height: 70%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-grow: 1;
+    
+    /* Sideways vertical writing mode for collapsed state */
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+}
+
+.company-trigger-logo-wrapper {
+    width: 90%;
+    max-width: 140px;
+    height: 60px;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    transition: all 0.3s ease;
+}
+
+.company-trigger-logo-wrapper.placeholder-badge {
+    background: rgba(255, 140, 0, 0.08);
+    border: 1.5px solid var(--accent);
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.15);
+}
+
+.company-btn-num-large {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--accent);
+    font-family: var(--font-heading);
+    letter-spacing: 1px;
+    line-height: 1;
+    display: block;
+    text-align: center;
+}
+
+.company-trigger-logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Shrink logo wrapper when sidebar collapses expanded on desktop */
+.company-card-wrapper.expanded .btn-company-trigger .company-trigger-logo-wrapper {
+    width: 44px !important;
+    height: 24px !important;
+    padding: 2px 3px !important;
+    border-radius: 4px !important;
+}
+
+.company-card-wrapper.expanded .btn-company-trigger .company-trigger-logo-wrapper.placeholder-badge {
+    border-width: 1px !important;
+}
+
+.company-card-wrapper.expanded .btn-company-trigger .company-trigger-logo-wrapper.placeholder-badge .company-btn-num-large {
+    font-size: 12px !important;
+}
+
+.company-card-wrapper.expanded .btn-company-trigger .company-trigger-name-area {
+    gap: 6px;
 }
 
 .company-btn-num {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 800;
     color: var(--accent);
     font-family: var(--font-heading);
     letter-spacing: 1.5px;
     transition: color 0.4s ease;
+}
+
+.company-btn-num-sub {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--accent);
+    font-family: var(--font-heading);
+    letter-spacing: 1px;
+    margin-bottom: 2px;
 }
 
 .company-btn-title {
@@ -3113,11 +3203,30 @@ html {
                 visibility 0.4s;
 }
 
+/* When collapsed, prevent reports dropdown from taking space so trigger occupies 100% card width */
+.company-card-wrapper:not(.expanded) .company-reports-dropdown {
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
 .company-card-wrapper.expanded .company-reports-dropdown {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: translateX(0);
+    position: relative !important;
+    width: auto !important;
+    height: 100% !important;
+    padding: 15px !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateX(0) !important;
 }
 
 /* Reduced size report link boxes */
@@ -3214,20 +3323,22 @@ html {
     }
 }
 
+
+
 /* Apply staggered animations when wrapper is expanded */
 .company-card-wrapper.expanded .btn-report-item {
     animation: float-wiggle 3.5s ease-in-out infinite;
 }
 
-.company-card-wrapper.expanded .btn-report-item:nth-child(1) {
+.company-card-wrapper.expanded .btn-report-item:nth-of-type(1) {
     animation-delay: 0s;
 }
 
-.company-card-wrapper.expanded .btn-report-item:nth-child(2) {
+.company-card-wrapper.expanded .btn-report-item:nth-of-type(2) {
     animation-delay: 0.6s;
 }
 
-.company-card-wrapper.expanded .btn-report-item:nth-child(3) {
+.company-card-wrapper.expanded .btn-report-item:nth-of-type(3) {
     animation-delay: 1.2s;
 }
 
@@ -3236,14 +3347,14 @@ html {
 @media (max-width: 768px) {
     .cases-buttons-container {
         display: flex;
-        flex-direction: row;
-        justify-content: center;
-        gap: 10px;
-        align-items: stretch;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        gap: 12px !important;
+        align-items: stretch !important;
         width: 100%;
-        min-height: 320px; /* Minimum height; grows when a card is expanded */
-        height: auto;
-        padding: 10px 0;
+        min-height: auto !important;
+        height: auto !important;
+        padding: 10px 0 !important;
     }
     
     .cases-buttons-container.has-expanded {
@@ -3252,26 +3363,32 @@ html {
     
     .company-card-wrapper {
         display: flex;
-        flex-direction: row;
-        height: 100%;
-        flex: 1;
-        min-width: 50px;
-        border-radius: 16px;
+        flex-direction: row !important; /* Biscuit shape (horizontal row) */
+        height: 72px !important; /* Fixed biscuit height */
+        width: 100% !important;
+        min-width: auto !important;
+        border-radius: 12px !important;
         border: 1px solid rgba(255, 140, 0, 0.18);
         background: rgba(26, 18, 10, 0.45);
-        transform: translate3d(0, 30px, 0) !important;
+        transform: translate3d(0, 20px, 0) !important;
         transition-delay: 0s !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        flex: none !important;
     }
     
     .cases-buttons-container.has-expanded .company-card-wrapper:not(.expanded) {
-        flex: 0.05 !important;
-        min-width: 32px;
-        background: rgba(10, 8, 6, 0.2);
+        flex: none !important;
+        width: 100% !important;
+        height: 72px !important;
+        min-width: auto !important;
+        opacity: 0.65 !important;
         border-color: rgba(255, 140, 0, 0.08);
+        background: rgba(10, 8, 6, 0.2);
     }
     
     .company-card-wrapper.expanded {
-        flex: 12 !important;
+        flex: none !important;
+        width: 100% !important;
         flex-direction: column !important;
         align-items: stretch !important;
         height: auto !important;
@@ -3288,31 +3405,71 @@ html {
     
     .btn-company-trigger {
         display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
+        flex-direction: row !important; /* Horizontal layout for biscuit shape */
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 16px !important;
         width: 100%;
-        height: 30%;
+        height: 72px !important;
         background: transparent;
         border: none;
-        color: rgba(255, 255, 255, 0.8);
+        color: rgba(255, 255, 255, 0.85);
         cursor: pointer;
         box-sizing: border-box;
-        text-align: center;
+        text-align: left;
         user-select: none;
-        writing-mode: vertical-rl;
-        transform: rotate(180deg);
-        white-space: nowrap;
+        writing-mode: horizontal-tb !important;
+        transform: none !important;
+        white-space: normal !important;
+        padding: 12px 16px !important;
     }
     
     .btn-company-trigger:hover {
-        transform: rotate(180deg);
+        transform: none !important;
     }
     
+    .company-trigger-logo-area {
+        height: auto !important;
+        width: auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+    }
+
+    .company-trigger-logo-wrapper {
+        width: 80px !important; /* Bigger logo on mobile biscuit */
+        height: 42px !important;
+        padding: 4px 6px !important;
+        border-radius: 6px !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .company-trigger-logo-wrapper.placeholder-badge {
+        border-width: 1.5px !important;
+    }
+
+    .company-trigger-logo-wrapper.placeholder-badge .company-btn-num-large {
+        font-size: 16px !important;
+    }
+
+    .company-trigger-name-area {
+        height: auto !important;
+        width: auto !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 8px !important;
+        writing-mode: horizontal-tb !important;
+        transform: none !important;
+        white-space: normal !important;
+        flex-grow: 1 !important;
+    }
+
     .company-card-wrapper.expanded .btn-company-trigger {
         width: 100% !important;
-        min-height: 48px !important;
+        min-height: 54px !important;
         height: auto !important;
         flex-shrink: 0;
         background: rgba(255, 140, 0, 0.05);
@@ -3323,16 +3480,48 @@ html {
         writing-mode: horizontal-tb !important;
         transform: none !important;
         display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: flex-start;
-        padding: 8px 14px !important;
-        gap: 6px;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        padding: 10px 16px !important;
+        gap: 16px !important;
         white-space: normal !important;
     }
     
+    .company-card-wrapper.expanded .company-trigger-logo-area {
+        height: auto !important;
+        width: auto !important;
+    }
+
+    .company-card-wrapper.expanded .company-trigger-logo-wrapper {
+        width: 80px !important;
+        height: 42px !important;
+        padding: 4px 6px !important;
+        border-radius: 6px !important;
+    }
+
+    .company-card-wrapper.expanded .company-trigger-logo-wrapper.placeholder-badge {
+        border-width: 1.5px !important;
+    }
+
+    .company-card-wrapper.expanded .company-trigger-logo-wrapper.placeholder-badge .company-btn-num-large {
+        font-size: 16px !important;
+    }
+
+    .company-card-wrapper.expanded .company-trigger-name-area {
+        height: auto !important;
+        width: auto !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 8px !important;
+        writing-mode: horizontal-tb !important;
+        transform: none !important;
+        white-space: normal !important;
+    }
+
     .company-card-wrapper.expanded .company-btn-title {
-        font-size: 11.5px !important;
+        font-size: 13.5px !important;
         line-height: 1.25;
         white-space: normal !important;
         text-align: left;
@@ -3347,10 +3536,15 @@ html {
         margin-bottom: 0;
     }
     
-    .company-btn-title {
-        font-size: 13px;
+    .company-btn-num-sub {
+        font-size: 11px !important;
+        margin-bottom: 0 !important;
     }
     
+    .company-btn-title {
+        font-size: 14px !important;
+    }
+
     .company-reports-dropdown {
         position: relative;
         top: auto;
@@ -3374,19 +3568,33 @@ html {
                     transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
                     visibility 0.4s;
     }
+
+    /* When collapsed, prevent reports dropdown from taking space so trigger occupies 100% card width */
+    .company-card-wrapper:not(.expanded) .company-reports-dropdown {
+        position: absolute !important;
+        width: 0 !important;
+        height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
     
     .company-card-wrapper.expanded .company-reports-dropdown {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
-        transform: translateX(0);
+        position: relative !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transform: translateX(0) !important;
         height: auto !important;
         max-height: none !important;
         overflow: visible !important;
-        padding: 12px 8px;
-        width: 100%;
-        flex-wrap: wrap;
-        justify-content: center;
+        padding: 12px 8px !important;
+        width: 100% !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
     }
     
     .btn-report-item {
@@ -4032,8 +4240,15 @@ html {
 }
 
 @media (max-width: 768px) {
+    .comparison-table-wrapper {
+        padding: 12px 6px !important;
+        border-radius: 12px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
     .comparison-modal-content {
-        padding: 16px 12px;
+        padding: 12px 8px;
         width: 98%;
         max-height: 98vh;
         border-radius: 16px;
@@ -4054,7 +4269,7 @@ html {
     }
     
     .comparison-table {
-        font-size: 10.5px;
+        font-size: 13.5px !important;
         table-layout: auto !important;
         width: 100% !important;
     }
@@ -4079,27 +4294,27 @@ html {
     }
     
     .comparison-table th:first-child {
-        width: 28% !important;
+        width: 35% !important;
         justify-content: flex-start !important;
-        font-size: 11px !important;
+        font-size: 13px !important;
         font-weight: 700 !important;
         color: #ffffff !important;
     }
     
     .comparison-table th:not(:first-child) {
-        width: 24% !important;
+        width: 21.6% !important;
         flex-grow: 1;
-        font-size: 9.5px !important;
+        font-size: 11.5px !important;
         text-align: center !important;
-        padding: 6px 2px !important;
-        border: 1px solid rgba(255, 255, 255, 0.12) !important;
-        border-radius: 6px !important;
-        background: rgba(255, 255, 255, 0.04) !important;
-        color: rgba(255, 255, 255, 0.6) !important;
+        padding: 8px 4px !important;
+        border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 8px !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        color: rgba(255, 255, 255, 0.75) !important;
         cursor: pointer !important;
         transition: all 0.25s ease !important;
-        min-height: 36px;
-        line-height: 1.2 !important;
+        min-height: 40px;
+        line-height: 1.25 !important;
         white-space: normal !important;
         word-break: break-word !important;
     }
@@ -4107,10 +4322,10 @@ html {
     /* Selected plan button glows in orange */
     .comparison-table thead th.active-plan-tab {
         border-color: #ff8c00 !important;
-        background: rgba(255, 140, 0, 0.15) !important;
+        background: rgba(255, 140, 0, 0.2) !important;
         color: #ff9f1a !important;
-        box-shadow: 0 0 12px rgba(255, 140, 0, 0.45) !important;
-        font-weight: 700 !important;
+        box-shadow: 0 0 15px rgba(255, 140, 0, 0.5) !important;
+        font-weight: 800 !important;
     }
 
     .comparison-table tbody tr {
@@ -4130,11 +4345,12 @@ html {
     .comparison-table td:first-child {
         width: 35% !important;
         font-weight: 600 !important;
-        color: rgba(255, 255, 255, 0.7) !important;
+        color: rgba(255, 255, 255, 0.95) !important;
         text-align: left !important;
         justify-content: flex-start !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
-        padding-left: 4px !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+        padding-left: 6px !important;
+        font-size: 12.5px !important;
     }
 
     .comparison-table td:not(:first-child) {
@@ -4142,23 +4358,48 @@ html {
         text-align: right !important;
         justify-content: flex-end !important;
         color: #ffffff !important;
+        padding-right: 6px !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Adjust widths and centering when 2 plan columns are active concurrently */
+    .comparison-table.show-plan-1.show-plan-2 td:not(:first-child),
+    .comparison-table.show-plan-1.show-plan-3 td:not(:first-child),
+    .comparison-table.show-plan-2.show-plan-3 td:not(:first-child) {
+        width: 32.5% !important;
+        text-align: center !important;
+        justify-content: center !important;
+        padding-left: 4px !important;
         padding-right: 4px !important;
     }
 
-    /* Hide/show columns based on active segment selection class */
-    .comparison-table.show-plan-1 td:nth-child(3),
-    .comparison-table.show-plan-1 td:nth-child(4) {
+    /* By default, hide all plan columns on mobile */
+    .comparison-table tbody td:nth-child(2),
+    .comparison-table tbody td:nth-child(3),
+    .comparison-table tbody td:nth-child(4) {
         display: none !important;
     }
-    
-    .comparison-table.show-plan-2 td:nth-child(2),
-    .comparison-table.show-plan-2 td:nth-child(4) {
-        display: none !important;
+
+    /* Show plan column only when its corresponding class is active */
+    .comparison-table.show-plan-1 tbody td:nth-child(2) {
+        display: flex !important;
     }
-    
-    .comparison-table.show-plan-3 td:nth-child(2),
-    .comparison-table.show-plan-3 td:nth-child(3) {
-        display: none !important;
+    .comparison-table.show-plan-2 tbody td:nth-child(3) {
+        display: flex !important;
+    }
+    .comparison-table.show-plan-3 tbody td:nth-child(4) {
+        display: flex !important;
+    }
+
+    /* Subtle orange shade background highlight for active/selected columns */
+    .comparison-table.show-plan-1 tbody td:nth-child(2),
+    .comparison-table.show-plan-2 tbody td:nth-child(3),
+    .comparison-table.show-plan-3 tbody td:nth-child(4) {
+        background: rgba(255, 140, 0, 0.05) !important;
+        border-left: 1px solid rgba(255, 140, 0, 0.12) !important;
+        border-right: 1px solid rgba(255, 140, 0, 0.12) !important;
     }
 
     /* Clear any highlight column overrides on mobile */
@@ -4169,17 +4410,32 @@ html {
 
     /* Styling for the bottom Subscribe button row on mobile */
     .comparison-table tbody tr.action-row {
-        margin-top: 12px !important;
+        margin-top: 16px !important;
         border-bottom: none !important;
     }
 
     .comparison-table tbody tr.action-row td:first-child {
-        display: none !important;
+        display: flex !important;
+        width: 35% !important;
+        background: transparent !important;
+        border: none !important;
+        pointer-events: none !important;
     }
 
     .comparison-table tbody tr.action-row td:not(:first-child) {
-        width: 100% !important;
         justify-content: center !important;
+        background: transparent !important;
+        border: none !important;
+    }
+
+    /* Adjust button sizes when 2 plans are visible side-by-side */
+    .comparison-table.show-plan-1.show-plan-2 tbody tr.action-row .table-btn,
+    .comparison-table.show-plan-1.show-plan-3 tbody tr.action-row .table-btn,
+    .comparison-table.show-plan-2.show-plan-3 tbody tr.action-row .table-btn {
+        font-size: 10px !important;
+        padding: 8px 3px !important;
+        letter-spacing: 0px !important;
+        border-radius: 6px !important;
     }
     
     .comparison-close {
@@ -4190,14 +4446,14 @@ html {
     
     .comparison-table .table-btn {
         width: 100% !important;
-        max-width: 260px !important;
+        max-width: 280px !important;
         text-align: center !important;
-        padding: 10px 14px !important;
-        font-size: 11px !important;
+        padding: 12px 16px !important;
+        font-size: 13px !important;
         font-weight: 700 !important;
         letter-spacing: 0.5px !important;
-        border-radius: 6px !important;
-        box-shadow: 0 4px 12px rgba(255, 140, 0, 0.2) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 15px rgba(255, 140, 0, 0.35) !important;
     }
 }
 

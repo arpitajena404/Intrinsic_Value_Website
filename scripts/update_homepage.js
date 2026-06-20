@@ -164,11 +164,29 @@ const caseStudiesCompaniesHtml = config.case_studies.companies.map((comp, idx) =
                                 </a>`;
     }).join('\n');
     
+    const logoTriggerHtml = comp.logo ? `
+                                <div class="company-trigger-logo-area">
+                                    <div class="company-trigger-logo-wrapper">
+                                        <img src="${comp.logo}" class="company-trigger-logo" alt="${comp.name}">
+                                    </div>
+                                </div>` : `
+                                <div class="company-trigger-logo-area">
+                                    <div class="company-trigger-logo-wrapper placeholder-badge">
+                                        <span class="company-btn-num-large">${comp.num}</span>
+                                    </div>
+                                </div>`;
+    
+    const nameTriggerHtml = `
+                                <div class="company-trigger-name-area">
+                                    <span class="company-btn-num-sub">${comp.num}</span>
+                                    <span class="company-btn-title">${comp.name}</span>
+                                </div>`;
+    
     return `                        <!-- Company ${idx + 1}: ${comp.name} -->
                         <div class="company-card-wrapper" data-case="${idx}">
                             <button class="btn-company-trigger">
-                                <span class="company-btn-num">${comp.num}</span>
-                                <span class="company-btn-title">${comp.name}</span>
+${logoTriggerHtml}
+${nameTriggerHtml}
                             </button>
                             <div class="company-reports-dropdown">
 ${reportsHtml}

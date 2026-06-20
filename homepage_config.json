@@ -56,7 +56,8 @@
         "media": {
             "type": "animation",
             "url": ""
-        }
+        },
+        "cta_new_tab": false
     },
     "philosophy": {
         "title": "Investment philosophy<em>.</em>",
@@ -123,6 +124,7 @@
             {
                 "num": "01",
                 "name": "JSW Holdings",
+                "logo": "CS reports/JSW Logo.png",
                 "reports": [
                     {
                         "name": "Buy Report",
@@ -141,6 +143,7 @@
             {
                 "num": "02",
                 "name": "Hero MotoCorp",
+                "logo": "CS reports/Hero Logo.png",
                 "reports": [
                     {
                         "name": "Exit Report",
@@ -155,6 +158,7 @@
             {
                 "num": "03",
                 "name": "Ircon International",
+                "logo": "CS reports/Ircon Logo.png",
                 "reports": [
                     {
                         "name": "Company Overview",
@@ -165,6 +169,7 @@
             {
                 "num": "04",
                 "name": "Texmaco",
+                "logo": "CS reports/Texmaco Logo.png",
                 "reports": [
                     {
                         "name": "Buy Report",

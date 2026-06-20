@@ -2248,22 +2248,42 @@ function initMobilePricingTabs() {
         // Add active class by default
         tabHni.classList.add('active-plan-tab');
         
-        const switchPlan = (planNum) => {
-            table.classList.remove('show-plan-1', 'show-plan-2', 'show-plan-3');
-            table.classList.add(`show-plan-${planNum}`);
+        let activePlans = [1]; // Keep track of active plan numbers
+        
+        const togglePlan = (planNum) => {
+            const index = activePlans.indexOf(planNum);
             
+            if (index !== -1) {
+                // Plan is already active, deactivate it if we have at least one other plan active
+                if (activePlans.length > 1) {
+                    activePlans.splice(index, 1);
+                }
+            } else {
+                // Plan is not active, activate it. If we already have 2, shift the oldest active one.
+                if (activePlans.length >= 2) {
+                    activePlans.shift();
+                }
+                activePlans.push(planNum);
+            }
+            
+            // Clear current active classes
+            table.classList.remove('show-plan-1', 'show-plan-2', 'show-plan-3');
             tabHni.classList.remove('active-plan-tab');
             tabInner.classList.remove('active-plan-tab');
             tabBiz.classList.remove('active-plan-tab');
             
-            if (planNum === 1) tabHni.classList.add('active-plan-tab');
-            if (planNum === 2) tabInner.classList.add('active-plan-tab');
-            if (planNum === 3) tabBiz.classList.add('active-plan-tab');
+            // Apply classes for all active plans
+            activePlans.forEach(num => {
+                table.classList.add(`show-plan-${num}`);
+                if (num === 1) tabHni.classList.add('active-plan-tab');
+                if (num === 2) tabInner.classList.add('active-plan-tab');
+                if (num === 3) tabBiz.classList.add('active-plan-tab');
+            });
         };
         
-        tabHni.addEventListener('click', () => switchPlan(1));
-        tabInner.addEventListener('click', () => switchPlan(2));
-        tabBiz.addEventListener('click', () => switchPlan(3));
+        tabHni.addEventListener('click', () => togglePlan(1));
+        tabInner.addEventListener('click', () => togglePlan(2));
+        tabBiz.addEventListener('click', () => togglePlan(3));
     });
 }
 

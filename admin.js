@@ -501,6 +501,7 @@
                             {
                                     "num": "01",
                                     "name": "JSW Holdings",
+                                    "logo": "CS reports/JSW Logo.png",
                                     "reports": [
                                             {
                                                     "name": "Buy Report",
@@ -519,6 +520,7 @@
                             {
                                     "num": "02",
                                     "name": "Hero MotoCorp",
+                                    "logo": "",
                                     "reports": [
                                             {
                                                     "name": "Exit Report",
@@ -533,6 +535,7 @@
                             {
                                     "num": "03",
                                     "name": "Ircon International",
+                                    "logo": "CS reports/Ircon Logo.png",
                                     "reports": [
                                             {
                                                     "name": "Company Overview",
@@ -543,6 +546,7 @@
                             {
                                     "num": "04",
                                     "name": "Texmaco",
+                                    "logo": "CS reports/Texmaco Logo.png",
                                     "reports": [
                                             {
                                                     "name": "Buy Report",
@@ -1764,13 +1768,20 @@
             div.innerHTML = `
                 <button type="button" class="iv-cms-btn-remove" onclick="removeCompany(${cIdx})">&times;</button>
                 <div class="iv-cms-row">
-                    <div class="iv-cms-group">
-                        <label class="iv-cms-label">Company Number (e.g. 01, 02)</label>
+                    <div class="iv-cms-group" style="flex: 0 0 15%;">
+                        <label class="iv-cms-label">Number (e.g. 01)</label>
                         <input type="text" class="iv-cms-input" value="${escapeHtml(comp.num)}" oninput="updateCompany(${cIdx}, 'num', this.value)">
                     </div>
-                    <div class="iv-cms-group">
+                    <div class="iv-cms-group" style="flex: 1 1 35%;">
                         <label class="iv-cms-label">Company Name</label>
                         <input type="text" class="iv-cms-input" value="${escapeHtml(comp.name)}" oninput="updateCompany(${cIdx}, 'name', this.value)">
+                    </div>
+                    <div class="iv-cms-group" style="flex: 1 1 45%;">
+                        <label class="iv-cms-label">Company Logo URL / Path</label>
+                        <div class="iv-cms-file-picker">
+                            <input type="text" id="comp-logo-${cIdx}" class="iv-cms-input" value="${escapeHtml(comp.logo || '')}" oninput="updateCompany(${cIdx}, 'logo', this.value)">
+                            <button type="button" class="iv-cms-file-btn" onclick="simulateFileUpload('comp-logo-${cIdx}', 'CS reports')">Select Logo</button>
+                        </div>
                     </div>
                 </div>
                 
@@ -1804,6 +1815,7 @@
         cmsState.case_studies.companies.push({
             num: nextNum,
             name: "New Company",
+            logo: "",
             reports: []
         });
         renderCaseStudies();
