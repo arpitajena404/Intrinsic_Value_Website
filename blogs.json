@@ -1,28 +1,5 @@
 [
   {
-    "id": 3523,
-    "slug": "trial",
-    "title": "trial",
-    "date": "June 20, 2026",
-    "rawDate": "2026-06-20T11:50:21",
-    "category": "Uncategorized",
-    "readingTime": "3 min read",
-    "image": "glenmark_logo.png",
-    "gradient": "linear-gradient(135deg, #FF8C00, #121212)",
-    "excerpt": "sdfg df",
-    "blocks": [
-      {
-        "type": "heading",
-        "text": "trial"
-      },
-      {
-        "type": "paragraph",
-        "text": "asdf"
-      }
-    ],
-    "content": "<h2 class=\"blog-highlighted-heading\">trial</h2>\n<p>asdf</p>\n"
-  },
-  {
     "id": 3522,
     "slug": "%f0%9f%9a%ab-20-stocks-which-destroyed-indian-investors-wealth-%f0%9f%9a%ab",
     "title": "🚫 20 Stocks which destroyed Indian Investors wealth 🚫",
