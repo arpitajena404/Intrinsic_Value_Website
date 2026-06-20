@@ -2486,6 +2486,12 @@ html {
   line-height: 1.3;
 }
 
+.post-content h2.blog-highlighted-heading {
+  color: var(--accent);
+  border-left: 4px solid var(--accent);
+  padding-left: 1rem;
+}
+
 .post-content h3 {
   font-size: 1.4rem;
   font-weight: 600;

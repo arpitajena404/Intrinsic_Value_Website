@@ -950,12 +950,20 @@
             } else {
                 path = file.name;
             }
-            var targetInput = document.getElementById(simulatedUploadTargetId);
-            if (targetInput) {
-                targetInput.value = path;
-                targetInput.dispatchEvent(new Event('input'));
-                
+            if (simulatedUploadTargetId && simulatedUploadTargetId.indexOf('blog-block-temp-upload-id-') === 0) {
+                var blockIdx = parseInt(simulatedUploadTargetId.replace('blog-block-temp-upload-id-', ''));
+                if (currentEditingBlog && currentEditingBlog.blocks && currentEditingBlog.blocks[blockIdx]) {
+                    currentEditingBlog.blocks[blockIdx].url = path;
+                    renderBlogElements();
+                }
                 alert("File selected: " + file.name + "\n\nIMPORTANT: Since this is a static site run on a browser environment, you MUST manually copy this file into the local project folder '" + simulatedUploadFolder + "/' so the site can reference it correctly.");
+            } else {
+                var targetInput = document.getElementById(simulatedUploadTargetId);
+                if (targetInput) {
+                    targetInput.value = path;
+                    targetInput.dispatchEvent(new Event('input'));
+                    alert("File selected: " + file.name + "\n\nIMPORTANT: Since this is a static site run on a browser environment, you MUST manually copy this file into the local project folder '" + simulatedUploadFolder + "/' so the site can reference it correctly.");
+                }
             }
         }
     };
@@ -1840,27 +1848,77 @@
     };
 
     function initTabs() {
-        var tabLinks = document.querySelectorAll('.iv-cms-tab-link');
-        tabLinks.forEach(function (link) {
-            link.addEventListener('click', function () {
-                var tabId = link.getAttribute('data-tab');
-                
-                tabLinks.forEach(function (l) { l.classList.remove('active'); });
-                link.classList.add('active');
+        // Scoped for Homepage CMS
+        var hpWorkspace = document.getElementById('homepageCmsWorkspace');
+        if (hpWorkspace) {
+            var hpLinks = hpWorkspace.querySelectorAll('.iv-cms-tab-link');
+            hpLinks.forEach(function (link) {
+                link.addEventListener('click', function () {
+                    var tabId = link.getAttribute('data-tab');
+                    hpLinks.forEach(function (l) { l.classList.remove('active'); });
+                    link.classList.add('active');
 
-                var contents = document.querySelectorAll('.iv-cms-tab-content');
-                contents.forEach(function (c) { c.classList.remove('active'); });
+                    var hpContents = hpWorkspace.querySelectorAll('.iv-cms-tab-content');
+                    hpContents.forEach(function (c) { c.classList.remove('active'); });
 
-                var targetContent = document.getElementById(tabId);
-                if (targetContent) {
-                    targetContent.classList.add('active');
-                }
+                    var targetContent = document.getElementById(tabId);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
 
-                if (tabId === 'tab-export') {
-                    compileCmsState();
-                }
+                    if (tabId === 'tab-export') {
+                        compileCmsState();
+                    }
+                });
             });
-        });
+        }
+
+        // Scoped for Blogs CMS
+        var blogsWorkspace = document.getElementById('blogsCmsWorkspace');
+        if (blogsWorkspace) {
+            var blogsLinks = blogsWorkspace.querySelectorAll('.iv-cms-tab-link');
+            blogsLinks.forEach(function (link) {
+                link.addEventListener('click', function () {
+                    var tabId = link.getAttribute('data-tab');
+                    blogsLinks.forEach(function (l) { l.classList.remove('active'); });
+                    link.classList.add('active');
+
+                    var blogsContents = blogsWorkspace.querySelectorAll('.iv-cms-tab-content');
+                    blogsContents.forEach(function (c) { c.classList.remove('active'); });
+
+                    var targetContent = document.getElementById(tabId);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+
+                    if (tabId === 'tab-blogs-edit') {
+                        if (!currentEditingBlog) {
+                            var newId = blogsState.length > 0 ? Math.max.apply(Math, blogsState.map(function(b) { return b.id || 0; })) + 1 : 1001;
+                            currentEditingBlog = {
+                                id: newId,
+                                slug: "",
+                                title: "",
+                                date: formatDate(new Date()),
+                                rawDate: new Date().toISOString().substring(0, 19),
+                                category: "Uncategorized",
+                                readingTime: "3 min read",
+                                image: "",
+                                gradient: "linear-gradient(135deg, #FF8C00, #121212)",
+                                excerpt: "",
+                                blocks: [],
+                                content: ""
+                            };
+                            currentEditingBlogIndex = -1;
+                        }
+                        renderBlogEditor();
+                    }
+
+                    if (tabId === 'tab-blogs-export') {
+                        compileBlogsCmsState();
+                    }
+                });
+            });
+        }
     }
 
     function bindCmsWorkspaceEvents() {
@@ -1947,6 +2005,443 @@
         }
     }
 
+    // ----------------------------------------------------
+    // BLOGS & ARTICLES CMS WORKSPACE ENGINE
+    // ----------------------------------------------------
+    var blogsState = [];
+    var currentEditingBlog = null;
+    var currentEditingBlogIndex = -1;
+
+    function loadBlogsCmsData() {
+        fetch('blogs.json')
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                blogsState = data;
+                renderBlogsList();
+            })
+            .catch(function (err) {
+                console.warn("Could not fetch blogs.json directly.", err);
+                blogsState = [];
+                renderBlogsList();
+            });
+    }
+
+    function renderBlogsList() {
+        var tbody = document.getElementById('blogs-list-tbody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        
+        if (blogsState.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">No blogs found. Click "Create New Blog" to write your first post.</td></tr>';
+            return;
+        }
+
+        blogsState.forEach(function (blog, index) {
+            var tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${escapeHtml(String(blog.id || ''))}</strong></td>
+                <td><span style="font-weight: 600; color: var(--text-primary);">${escapeHtml(blog.title || '')}</span></td>
+                <td><span class="status-badge conducted" style="background: rgba(255,140,0,0.1); color: var(--accent); border: 1px solid rgba(255,140,0,0.2);">${escapeHtml(blog.category || 'Uncategorized')}</span></td>
+                <td><span style="color: var(--text-muted); font-size: 13px;">${escapeHtml(blog.date || '')}</span></td>
+                <td style="text-align: center;">
+                    <div style="display: flex; gap: 8px; justify-content: center;">
+                        <button type="button" class="iv-cms-btn-add" style="width: auto; padding: 4px 10px; font-size: 11px;" onclick="editBlog(${index})">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                        </button>
+                        <button type="button" class="iv-cms-btn-remove" style="position: static; padding: 4px 10px; font-size: 11px; width: auto;" onclick="deleteBlog(${index})">
+                            <i class="fa-solid fa-trash-can"></i> Delete
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    window.createNewBlog = function () {
+        var newId = blogsState.length > 0 ? Math.max.apply(Math, blogsState.map(function(b) { return b.id || 0; })) + 1 : 1001;
+        currentEditingBlog = {
+            id: newId,
+            slug: "",
+            title: "",
+            date: formatDate(new Date()),
+            rawDate: new Date().toISOString().substring(0, 19),
+            category: "Uncategorized",
+            readingTime: "3 min read",
+            image: "",
+            gradient: "linear-gradient(135deg, #FF8C00, #121212)",
+            excerpt: "",
+            blocks: [],
+            content: ""
+        };
+        currentEditingBlogIndex = -1;
+        renderBlogEditor();
+        
+        var editTabLink = document.getElementById('tab-btn-blogs-edit');
+        if (editTabLink) editTabLink.click();
+    };
+
+    window.editBlog = function (index) {
+        currentEditingBlog = JSON.parse(JSON.stringify(blogsState[index]));
+        currentEditingBlogIndex = index;
+        
+        if (!currentEditingBlog.blocks || currentEditingBlog.blocks.length === 0) {
+            currentEditingBlog.blocks = parseHtmlToBlocks(currentEditingBlog.content || "");
+        }
+        
+        renderBlogEditor();
+        
+        var editTabLink = document.getElementById('tab-btn-blogs-edit');
+        if (editTabLink) editTabLink.click();
+    };
+
+    window.deleteBlog = function (index) {
+        if (confirm("Are you sure you want to delete the blog post: \"" + blogsState[index].title + "\"?")) {
+            blogsState.splice(index, 1);
+            renderBlogsList();
+        }
+    };
+
+    function formatDate(date) {
+        var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        return months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
+    }
+
+    function parseHtmlToBlocks(html) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, 'text/html');
+        var blocks = [];
+        var children = Array.prototype.slice.call(doc.body.childNodes);
+        
+        children.forEach(function (node) {
+            if (node.nodeType === 1) { // ELEMENT_NODE
+                var tagName = node.tagName.toLowerCase();
+                if (tagName === 'h2' || tagName === 'h3' || tagName === 'h4' || tagName === 'h1' || tagName === 'h5' || tagName === 'h6') {
+                    blocks.push({
+                        type: 'heading',
+                        text: node.innerText.trim()
+                    });
+                } else if (tagName === 'p') {
+                    var img = node.querySelector('img');
+                    if (img) {
+                        blocks.push({
+                            type: 'photo',
+                            url: img.getAttribute('src') || ''
+                        });
+                    } else {
+                        var inner = node.innerHTML.trim();
+                        if (inner) {
+                            blocks.push({
+                                type: 'paragraph',
+                                text: inner.replace(/<br\s*\/?>/gi, '\n')
+                            });
+                        }
+                    }
+                } else if (tagName === 'img') {
+                    blocks.push({
+                        type: 'photo',
+                        url: node.getAttribute('src') || ''
+                    });
+                } else {
+                    var innerHtml = node.outerHTML.trim();
+                    if (innerHtml) {
+                        blocks.push({
+                            type: 'paragraph',
+                            text: innerHtml
+                        });
+                    }
+                }
+            } else if (node.nodeType === 3) { // TEXT_NODE
+                var text = node.nodeValue.trim();
+                if (text) {
+                    blocks.push({
+                        type: 'paragraph',
+                        text: text
+                    });
+                }
+            }
+        });
+        
+        if (blocks.length === 0 && html.trim() !== '') {
+            blocks.push({
+                type: 'paragraph',
+                text: html.trim()
+            });
+        }
+        return blocks;
+    }
+
+    function renderBlogEditor() {
+        if (!currentEditingBlog) return;
+        document.getElementById('blog-edit-title').value = currentEditingBlog.title || "";
+        document.getElementById('blog-edit-slug').value = currentEditingBlog.slug || "";
+        document.getElementById('blog-edit-category').value = currentEditingBlog.category || "Uncategorized";
+        document.getElementById('blog-edit-date').value = currentEditingBlog.date || "";
+        document.getElementById('blog-edit-image').value = currentEditingBlog.image || "";
+        document.getElementById('blog-edit-time').value = currentEditingBlog.readingTime || "3 min read";
+        document.getElementById('blog-edit-gradient').value = currentEditingBlog.gradient || "linear-gradient(135deg, #FF8C00, #121212)";
+        document.getElementById('blog-edit-excerpt').value = currentEditingBlog.excerpt || "";
+        
+        renderBlogElements();
+    }
+
+    function renderBlogElements() {
+        var container = document.getElementById('blog-elements-list');
+        if (!container) return;
+        container.innerHTML = '';
+        
+        if (!currentEditingBlog) return;
+        var blocks = currentEditingBlog.blocks || [];
+        if (blocks.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">No content blocks yet. Click below to add your first content block.</p>';
+            return;
+        }
+        
+        blocks.forEach(function (block, index) {
+            var div = document.createElement('div');
+            div.className = 'iv-cms-repeater-item';
+            div.style.padding = '16px';
+            div.style.marginBottom = '16px';
+            div.style.border = '1px solid rgba(255, 140, 0, 0.1)';
+            div.style.background = 'rgba(255, 255, 255, 0.01)';
+            
+            var labelColor = 'var(--text-muted)';
+            var icon = 'fa-paragraph';
+            if (block.type === 'heading') {
+                labelColor = 'var(--accent)';
+                icon = 'fa-heading';
+            } else if (block.type === 'photo') {
+                labelColor = '#3498db';
+                icon = 'fa-image';
+            }
+            
+            var upDisabled = index === 0 ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : '';
+            var downDisabled = index === blocks.length - 1 ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : '';
+            
+            var blockHtml = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="font-size: 11px; font-weight: 700; color: ${labelColor}; text-transform: uppercase; letter-spacing: 0.05em;">
+                        <i class="fa-solid ${icon}"></i> Block ${index + 1}: ${block.type}
+                    </span>
+                    <div style="display: flex; gap: 6px;">
+                        <button type="button" class="iv-cms-btn-add" style="width: auto; padding: 2px 8px; font-size: 11px;" ${upDisabled} onclick="moveBlogElement(${index}, -1)">
+                            <i class="fa-solid fa-arrow-up"></i> Up
+                        </button>
+                        <button type="button" class="iv-cms-btn-add" style="width: auto; padding: 2px 8px; font-size: 11px;" ${downDisabled} onclick="moveBlogElement(${index}, 1)">
+                            <i class="fa-solid fa-arrow-down"></i> Down
+                        </button>
+                        <button type="button" class="iv-cms-btn-remove" style="position: static; margin-left: 10px;" onclick="removeBlogElement(${index})">
+                            &times;
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            if (block.type === 'heading') {
+                blockHtml += `
+                    <div class="iv-cms-group" style="margin-bottom: 0;">
+                        <input type="text" class="iv-cms-input" style="font-size: 16px; font-weight: 700; color: var(--accent);" value="${escapeHtml(block.text || '')}" oninput="updateBlogElement(${index}, this.value)" placeholder="Enter highlighted heading text...">
+                    </div>
+                `;
+            } else if (block.type === 'paragraph') {
+                blockHtml += `
+                    <div class="iv-cms-group" style="margin-bottom: 0;">
+                        <textarea class="iv-cms-textarea" style="min-height: 100px; font-size: 14px; line-height: 1.6;" oninput="updateBlogElement(${index}, this.value)" placeholder="Enter paragraph content...">${escapeHtml(block.text || '')}</textarea>
+                    </div>
+                `;
+            } else if (block.type === 'photo') {
+                blockHtml += `
+                    <div class="iv-cms-group" style="margin-bottom: 0;">
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" class="iv-cms-input" style="flex: 1;" value="${escapeHtml(block.url || '')}" oninput="updateBlogElement(${index}, this.value)" placeholder="Enter image URL/path (e.g. images/my-image.jpg)">
+                            <button type="button" class="iv-cms-btn-add" style="width: auto; padding: 0 16px;" onclick="simulateFileUploadForBlock(${index})">Upload</button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            div.innerHTML = blockHtml;
+            container.appendChild(div);
+        });
+    }
+
+    window.addBlogElement = function (type) {
+        currentEditingBlog.blocks = currentEditingBlog.blocks || [];
+        if (type === 'photo') {
+            currentEditingBlog.blocks.push({ type: 'photo', url: '' });
+        } else {
+            currentEditingBlog.blocks.push({ type: type, text: '' });
+        }
+        renderBlogElements();
+    };
+
+    window.removeBlogElement = function (index) {
+        currentEditingBlog.blocks.splice(index, 1);
+        renderBlogElements();
+    };
+
+    window.moveBlogElement = function (index, direction) {
+        var blocks = currentEditingBlog.blocks;
+        var targetIndex = index + direction;
+        if (targetIndex >= 0 && targetIndex < blocks.length) {
+            var temp = blocks[index];
+            blocks[index] = blocks[targetIndex];
+            blocks[targetIndex] = temp;
+            renderBlogElements();
+        }
+    };
+
+    window.updateBlogElement = function (index, value) {
+        var block = currentEditingBlog.blocks[index];
+        if (block.type === 'photo') {
+            block.url = value;
+        } else {
+            block.text = value;
+        }
+    };
+
+    window.simulateFileUploadForBlock = function (index) {
+        window.simulateFileUpload('blog-block-temp-upload-id-' + index, 'images');
+    };
+
+    window.autoGenerateSlug = function (title) {
+        var slugInput = document.getElementById('blog-edit-slug');
+        if (slugInput) {
+            var slug = title.toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+            slugInput.value = slug;
+        }
+    };
+
+    window.saveCurrentBlog = function () {
+        currentEditingBlog.title = document.getElementById('blog-edit-title').value.trim();
+        currentEditingBlog.slug = document.getElementById('blog-edit-slug').value.trim();
+        currentEditingBlog.category = document.getElementById('blog-edit-category').value.trim() || "Uncategorized";
+        currentEditingBlog.date = document.getElementById('blog-edit-date').value.trim() || formatDate(new Date());
+        currentEditingBlog.image = document.getElementById('blog-edit-image').value.trim() || null;
+        currentEditingBlog.readingTime = document.getElementById('blog-edit-time').value.trim() || "3 min read";
+        currentEditingBlog.gradient = document.getElementById('blog-edit-gradient').value.trim() || "linear-gradient(135deg, #FF8C00, #121212)";
+        currentEditingBlog.excerpt = document.getElementById('blog-edit-excerpt').value.trim();
+
+        if (!currentEditingBlog.title || !currentEditingBlog.slug || !currentEditingBlog.excerpt) {
+            alert("Please fill in all required fields (Title, Slug, Excerpt).");
+            return;
+        }
+
+        currentEditingBlog.content = compileBlocksToHtml(currentEditingBlog.blocks);
+
+        if (currentEditingBlogIndex === -1) {
+            blogsState.unshift(currentEditingBlog);
+        } else {
+            blogsState[currentEditingBlogIndex] = currentEditingBlog;
+        }
+
+        renderBlogsList();
+        
+        var listTabLink = document.getElementById('tab-btn-blogs-list');
+        if (listTabLink) listTabLink.click();
+    };
+
+    window.cancelBlogEdit = function () {
+        if (confirm("Discard all unsaved edits to this blog post?")) {
+            var listTabLink = document.getElementById('tab-btn-blogs-list');
+            if (listTabLink) listTabLink.click();
+        }
+    };
+
+    function compileBlocksToHtml(blocks) {
+        var html = '';
+        blocks.forEach(function (block) {
+            if (block.type === 'heading') {
+                html += '<h2 class="blog-highlighted-heading">' + escapeHtml(block.text) + '</h2>\n';
+            } else if (block.type === 'paragraph') {
+                var paragraphs = block.text.split('\n\n').filter(function (p) { return p.trim() !== ''; });
+                paragraphs.forEach(function (p) {
+                    var formattedText = p.replace(/\n/g, '<br />');
+                    html += '<p>' + formattedText + '</p>\n';
+                });
+            } else if (block.type === 'photo') {
+                html += '<p><img loading="lazy" decoding="async" class="aligncenter" src="' + escapeHtml(block.url) + '" alt="" /></p>\n';
+            }
+        });
+        return html;
+    }
+
+    function compileBlogsCmsState() {
+        var jsonText = JSON.stringify(blogsState, null, 2);
+        var display = document.getElementById('blogsJsonDisplay');
+        if (display) {
+            display.textContent = jsonText;
+        }
+        return jsonText;
+    }
+
+    function downloadBlogsJsonFile() {
+        var jsonText = compileBlogsCmsState();
+        var blob = new Blob([jsonText], { type: "application/json" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "blogs.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showToast("blogs.json Downloaded!");
+    }
+
+    function copyBlogsJsonToClipboard() {
+        var jsonText = compileBlogsCmsState();
+        navigator.clipboard.writeText(jsonText).then(function () {
+            showToast("blogs.json copied!");
+        }).catch(function (err) {
+            console.error("Could not copy text: ", err);
+        });
+    }
+
+    function bindBlogsCmsWorkspaceEvents() {
+        var workspace = document.getElementById('blogsCmsWorkspace');
+        var openBtn = document.getElementById('openBlogsCmsBtn');
+        var closeBtn = document.getElementById('closeBlogsCmsBtn');
+        var saveBtn = document.getElementById('blogsSaveBtn');
+        var copyBtn = document.getElementById('blogsCopyJsonBtn');
+        var downloadBtn = document.getElementById('blogsDownloadJsonBtn');
+        
+        if (openBtn && workspace) {
+            openBtn.addEventListener('click', function () {
+                workspace.style.display = 'block';
+                loadBlogsCmsData();
+                var firstTabLink = document.getElementById('tab-btn-blogs-list');
+                if (firstTabLink) firstTabLink.click();
+            });
+        }
+
+        if (closeBtn && workspace) {
+            closeBtn.addEventListener('click', function () {
+                workspace.style.display = 'none';
+            });
+        }
+
+        if (saveBtn) {
+            saveBtn.addEventListener('click', function () {
+                compileBlogsCmsState();
+                var exportTabLink = document.getElementById('tab-btn-blogs-export');
+                if (exportTabLink) exportTabLink.click();
+            });
+        }
+
+        if (copyBtn) {
+            copyBtn.addEventListener('click', copyBlogsJsonToClipboard);
+        }
+
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', downloadBlogsJsonFile);
+        }
+    }
+
     // Initialize on DOM load
     document.addEventListener('DOMContentLoaded', function () {
         initGoogleSignIn();
@@ -1957,6 +2452,7 @@
         // Initialize CMS Workspace controls
         initTabs();
         bindCmsWorkspaceEvents();
+        bindBlogsCmsWorkspaceEvents();
 
         // Monitor activity to reset inactivity timer
         var activityEvents = ['mousedown', 'keydown', 'scroll', 'touchstart'];

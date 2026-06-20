@@ -873,8 +873,8 @@
                         <h4>Blogs & Articles</h4>
                         <p>Write, publish, and schedule educational value-investing articles and news releases.</p>
                     </div>
-                    <button class="iv-admin-action-btn" onclick="alert('Blog CMS interface is coming soon.')">
-                        Manage Blog Posts
+                    <button id="openBlogsCmsBtn" class="iv-admin-action-btn">
+                        <i class="fa-solid fa-screwdriver-wrench"></i> Manage Blog Posts
                     </button>
                 </div>
 
@@ -1341,6 +1341,186 @@
                         </button>
                     </div>
 
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 4. Blogs & Articles CMS Workspace Overlay -->
+    <div id="blogsCmsWorkspace" class="iv-cms-workspace">
+        <div class="iv-cms-container">
+            
+            <!-- Header -->
+            <div class="iv-cms-header">
+                <div>
+                    <span class="iv-kicker" style="color: var(--accent); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;">Article Content Manager</span>
+                    <h3>Blogs & Articles CMS</h3>
+                </div>
+                <div class="iv-cms-header-actions">
+                    <button id="blogsSaveBtn" class="iv-admin-btn" style="border-style: solid; border-color: var(--accent); background: rgba(255, 140, 0, 0.1); width: auto; padding: 10px 20px;">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Generate JSON
+                    </button>
+                    <button id="closeBlogsCmsBtn" class="iv-cms-close-btn" title="Close Blogs CMS">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="iv-cms-tabs-nav">
+                <button class="iv-cms-tab-link active" id="tab-btn-blogs-list" data-tab="tab-blogs-list">Manage Blogs</button>
+                <button class="iv-cms-tab-link" id="tab-btn-blogs-edit" data-tab="tab-blogs-edit">Create / Edit Blog</button>
+                <button class="iv-cms-tab-link" id="tab-btn-blogs-export" data-tab="tab-blogs-export">Export Blogs JSON</button>
+            </div>
+
+            <!-- Workspace Body -->
+            <div class="iv-cms-body">
+
+                <!-- TAB 1: MANAGE BLOGS (LIST) -->
+                <div id="tab-blogs-list" class="iv-cms-tab-content active">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h4 style="margin: 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">All Blog Posts</h4>
+                        <button type="button" class="iv-admin-btn" style="width: auto; padding: 8px 16px;" onclick="createNewBlog()">
+                            <i class="fa-solid fa-plus"></i> Create New Blog
+                        </button>
+                    </div>
+                    
+                    <div class="iv-cms-repeater-container">
+                        <div class="table-responsive-wrapper" style="margin-top: 0; border: none; background: transparent;">
+                            <table class="disclosure-table" id="blogs-list-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 8%;">ID</th>
+                                        <th style="width: 45%;">Title</th>
+                                        <th style="width: 15%;">Category</th>
+                                        <th style="width: 15%;">Date</th>
+                                        <th style="width: 17%; text-align: center;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="blogs-list-tbody">
+                                    <!-- Populated dynamically by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: CREATE / EDIT BLOG -->
+                <div id="tab-blogs-edit" class="iv-cms-tab-content">
+                    <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Blog Post Details</h4>
+                    
+                    <!-- Metadata Rows -->
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Blog Title <span class="req">Required</span></label>
+                            <input type="text" id="blog-edit-title" class="iv-cms-input" placeholder="e.g. 20 Stocks which destroyed Indian Investors wealth" oninput="autoGenerateSlug(this.value)">
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">URL Slug <span class="req">Required</span></label>
+                            <input type="text" id="blog-edit-slug" class="iv-cms-input" placeholder="e.g. 20-stocks-destroyed-investors-wealth">
+                        </div>
+                    </div>
+
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Category</label>
+                            <input type="text" id="blog-edit-category" class="iv-cms-input" placeholder="e.g. cyclical investing, value investing">
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Publish Date</label>
+                            <input type="text" id="blog-edit-date" class="iv-cms-input" placeholder="e.g. January 19, 2026">
+                        </div>
+                    </div>
+
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Featured Main Image URL <span class="req">Required</span></label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="blog-edit-image" class="iv-cms-input" style="flex: 1;" placeholder="e.g. images/quality.jpg">
+                                <button type="button" class="iv-cms-btn-add" style="width: auto; padding: 0 16px;" onclick="simulateFileUpload('blog-edit-image', 'images')">Upload</button>
+                            </div>
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Reading Time Estimation</label>
+                            <input type="text" id="blog-edit-time" class="iv-cms-input" placeholder="e.g. 3 min read">
+                        </div>
+                    </div>
+
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Background Gradient fallback (if image fails/omitted)</label>
+                            <input type="text" id="blog-edit-gradient" class="iv-cms-input" placeholder="e.g. linear-gradient(135deg, #FF8C00, #121212)">
+                        </div>
+                    </div>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Short Excerpt (Grid Card description) <span class="req">Required</span></label>
+                        <textarea id="blog-edit-excerpt" class="iv-cms-textarea" style="min-height: 80px;" placeholder="Summarize the article in 2-3 sentences..."></textarea>
+                    </div>
+
+                    <!-- Elements List -->
+                    <h5 style="margin: 24px 0 12px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Article Content Blocks (Dynamic Elements)</h5>
+                    <div class="iv-cms-repeater-container" style="margin-bottom: 24px;">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">Content Sequence</span>
+                        </div>
+                        
+                        <div id="blog-elements-list">
+                            <!-- Populated dynamically by JS -->
+                        </div>
+                        
+                        <div class="blog-element-add-actions" style="display: flex; gap: 12px; margin-top: 16px;">
+                            <button type="button" class="iv-cms-btn-add" style="flex: 1;" onclick="addBlogElement('heading')">
+                                <i class="fa-solid fa-heading"></i> + Add Heading
+                            </button>
+                            <button type="button" class="iv-cms-btn-add" style="flex: 1;" onclick="addBlogElement('paragraph')">
+                                <i class="fa-solid fa-paragraph"></i> + Add Paragraph
+                            </button>
+                            <button type="button" class="iv-cms-btn-add" style="flex: 1;" onclick="addBlogElement('photo')">
+                                <i class="fa-solid fa-image"></i> + Add Photo Block
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Editor Action Panel -->
+                    <div style="display: flex; gap: 16px; margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                        <button type="button" class="iv-admin-btn" style="width: auto; padding: 12px 24px; background: var(--accent); color: var(--text-dark);" onclick="saveCurrentBlog()">
+                            <i class="fa-solid fa-floppy-disk"></i> Save Post & Return
+                        </button>
+                        <button type="button" class="iv-admin-btn" style="width: auto; padding: 12px 24px; border-color: var(--border-color); color: var(--text-muted);" onclick="cancelBlogEdit()">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TAB 3: EXPORT BLOGS JSON -->
+                <div id="tab-blogs-export" class="iv-cms-tab-content">
+                    <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Export Blogs JSON File</h4>
+                    
+                    <div class="iv-cms-alert-info" style="border-left: 4px solid var(--accent); background: rgba(255, 140, 0, 0.02);">
+                        <p style="margin-bottom: 8px;"><strong>Steps to save your blogs updates:</strong></p>
+                        <ol style="margin-left: 20px; padding-left: 0; line-height: 1.6;">
+                            <li>Verify your updates list, then click **Generate JSON** or **Download JSON File**.</li>
+                            <li>Overwrite the contents of <strong><a href="file:///c:/IV website/blogs.json" style="color: var(--accent); text-decoration: underline;">blogs.json</a></strong> with this payload.</li>
+                            <li>That's it! The blogs listing and detail pages load this JSON dynamically, so changes will show immediately.</li>
+                        </ol>
+                    </div>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Generated blogs.json Payload</label>
+                        <div id="blogsJsonDisplay" class="iv-cms-json-box">Click "Generate JSON" in the top-right to compile blogs database.</div>
+                    </div>
+
+                    <div class="iv-cms-export-actions">
+                        <button type="button" id="blogsCopyJsonBtn" class="iv-admin-btn" style="width: auto; padding: 12px 24px; border-style: solid; border-color: var(--accent);">
+                            <i class="fa-solid fa-copy"></i> Copy to Clipboard
+                        </button>
+                        <button type="button" id="blogsDownloadJsonBtn" class="iv-admin-btn" style="width: auto; padding: 12px 24px;">
+                            <i class="fa-solid fa-circle-down"></i> Download JSON File
+                        </button>
+                    </div>
                 </div>
 
             </div>
