@@ -175,7 +175,7 @@
         } else {
             var btnContainer = document.getElementById("googleBtnContainer");
             if (btnContainer) {
-                btnContainer.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; margin: 10px 0; border: 1px dashed var(--border-color); padding: 16px; border-radius: 12px; background: var(--bg-secondary); text-align: left; line-height: 1.5;">Google Sign-In requires a Client ID.<br><small style="font-size: 11px; opacity: 0.7; display: block; margin-top: 4px;">Configure your Web Client ID as the <code>GOOGLE_CLIENT_ID</code> variable inside <code>admin.js</code> to enable Google login.</small></div>';
+                btnContainer.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; margin: 10px 0; border: 1px dashed var(--border-color); padding: 16px; border-radius: 12px; background: var(--bg-secondary); text-align: left; line-height: 1.5;">Google Sign-In requires a Client ID.<br><small style="font-size: 11px; opacity: 0.7; display: block; margin-top: 4px;">Configure your Web Client ID as the <code>GOOGLE_CLIENT_ID</code> variable inside <code>iv_admin.js</code> to enable Google login.</small></div>';
             }
         }
     }
