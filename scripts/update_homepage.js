@@ -155,25 +155,30 @@ const caseStudiesTitleHtml = `                        <span class="cases-pre-tit
                         <h2 class="cases-main-title">${config.case_studies.title}</h2>`;
 replaceSection('CASE_STUDIES_TITLE', caseStudiesTitleHtml);
 
-const caseStudiesCompaniesHtml = config.case_studies.companies.map((comp, idx) => {
-    const reportsHtml = comp.reports.map(rep => {
-        const targetAttr = rep.new_tab !== false ? ' target="_blank" rel="noopener noreferrer"' : '';
-        return `                                    <a href="${rep.url}"${targetAttr} class="btn-report-item">
+const caseStudiesCompaniesHtmlList = [];
+const chunkSize = 4;
+for (let i = 0; i < config.case_studies.companies.length; i += chunkSize) {
+    const chunk = config.case_studies.companies.slice(i, i + chunkSize);
+    const rowCardsHtml = chunk.map((comp, idx) => {
+        const globalIdx = i + idx;
+        const reportsHtml = comp.reports.map(rep => {
+            const targetAttr = rep.new_tab !== false ? ' target="_blank" rel="noopener noreferrer"' : '';
+            return `                                    <a href="${rep.url}"${targetAttr} class="btn-report-item">
                                         <i class="far fa-file-pdf"></i>
                                         <span>${rep.name}</span>
                                     </a>`;
-    }).join('\n');
-    
-    const logoTriggerHtml = comp.logo ? `
-                                <div class="company-trigger-logo-wrapper">
-                                    <img src="${comp.logo}" class="company-trigger-logo" alt="${comp.name}">
-                                </div>` : `
-                                <div class="company-trigger-logo-wrapper placeholder-badge">
-                                    <span class="company-btn-num-large">${comp.num}</span>
-                                </div>`;
-    
-    return `                        <!-- Company ${idx + 1}: ${comp.name} -->
-                        <div class="company-card-wrapper" data-case="${idx}">
+        }).join('\n');
+        
+        const logoTriggerHtml = comp.logo ? `
+                                    <div class="company-trigger-logo-wrapper">
+                                        <img src="${comp.logo}" class="company-trigger-logo" alt="${comp.name}">
+                                    </div>` : `
+                                    <div class="company-trigger-logo-wrapper placeholder-badge">
+                                        <span class="company-btn-num-large">${comp.num}</span>
+                                    </div>`;
+        
+        return `                        <!-- Company ${globalIdx + 1}: ${comp.name} -->
+                        <div class="company-card-wrapper" data-case="${globalIdx}">
                             <button class="btn-company-trigger" aria-label="Open ${comp.name} reports">
 ${logoTriggerHtml}
                             </button>
@@ -185,7 +190,13 @@ ${reportsHtml}
                                 </div>
                             </div>
                         </div>`;
-}).join('\n');
+    }).join('\n');
+
+    caseStudiesCompaniesHtmlList.push(`                    <div class="cases-row-container">
+${rowCardsHtml}
+                    </div>`);
+}
+const caseStudiesCompaniesHtml = caseStudiesCompaniesHtmlList.join('\n');
 replaceSection('CASE_STUDIES_COMPANIES', caseStudiesCompaniesHtml);
 
 // 8. News Section Display Area & Cards Row

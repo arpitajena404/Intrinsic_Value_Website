@@ -1325,19 +1325,17 @@ function initCaseStudies() {
         if (trigger) {
             trigger.addEventListener('click', (e) => {
                 const isAlreadyExpanded = wrapper.classList.contains('expanded');
+                const row = wrapper.closest('.cases-row-container') || container;
 
-                // 1. Collapse all other wrappers first
+                // 1. Collapse all other wrappers and remove has-expanded from all rows first
                 wrappers.forEach(w => w.classList.remove('expanded'));
+                document.querySelectorAll('.cases-row-container').forEach(r => r.classList.remove('has-expanded'));
 
                 // 2. Toggle this wrapper if it wasn't already expanded
                 if (!isAlreadyExpanded) {
                     wrapper.classList.add('expanded');
-                    if (container) {
-                        container.classList.add('has-expanded');
-                    }
-                } else {
-                    if (container) {
-                        container.classList.remove('has-expanded');
+                    if (row) {
+                        row.classList.add('has-expanded');
                     }
                 }
             });
@@ -1349,8 +1347,9 @@ function initCaseStudies() {
             closeBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 wrapper.classList.remove('expanded');
-                if (container && !document.querySelector('.company-card-wrapper.expanded')) {
-                    container.classList.remove('has-expanded');
+                const row = wrapper.closest('.cases-row-container') || container;
+                if (row) {
+                    row.classList.remove('has-expanded');
                 }
             });
         }
@@ -1361,8 +1360,9 @@ function initCaseStudies() {
             dropdown.addEventListener('click', (e) => {
                 if (e.target === dropdown) {
                     wrapper.classList.remove('expanded');
-                    if (container && !document.querySelector('.company-card-wrapper.expanded')) {
-                        container.classList.remove('has-expanded');
+                    const row = wrapper.closest('.cases-row-container') || container;
+                    if (row) {
+                        row.classList.remove('has-expanded');
                     }
                 }
             });
