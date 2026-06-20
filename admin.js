@@ -520,7 +520,7 @@
                             {
                                     "num": "02",
                                     "name": "Hero MotoCorp",
-                                    "logo": "",
+                                    "logo": "CS reports/Hero Logo.png",
                                     "reports": [
                                             {
                                                     "name": "Exit Report",
