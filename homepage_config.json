@@ -189,6 +189,18 @@
                         "url": "CS reports/Texmaco/Texmaco Exit.pdf"
                     }
                 ]
+            },
+            {
+                "num": "05",
+                "name": "IIFL",
+                "logo": "CS reports/IIFL cap logo.png",
+                "reports": [
+                    {
+                        "name": "Company Overview",
+                        "url": "CS reports/IIFL CO.pdf",
+                        "new_tab": true
+                    }
+                ]
             }
         ]
     },
