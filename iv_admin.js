@@ -1239,6 +1239,10 @@
         container.innerHTML = '';
         
         (pricingCmsState.table_plans || []).forEach(function (plan, planIdx) {
+            var planListLength = (pricingCmsState.table_plans || []).length;
+            var upDisabled = planIdx === 0 ? 'disabled' : '';
+            var downDisabled = planIdx === planListLength - 1 ? 'disabled' : '';
+
             var div = document.createElement('div');
             div.className = 'iv-cms-repeater-item';
             div.style.marginBottom = '20px';
@@ -1255,7 +1259,11 @@
             }).join('');
             
             div.innerHTML = `
-                <button type="button" class="iv-cms-btn-remove" onclick="removePlan(${planIdx})">&times;</button>
+                <div class="iv-cms-item-controls">
+                    <button type="button" class="iv-cms-btn-move" onclick="movePlan(${planIdx}, -1)" ${upDisabled}>▲</button>
+                    <button type="button" class="iv-cms-btn-move" onclick="movePlan(${planIdx}, 1)" ${downDisabled}>▼</button>
+                    <button type="button" class="iv-cms-btn-remove" onclick="removePlan(${planIdx})">&times;</button>
+                </div>
                 <div class="iv-cms-row">
                     <div class="iv-cms-group">
                         <label class="iv-cms-label">Plan / Column Name <span class="req">Required</span></label>
@@ -1291,11 +1299,19 @@
         container.innerHTML = '';
         
         (pricingCmsState.cards || []).forEach(function (card, cardIdx) {
+            var cardListLength = (pricingCmsState.cards || []).length;
+            var upDisabled = cardIdx === 0 ? 'disabled' : '';
+            var downDisabled = cardIdx === cardListLength - 1 ? 'disabled' : '';
+
             var div = document.createElement('div');
             div.className = 'iv-cms-repeater-item';
             
             div.innerHTML = `
-                <button type="button" class="iv-cms-btn-remove" onclick="removeCard(${cardIdx})">&times;</button>
+                <div class="iv-cms-item-controls">
+                    <button type="button" class="iv-cms-btn-move" onclick="moveCard(${cardIdx}, -1)" ${upDisabled}>▲</button>
+                    <button type="button" class="iv-cms-btn-move" onclick="moveCard(${cardIdx}, 1)" ${downDisabled}>▼</button>
+                    <button type="button" class="iv-cms-btn-remove" onclick="removeCard(${cardIdx})">&times;</button>
+                </div>
                 <div class="iv-cms-row">
                     <div class="iv-cms-group">
                         <label class="iv-cms-label">Plan Card Name <span class="req">Required</span></label>
@@ -1402,6 +1418,28 @@
     window.removeCard = function (cardIdx) {
         if (confirm("Are you sure you want to remove this pricing card?")) {
             pricingCmsState.cards.splice(cardIdx, 1);
+            renderCardList();
+        }
+    };
+
+    window.movePlan = function (planIdx, dir) {
+        var arr = pricingCmsState.table_plans || [];
+        var target = planIdx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[planIdx];
+            arr[planIdx] = arr[target];
+            arr[target] = temp;
+            renderPlanList();
+        }
+    };
+
+    window.moveCard = function (cardIdx, dir) {
+        var arr = pricingCmsState.cards || [];
+        var target = cardIdx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[cardIdx];
+            arr[cardIdx] = arr[target];
+            arr[target] = temp;
             renderCardList();
         }
     };
@@ -1534,10 +1572,18 @@
         var container = document.getElementById('cms-nav-list');
         container.innerHTML = '';
         (cmsState.navigation || []).forEach(function (link, index) {
+            var listLength = (cmsState.navigation || []).length;
+            var upDisabled = index === 0 ? 'disabled' : '';
+            var downDisabled = index === listLength - 1 ? 'disabled' : '';
+
             var div = document.createElement('div');
             div.className = 'iv-cms-repeater-item';
             div.innerHTML = `
-                <button type="button" class="iv-cms-btn-remove" onclick="removeNavItem(${index})">&times;</button>
+                <div class="iv-cms-item-controls">
+                    <button type="button" class="iv-cms-btn-move" onclick="moveNavItem(${index}, -1)" ${upDisabled}>▲</button>
+                    <button type="button" class="iv-cms-btn-move" onclick="moveNavItem(${index}, 1)" ${downDisabled}>▼</button>
+                    <button type="button" class="iv-cms-btn-remove" onclick="removeNavItem(${index})">&times;</button>
+                </div>
                 <div class="iv-cms-row" style="margin-bottom: 0;">
                     <div class="iv-cms-group" style="margin-bottom: 0;">
                         <label class="iv-cms-label">Link Text</label>
@@ -1610,10 +1656,18 @@
         var container = document.getElementById('cms-philosophy-list');
         container.innerHTML = '';
         (cmsState.philosophy.cards || []).forEach(function (card, index) {
+            var listLength = (cmsState.philosophy.cards || []).length;
+            var upDisabled = index === 0 ? 'disabled' : '';
+            var downDisabled = index === listLength - 1 ? 'disabled' : '';
+
             var div = document.createElement('div');
             div.className = 'iv-cms-repeater-item';
             div.innerHTML = `
-                <button type="button" class="iv-cms-btn-remove" onclick="removePhilosophyCard(${index})">&times;</button>
+                <div class="iv-cms-item-controls">
+                    <button type="button" class="iv-cms-btn-move" onclick="movePhilosophyCard(${index}, -1)" ${upDisabled}>▲</button>
+                    <button type="button" class="iv-cms-btn-move" onclick="movePhilosophyCard(${index}, 1)" ${downDisabled}>▼</button>
+                    <button type="button" class="iv-cms-btn-remove" onclick="removePhilosophyCard(${index})">&times;</button>
+                </div>
                 <div class="iv-cms-row">
                     <div class="iv-cms-group">
                         <label class="iv-cms-label">Icon Class (FontAwesome)</label>
@@ -1664,11 +1718,19 @@
         var container = document.getElementById('cms-news-list');
         container.innerHTML = '';
         (cmsState.news.items || []).forEach(function (item, index) {
+            var listLength = (cmsState.news.items || []).length;
+            var upDisabled = index === 0 ? 'disabled' : '';
+            var downDisabled = index === listLength - 1 ? 'disabled' : '';
+
             var div = document.createElement('div');
             div.className = 'iv-cms-repeater-item';
             var randId = 'news-logo-' + index;
             div.innerHTML = `
-                <button type="button" class="iv-cms-btn-remove" onclick="removeNewsItem(${index})">&times;</button>
+                <div class="iv-cms-item-controls">
+                    <button type="button" class="iv-cms-btn-move" onclick="moveNewsItem(${index}, -1)" ${upDisabled}>▲</button>
+                    <button type="button" class="iv-cms-btn-move" onclick="moveNewsItem(${index}, 1)" ${downDisabled}>▼</button>
+                    <button type="button" class="iv-cms-btn-remove" onclick="removeNewsItem(${index})">&times;</button>
+                </div>
                 <div class="iv-cms-row">
                     <div class="iv-cms-group">
                         <label class="iv-cms-label">Outlet Label</label>
@@ -1741,6 +1803,10 @@
         }
 
         (cmsState.case_studies.companies || []).forEach(function (comp, cIdx) {
+            var compListLength = (cmsState.case_studies.companies || []).length;
+            var compUpDisabled = cIdx === 0 ? 'disabled' : '';
+            var compDownDisabled = cIdx === compListLength - 1 ? 'disabled' : '';
+
             var div = document.createElement('div');
             div.className = 'iv-cms-repeater-item';
             div.style.border = '1px solid rgba(255, 140, 0, 0.15)';
@@ -1749,6 +1815,10 @@
             comp.reports = comp.reports || [];
             comp.reports.forEach(function (rep, rIdx) {
                 var repRandId = 'rep-url-' + cIdx + '-' + rIdx;
+                var repListLength = comp.reports.length;
+                var repUpDisabled = rIdx === 0 ? 'disabled' : '';
+                var repDownDisabled = rIdx === repListLength - 1 ? 'disabled' : '';
+
                 reportsHtml += `
                     <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:12px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:8px;">
                         <div style="display:flex; gap:10px; align-items:center;">
@@ -1757,7 +1827,9 @@
                                 <input type="text" id="${repRandId}" class="iv-cms-input" style="font-size:12px; padding:8px 12px;" value="${escapeHtml(rep.url)}" placeholder="PDF Path" oninput="updateCompanyReport(${cIdx}, ${rIdx}, 'url', this.value)">
                                 <button type="button" class="iv-cms-file-btn" style="padding:8px 12px; font-size:11px;" onclick="simulateFileUpload('${repRandId}', 'CS reports')">Upload PDF</button>
                             </div>
-                            <button type="button" class="iv-cms-btn-remove" style="position:static; margin-left:5px; height:32px; width:32px; display:inline-flex;" onclick="removeCompanyReport(${cIdx}, ${rIdx})">&times;</button>
+                            <button type="button" class="iv-cms-btn-move" style="height:32px; width:32px; flex-shrink: 0;" ${repUpDisabled} onclick="moveCompanyReport(${cIdx}, ${rIdx}, -1)">▲</button>
+                            <button type="button" class="iv-cms-btn-move" style="height:32px; width:32px; flex-shrink: 0;" ${repDownDisabled} onclick="moveCompanyReport(${cIdx}, ${rIdx}, 1)">▼</button>
+                            <button type="button" class="iv-cms-btn-remove" style="position:static; margin-left:5px; height:32px; width:32px; display:inline-flex; flex-shrink: 0;" onclick="removeCompanyReport(${cIdx}, ${rIdx})">&times;</button>
                         </div>
                         <div class="iv-cms-radio-group" style="margin-left: 31%; margin-top:2px;">
                             <label class="iv-cms-radio-label"><input type="radio" name="report-target-${cIdx}-${rIdx}" value="same" ${rep.new_tab === false ? 'checked' : ''} onchange="updateCompanyReport(${cIdx}, ${rIdx}, 'new_tab', false)"> Same Tab</label>
@@ -1768,7 +1840,11 @@
             });
 
             div.innerHTML = `
-                <button type="button" class="iv-cms-btn-remove" onclick="removeCompany(${cIdx})">&times;</button>
+                <div class="iv-cms-item-controls">
+                    <button type="button" class="iv-cms-btn-move" onclick="moveCompany(${cIdx}, -1)" ${compUpDisabled}>▲</button>
+                    <button type="button" class="iv-cms-btn-move" onclick="moveCompany(${cIdx}, 1)" ${compDownDisabled}>▼</button>
+                    <button type="button" class="iv-cms-btn-remove" onclick="removeCompany(${cIdx})">&times;</button>
+                </div>
                 <div class="iv-cms-row">
                     <div class="iv-cms-group" style="flex: 0 0 15%;">
                         <label class="iv-cms-label">Number (e.g. 01)</label>
@@ -1844,11 +1920,19 @@
         var container = document.getElementById('cms-team-list');
         container.innerHTML = '';
         (cmsState.team.members || []).forEach(function (member, index) {
+            var listLength = (cmsState.team.members || []).length;
+            var upDisabled = index === 0 ? 'disabled' : '';
+            var downDisabled = index === listLength - 1 ? 'disabled' : '';
+
             var div = document.createElement('div');
             div.className = 'iv-cms-repeater-item';
             var randId = 'team-photo-' + index;
             div.innerHTML = `
-                <button type="button" class="iv-cms-btn-remove" onclick="removeTeamMember(${index})">&times;</button>
+                <div class="iv-cms-item-controls">
+                    <button type="button" class="iv-cms-btn-move" onclick="moveTeamMember(${index}, -1)" ${upDisabled}>▲</button>
+                    <button type="button" class="iv-cms-btn-move" onclick="moveTeamMember(${index}, 1)" ${downDisabled}>▼</button>
+                    <button type="button" class="iv-cms-btn-remove" onclick="removeTeamMember(${index})">&times;</button>
+                </div>
                 <div class="iv-cms-row">
                     <div class="iv-cms-group">
                         <label class="iv-cms-label">Name</label>
@@ -1899,11 +1983,19 @@
         var container = document.getElementById('cms-testimonials-list');
         container.innerHTML = '';
         (cmsState.testimonials.items || []).forEach(function (item, index) {
+            var listLength = (cmsState.testimonials.items || []).length;
+            var upDisabled = index === 0 ? 'disabled' : '';
+            var downDisabled = index === listLength - 1 ? 'disabled' : '';
+
             var div = document.createElement('div');
             div.className = 'iv-cms-repeater-item';
             var randId = 'testimonial-avatar-' + index;
             div.innerHTML = `
-                <button type="button" class="iv-cms-btn-remove" onclick="removeTestimonial(${index})">&times;</button>
+                <div class="iv-cms-item-controls">
+                    <button type="button" class="iv-cms-btn-move" onclick="moveTestimonial(${index}, -1)" ${upDisabled}>▲</button>
+                    <button type="button" class="iv-cms-btn-move" onclick="moveTestimonial(${index}, 1)" ${downDisabled}>▼</button>
+                    <button type="button" class="iv-cms-btn-remove" onclick="removeTestimonial(${index})">&times;</button>
+                </div>
                 <div class="iv-cms-row">
                     <div class="iv-cms-group">
                         <label class="iv-cms-label">Client Name</label>
@@ -1952,10 +2044,18 @@
         var container = document.getElementById('cms-faq-list');
         container.innerHTML = '';
         (cmsState.faqs.items || []).forEach(function (item, index) {
+            var listLength = (cmsState.faqs.items || []).length;
+            var upDisabled = index === 0 ? 'disabled' : '';
+            var downDisabled = index === listLength - 1 ? 'disabled' : '';
+
             var div = document.createElement('div');
             div.className = 'iv-cms-repeater-item';
             div.innerHTML = `
-                <button type="button" class="iv-cms-btn-remove" onclick="removeFaq(${index})">&times;</button>
+                <div class="iv-cms-item-controls">
+                    <button type="button" class="iv-cms-btn-move" onclick="moveFaq(${index}, -1)" ${upDisabled}>▲</button>
+                    <button type="button" class="iv-cms-btn-move" onclick="moveFaq(${index}, 1)" ${downDisabled}>▼</button>
+                    <button type="button" class="iv-cms-btn-remove" onclick="removeFaq(${index})">&times;</button>
+                </div>
                 <div class="iv-cms-group">
                     <label class="iv-cms-label">Question</label>
                     <input type="text" class="iv-cms-input" value="${escapeHtml(item.question)}" oninput="updateFaq(${index}, 'question', this.value)">
@@ -1989,10 +2089,18 @@
         var container = document.getElementById('cms-footer-quick-list');
         container.innerHTML = '';
         (cmsState.footer.quick_links || []).forEach(function (link, index) {
+            var listLength = (cmsState.footer.quick_links || []).length;
+            var upDisabled = index === 0 ? 'disabled' : '';
+            var downDisabled = index === listLength - 1 ? 'disabled' : '';
+
             var div = document.createElement('div');
             div.className = 'iv-cms-repeater-item';
             div.innerHTML = `
-                <button type="button" class="iv-cms-btn-remove" onclick="removeFooterQuickLink(${index})">&times;</button>
+                <div class="iv-cms-item-controls">
+                    <button type="button" class="iv-cms-btn-move" onclick="moveFooterQuickLink(${index}, -1)" ${upDisabled}>▲</button>
+                    <button type="button" class="iv-cms-btn-move" onclick="moveFooterQuickLink(${index}, 1)" ${downDisabled}>▼</button>
+                    <button type="button" class="iv-cms-btn-remove" onclick="removeFooterQuickLink(${index})">&times;</button>
+                </div>
                 <div class="iv-cms-row" style="margin-bottom: 0;">
                     <div class="iv-cms-group" style="margin-bottom: 0;">
                         <label class="iv-cms-label">Link Text</label>
@@ -2029,10 +2137,18 @@
         var container = document.getElementById('cms-footer-imp-list');
         container.innerHTML = '';
         (cmsState.footer.important_info || []).forEach(function (link, index) {
+            var listLength = (cmsState.footer.important_info || []).length;
+            var upDisabled = index === 0 ? 'disabled' : '';
+            var downDisabled = index === listLength - 1 ? 'disabled' : '';
+
             var div = document.createElement('div');
             div.className = 'iv-cms-repeater-item';
             div.innerHTML = `
-                <button type="button" class="iv-cms-btn-remove" onclick="removeFooterImportantLink(${index})">&times;</button>
+                <div class="iv-cms-item-controls">
+                    <button type="button" class="iv-cms-btn-move" onclick="moveFooterImportantLink(${index}, -1)" ${upDisabled}>▲</button>
+                    <button type="button" class="iv-cms-btn-move" onclick="moveFooterImportantLink(${index}, 1)" ${downDisabled}>▼</button>
+                    <button type="button" class="iv-cms-btn-remove" onclick="removeFooterImportantLink(${index})">&times;</button>
+                </div>
                 <div class="iv-cms-row" style="margin-bottom: 0;">
                     <div class="iv-cms-group" style="margin-bottom: 0;">
                         <label class="iv-cms-label">Link Text</label>
@@ -2117,10 +2233,18 @@
         if (!container) return;
         container.innerHTML = '';
         (cmsState.compliance?.audits || []).forEach(function (audit, index) {
+            var listLength = (cmsState.compliance?.audits || []).length;
+            var upDisabled = index === 0 ? 'disabled' : '';
+            var downDisabled = index === listLength - 1 ? 'disabled' : '';
+
             var div = document.createElement('div');
             div.className = 'iv-cms-repeater-item';
             div.innerHTML = `
-                <button type="button" class="iv-cms-btn-remove" onclick="removeComplianceAudit(${index})">&times;</button>
+                <div class="iv-cms-item-controls">
+                    <button type="button" class="iv-cms-btn-move" onclick="moveComplianceAudit(${index}, -1)" ${upDisabled}>▲</button>
+                    <button type="button" class="iv-cms-btn-move" onclick="moveComplianceAudit(${index}, 1)" ${downDisabled}>▼</button>
+                    <button type="button" class="iv-cms-btn-remove" onclick="removeComplianceAudit(${index})">&times;</button>
+                </div>
                 <div class="iv-cms-row" style="margin-bottom: 0;">
                     <div class="iv-cms-group" style="margin-bottom: 0; width: 30%;">
                         <label class="iv-cms-label">Financial Year</label>
@@ -2149,6 +2273,127 @@
     };
     window.updateComplianceAudit = function (idx, field, val) {
         cmsState.compliance.audits[idx][field] = val;
+    };
+
+    window.moveNavItem = function (idx, dir) {
+        var arr = cmsState.navigation || [];
+        var target = idx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[idx];
+            arr[idx] = arr[target];
+            arr[target] = temp;
+            renderNavMenu();
+        }
+    };
+
+    window.movePhilosophyCard = function (idx, dir) {
+        var arr = cmsState.philosophy.cards || [];
+        var target = idx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[idx];
+            arr[idx] = arr[target];
+            arr[target] = temp;
+            renderPhilosophyCards();
+        }
+    };
+
+    window.moveNewsItem = function (idx, dir) {
+        var arr = cmsState.news.items || [];
+        var target = idx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[idx];
+            arr[idx] = arr[target];
+            arr[target] = temp;
+            renderNewsItems();
+        }
+    };
+
+    window.moveCompany = function (idx, dir) {
+        var arr = cmsState.case_studies.companies || [];
+        var target = idx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[idx];
+            arr[idx] = arr[target];
+            arr[target] = temp;
+            renderCaseStudies();
+        }
+    };
+
+    window.moveCompanyReport = function (cIdx, rIdx, dir) {
+        var arr = cmsState.case_studies.companies[cIdx].reports || [];
+        var target = rIdx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[rIdx];
+            arr[rIdx] = arr[target];
+            arr[target] = temp;
+            renderCaseStudies();
+        }
+    };
+
+    window.moveTeamMember = function (idx, dir) {
+        var arr = cmsState.team.members || [];
+        var target = idx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[idx];
+            arr[idx] = arr[target];
+            arr[target] = temp;
+            renderTeamMembers();
+        }
+    };
+
+    window.moveTestimonial = function (idx, dir) {
+        var arr = cmsState.testimonials.items || [];
+        var target = idx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[idx];
+            arr[idx] = arr[target];
+            arr[target] = temp;
+            renderTestimonials();
+        }
+    };
+
+    window.moveFaq = function (idx, dir) {
+        var arr = cmsState.faqs.items || [];
+        var target = idx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[idx];
+            arr[idx] = arr[target];
+            arr[target] = temp;
+            renderFaqs();
+        }
+    };
+
+    window.moveFooterQuickLink = function (idx, dir) {
+        var arr = cmsState.footer.quick_links || [];
+        var target = idx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[idx];
+            arr[idx] = arr[target];
+            arr[target] = temp;
+            renderFooterQuickLinks();
+        }
+    };
+
+    window.moveFooterImportantLink = function (idx, dir) {
+        var arr = cmsState.footer.important_info || [];
+        var target = idx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[idx];
+            arr[idx] = arr[target];
+            arr[target] = temp;
+            renderFooterImportantLinks();
+        }
+    };
+
+    window.moveComplianceAudit = function (idx, dir) {
+        var arr = cmsState.compliance.audits || [];
+        var target = idx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[idx];
+            arr[idx] = arr[target];
+            arr[target] = temp;
+            renderComplianceAudits();
+        }
     };
 
     // 12. Grievance Status database editor

@@ -657,6 +657,46 @@
             border-color: #ef5350;
         }
 
+        .iv-cms-item-controls {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .iv-cms-item-controls .iv-cms-btn-remove {
+            position: static;
+        }
+
+        .iv-cms-btn-move {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-secondary);
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            font-size: 11px;
+        }
+
+        .iv-cms-btn-move:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .iv-cms-btn-move:disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+        }
+
         /* File Upload Picker Simulation */
         .iv-cms-file-picker {
             display: flex;
