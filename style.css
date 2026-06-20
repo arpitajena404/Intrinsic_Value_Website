@@ -3279,7 +3279,7 @@ html {
         display: flex !important;
         flex-direction: row !important;
         align-items: center !important;
-        justify-content: flex-start !important;
+        justify-content: center !important;
         gap: 16px !important;
         width: 100% !important;
         height: 80px !important;
