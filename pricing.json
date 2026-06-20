@@ -1,0 +1,120 @@
+{
+    "pricing_title": "Intrinsic Value Pricing",
+    "pricing_subtitle": "Select the perfect advisory tier aligned with your capital size and research requirement.",
+    "comparison_title": "Advisory Tiers Comparison",
+    "comparison_subtitle": "Compare the exact features, query resolutions, and platforms for each tier.",
+    "cards": [
+        {
+            "name": "HNI Premium",
+            "min_capital": "10 - 15 Lakhs",
+            "price_display": "₹<span class=\"pricing-discount-counter\">45,000</span> + GST / year",
+            "duration": "1 Year Subscription"
+        },
+        {
+            "name": "Inner Circle",
+            "min_capital": "2 Crore+",
+            "price_display": "₹1.51 Lacs + GST / year",
+            "duration": "1 Year Subscription"
+        },
+        {
+            "name": "Invest Biz",
+            "min_capital": "5 Cr+ (Business money only)",
+            "price_display": "Custom Pricing",
+            "duration": "Quarterly Billing"
+        }
+    ],
+    "parameters": [
+        "Bill Tenure",
+        "Minimum Capital",
+        "Asset Class",
+        "Volatility / Risk",
+        "Market cap",
+        "Alternate assets",
+        "Holding",
+        "Face to Face",
+        "Target returns",
+        "Possible Drawdown",
+        "Portfolio",
+        "SME Stocks",
+        "Query resolution",
+        "Access",
+        "Platform",
+        "Model portfolio",
+        "Who should join",
+        "Fee/Year"
+    ],
+    "table_plans": [
+        {
+            "name": "HNI Premium",
+            "cta_link": "https://premium.intrinsicvalueequity.in/checkout/efe6d23f-bf90-4e14-92c2-6fd0fb8f0237?init_booking=true",
+            "values": {
+                "Bill Tenure": "Annual",
+                "Minimum Capital": "10–15 Lakhs",
+                "Asset Class": "Equity only",
+                "Volatility / Risk": "Mid/High",
+                "Market cap": "Small/&#8203;Microcap",
+                "Alternate assets": "Only at Extremes",
+                "Holding": "2–5 years",
+                "Face to Face": "Once/&#8203;Quarter",
+                "Target returns": "Index +6-9%",
+                "Possible Drawdown": ">15%",
+                "Portfolio": ">20 stocks",
+                "SME Stocks": "No",
+                "Query resolution": "3 days",
+                "Access": "Single",
+                "Platform": "App",
+                "Model portfolio": "Equity research",
+                "Who should join": "Retail investors",
+                "Fee/Year": "39,871+GST"
+            }
+        },
+        {
+            "name": "Inner Circle",
+            "cta_link": "https://premium.intrinsicvalueequity.in/checkout/311e8d9b-8d7c-4bfa-95c3-53704355ca4a",
+            "values": {
+                "Bill Tenure": "Annual",
+                "Minimum Capital": "2 Crore+",
+                "Asset Class": "Equity only",
+                "Volatility / Risk": "Mid/High",
+                "Market cap": "Small/&#8203;Microcap",
+                "Alternate assets": "Only at Extremes",
+                "Holding": "2–5 years",
+                "Face to Face": "As needed",
+                "Target returns": "Index +6-9%",
+                "Possible Drawdown": ">15%",
+                "Portfolio": ">20 stocks",
+                "SME Stocks": "Opportunity based",
+                "Query resolution": "24 hours",
+                "Access": "2 people",
+                "Platform": "WhatsApp plus App",
+                "Model portfolio": "Focused Model Portfolio",
+                "Who should join": "Entrepreneurs/&#8203;Professionals",
+                "Fee/Year": "1.51 Lacs +GST"
+            }
+        },
+        {
+            "name": "Invest Biz",
+            "cta_link": "https://premium.intrinsicvalueequity.in/checkout/28180dfc-84a9-488e-854e-9f7958a1b8d7",
+            "values": {
+                "Bill Tenure": "Quarterly",
+                "Minimum Capital": "5 Cr+ (Business money only)",
+                "Asset Class": "ETFs only",
+                "Volatility / Risk": "Low",
+                "Market cap": "—",
+                "Alternate assets": "Always",
+                "Holding": "9–12 months",
+                "Face to Face": "Active all time",
+                "Target returns": "FD +6-9%",
+                "Possible Drawdown": "<8%",
+                "Portfolio": ">3 ETFs",
+                "SME Stocks": "No",
+                "Query resolution": "24 hours",
+                "Access": "Multi",
+                "Platform": "Personalized WA Group",
+                "Model portfolio": "Business worthy",
+                "Who should join": "Companies with Business Cash",
+                "Fee/Year": "Custom"
+            }
+        }
+    ]
+}

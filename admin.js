@@ -255,6 +255,127 @@
     // HOMEPAGE CMS WORKSPACE ENGINE
     // ----------------------------------------------------
     var cmsState = {};
+    var pricingCmsState = {};
+    var DEFAULT_PRICING_FALLBACK_CONFIG = {
+        "pricing_title": "Intrinsic Value Pricing",
+        "pricing_subtitle": "Select the perfect advisory tier aligned with your capital size and research requirement.",
+        "comparison_title": "Advisory Tiers Comparison",
+        "comparison_subtitle": "Compare the exact features, query resolutions, and platforms for each tier.",
+        "cards": [
+            {
+                "name": "HNI Premium",
+                "min_capital": "10 - 15 Lakhs",
+                "price_display": "₹<span class=\"pricing-discount-counter\">45,000</span> + GST / year",
+                "duration": "1 Year Subscription"
+            },
+            {
+                "name": "Inner Circle",
+                "min_capital": "2 Crore+",
+                "price_display": "₹1.51 Lacs + GST / year",
+                "duration": "1 Year Subscription"
+            },
+            {
+                "name": "Invest Biz",
+                "min_capital": "5 Cr+ (Business money only)",
+                "price_display": "Custom Pricing",
+                "duration": "Quarterly Billing"
+            }
+        ],
+        "parameters": [
+            "Bill Tenure",
+            "Minimum Capital",
+            "Asset Class",
+            "Volatility / Risk",
+            "Market cap",
+            "Alternate assets",
+            "Holding",
+            "Face to Face",
+            "Target returns",
+            "Possible Drawdown",
+            "Portfolio",
+            "SME Stocks",
+            "Query resolution",
+            "Access",
+            "Platform",
+            "Model portfolio",
+            "Who should join",
+            "Fee/Year"
+        ],
+        "table_plans": [
+            {
+                "name": "HNI Premium",
+                "cta_link": "https://premium.intrinsicvalueequity.in/checkout/efe6d23f-bf90-4e14-92c2-6fd0fb8f0237?init_booking=true",
+                "values": {
+                    "Bill Tenure": "Annual",
+                    "Minimum Capital": "10–15 Lakhs",
+                    "Asset Class": "Equity only",
+                    "Volatility / Risk": "Mid/High",
+                    "Market cap": "Small/&#8203;Microcap",
+                    "Alternate assets": "Only at Extremes",
+                    "Holding": "2–5 years",
+                    "Face to Face": "Once/&#8203;Quarter",
+                    "Target returns": "Index +6-9%",
+                    "Possible Drawdown": ">15%",
+                    "Portfolio": ">20 stocks",
+                    "SME Stocks": "No",
+                    "Query resolution": "3 days",
+                    "Access": "Single",
+                    "Platform": "App",
+                    "Model portfolio": "Equity research",
+                    "Who should join": "Retail investors",
+                    "Fee/Year": "39,871+GST"
+                }
+            },
+            {
+                "name": "Inner Circle",
+                "cta_link": "https://premium.intrinsicvalueequity.in/checkout/311e8d9b-8d7c-4bfa-95c3-53704355ca4a",
+                "values": {
+                    "Bill Tenure": "Annual",
+                    "Minimum Capital": "2 Crore+",
+                    "Asset Class": "Equity only",
+                    "Volatility / Risk": "Mid/High",
+                    "Market cap": "Small/&#8203;Microcap",
+                    "Alternate assets": "Only at Extremes",
+                    "Holding": "2–5 years",
+                    "Face to Face": "As needed",
+                    "Target returns": "Index +6-9%",
+                    "Possible Drawdown": ">15%",
+                    "Portfolio": ">20 stocks",
+                    "SME Stocks": "Opportunity based",
+                    "Query resolution": "24 hours",
+                    "Access": "2 people",
+                    "Platform": "WhatsApp plus App",
+                    "Model portfolio": "Focused Model Portfolio",
+                    "Who should join": "Entrepreneurs/&#8203;Professionals",
+                    "Fee/Year": "1.51 Lacs +GST"
+                }
+            },
+            {
+                "name": "Invest Biz",
+                "cta_link": "https://premium.intrinsicvalueequity.in/checkout/28180dfc-84a9-488e-854e-9f7958a1b8d7",
+                "values": {
+                    "Bill Tenure": "Quarterly",
+                    "Minimum Capital": "5 Cr+ (Business money only)",
+                    "Asset Class": "ETFs only",
+                    "Volatility / Risk": "Low",
+                    "Market cap": "—",
+                    "Alternate assets": "Always",
+                    "Holding": "9–12 months",
+                    "Face to Face": "Active all time",
+                    "Target returns": "FD +6-9%",
+                    "Possible Drawdown": "<8%",
+                    "Portfolio": ">3 ETFs",
+                    "SME Stocks": "No",
+                    "Query resolution": "24 hours",
+                    "Access": "Multi",
+                    "Platform": "Personalized WA Group",
+                    "Model portfolio": "Business worthy",
+                    "Who should join": "Companies with Business Cash",
+                    "Fee/Year": "Custom"
+                }
+            }
+        ]
+    };
     var DEFAULT_FALLBACK_CONFIG = {
             "navigation": [
                     {
@@ -981,6 +1102,18 @@
                 cmsState = JSON.parse(JSON.stringify(DEFAULT_FALLBACK_CONFIG));
                 populateCmsForms();
             });
+
+        fetch('pricing.json')
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                pricingCmsState = data;
+                populatePricingForms();
+            })
+            .catch(function (err) {
+                console.warn("Could not fetch pricing.json directly. Loading fallback configuration:", err);
+                pricingCmsState = JSON.parse(JSON.stringify(DEFAULT_PRICING_FALLBACK_CONFIG));
+                populatePricingForms();
+            });
     }
 
     // Toggle hero media url input depending on type
@@ -1080,6 +1213,251 @@
         renderComplianceAudits();
         renderGrievanceRecordEditor();
     }
+
+    function populatePricingForms() {
+        if (!pricingCmsState) return;
+        document.getElementById('cms-pricing-title').value = pricingCmsState.pricing_title || '';
+        document.getElementById('cms-pricing-subtitle').value = pricingCmsState.pricing_subtitle || '';
+        document.getElementById('cms-comparison-title').value = pricingCmsState.comparison_title || '';
+        document.getElementById('cms-comparison-subtitle').value = pricingCmsState.comparison_subtitle || '';
+        
+        document.getElementById('cms-pricing-parameters').value = (pricingCmsState.parameters || []).join('\n');
+        
+        renderPlanList();
+        renderCardList();
+    }
+
+    function renderPlanList() {
+        var container = document.getElementById('cms-plan-list');
+        if (!container) return;
+        container.innerHTML = '';
+        
+        (pricingCmsState.table_plans || []).forEach(function (plan, planIdx) {
+            var div = document.createElement('div');
+            div.className = 'iv-cms-repeater-item';
+            div.style.marginBottom = '20px';
+            
+            // Build the dynamic parameters list HTML for this plan
+            var paramsHtml = (pricingCmsState.parameters || []).map(function(param) {
+                var val = (plan.values && plan.values[param]) || '';
+                return `
+                    <div class="iv-cms-group" style="margin-bottom: 8px; flex: 1 1 200px; min-width: 180px;">
+                        <label class="iv-cms-label" style="font-size: 11px; margin-bottom: 2px;">${escapeHtml(param)}</label>
+                        <input type="text" class="iv-cms-input" style="padding: 6px 10px; font-size: 12px;" value="${escapeHtml(val)}" oninput="updatePlanValue(${planIdx}, '${escapeHtml(param).replace(/'/g, "\\'")}', this.value)">
+                    </div>
+                `;
+            }).join('');
+            
+            div.innerHTML = `
+                <button type="button" class="iv-cms-btn-remove" onclick="removePlan(${planIdx})">&times;</button>
+                <div class="iv-cms-row">
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Plan / Column Name <span class="req">Required</span></label>
+                        <input type="text" class="iv-cms-input" value="${escapeHtml(plan.name)}" oninput="updatePlanField(${planIdx}, 'name', this.value)">
+                    </div>
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Checkout / CTA Link <span class="req">Required</span></label>
+                        <input type="text" class="iv-cms-input" value="${escapeHtml(plan.cta_link)}" oninput="updatePlanField(${planIdx}, 'cta_link', this.value)">
+                    </div>
+                </div>
+                
+                <div style="margin: 12px 0 6px 0; font-size: 12px; font-weight: bold; color: var(--accent);">Column Row Values:</div>
+                <div class="iv-cms-row" style="flex-wrap: wrap; gap: 8px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    ${paramsHtml}
+                </div>
+                
+                <div class="iv-cms-export-actions" style="margin-top: 14px; gap: 8px; justify-content: flex-start;">
+                    <button type="button" class="iv-admin-btn" style="width: auto; padding: 6px 12px; font-size: 11px; border-style: solid; border-color: var(--accent);" onclick="buildCardFromPlan(${planIdx})">
+                        <i class="fa-solid fa-sync"></i> Build / Sync Pricing Card
+                    </button>
+                    <button type="button" class="iv-admin-btn" style="width: auto; padding: 6px 12px; font-size: 11px; background: rgba(239, 83, 80, 0.15); border-color: rgba(239, 83, 80, 0.3); color: #ef5350;" onclick="deleteCardForPlan(${planIdx})">
+                        <i class="fa-solid fa-trash-can"></i> Delete Corresponding Card
+                    </button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function renderCardList() {
+        var container = document.getElementById('cms-card-list');
+        if (!container) return;
+        container.innerHTML = '';
+        
+        (pricingCmsState.cards || []).forEach(function (card, cardIdx) {
+            var div = document.createElement('div');
+            div.className = 'iv-cms-repeater-item';
+            
+            div.innerHTML = `
+                <button type="button" class="iv-cms-btn-remove" onclick="removeCard(${cardIdx})">&times;</button>
+                <div class="iv-cms-row">
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Plan Card Name <span class="req">Required</span></label>
+                        <input type="text" class="iv-cms-input" value="${escapeHtml(card.name)}" oninput="updateCardField(${cardIdx}, 'name', this.value)">
+                    </div>
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Min Capital <span class="req">Required</span></label>
+                        <input type="text" class="iv-cms-input" value="${escapeHtml(card.min_capital)}" oninput="updateCardField(${cardIdx}, 'min_capital', this.value)">
+                    </div>
+                </div>
+                <div class="iv-cms-row" style="margin-bottom: 0;">
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Price/Fee Display (HTML allowed) <span class="req">Required</span></label>
+                        <input type="text" class="iv-cms-input" value="${escapeHtml(card.price_display)}" oninput="updateCardField(${cardIdx}, 'price_display', this.value)">
+                    </div>
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Duration Text <span class="req">Required</span></label>
+                        <input type="text" class="iv-cms-input" value="${escapeHtml(card.duration)}" oninput="updateCardField(${cardIdx}, 'duration', this.value)">
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function compilePricingCmsState() {
+        pricingCmsState.pricing_title = document.getElementById('cms-pricing-title').value;
+        pricingCmsState.pricing_subtitle = document.getElementById('cms-pricing-subtitle').value;
+        pricingCmsState.comparison_title = document.getElementById('cms-comparison-title').value;
+        pricingCmsState.comparison_subtitle = document.getElementById('cms-comparison-subtitle').value;
+        
+        var paramsText = document.getElementById('cms-pricing-parameters').value;
+        pricingCmsState.parameters = paramsText.split('\n').map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 0; });
+        
+        var jsonText = JSON.stringify(pricingCmsState, null, 4);
+        var jsonDisplay = document.getElementById('cmsPricingJsonDisplay');
+        if (jsonDisplay) {
+            jsonDisplay.textContent = jsonText;
+        }
+        return jsonText;
+    }
+
+    function copyPricingJsonToClipboard() {
+        var jsonText = compilePricingCmsState();
+        navigator.clipboard.writeText(jsonText)
+            .then(function () {
+                showToast("Copied Pricing JSON to Clipboard!");
+            })
+            .catch(function (err) {
+                console.error("Could not copy pricing text: ", err);
+                var textarea = document.createElement('textarea');
+                textarea.value = jsonText;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast("Copied Pricing JSON to Clipboard!");
+                } catch (e) {
+                    alert("Failed to copy. Please select the text inside the block and copy manually.");
+                }
+                document.body.removeChild(textarea);
+            });
+    }
+
+    function downloadPricingJsonFile() {
+        var jsonText = compilePricingCmsState();
+        var blob = new Blob([jsonText], { type: "application/json" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = "pricing.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    window.updatePlanField = function (planIdx, field, val) {
+        pricingCmsState.table_plans[planIdx][field] = val;
+    };
+    
+    window.updatePlanValue = function (planIdx, paramName, val) {
+        pricingCmsState.table_plans[planIdx].values = pricingCmsState.table_plans[planIdx].values || {};
+        pricingCmsState.table_plans[planIdx].values[paramName] = val;
+    };
+    
+    window.updateCardField = function (cardIdx, field, val) {
+        pricingCmsState.cards[cardIdx][field] = val;
+    };
+    
+    window.removePlan = function (planIdx) {
+        var planName = pricingCmsState.table_plans[planIdx].name;
+        if (confirm("Are you sure you want to remove the plan '" + planName + "'?")) {
+            var deleteCard = confirm("Do you also want to delete the corresponding 3D pricing card '" + planName + "'?");
+            if (deleteCard) {
+                pricingCmsState.cards = (pricingCmsState.cards || []).filter(function (c) { return c.name !== planName; });
+            }
+            pricingCmsState.table_plans.splice(planIdx, 1);
+            renderPlanList();
+            renderCardList();
+        }
+    };
+    
+    window.removeCard = function (cardIdx) {
+        if (confirm("Are you sure you want to remove this pricing card?")) {
+            pricingCmsState.cards.splice(cardIdx, 1);
+            renderCardList();
+        }
+    };
+
+    window.buildCardFromPlan = function(planIdx) {
+        var plan = pricingCmsState.table_plans[planIdx];
+        if (!plan.name) {
+            alert("Please enter a Plan name first.");
+            return;
+        }
+        pricingCmsState.cards = pricingCmsState.cards || [];
+        var existingCard = pricingCmsState.cards.find(function(c) { return c.name.toLowerCase() === plan.name.toLowerCase(); });
+        
+        var capVal = (plan.values && plan.values['Minimum Capital']) || '';
+        var feeVal = (plan.values && plan.values['Fee/Year']) || '';
+        var tenureVal = (plan.values && plan.values['Bill Tenure']) || '';
+        
+        var priceDisplay = feeVal;
+        if (priceDisplay.indexOf('₹') === -1 && priceDisplay.toLowerCase() !== 'custom') {
+            priceDisplay = '₹' + priceDisplay;
+        }
+        if (priceDisplay.toLowerCase() !== 'custom' && priceDisplay.indexOf('/ year') === -1) {
+            priceDisplay = priceDisplay + ' / year';
+        }
+        
+        var durationText = tenureVal;
+        if (durationText.toLowerCase() === 'annual') {
+            durationText = '1 Year Subscription';
+        } else if (durationText.toLowerCase() === 'quarterly') {
+            durationText = 'Quarterly Billing';
+        }
+        
+        if (existingCard) {
+            existingCard.min_capital = capVal;
+            existingCard.price_display = priceDisplay;
+            existingCard.duration = durationText;
+            alert("Updated existing card for '" + plan.name + "'!");
+        } else {
+            pricingCmsState.cards.push({
+                name: plan.name,
+                min_capital: capVal,
+                price_display: priceDisplay,
+                duration: durationText
+            });
+            alert("Created new pricing card for '" + plan.name + "'!");
+        }
+        renderCardList();
+    };
+
+    window.deleteCardForPlan = function(planIdx) {
+        var plan = pricingCmsState.table_plans[planIdx];
+        if (!plan.name) return;
+        var originalLen = (pricingCmsState.cards || []).length;
+        pricingCmsState.cards = (pricingCmsState.cards || []).filter(function(c) { return c.name.toLowerCase() !== plan.name.toLowerCase(); });
+        if (pricingCmsState.cards.length < originalLen) {
+            alert("Deleted pricing card matching plan '" + plan.name + "'!");
+        } else {
+            alert("No card found matching plan '" + plan.name + "'.");
+        }
+        renderCardList();
+    };
+
 
     // Compile from forms to output JSON
     function compileCmsState() {
@@ -1868,6 +2246,7 @@
 
                     if (tabId === 'tab-export') {
                         compileCmsState();
+                        compilePricingCmsState();
                     }
                 });
             });
@@ -1947,6 +2326,7 @@
         if (saveBtn) {
             saveBtn.addEventListener('click', function () {
                 compileCmsState();
+                compilePricingCmsState();
                 var exportTabLink = document.querySelector('.iv-cms-tab-link[data-tab="tab-export"]');
                 if (exportTabLink) exportTabLink.click();
             });
@@ -1958,6 +2338,61 @@
 
         if (downloadBtn) {
             downloadBtn.addEventListener('click', downloadJsonFile);
+        }
+
+        // Pricing Config clipboard copy & download buttons
+        var copyPricingBtn = document.getElementById('cmsCopyPricingJsonBtn');
+        if (copyPricingBtn) {
+            copyPricingBtn.addEventListener('click', copyPricingJsonToClipboard);
+        }
+
+        var downloadPricingBtn = document.getElementById('cmsDownloadPricingJsonBtn');
+        if (downloadPricingBtn) {
+            downloadPricingBtn.addEventListener('click', downloadPricingJsonFile);
+        }
+
+        // Add plan column
+        var addPlanBtn = document.getElementById('cms-plan-add-btn');
+        if (addPlanBtn) {
+            addPlanBtn.addEventListener('click', function () {
+                pricingCmsState.table_plans = pricingCmsState.table_plans || [];
+                // Gather default values map based on current parameters list
+                var defaultValues = {};
+                (pricingCmsState.parameters || []).forEach(function (param) {
+                    defaultValues[param] = "";
+                });
+                
+                pricingCmsState.table_plans.push({
+                    name: "New Plan Name",
+                    cta_link: "https://premium.intrinsicvalueequity.in/checkout/...",
+                    values: defaultValues
+                });
+                renderPlanList();
+            });
+        }
+
+        // Add plan card listing
+        var addCardBtn = document.getElementById('cms-card-add-btn');
+        if (addCardBtn) {
+            addCardBtn.addEventListener('click', function () {
+                pricingCmsState.cards = pricingCmsState.cards || [];
+                pricingCmsState.cards.push({
+                    name: "New Plan",
+                    min_capital: "10 - 15 Lakhs",
+                    price_display: "₹39,871 + GST / year",
+                    duration: "1 Year Subscription"
+                });
+                renderCardList();
+            });
+        }
+
+        // Bind pricing parameters text input change
+        var pricingParamsInput = document.getElementById('cms-pricing-parameters');
+        if (pricingParamsInput) {
+            pricingParamsInput.addEventListener('input', function () {
+                pricingCmsState.parameters = this.value.split('\n').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
+                renderPlanList();
+            });
         }
 
         document.getElementById('cms-hero-media-type').addEventListener('change', toggleMediaUrlField);

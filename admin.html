@@ -935,6 +935,7 @@
                 <button class="iv-cms-tab-link" data-tab="tab-case-studies">Case Studies</button>
                 <button class="iv-cms-tab-link" data-tab="tab-team-testimonials">Team & Reviews</button>
                 <button class="iv-cms-tab-link" data-tab="tab-footer-faqs">FAQs & Footer</button>
+                <button class="iv-cms-tab-link" data-tab="tab-pricing">Plans & Pricing</button>
                 <button class="iv-cms-tab-link" data-tab="tab-export">Export & Build</button>
             </div>
 
@@ -1309,6 +1310,69 @@
 
                 </div>
 
+                <!-- TAB 5.5: PLANS & PRICING -->
+                <div id="tab-pricing" class="iv-cms-tab-content">
+                    
+                    <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Plans & Pricing General Content</h4>
+                    
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Pricing Page Title <span class="req">Required</span></label>
+                            <input type="text" id="cms-pricing-title" class="iv-cms-input">
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Pricing Page Subtitle <span class="req">Required</span></label>
+                            <input type="text" id="cms-pricing-subtitle" class="iv-cms-input">
+                        </div>
+                    </div>
+
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Comparison Table Title <span class="req">Required</span></label>
+                            <input type="text" id="cms-comparison-title" class="iv-cms-input">
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Comparison Table Subtitle <span class="req">Required</span></label>
+                            <input type="text" id="cms-comparison-subtitle" class="iv-cms-input">
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 32px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Table Parameters</h4>
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Table Row Parameters (one per line) <span class="req">Required</span></label>
+                        <textarea id="cms-pricing-parameters" class="iv-cms-textarea" style="min-height: 120px;" placeholder="Bill Tenure&#10;Minimum Capital&#10;Asset Class..."></textarea>
+                    </div>
+
+                    <h4 style="margin: 32px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Advisory Plans & Table Columns</h4>
+                    
+                    <div class="iv-cms-repeater-container" style="margin-bottom: 32px;">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">Plans List (Table Columns)</span>
+                            <button type="button" id="cms-plan-add-btn" class="iv-cms-btn-add">
+                                <i class="fa-solid fa-plus"></i> Add New Plan
+                            </button>
+                        </div>
+                        <div id="cms-plan-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 32px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Pricing Cards (3D Cards)</h4>
+                    
+                    <div class="iv-cms-repeater-container">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">Plan Card Listings</span>
+                            <button type="button" id="cms-card-add-btn" class="iv-cms-btn-add">
+                                <i class="fa-solid fa-plus"></i> Add Plan Card
+                            </button>
+                        </div>
+                        <div id="cms-card-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                </div>
+
                 <!-- TAB 6: EXPORT & BUILD -->
                 <div id="tab-export" class="iv-cms-tab-content">
                     
@@ -1318,27 +1382,45 @@
                         <p style="margin-bottom: 8px;"><strong>Steps to apply these changes to the live website:</strong></p>
                         <ol style="margin-left: 20px; padding-left: 0; line-height: 1.6;">
                             <li>Verify your edits across all tabs, then click the **Generate Config** button.</li>
-                            <li>Copy the resulting JSON payload from the code-block below.</li>
-                            <li>Overwrite the contents of <strong><a href="file:///c:/IV website/homepage_config.json" style="color: var(--accent); text-decoration: underline;">homepage_config.json</a></strong> with this text.</li>
-                            <li>Execute the build script by running the following command in your terminal:
-                                <code style="display:block; margin: 8px 0; padding: 10px; background: #000; border-radius: 6px; border: 1px solid #333; color: var(--accent);">node scripts/update_homepage.js</code>
+                            <li>Copy or download the respective JSON payloads.</li>
+                            <li>Save the Homepage JSON to <strong>homepage_config.json</strong> and run:
+                                <code style="display:block; margin: 4px 0; padding: 8px; background: #000; border-radius: 6px; border: 1px solid #333; color: var(--accent);">node scripts/update_homepage.js</code>
                             </li>
-                            <li>Refresh the landing page to verify that everything works as expected!</li>
+                            <li>Save the Pricing JSON to <strong>pricing.json</strong> and run:
+                                <code style="display:block; margin: 4px 0; padding: 8px; background: #000; border-radius: 6px; border: 1px solid #333; color: var(--accent);">node scripts/update_pricing.js</code>
+                            </li>
+                            <li>Refresh the website pages to verify that everything works!</li>
                         </ol>
                     </div>
 
-                    <div class="iv-cms-group">
-                        <label class="iv-cms-label">Generated JSON Payload <span style="font-weight: normal; color: var(--text-muted);">Config format</span></label>
-                        <div id="cmsJsonDisplay" class="iv-cms-json-box">Click "Generate Config" in the top-right to compile configuration.</div>
-                    </div>
+                    <div class="iv-cms-row">
+                        <!-- Homepage Config Block -->
+                        <div class="iv-cms-group" style="flex: 1; min-width: 300px;">
+                            <label class="iv-cms-label">Homepage Config (homepage_config.json)</label>
+                            <div id="cmsJsonDisplay" class="iv-cms-json-box" style="height: 250px; overflow-y: auto;">Click "Generate Config" in the top-right to compile configuration.</div>
+                            <div class="iv-cms-export-actions" style="margin-top: 10px;">
+                                <button type="button" id="cmsCopyJsonBtn" class="iv-admin-btn" style="width: auto; padding: 8px 16px; font-size: 13px; border-style: solid; border-color: var(--accent);">
+                                    <i class="fa-solid fa-copy"></i> Copy Homepage JSON
+                                </button>
+                                <button type="button" id="cmsDownloadJsonBtn" class="iv-admin-btn" style="width: auto; padding: 8px 16px; font-size: 13px;">
+                                    <i class="fa-solid fa-circle-down"></i> Download Homepage JSON
+                                </button>
+                            </div>
+                        </div>
 
-                    <div class="iv-cms-export-actions">
-                        <button type="button" id="cmsCopyJsonBtn" class="iv-admin-btn" style="width: auto; padding: 12px 24px; border-style: solid; border-color: var(--accent);">
-                            <i class="fa-solid fa-copy"></i> Copy to Clipboard
-                        </button>
-                        <button type="button" id="cmsDownloadJsonBtn" class="iv-admin-btn" style="width: auto; padding: 12px 24px;">
-                            <i class="fa-solid fa-circle-down"></i> Download JSON File
-                        </button>
+                        <!-- Pricing Config Block -->
+                        <div class="iv-cms-group" style="flex: 1; min-width: 300px;">
+                            <label class="iv-cms-label">Pricing Config (pricing.json)</label>
+                            <div id="cmsPricingJsonDisplay" class="iv-cms-json-box" style="height: 250px; overflow-y: auto;">Click "Generate Config" in the top-right to compile configuration.</div>
+                            <div class="iv-cms-export-actions" style="margin-top: 10px;">
+                                <button type="button" id="cmsCopyPricingJsonBtn" class="iv-admin-btn" style="width: auto; padding: 8px 16px; font-size: 13px; border-style: solid; border-color: var(--accent);">
+                                    <i class="fa-solid fa-copy"></i> Copy Pricing JSON
+                                </button>
+                                <button type="button" id="cmsDownloadPricingJsonBtn" class="iv-admin-btn" style="width: auto; padding: 8px 16px; font-size: 13px;">
+                                    <i class="fa-solid fa-circle-down"></i> Download Pricing JSON
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
