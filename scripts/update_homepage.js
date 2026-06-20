@@ -158,38 +158,31 @@ replaceSection('CASE_STUDIES_TITLE', caseStudiesTitleHtml);
 const caseStudiesCompaniesHtml = config.case_studies.companies.map((comp, idx) => {
     const reportsHtml = comp.reports.map(rep => {
         const targetAttr = rep.new_tab !== false ? ' target="_blank" rel="noopener noreferrer"' : '';
-        return `                                <a href="${rep.url}"${targetAttr} class="btn-report-item">
-                                    <i class="far fa-file-pdf"></i>
-                                    <span>${rep.name}</span>
-                                </a>`;
+        return `                                    <a href="${rep.url}"${targetAttr} class="btn-report-item">
+                                        <i class="far fa-file-pdf"></i>
+                                        <span>${rep.name}</span>
+                                    </a>`;
     }).join('\n');
     
     const logoTriggerHtml = comp.logo ? `
-                                <div class="company-trigger-logo-area">
-                                    <div class="company-trigger-logo-wrapper">
-                                        <img src="${comp.logo}" class="company-trigger-logo" alt="${comp.name}">
-                                    </div>
+                                <div class="company-trigger-logo-wrapper">
+                                    <img src="${comp.logo}" class="company-trigger-logo" alt="${comp.name}">
                                 </div>` : `
-                                <div class="company-trigger-logo-area">
-                                    <div class="company-trigger-logo-wrapper placeholder-badge">
-                                        <span class="company-btn-num-large">${comp.num}</span>
-                                    </div>
-                                </div>`;
-    
-    const nameTriggerHtml = `
-                                <div class="company-trigger-name-area">
-                                    <span class="company-btn-num-sub">${comp.num}</span>
-                                    <span class="company-btn-title">${comp.name}</span>
+                                <div class="company-trigger-logo-wrapper placeholder-badge">
+                                    <span class="company-btn-num-large">${comp.num}</span>
                                 </div>`;
     
     return `                        <!-- Company ${idx + 1}: ${comp.name} -->
                         <div class="company-card-wrapper" data-case="${idx}">
-                            <button class="btn-company-trigger">
+                            <button class="btn-company-trigger" aria-label="Open ${comp.name} reports">
 ${logoTriggerHtml}
-${nameTriggerHtml}
                             </button>
                             <div class="company-reports-dropdown">
+                                <button class="btn-close-reports" aria-label="Close reports">&times;</button>
+                                <div class="reports-list-title">${comp.name}</div>
+                                <div class="reports-links-container">
 ${reportsHtml}
+                                </div>
                             </div>
                         </div>`;
 }).join('\n');

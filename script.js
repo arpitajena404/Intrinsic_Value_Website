@@ -1343,7 +1343,32 @@ function initCaseStudies() {
             });
         }
 
-        // 3. Prevent click propagation inside report links
+        // 3. Close button handler inside reports dropdown
+        const closeBtn = wrapper.querySelector('.btn-close-reports');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                wrapper.classList.remove('expanded');
+                if (container && !document.querySelector('.company-card-wrapper.expanded')) {
+                    container.classList.remove('has-expanded');
+                }
+            });
+        }
+
+        // 4. Close if clicking on the dropdown container background (overlay backdrop)
+        const dropdown = wrapper.querySelector('.company-reports-dropdown');
+        if (dropdown) {
+            dropdown.addEventListener('click', (e) => {
+                if (e.target === dropdown) {
+                    wrapper.classList.remove('expanded');
+                    if (container && !document.querySelector('.company-card-wrapper.expanded')) {
+                        container.classList.remove('has-expanded');
+                    }
+                }
+            });
+        }
+
+        // 5. Prevent click propagation inside report links
         const reportLinks = wrapper.querySelectorAll('.btn-report-item');
         reportLinks.forEach(link => {
             link.addEventListener('click', (e) => {
