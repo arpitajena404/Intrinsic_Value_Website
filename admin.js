@@ -2317,6 +2317,16 @@
             });
         }
 
+        var openPricingBtn = document.getElementById('openPricingCmsBtn');
+        if (openPricingBtn && workspace) {
+            openPricingBtn.addEventListener('click', function () {
+                workspace.style.display = 'block';
+                loadCmsData();
+                var pricingTabLink = document.querySelector('.iv-cms-tab-link[data-tab="tab-pricing"]');
+                if (pricingTabLink) pricingTabLink.click();
+            });
+        }
+
         if (closeBtn && workspace) {
             closeBtn.addEventListener('click', function () {
                 workspace.style.display = 'none';
