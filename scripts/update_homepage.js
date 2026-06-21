@@ -42,10 +42,15 @@ function replaceSection(sectionName, newContent) {
 }
 
 // 1. Navigation Menu
-const navHtml = config.navigation.map(link => {
-    const targetAttr = link.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
-    return `                    <li><a href="${link.url}" class="nav-link"${targetAttr}>${link.text}</a></li>`;
-}).join('\n');
+function generateNavHtml(prefix) {
+    return config.navigation.map(link => {
+        const isAbsolute = /^(?:https?:)?\/\//i.test(link.url) || link.url.startsWith('/') || link.url.startsWith('#');
+        const url = isAbsolute ? link.url : (prefix + link.url);
+        const targetAttr = link.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+        return `                    <li><a href="${url}" class="nav-link"${targetAttr}>${link.text}</a></li>`;
+    }).join('\n');
+}
+const navHtml = generateNavHtml('');
 replaceSection('NAV', navHtml);
 
 // 2. Hero Left Column
@@ -155,48 +160,51 @@ const caseStudiesTitleHtml = `                        <span class="cases-pre-tit
                         <h2 class="cases-main-title">${config.case_studies.title}</h2>`;
 replaceSection('CASE_STUDIES_TITLE', caseStudiesTitleHtml);
 
-const caseStudiesCompaniesHtmlList = [];
-const chunkSize = 4;
-for (let i = 0; i < config.case_studies.companies.length; i += chunkSize) {
-    const chunk = config.case_studies.companies.slice(i, i + chunkSize);
-    const rowCardsHtml = chunk.map((comp, idx) => {
-        const globalIdx = i + idx;
-        const reportsHtml = comp.reports.map(rep => {
-            const targetAttr = rep.new_tab !== false ? ' target="_blank" rel="noopener noreferrer"' : '';
-            return `                                    <a href="${rep.url}"${targetAttr} class="btn-report-item">
-                                        <i class="far fa-file-pdf"></i>
-                                        <span>${rep.name}</span>
-                                    </a>`;
-        }).join('\n');
-        
-        const logoTriggerHtml = comp.logo ? `
+const rowCardsHtml = config.case_studies.companies.map((comp, globalIdx) => {
+    const reportsHtml = comp.reports.map((rep, rIdx) => {
+        const targetAttr = rep.new_tab !== false ? ' target="_blank" rel="noopener noreferrer"' : '';
+        return `                                    <div class="report-option-card">
+                                        <span class="report-option-label">Option ${rIdx + 1}</span>
+                                        <a href="${rep.url}"${targetAttr} class="btn-report-item">
+                                            <i class="far fa-file-pdf"></i>
+                                            <span>${rep.name}</span>
+                                        </a>
+                                    </div>`;
+    }).join('\n');
+    
+    const logoTriggerHtml = comp.logo ? `
                                     <div class="company-trigger-logo-wrapper">
                                         <img src="${comp.logo}" class="company-trigger-logo" alt="${comp.name}">
                                     </div>` : `
                                     <div class="company-trigger-logo-wrapper placeholder-badge">
                                         <span class="company-btn-num-large">${comp.num}</span>
                                     </div>`;
-        
-        return `                        <!-- Company ${globalIdx + 1}: ${comp.name} -->
+    
+    const headerLogoHtml = comp.logo ? `
+                                <div class="reports-header-logo-wrapper">
+                                    <img src="${comp.logo}" class="reports-header-logo" alt="${comp.name}">
+                                </div>` : '';
+    
+    return `                        <!-- Company ${globalIdx + 1}: ${comp.name} -->
                         <div class="company-card-wrapper" data-case="${globalIdx}">
                             <button class="btn-company-trigger" aria-label="Open ${comp.name} reports">
-${logoTriggerHtml}
+                                <div class="company-trigger-num">${comp.num}</div>
+                                ${logoTriggerHtml}
                             </button>
                             <div class="company-reports-dropdown">
                                 <button class="btn-close-reports" aria-label="Close reports">&times;</button>
-                                <div class="reports-list-title">${comp.name}</div>
+                                <div class="reports-expanded-header">
+                                    ${headerLogoHtml}
+                                    <div class="reports-list-title">${comp.name}</div>
+                                </div>
                                 <div class="reports-links-container">
 ${reportsHtml}
                                 </div>
                             </div>
                         </div>`;
-    }).join('\n');
+}).join('\n');
 
-    caseStudiesCompaniesHtmlList.push(`                    <div class="cases-row-container">
-${rowCardsHtml}
-                    </div>`);
-}
-const caseStudiesCompaniesHtml = caseStudiesCompaniesHtmlList.join('\n');
+const caseStudiesCompaniesHtml = `                    <div class="cases-row-container">\n${rowCardsHtml}\n                    </div>`;
 replaceSection('CASE_STUDIES_COMPANIES', caseStudiesCompaniesHtml);
 
 // 8. News Section Display Area & Cards Row
@@ -460,3 +468,80 @@ replaceSection('GRIEVANCE_DATA', grievanceDataHtml);
 
 fs.writeFileSync(htmlPath, html, 'utf8');
 console.log("Statically compiled index.html successfully!");
+
+// Compile navigation menu for all other HTML pages
+const navRegex = /([\t ]*)<li><a href="(?:\.\.\/)?pricing\.html"[^>]*>Service<\/a><\/li>\s*<li><a href="(?:\.\.\/)?about\.html"[^>]*>About Us<\/a><\/li>\s*<li><a href="(?:\.\.\/)?blogs\.html"[^>]*>Blogs<\/a><\/li>\s*<li><a href="(?:\.\.\/)?analytics\/index\.html"[^>]*>Analytics<\/a><\/li>/;
+
+function updateAllPagesNavigation() {
+    const rootDir = path.join(__dirname, '..');
+    
+    function walkAndFindHtml(dir, fileList = []) {
+        const files = fs.readdirSync(dir);
+        for (const file of files) {
+            const filePath = path.join(dir, file);
+            const stat = fs.statSync(filePath);
+            if (stat.isDirectory()) {
+                if (file !== '.git' && file !== 'node_modules' && file !== 'analytics' && file !== 'CS reports') {
+                    walkAndFindHtml(filePath, fileList);
+                }
+            } else if (file.endsWith('.html')) {
+                fileList.push(filePath);
+            }
+        }
+        return fileList;
+    }
+
+    const htmlFiles = walkAndFindHtml(rootDir);
+    
+    for (const filePath of htmlFiles) {
+        // Skip index.html since we updated it via main loop
+        if (path.resolve(filePath) === path.resolve(htmlPath)) {
+            continue;
+        }
+        
+        let content = fs.readFileSync(filePath, 'utf8').replace(/\r\n/g, '\n');
+        let modified = false;
+        
+        // 1. Inject markers if they don't exist but the standard nav links are there
+        if (!content.includes('CMS_NAV_START')) {
+            const match = content.match(navRegex);
+            if (match) {
+                const spaces = match[1] || '';
+                const blockToReplace = match[0];
+                const replacement = `\n${spaces}<!-- CMS_NAV_START -->\n${blockToReplace}\n${spaces}<!-- CMS_NAV_END -->`;
+                content = content.replace(blockToReplace, replacement);
+                modified = true;
+                console.log(`Injected navigation markers into: ${path.relative(rootDir, filePath)}`);
+            }
+        }
+        
+        // 2. If it has markers now, update the navigation content
+        if (content.includes('CMS_NAV_START')) {
+            const startMarker = '<!-- CMS_NAV_START -->';
+            const endMarker = '<!-- CMS_NAV_END -->';
+            const startIndex = content.indexOf(startMarker);
+            const endIndex = content.indexOf(endMarker);
+            
+            if (startIndex !== -1 && endIndex !== -1) {
+                const relPath = path.relative(rootDir, filePath).replace(/\\/g, '/');
+                const depth = relPath.split('/').length - 1;
+                const prefix = '../'.repeat(depth);
+                
+                const relativeNavHtml = generateNavHtml(prefix);
+                
+                const before = content.substring(0, startIndex + startMarker.length);
+                const after = content.substring(endIndex);
+                
+                content = before + "\n" + relativeNavHtml + "\n" + after;
+                modified = true;
+                console.log(`Updated navigation in: ${path.relative(rootDir, filePath)}`);
+            }
+        }
+        
+        if (modified) {
+            fs.writeFileSync(filePath, content, 'utf8');
+        }
+    }
+}
+
+updateAllPagesNavigation();

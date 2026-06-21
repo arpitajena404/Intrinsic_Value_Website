@@ -1,6 +1,11 @@
 {
     "navigation": [
         {
+            "text": "Home",
+            "url": "https://intrinsicvalueequity.in",
+            "new_tab": false
+        },
+        {
             "text": "Service",
             "url": "pricing.html"
         },

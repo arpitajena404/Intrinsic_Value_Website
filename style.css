@@ -2952,7 +2952,7 @@ html {
     flex-direction: row;
     gap: 16px;
     width: 100%;
-    height: 340px;
+    height: 380px;
     align-items: center;
     box-sizing: border-box;
 }
@@ -2964,7 +2964,7 @@ html {
     align-items: center;
     height: 100%;
     flex: 1;
-    min-width: 80px;
+    min-width: 70px;
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
@@ -3005,25 +3005,24 @@ html {
 
 /* Focus States: Dim other cards inside the active row when one is expanded */
 .cases-row-container.has-expanded .company-card-wrapper:not(.expanded) {
-    flex: 0.75;
-    opacity: 0.35;
-    filter: blur(1px);
+    flex: 0.4;
+    opacity: 0.45;
+    filter: blur(0.5px);
 }
 
 .company-card-wrapper.expanded {
-    flex: 2.0;
+    flex: 4.5;
     border-color: var(--accent);
-    background: rgba(24, 18, 12, 0.85);
+    background: rgba(24, 18, 12, 0.95);
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6), 0 0 12px rgba(255, 140, 0, 0.15);
 }
 
-/* Trigger button inside card */
+/* Trigger button inside card: displays vertically when collapsed */
 .btn-company-trigger {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 12px;
+    justify-content: space-between;
     width: 100%;
     height: 100%;
     background: transparent;
@@ -3031,40 +3030,56 @@ html {
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
     box-sizing: border-box;
-    padding: 20px 8px;
+    padding: 24px 8px;
+    gap: 16px;
 }
 
 .company-card-wrapper.expanded .btn-company-trigger {
-    width: 72px !important;
+    width: 70px !important;
     height: 100%;
     flex-shrink: 0;
-    background: rgba(255, 140, 0, 0.05);
+    background: rgba(255, 140, 0, 0.03);
     border-right: 1px solid rgba(255, 140, 0, 0.2);
-    color: #ffffff;
-    padding: 15px 4px;
+    padding: 24px 4px;
 }
 
-/* Logo Sizing */
+/* Number display inside vertical trigger */
+.company-trigger-num {
+    font-size: 24px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.2);
+    font-family: var(--font-heading);
+    transition: color 0.3s ease;
+    line-height: 1;
+}
+
+.company-card-wrapper:hover .company-trigger-num,
+.company-card-wrapper.expanded .company-trigger-num {
+    color: var(--accent);
+}
+
+/* Logo Sizing & Rotation in Collapsed State */
 .company-trigger-logo-wrapper {
-    width: 90%;
-    max-width: 140px;
-    height: 60px;
+    width: 110px;
+    height: 50px;
     background: #ffffff;
-    border-radius: 8px;
-    padding: 6px 12px;
+    border-radius: 6px;
+    padding: 4px 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    transition: all 0.4s ease;
+    transform: rotate(-90deg);
 }
 
 .company-card-wrapper.expanded .btn-company-trigger .company-trigger-logo-wrapper {
-    width: 48px !important;
-    height: 28px !important;
+    width: 70px !important;
+    height: 32px !important;
     padding: 2px 4px !important;
     border-radius: 4px !important;
+    transform: rotate(-90deg) !important;
 }
 
 .company-trigger-logo-wrapper.placeholder-badge {
@@ -3074,7 +3089,7 @@ html {
 }
 
 .company-btn-num-large {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 800;
     color: var(--accent);
     font-family: var(--font-heading);
@@ -3088,7 +3103,7 @@ html {
     object-fit: contain;
 }
 
-/* Dropdown Overlay: slides out on the right */
+/* Expanded Content Area: slides out on the right */
 .company-reports-dropdown {
     position: relative;
     width: auto;
@@ -3098,16 +3113,17 @@ html {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 24px;
     z-index: 10;
+    box-sizing: border-box;
+    padding: 30px;
+    transition: opacity 0.5s ease 0.1s,
+                transform 0.5s cubic-bezier(0.25, 1, 0.5, 1) 0.1s,
+                visibility 0.5s;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    box-sizing: border-box;
-    padding: 15px;
-    transition: opacity 0.4s ease,
-                transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
-                visibility 0.4s;
+    transform: translateX(30px);
 }
 
 .company-card-wrapper:not(.expanded) .company-reports-dropdown {
@@ -3126,7 +3142,7 @@ html {
     position: relative !important;
     width: auto !important;
     height: 100% !important;
-    padding: 15px !important;
+    padding: 30px !important;
     margin: 0 !important;
     overflow: visible !important;
     opacity: 1 !important;
@@ -3138,63 +3154,107 @@ html {
 /* Close Button */
 .btn-close-reports {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 16px;
+    right: 16px;
     background: transparent;
     border: none;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 20px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 24px;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, transform 0.2s ease;
     line-height: 1;
     padding: 4px;
 }
 
 .btn-close-reports:hover {
     color: var(--accent);
+    transform: scale(1.1);
 }
 
-/* Dropdown Title */
+/* Expanded Header with Company Logo & Name horizontal */
+.reports-expanded-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    justify-content: center;
+    width: 100%;
+}
+
+.reports-header-logo-wrapper {
+    width: 90px;
+    height: 45px;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.reports-header-logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
 .reports-list-title {
-    font-size: 14px;
+    font-size: 22px;
     font-weight: 800;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    text-align: center;
-    margin-bottom: 8px;
+    color: #ffffff;
+    font-family: var(--font-heading);
+    letter-spacing: 0.5px;
+    margin-bottom: 0;
 }
 
-/* Links Container */
+/* Links Container: horizontal option-cards row */
 .reports-links-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     width: 100%;
-    gap: 10px;
-    overflow-y: auto;
-    max-height: 200px;
-    padding: 2px;
+    gap: 20px;
+    justify-content: center;
     align-items: center;
+    box-sizing: border-box;
+    padding: 4px;
 }
 
-/* Report links inside overlay */
+/* Option Card: stacks label above the download button */
+.report-option-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.report-option-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Report link button */
 .btn-report-item {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 10px;
-    width: 160px;
-    height: 46px;
-    background: rgba(26, 18, 10, 0.85);
-    border: 1px solid rgba(255, 140, 0, 0.2);
-    border-radius: 10px;
+    width: 170px;
+    height: 48px;
+    background: rgba(255, 140, 0, 0.05);
+    border: 1.5px solid rgba(255, 140, 0, 0.25);
+    border-radius: 12px;
     color: #ffffff;
     text-decoration: none;
     box-sizing: border-box;
-    padding: 8px 12px;
-    text-align: left;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease,
                 border-color 0.3s ease,
                 color 0.3s ease,
@@ -3203,28 +3263,28 @@ html {
 }
 
 .btn-report-item i {
-    font-size: 18px;
+    font-size: 16px;
     color: var(--accent);
     transition: transform 0.3s ease;
 }
 
 .btn-report-item span {
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1.2;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .btn-report-item:hover {
-    background: rgba(255, 140, 0, 0.12);
+    background: var(--accent);
     border-color: var(--accent);
-    color: #ffffff;
-    transform: translateX(5px) !important;
-    box-shadow: 0 12px 30px rgba(255, 140, 0, 0.25);
+    color: #000000;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 140, 0, 0.35);
 }
 
 .btn-report-item:hover i {
-    transform: scale(1.15);
+    color: #000000;
+    transform: scale(1.1);
 }
 
 /* Disabled state */
@@ -3265,10 +3325,12 @@ html {
     }
     
     .company-card-wrapper.expanded {
-        height: 160px !important;
+        height: auto !important;
+        min-height: 180px !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: stretch !important;
+        padding-bottom: 15px !important;
     }
     
     .iv-cases-section.entered .company-card-wrapper {
@@ -3290,8 +3352,14 @@ html {
         width: 100% !important;
         height: 50px !important;
         border-right: none !important;
-        border-bottom: 1.5px solid rgba(255, 140, 0, 0.25) !important;
+        border-bottom: 1.5px solid rgba(255, 140, 0, 0.2) !important;
         padding: 10px 16px !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+    }
+
+    .company-trigger-num {
+        font-size: 20px !important;
     }
     
     .company-trigger-logo-wrapper {
@@ -3299,12 +3367,14 @@ html {
         max-height: 50px !important;
         padding: 6px 12px !important;
         border-radius: 8px !important;
+        transform: none !important;
     }
     
     .company-card-wrapper.expanded .btn-company-trigger .company-trigger-logo-wrapper {
         width: 80px !important;
         height: 32px !important;
         padding: 3px 5px !important;
+        transform: none !important;
     }
     
     .company-btn-num-large {
@@ -3312,11 +3382,12 @@ html {
     }
     
     .company-reports-dropdown {
-        padding: 8px !important;
+        padding: 15px !important;
         flex-direction: column !important;
         transform: none !important;
         height: auto !important;
         width: 100% !important;
+        gap: 12px !important;
     }
 
     .company-card-wrapper:not(.expanded) .company-reports-dropdown {
@@ -3333,38 +3404,47 @@ html {
         visibility: visible !important;
         pointer-events: auto !important;
     }
-    
-    .reports-list-title {
-        font-size: 10px !important;
-        margin-bottom: 0 !important;
+
+    .reports-expanded-header {
+        display: none !important;
     }
     
     .btn-close-reports {
-        top: 3px !important;
-        right: 6px !important;
-        font-size: 16px !important;
+        top: 8px !important;
+        right: 8px !important;
+        font-size: 20px !important;
     }
     
     .reports-links-container {
-        max-height: 100px !important;
-        gap: 4px !important;
+        flex-direction: column !important;
+        max-height: none !important;
+        gap: 12px !important;
         width: 100% !important;
         align-items: center !important;
+        padding: 0 !important;
+        overflow-y: visible !important;
+    }
+
+    .report-option-card {
+        gap: 0 !important;
+        width: 100% !important;
+    }
+
+    .report-option-label {
+        display: none !important;
     }
     
     .btn-report-item {
-        height: 28px !important;
-        width: 160px !important;
-        border-radius: 6px !important;
-        padding: 2px 8px !important;
+        height: 42px !important;
+        width: 90% !important;
+        max-width: 280px !important;
+        border-radius: 8px !important;
+        padding: 6px 12px !important;
+        font-size: 11px !important;
     }
     
     .btn-report-item i {
-        font-size: 12px !important;
-    }
-    
-    .btn-report-item span {
-        font-size: 9.5px !important;
+        font-size: 14px !important;
     }
 }
 
