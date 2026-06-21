@@ -1500,10 +1500,11 @@ function animatePriceCounter() {
     const counterSpan = document.querySelector('.pricing-discount-counter');
     if (!counterSpan) return;
     
+    const cardEl = counterSpan.closest('.pricing-card-3d');
     const suffixSpan = document.querySelector('.pricing-price-suffix');
     
-    const startVal = 45000;
-    const endVal = 39871;
+    const startVal = (cardEl && cardEl.getAttribute('data-start')) ? parseInt(cardEl.getAttribute('data-start'), 10) : 45000;
+    const endVal = (cardEl && cardEl.getAttribute('data-end')) ? parseInt(cardEl.getAttribute('data-end'), 10) : 39871;
     const duration = 2000; // 2 seconds countdown
     const startTime = performance.now();
     

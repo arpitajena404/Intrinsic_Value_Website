@@ -50,8 +50,10 @@ function compileFile(filePath) {
     
     // 2. Pricing Cards Grid
     const cardsHtml = config.cards.map((card, idx) => {
+        const startAttr = card.discount_start ? ` data-start="${card.discount_start}"` : '';
+        const endAttr = card.discount_end ? ` data-end="${card.discount_end}"` : '';
         return `                        <!-- Plan ${idx + 1}: ${card.name} -->
-                        <div class="pricing-card-3d" data-index="${idx}" style="opacity: 1; transform: none;">
+                        <div class="pricing-card-3d" data-index="${idx}"${startAttr}${endAttr} style="opacity: 1; transform: none;">
                             <div class="pricing-card-glow"></div>
                             <div class="pricing-card-header">
                                 <h3 class="pricing-plan-name">${card.name}</h3>

@@ -1322,7 +1322,7 @@
                         <input type="text" class="iv-cms-input" value="${escapeHtml(card.min_capital)}" oninput="updateCardField(${cardIdx}, 'min_capital', this.value)">
                     </div>
                 </div>
-                <div class="iv-cms-row" style="margin-bottom: 0;">
+                <div class="iv-cms-row" style="margin-bottom: 10px;">
                     <div class="iv-cms-group">
                         <label class="iv-cms-label">Price/Fee Display (HTML allowed) <span class="req">Required</span></label>
                         <input type="text" class="iv-cms-input" value="${escapeHtml(card.price_display)}" oninput="updateCardField(${cardIdx}, 'price_display', this.value)">
@@ -1330,6 +1330,16 @@
                     <div class="iv-cms-group">
                         <label class="iv-cms-label">Duration Text <span class="req">Required</span></label>
                         <input type="text" class="iv-cms-input" value="${escapeHtml(card.duration)}" oninput="updateCardField(${cardIdx}, 'duration', this.value)">
+                    </div>
+                </div>
+                <div class="iv-cms-row" style="margin-bottom: 0;">
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Discount Start Value (Optional, e.g. 45000)</label>
+                        <input type="number" class="iv-cms-input" value="${card.discount_start || ''}" oninput="updateCardField(${cardIdx}, 'discount_start', this.value ? parseInt(this.value, 10) : '')">
+                    </div>
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Discount End Value (Optional, e.g. 39871)</label>
+                        <input type="number" class="iv-cms-input" value="${card.discount_end || ''}" oninput="updateCardField(${cardIdx}, 'discount_end', this.value ? parseInt(this.value, 10) : '')">
                     </div>
                 </div>
             `;
