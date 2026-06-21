@@ -197,7 +197,68 @@
                 "reports": [
                     {
                         "name": "Company Overview",
-                        "url": "CS reports/IIFL CO.pdf",
+                        "url": "CS reports/IIFL/IIFL CO.pdf",
+                        "new_tab": true
+                    }
+                ]
+            },
+            {
+                "num": "06",
+                "name": "Mazagon Dock ",
+                "logo": "CS reports/Mazagon logo.png",
+                "reports": [
+                    {
+                        "name": "Buy Report",
+                        "url": "CS reports/Mazagon dock/Mazagon Dock Buy Report.pdf",
+                        "new_tab": true
+                    },
+                    {
+                        "name": "Company Overview",
+                        "url": "CS reports/Mazagon dock/Mazagon Dock CO.pdf",
+                        "new_tab": true
+                    },
+                    {
+                        "name": "Exit Report",
+                        "url": "CS reports/Mazagon dock/Exitreport_Mazagon Dock.pdf",
+                        "new_tab": true
+                    }
+                ]
+            },
+            {
+                "num": "07",
+                "name": "Engineers India",
+                "logo": "CS reports/Engineers India logo.png",
+                "reports": [
+                    {
+                        "name": "Buy Report",
+                        "url": "CS reports/Engineers india/Engineersindia Buy report.pdf",
+                        "new_tab": true
+                    },
+                    {
+                        "name": "Company Overview",
+                        "url": "CS reports/Engineers india/Engineers India CO.pdf",
+                        "new_tab": true
+                    },
+                    {
+                        "name": "Exit Report",
+                        "url": "CS reports/Engineers india/Exitreport_Engineers India.pdf",
+                        "new_tab": true
+                    }
+                ]
+            },
+            {
+                "num": "08",
+                "name": "Glenmark Pharma",
+                "logo": "CS reports/glenmark_logo.png",
+                "reports": [
+                    {
+                        "name": "Buy Report",
+                        "url": "CS reports/Glenmark/GlenmarkPharma Buy Report.pdf",
+                        "new_tab": true
+                    },
+                    {
+                        "name": "Company Overview",
+                        "url": "CS reports/Glenmark/Glenmark Pharma CO.pdf",
                         "new_tab": true
                     }
                 ]
