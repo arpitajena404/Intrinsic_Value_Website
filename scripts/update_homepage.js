@@ -163,13 +163,10 @@ replaceSection('CASE_STUDIES_TITLE', caseStudiesTitleHtml);
 const rowCardsHtml = config.case_studies.companies.map((comp, globalIdx) => {
     const reportsHtml = comp.reports.map((rep, rIdx) => {
         const targetAttr = rep.new_tab !== false ? ' target="_blank" rel="noopener noreferrer"' : '';
-        return `                                    <div class="report-option-card">
-                                        <span class="report-option-label">Option ${rIdx + 1}</span>
-                                        <a href="${rep.url}"${targetAttr} class="btn-report-item">
-                                            <i class="far fa-file-pdf"></i>
-                                            <span>${rep.name}</span>
-                                        </a>
-                                    </div>`;
+        return `                                    <a href="${rep.url}"${targetAttr} class="btn-report-item">
+                                        <i class="far fa-file-pdf"></i>
+                                        <span>${rep.name}</span>
+                                    </a>`;
     }).join('\n');
     
     const logoTriggerHtml = comp.logo ? `
