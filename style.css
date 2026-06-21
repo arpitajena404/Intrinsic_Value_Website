@@ -3311,8 +3311,8 @@ html {
     }
 
     .cases-row-container {
-        display: flex;
-        flex-direction: column !important;
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
         height: auto !important;
         gap: 12px !important;
         width: 100% !important;
@@ -3325,6 +3325,7 @@ html {
         border-radius: 12px !important;
         transform: translateY(20px);
         display: block !important;
+        grid-column: auto !important;
     }
     
     .company-card-wrapper.expanded {
@@ -3334,6 +3335,7 @@ html {
         flex-direction: column !important;
         align-items: stretch !important;
         padding-bottom: 15px !important;
+        grid-column: span 2 !important;
     }
     
     .iv-cases-section.entered .company-card-wrapper {
