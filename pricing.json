@@ -8,7 +8,9 @@
             "name": "HNI Premium",
             "min_capital": "10 - 15 Lakhs",
             "price_display": "₹<span class=\"pricing-discount-counter\">45,000</span> <span class=\"pricing-price-suffix\">+ GST / year</span>",
-            "duration": "1 Year Subscription"
+            "duration": "1 Year Subscription",
+            "discount_start": 45000,
+            "discount_end": 39871
         },
         {
             "name": "Inner Circle",
@@ -65,7 +67,7 @@
                 "Platform": "App",
                 "Model portfolio": "Equity research",
                 "Who should join": "Retail investors",
-                "Fee/Year": "39,871+GST"
+                "Fee/Year": "₹39,871 incl. GST"
             }
         },
         {
@@ -89,7 +91,7 @@
                 "Platform": "WhatsApp plus App",
                 "Model portfolio": "Focused Model Portfolio",
                 "Who should join": "Entrepreneurs/&#8203;Professionals",
-                "Fee/Year": "1.51 Lacs +GST"
+                "Fee/Year": "₹1.51 Lacs +GST"
             }
         },
         {
