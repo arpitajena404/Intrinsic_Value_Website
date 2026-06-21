@@ -197,6 +197,7 @@
                 "reports": [
                     {
                         "name": "Company Overview",
+<<<<<<< HEAD
                         "url": "CS reports/IIFL/IIFL CO.pdf",
                         "new_tab": true
                     }
@@ -259,6 +260,9 @@
                     {
                         "name": "Company Overview",
                         "url": "CS reports/Glenmark/Glenmark Pharma CO.pdf",
+=======
+                        "url": "CS reports/IIFL CO.pdf",
+>>>>>>> bb75ec982841e849808542b63fd2bce8b9a22dee
                         "new_tab": true
                     }
                 ]
