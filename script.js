@@ -1497,58 +1497,8 @@ function initComparisonModal() {
 // PRICE COUNTDOWN COUNTER ANIMATION
 // ==========================================================================
 function animatePriceCounter() {
-    const counterSpan = document.querySelector('.pricing-discount-counter');
-    if (!counterSpan) return;
-    
-    const cardEl = counterSpan.closest('.pricing-card-3d');
-    const suffixSpan = document.querySelector('.pricing-price-suffix');
-    
-    const startVal = (cardEl && cardEl.getAttribute('data-start')) ? parseInt(cardEl.getAttribute('data-start'), 10) : 45000;
-    const endVal = (cardEl && cardEl.getAttribute('data-end')) ? parseInt(cardEl.getAttribute('data-end'), 10) : 39871;
-    const duration = 2000; // 2 seconds countdown
-    const startTime = performance.now();
-    
-    let suffixTransitioned = false;
-    
-    function update(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        
-        // Easing out cubic: starts fast, slows down at the end
-        const easeProgress = 1 - Math.pow(1 - progress, 3);
-        
-        const currentVal = Math.round(startVal - (startVal - endVal) * easeProgress);
-        
-        // Format with Indian commas
-        counterSpan.textContent = currentVal.toLocaleString('en-IN');
-        
-        // Trigger smooth suffix change halfway through the price drop
-        if (suffixSpan && progress >= 0.55 && !suffixTransitioned) {
-            suffixTransitioned = true;
-            suffixSpan.style.opacity = '0';
-            suffixSpan.style.transform = 'translateY(-3px)';
-            
-            setTimeout(() => {
-                suffixSpan.textContent = ' incl. GST';
-                suffixSpan.style.opacity = '1';
-                suffixSpan.style.transform = 'translateY(0)';
-            }, 400);
-        }
-        
-        if (progress < 1) {
-            requestAnimationFrame(update);
-        } else {
-            // Ensure final values are clean and set
-            counterSpan.textContent = endVal.toLocaleString('en-IN');
-            if (suffixSpan) {
-                suffixSpan.textContent = ' incl. GST';
-                suffixSpan.style.opacity = '1';
-                suffixSpan.style.transform = 'translateY(0)';
-            }
-        }
-    }
-    
-    requestAnimationFrame(update);
+    // Price animation disabled - static prices displayed instead
+    return;
 }
 
 // ==========================================================================

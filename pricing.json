@@ -7,7 +7,7 @@
         {
             "name": "HNI Premium",
             "min_capital": "10 - 15 Lakhs",
-            "price_display": "₹<span class=\"pricing-discount-counter\">45,000</span> <span class=\"pricing-price-suffix\">+ GST / year</span>",
+            "price_display": "<span class=\"price-current\">₹39,871 <span class=\"price-suffix\">incl. GST</span></span> <span class=\"price-original\">₹45,000</span>",
             "duration": "1 Year Subscription",
             "discount_start": 45000,
             "discount_end": 39871
