@@ -409,7 +409,7 @@
                     "desc1": "Discover the power of systematic <strong>sector rotation investing</strong> paired with\n                            precise <strong>value unlocking</strong> strategies. Our methodology targets high-quality,\n                            overlooked businesses positioned for major structural turnarounds and multi-year growth.",
                     "desc2": "At Intrinsic Value, alpha is a natural result of a robust, data-driven strategy.\n                            <strong>Capital protection, strict risk management, and process</strong> govern every stock\n                            recommendation. We are a SEBI-registered equity research analyst service dedicated to\n                            sustainable wealth creation.",
                     "cta_text": "Accelerate Your Wealth Now",
-                    "cta_url": "index.html",
+                    "cta_url": "pricing.html",
                     "sebi_badge": "SEBI Registered · INH000009047",
                     "stats": [
                             {
