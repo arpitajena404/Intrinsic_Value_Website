@@ -18,6 +18,15 @@ const dismissPreloader = () => {
             preloader.style.opacity = '0';
             preloader.style.visibility = 'hidden';
             document.body.classList.remove('preloader-active');
+            
+            // Trigger price drop animation on standalone pricing page
+            const scrollStack = document.querySelector('.scroll-stack');
+            const counterSpan = document.querySelector('.pricing-discount-counter');
+            if (!scrollStack && counterSpan) {
+                setTimeout(() => {
+                    animatePriceCounter();
+                }, 500);
+            }
         }, 1300); // wait for 1.2s animation completion
     }
 };
@@ -36,6 +45,16 @@ document.addEventListener('DOMContentLoaded', () => {
         history.scrollRestoration = 'manual';
     }
     window.scrollTo(0, 0);
+
+    // Fallback: if there is no preloader on the page, trigger the price animation directly after a brief delay
+    const fallbackPreloader = document.getElementById('iv-preloader');
+    const fallbackScrollStack = document.querySelector('.scroll-stack');
+    const fallbackCounterSpan = document.querySelector('.pricing-discount-counter');
+    if (!fallbackPreloader && !fallbackScrollStack && fallbackCounterSpan) {
+        setTimeout(() => {
+            animatePriceCounter();
+        }, 1000);
+    }
     // Clean up URLs for production (running on http: or https: but NOT on localhost/127.0.0.1)
     var isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     if ((window.location.protocol === 'http:' || window.location.protocol === 'https:') && !isLocalhost) {
@@ -1481,10 +1500,14 @@ function animatePriceCounter() {
     const counterSpan = document.querySelector('.pricing-discount-counter');
     if (!counterSpan) return;
     
+    const suffixSpan = document.querySelector('.pricing-price-suffix');
+    
     const startVal = 45000;
     const endVal = 39871;
-    const duration = 2500; // 2.5 seconds countdown (slower rate)
+    const duration = 2000; // 2 seconds countdown
     const startTime = performance.now();
+    
+    let suffixTransitioned = false;
     
     function update(now) {
         const elapsed = now - startTime;
@@ -1498,8 +1521,29 @@ function animatePriceCounter() {
         // Format with Indian commas
         counterSpan.textContent = currentVal.toLocaleString('en-IN');
         
+        // Trigger smooth suffix change halfway through the price drop
+        if (suffixSpan && progress >= 0.55 && !suffixTransitioned) {
+            suffixTransitioned = true;
+            suffixSpan.style.opacity = '0';
+            suffixSpan.style.transform = 'translateY(-3px)';
+            
+            setTimeout(() => {
+                suffixSpan.textContent = ' incl. GST';
+                suffixSpan.style.opacity = '1';
+                suffixSpan.style.transform = 'translateY(0)';
+            }, 400);
+        }
+        
         if (progress < 1) {
             requestAnimationFrame(update);
+        } else {
+            // Ensure final values are clean and set
+            counterSpan.textContent = endVal.toLocaleString('en-IN');
+            if (suffixSpan) {
+                suffixSpan.textContent = ' incl. GST';
+                suffixSpan.style.opacity = '1';
+                suffixSpan.style.transform = 'translateY(0)';
+            }
         }
     }
     

@@ -270,8 +270,9 @@ html {
 .main-header {
     position: fixed;
     top: 24px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
+    margin: 0 auto;
     width: calc(100% - 48px);
     max-width: var(--container-max-width);
     height: 72px;
@@ -295,7 +296,7 @@ html {
 }
 
 .main-header.header-hidden {
-    transform: translate3d(-50%, -120px, 0);
+    transform: translateY(-120px);
     opacity: 0;
     pointer-events: none;
 }
@@ -556,7 +557,7 @@ html {
     .nav-menu {
         position: fixed;
         top: 0;
-        right: -100%;
+        right: -320px;
         width: 300px;
         height: 100vh;
         background: var(--bg-secondary);
@@ -3742,6 +3743,11 @@ html {
     font-weight: 700;
     color: var(--accent);
     font-family: var(--font-heading);
+}
+
+.pricing-price-suffix {
+    display: inline-block;
+    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .pricing-duration {
