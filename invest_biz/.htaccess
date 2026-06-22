@@ -1,0 +1,8 @@
+# Disable parent directory rewrite rules from interfering with this subdomain
+RewriteEngine On
+
+# Rewrite /admin to admin.html
+RewriteRule ^admin$ admin.html [L]
+
+# Ensure index.html is served as the default page
+DirectoryIndex index.html

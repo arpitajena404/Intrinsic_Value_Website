@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="live_config.js"></script>
 <style>
 :root{
   --ink:#091221; --ink-2:#0D1E3D;
@@ -162,9 +163,109 @@ h1 .hl{color:var(--gold)}
 
 <script>
 var CHECKOUT_URL="https://premium.intrinsicvalueequity.in/checkout/28180dfc-84a9-488e-854e-9f7958a1b8d7";
+if(typeof LIVE_CONFIG !== 'undefined' && LIVE_CONFIG.vslCheckoutUrl){
+  CHECKOUT_URL = LIVE_CONFIG.vslCheckoutUrl;
+}
+
+function safeRedirect(url) {
+  if (!url) return;
+  var target = url.trim();
+  if (!/^(https?:)?\/\//i.test(target) && !/^mailto:/i.test(target) && !/^tel:/i.test(target)) {
+    target = 'https://' + target;
+  }
+  window.location.href = target;
+}
+
 document.getElementById("applyBtn").addEventListener("click",function(){
-  window.location.href=CHECKOUT_URL;
+  safeRedirect(CHECKOUT_URL);
 });
+/* ============ CMS VISUAL EDITOR INTEGRATION ============ */
+(function() {
+  var isEditMode = false;
+  var redirectKey = 'vslCheckoutUrl';
+  var buttonLabel = 'VSL Strategy Call Link';
+
+  window.addEventListener('message', function(event) {
+    var msg = event.data;
+    if (!msg) return;
+
+    if (msg.type === 'init_cms_state') {
+      if (msg.config && msg.config[redirectKey]) {
+        CHECKOUT_URL = msg.config[redirectKey];
+      }
+      isEditMode = msg.enabled;
+      updateVisuals();
+    } else if (msg.type === 'toggle_edit_mode') {
+      isEditMode = msg.enabled;
+      updateVisuals();
+    } else if (msg.type === 'update_value') {
+      if (msg.key === redirectKey) {
+        CHECKOUT_URL = msg.value;
+      }
+    }
+  });
+
+  // Notify parent window that child is ready to receive config
+  if (window.self !== window.top) {
+    window.parent.postMessage({ type: 'iframe_ready' }, '*');
+  }
+
+  function updateVisuals() {
+    var buttons = document.querySelectorAll('.btn, .cta, .wa-btn');
+    var existingStyle = document.getElementById('cms-injected-styles');
+    
+    if (isEditMode) {
+      if (!existingStyle) {
+        var style = document.createElement('style');
+        style.id = 'cms-injected-styles';
+        style.innerHTML = `
+          .cms-editable-highlight {
+            outline: 3px dashed #E6B53D !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 20px rgba(230, 181, 61, 0.7) !important;
+            cursor: pointer !important;
+            position: relative !important;
+            transition: all 0.2s ease !important;
+          }
+          .cms-editable-highlight:hover {
+            transform: scale(1.02) !important;
+            outline-color: #ffc107 !important;
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      buttons.forEach(function(btn) {
+        btn.classList.add('cms-editable-highlight');
+        btn.onclick = null;
+        btn.setAttribute('onclick', 'return false;');
+        
+        if (!btn.dataset.hasCmsListener) {
+          btn.dataset.hasCmsListener = 'true';
+          // Replace button/clone to clear all existing event listeners
+          var cloned = btn.cloneNode(true);
+          btn.parentNode.replaceChild(cloned, btn);
+          
+          cloned.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.parent.postMessage({
+              type: 'request_edit',
+              key: redirectKey,
+              label: buttonLabel,
+              currentVal: CHECKOUT_URL
+            }, '*');
+          });
+        }
+      });
+    } else {
+      if (existingStyle) existingStyle.remove();
+      buttons.forEach(function(btn) {
+        btn.classList.remove('cms-editable-highlight');
+      });
+    }
+  }
+})();
 </script>
 </body>
 </html>
