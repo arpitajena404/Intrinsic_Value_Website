@@ -241,7 +241,7 @@
           { view: "monthly-analysis", label: "Market Pulse", icon: "◌", path: "/monthly-market-analysis" },
           { view: "earnings-trends", label: "Earnings Trends", icon: "\u22bf", path: "/earnings-trends" },
           { view: "valuation", label: "Market Valuation Tracker", icon: "∑", path: "/market-valuation-index" },
-          { view: "headwind", label: "Headwind / Tailwind Indicator", icon: "⇄", path: "/headwind-tailwind-indicator" }
+          { view: "headwind", label: "Upcycle / Downcycle Indicator", icon: "⇄", path: "/headwind-tailwind-indicator" }
         ]
       },
       {
@@ -254,7 +254,7 @@
       },
       {
         type: "group",
-        name: "Intrinsic Theme",
+        name: "Thematic portfolios",
         items: [
           { view: "intrinsic-theme-gv", label: "Growth at Value", icon: "📈", path: "/intrinsic-theme?type=growth-at-value" },
           { view: "intrinsic-theme-as", label: "High Growth Small Cap", icon: "⚡", path: "/intrinsic-theme?type=aggressive-smallcaps" },
@@ -590,7 +590,7 @@
                 </div>
                 <div class="iv-lock-text">
                   Subscribe to <span class="iv-lock-highlight">unlock full potential</span> <br>
-                  <span class="iv-lock-subtext">Get access to premium valuation insights, advanced analytics.</span>
+                  <span class="iv-lock-subtext">Get access to premium valuation insights and advanced analytics.</span>
                 </div>
               </div>
             `;

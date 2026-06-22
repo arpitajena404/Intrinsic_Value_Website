@@ -87,8 +87,8 @@ function ivDrawRoundedRect(ctx, x, y, w, h, r) {
 
     function ivHeadwindScoreLabel(score) {
       if (!isFinite(score)) return 'Neutral';
-      if (score < 1) return 'Headwind';
-      if (score > 1) return 'Tailwind';
+      if (score < 1) return 'Downcycle';
+      if (score > 1) return 'Upcycle';
       return 'Neutral';
     }
 
@@ -219,16 +219,16 @@ function ivDrawRoundedRect(ctx, x, y, w, h, r) {
       // Positive = Tailwind (green), Negative = Headwind (red), 0 = Neutral (gold)
 
       function colorFor(signal) {
-        if (signal === 'Tailwind') return '#34D399';   // green
-        if (signal === 'Headwind') return '#F87171';   // red
+        if (signal === 'Tailwind' || signal === 'Upcycle') return '#34D399';   // green
+        if (signal === 'Headwind' || signal === 'Downcycle') return '#F87171';   // red
         return '#F4D676';                               // gold / neutral
       }
 
       function badgeHtml(signal) {
-        if (signal === 'Tailwind')
-          return '<span class="iv-hw-badge tailwind iv-blur-value">▲ Tailwind</span>';
-        if (signal === 'Headwind')
-          return '<span class="iv-hw-badge headwind iv-blur-value">▼ Headwind</span>';
+        if (signal === 'Tailwind' || signal === 'Upcycle')
+          return '<span class="iv-hw-badge tailwind iv-blur-value">▲ Upcycle</span>';
+        if (signal === 'Headwind' || signal === 'Downcycle')
+          return '<span class="iv-hw-badge headwind iv-blur-value">▼ Downcycle</span>';
         return '<span class="iv-hw-badge neutral iv-blur-value">● Neutral</span>';
       }
 
@@ -314,23 +314,23 @@ function ivDrawRoundedRect(ctx, x, y, w, h, r) {
       if (!tbody) return;
 
       var mockHwData = {
-        market: { score: 0.15, signal: "Tailwind", scoreDisplay: "0.15" },
+        market: { score: 0.15, signal: "Upcycle", scoreDisplay: "0.15" },
         sectorBreakdown: [
-          { industry: "IT Software", score: 0.35, signal: "Tailwind", scoreDisplay: "0.35" },
-          { industry: "Private Banks", score: -0.10, signal: "Headwind", scoreDisplay: "-0.10" },
-          { industry: "Pharmaceuticals", score: 0.05, signal: "Tailwind", scoreDisplay: "0.05" },
-          { industry: "Oil & Gas", score: -0.20, signal: "Headwind", scoreDisplay: "-0.20" },
-          { industry: "Passenger Vehicles", score: 0.20, signal: "Tailwind", scoreDisplay: "0.20" },
-          { industry: "FMCG", score: 0.12, signal: "Tailwind", scoreDisplay: "0.12" },
-          { industry: "Telecom", score: -0.05, signal: "Headwind", scoreDisplay: "-0.05" },
-          { industry: "Power & Utilities", score: 0.25, signal: "Tailwind", scoreDisplay: "0.25" },
-          { industry: "Metal & Mining", score: -0.30, signal: "Headwind", scoreDisplay: "-0.30" },
-          { industry: "Infrastructure", score: 0.18, signal: "Tailwind", scoreDisplay: "0.18" },
-          { industry: "Chemicals", score: -0.15, signal: "Headwind", scoreDisplay: "-0.15" },
-          { industry: "Real Estate", score: 0.40, signal: "Tailwind", scoreDisplay: "0.40" },
-          { industry: "Cement", score: 0.02, signal: "Tailwind", scoreDisplay: "0.02" },
-          { industry: "Textiles", score: -0.25, signal: "Headwind", scoreDisplay: "-0.25" },
-          { industry: "Auto Ancillaries", score: 0.08, signal: "Tailwind", scoreDisplay: "0.08" }
+          { industry: "IT Software", score: 0.35, signal: "Upcycle", scoreDisplay: "0.35" },
+          { industry: "Private Banks", score: -0.10, signal: "Downcycle", scoreDisplay: "-0.10" },
+          { industry: "Pharmaceuticals", score: 0.05, signal: "Upcycle", scoreDisplay: "0.05" },
+          { industry: "Oil & Gas", score: -0.20, signal: "Downcycle", scoreDisplay: "-0.20" },
+          { industry: "Passenger Vehicles", score: 0.20, signal: "Upcycle", scoreDisplay: "0.20" },
+          { industry: "FMCG", score: 0.12, signal: "Upcycle", scoreDisplay: "0.12" },
+          { industry: "Telecom", score: -0.05, signal: "Downcycle", scoreDisplay: "-0.05" },
+          { industry: "Power & Utilities", score: 0.25, signal: "Upcycle", scoreDisplay: "0.25" },
+          { industry: "Metal & Mining", score: -0.30, signal: "Downcycle", scoreDisplay: "-0.30" },
+          { industry: "Infrastructure", score: 0.18, signal: "Upcycle", scoreDisplay: "0.18" },
+          { industry: "Chemicals", score: -0.15, signal: "Downcycle", scoreDisplay: "-0.15" },
+          { industry: "Real Estate", score: 0.40, signal: "Upcycle", scoreDisplay: "0.40" },
+          { industry: "Cement", score: 0.02, signal: "Upcycle", scoreDisplay: "0.02" },
+          { industry: "Textiles", score: -0.25, signal: "Downcycle", scoreDisplay: "-0.25" },
+          { industry: "Auto Ancillaries", score: 0.08, signal: "Upcycle", scoreDisplay: "0.08" }
         ]
       };
 
