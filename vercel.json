@@ -10,6 +10,17 @@
       }
     },
     {
+      "src": "/nikhil-gangil-indian-value-investor",
+      "status": 301,
+      "headers": {
+        "Location": "/nikhil-gangil-indian-value-investor/"
+      }
+    },
+    {
+      "src": "/nikhil-gangil-indian-value-investor/",
+      "dest": "/nikhil-gangil-indian-value-investor.html"
+    },
+    {
       "src": "/analytics/static/(.*)",
       "dest": "/analytics/frontend/assets/$1"
     },
