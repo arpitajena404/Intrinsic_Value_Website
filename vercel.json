@@ -3,6 +3,13 @@
   "cleanUrls": true,
   "routes": [
     {
+      "src": "/admin/?",
+      "status": 301,
+      "headers": {
+        "Location": "https://live.intrinsicvalueequity.in/invest_biz/admin.html"
+      }
+    },
+    {
       "src": "/analytics/static/(.*)",
       "dest": "/analytics/frontend/assets/$1"
     },

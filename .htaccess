@@ -9,6 +9,9 @@
 
 RewriteEngine On
 
+# Redirect /admin to the new admin URL
+RewriteRule ^admin/?$ https://live.intrinsicvalueequity.in/invest_biz/admin.html [R=301,L]
+
 # 1. External redirect: strip .html extension if requested directly
 RewriteCond %{THE_REQUEST} \s/+(.+)\.html[\s?] [NC]
 RewriteRule ^ /%1 [R=301,L]
