@@ -577,7 +577,7 @@
 
           if (!container.querySelector(".iv-lock-overlay")) {
             var overlay = document.createElement("a");
-            overlay.href = "https://premium.intrinsicvalueequity.in/checkout/efe6d23f-bf90-4e14-92c2-6fd0fb8f0237";
+            overlay.href = "https://premium.intrinsicvalueequity.in/checkout/98ce69d1-d43b-47b2-a06c-f816b3ee8c91";
             overlay.className = "iv-lock-overlay";
             overlay.title = "Unlock Premium Version";
             overlay.innerHTML = `
@@ -608,7 +608,7 @@
             el.style.setProperty("pointer-events", "auto", "important");
             el.addEventListener("click", function (e) {
               e.stopPropagation();
-              window.location.href = "https://premium.intrinsicvalueequity.in/checkout/efe6d23f-bf90-4e14-92c2-6fd0fb8f0237";
+              window.location.href = "https://premium.intrinsicvalueequity.in/checkout/98ce69d1-d43b-47b2-a06c-f816b3ee8c91";
             });
           }
         }
