@@ -258,6 +258,12 @@
     // ----------------------------------------------------
     var cmsState = {};
     var pricingCmsState = {};
+    var liveCmsState = {};
+    var DEFAULT_LIVE_FALLBACK_CONFIG = {
+        "indexRedirectUrl": "vsl.html",
+        "vslCheckoutUrl": "https://premium.intrinsicvalueequity.in/checkout/28180dfc-84a9-488e-854e-9f7958a1b8d7",
+        "tyWhatsAppUrl": "https://chat.whatsapp.com/EZzUNyMTkklAxMMQNZw6so"
+    };
     var DEFAULT_PRICING_FALLBACK_CONFIG = {
         "pricing_title": "Intrinsic Value Pricing",
         "pricing_subtitle": "Select the perfect advisory tier aligned with your capital size and research requirement.",
@@ -1120,6 +1126,28 @@
                 pricingCmsState = JSON.parse(JSON.stringify(DEFAULT_PRICING_FALLBACK_CONFIG));
                 populatePricingForms();
             });
+
+        if (typeof LIVE_CONFIG !== 'undefined') {
+            liveCmsState = Object.assign({}, DEFAULT_LIVE_FALLBACK_CONFIG, LIVE_CONFIG);
+            populateLiveForms();
+        } else {
+            fetch('live/live_config.js')
+                .then(function (res) { return res.text(); })
+                .then(function (text) {
+                    var match = text.match(/var\s+LIVE_CONFIG\s*=\s*([\s\S]+?);/);
+                    if (match && match[1]) {
+                        liveCmsState = JSON.parse(match[1]);
+                    } else {
+                        throw new Error("Could not parse live_config.js content");
+                    }
+                    populateLiveForms();
+                })
+                .catch(function (err) {
+                    console.warn("Could not load live/live_config.js directly. Loading fallback configuration:", err);
+                    liveCmsState = JSON.parse(JSON.stringify(DEFAULT_LIVE_FALLBACK_CONFIG));
+                    populateLiveForms();
+                });
+        }
     }
 
     // Toggle hero media url input depending on type
@@ -1231,6 +1259,13 @@
         
         renderPlanList();
         renderCardList();
+    }
+
+    function populateLiveForms() {
+        if (!liveCmsState) return;
+        document.getElementById('cmsLiveIndexRedirect').value = liveCmsState.indexRedirectUrl || '';
+        document.getElementById('cmsLiveVslCheckout').value = liveCmsState.vslCheckoutUrl || '';
+        document.getElementById('cmsLiveTyWhatsApp').value = liveCmsState.tyWhatsAppUrl || '';
     }
 
     function renderPlanList() {
@@ -1393,6 +1428,55 @@
         var a = document.createElement('a');
         a.href = url;
         a.download = "pricing.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function compileLiveCmsState() {
+        liveCmsState.indexRedirectUrl = document.getElementById('cmsLiveIndexRedirect').value.trim();
+        liveCmsState.vslCheckoutUrl = document.getElementById('cmsLiveVslCheckout').value.trim();
+        liveCmsState.tyWhatsAppUrl = document.getElementById('cmsLiveTyWhatsApp').value.trim();
+
+        var jsonText = JSON.stringify(liveCmsState, null, 4);
+        var jsContent = "var LIVE_CONFIG = " + jsonText + ";\n";
+        var jsonDisplay = document.getElementById('cmsLiveJsonDisplay');
+        if (jsonDisplay) {
+            jsonDisplay.textContent = jsContent;
+        }
+        return jsContent;
+    }
+
+    function copyLiveJsonToClipboard() {
+        var jsContent = compileLiveCmsState();
+        navigator.clipboard.writeText(jsContent)
+            .then(function () {
+                showToast("Copied Live JS Config to Clipboard!");
+            })
+            .catch(function (err) {
+                console.error("Could not copy live text: ", err);
+                var textarea = document.createElement('textarea');
+                textarea.value = jsContent;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast("Copied Live JS Config to Clipboard!");
+                } catch (e) {
+                    alert("Failed to copy. Please select the text inside the block and copy manually.");
+                }
+                document.body.removeChild(textarea);
+            });
+    }
+
+    function downloadLiveJsonFile() {
+        var jsContent = compileLiveCmsState();
+        var blob = new Blob([jsContent], { type: "application/javascript" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = "live_config.js";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -2516,6 +2600,7 @@
                     if (tabId === 'tab-export') {
                         compileCmsState();
                         compilePricingCmsState();
+                        compileLiveCmsState();
                     }
                 });
             });
@@ -2606,6 +2691,7 @@
             saveBtn.addEventListener('click', function () {
                 compileCmsState();
                 compilePricingCmsState();
+                compileLiveCmsState();
                 var exportTabLink = document.querySelector('.iv-cms-tab-link[data-tab="tab-export"]');
                 if (exportTabLink) exportTabLink.click();
             });
@@ -2628,6 +2714,17 @@
         var downloadPricingBtn = document.getElementById('cmsDownloadPricingJsonBtn');
         if (downloadPricingBtn) {
             downloadPricingBtn.addEventListener('click', downloadPricingJsonFile);
+        }
+
+        // Live Config clipboard copy & download buttons
+        var copyLiveBtn = document.getElementById('cmsCopyLiveJsonBtn');
+        if (copyLiveBtn) {
+            copyLiveBtn.addEventListener('click', copyLiveJsonToClipboard);
+        }
+
+        var downloadLiveBtn = document.getElementById('cmsDownloadLiveJsonBtn');
+        if (downloadLiveBtn) {
+            downloadLiveBtn.addEventListener('click', downloadLiveJsonFile);
         }
 
         // Add plan column

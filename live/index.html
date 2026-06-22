@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="live_config.js"></script>
 <style>
 :root{
   --ink:#091221; --ink-2:#0D1E3D; --ink-3:#13284f;
@@ -598,22 +599,36 @@ img{max-width:100%;display:block}
 /* ============ POPUP CONTROL ============ */
 var overlay=document.getElementById('overlay');
 var openers=document.querySelectorAll('.js-open');
-// var closeBtn=document.getElementById('closeBtn');
+var closeBtn=document.getElementById('closeBtn');
 
 function openPopup(){overlay.classList.add('open');document.body.style.overflow='hidden';}
 function closePopup(){overlay.classList.remove('open');document.body.style.overflow='';}
 
-openers.forEach(function(b){b.addEventListener('click',openPopup);});
+function safeRedirect(url) {
+  if (!url) return;
+  var target = url.trim();
+  if (!/^(https?:)?\/\//i.test(target) && !/^mailto:/i.test(target) && !/^tel:/i.test(target)) {
+    target = 'https://' + target;
+  }
+  window.location.href = target;
+}
+
+openers.forEach(function(b){
+  b.addEventListener('click', function(e) {
+    e.preventDefault();
+    safeRedirect(redirectUrl);
+  });
+});
 closeBtn.addEventListener('click',closePopup);
 overlay.addEventListener('click',function(e){if(e.target===overlay)closePopup();});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&overlay.classList.contains('open'))closePopup();});
 
-/* auto-open after a slight scroll; resets every page load */
-var autoOpened=false;
-function maybeAutoOpen(){
-  if(!autoOpened && window.scrollY>70){autoOpened=true;openPopup();window.removeEventListener('scroll',maybeAutoOpen);}
-}
-window.addEventListener('scroll',maybeAutoOpen,{passive:true});
+/* auto-open popup disabled as form is removed */
+// var autoOpened=false;
+// function maybeAutoOpen(){
+//   if(!autoOpened && window.scrollY>70){autoOpened=true;openPopup();window.removeEventListener('scroll',maybeAutoOpen);}
+// }
+// window.addEventListener('scroll',maybeAutoOpen,{passive:true});
 
 /* ============ SELECTABLE CHECKLIST ============ */
 var forList=document.getElementById('forList');
@@ -628,15 +643,21 @@ if(forList){
 }
 
 /* ============ SCROLL REVEAL ============ */
-var io=new IntersectionObserver(function(entries){
-  entries.forEach(function(en,i){
-    if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}
+if (window.self !== window.top) {
+  document.querySelectorAll('.reveal').forEach(function(el){
+    el.classList.add('in');
   });
-},{threshold:.14});
-document.querySelectorAll('.reveal').forEach(function(el,i){
-  el.style.transitionDelay=(i%4*70)+'ms';
-  io.observe(el);
-});
+} else {
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en,i){
+      if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}
+    });
+  },{threshold:.14});
+  document.querySelectorAll('.reveal').forEach(function(el,i){
+    el.style.transitionDelay=(i%4*70)+'ms';
+    io.observe(el);
+  });
+}
 
 /* ============ DATE / TIME (live override with safe fallback) ============ */
 var sellerName="NIKHIL";
@@ -672,7 +693,10 @@ var fetchOngoingWorkshopDetails=async function(){
 fetchOngoingWorkshopDetails();
 
 /* ============ FORM SUBMISSION (integrated exactly) ============ */
-var redirectUrl="https://live.intrinsicvalueequity.in/vsl.html";
+var redirectUrl="https://premium.intrinsicvalueequity.in/checkout/28180dfc-84a9-488e-854e-9f7958a1b8d7";
+if(typeof LIVE_CONFIG !== 'undefined' && LIVE_CONFIG.indexRedirectUrl){
+  redirectUrl = LIVE_CONFIG.indexRedirectUrl;
+}
 var webhook="https://connect.pabbly.com/workflow/sendwebhookdata/IjU3NjcwNTY5MDYzNjA0M2M1MjZmNTUzNDUxMzEi_pc";
 
 var form=document.getElementById("freeLead");
@@ -736,7 +760,7 @@ submitButton.addEventListener("click",async function(e){
       if(!response.ok){var t=await response.text();throw new Error("HTTP error! status: "+response.status+", message: "+t);}
       var result=await response.json();
       console.log("Success:",result);
-      if(result.success){window.location.href=redirectUrl;}
+      if(result.success){safeRedirect(redirectUrl);}
     }catch(error){
       console.error("Error:",error.message);
       alert("An error occurred. Please try again.");
@@ -746,6 +770,93 @@ submitButton.addEventListener("click",async function(e){
     }
   }
 });
+/* ============ CMS VISUAL EDITOR INTEGRATION ============ */
+(function() {
+  var isEditMode = false;
+  var redirectKey = 'indexRedirectUrl';
+  var buttonLabel = 'Landing Page Checkout Link';
+
+  window.addEventListener('message', function(event) {
+    var msg = event.data;
+    if (!msg) return;
+
+    if (msg.type === 'init_cms_state') {
+      if (msg.config && msg.config[redirectKey]) {
+        redirectUrl = msg.config[redirectKey];
+      }
+      isEditMode = msg.enabled;
+      updateVisuals();
+    } else if (msg.type === 'toggle_edit_mode') {
+      isEditMode = msg.enabled;
+      updateVisuals();
+    } else if (msg.type === 'update_value') {
+      if (msg.key === redirectKey) {
+        redirectUrl = msg.value;
+      }
+    }
+  });
+
+  // Notify parent window that child is ready to receive config
+  if (window.self !== window.top) {
+    window.parent.postMessage({ type: 'iframe_ready' }, '*');
+  }
+
+  function updateVisuals() {
+    var buttons = document.querySelectorAll('.btn, .cta, .wa-btn, .video-box');
+    var existingStyle = document.getElementById('cms-injected-styles');
+    
+    if (isEditMode) {
+      if (!existingStyle) {
+        var style = document.createElement('style');
+        style.id = 'cms-injected-styles';
+        style.innerHTML = `
+          .cms-editable-highlight {
+            outline: 3px dashed #E6B53D !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 20px rgba(230, 181, 61, 0.7) !important;
+            cursor: pointer !important;
+            position: relative !important;
+            transition: all 0.2s ease !important;
+          }
+          .cms-editable-highlight:hover {
+            transform: scale(1.02) !important;
+            outline-color: #ffc107 !important;
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      buttons.forEach(function(btn) {
+        btn.classList.add('cms-editable-highlight');
+        btn.onclick = null;
+        btn.setAttribute('onclick', 'return false;');
+        
+        if (!btn.dataset.hasCmsListener) {
+          btn.dataset.hasCmsListener = 'true';
+          // Replace button/clone to clear all existing event listeners
+          var cloned = btn.cloneNode(true);
+          btn.parentNode.replaceChild(cloned, btn);
+          
+          cloned.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.parent.postMessage({
+              type: 'request_edit',
+              key: redirectKey,
+              label: buttonLabel,
+              currentVal: redirectUrl
+            }, '*');
+          });
+        }
+      });
+    } else {
+      if (existingStyle) existingStyle.remove();
+      buttons.forEach(function(btn) {
+        btn.classList.remove('cms-editable-highlight');
+      });
+    }
+  }
+})();
 </script>
 </body>
 </html>

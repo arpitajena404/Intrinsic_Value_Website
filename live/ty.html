@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="live_config.js"></script>
 <style>
 :root{
   --ink:#091221; --ink-2:#0D1E3D;
@@ -133,7 +134,7 @@ h1{font-family:'Sora',sans-serif;font-weight:800;font-size:33px;line-height:1.15
 
   <p class="next">Join the WhatsApp group below to get your session link and reminders.</p>
 
-  <button onclick="window.location.href='https://chat.whatsapp.com/EZzUNyMTkklAxMMQNZw6so';" id="whatsAppBtn" class="wa-btn">
+  <button id="whatsAppBtn" class="wa-btn">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.9c0 2.09.55 4.06 1.6 5.83L2 22l4.41-1.7a9.84 9.84 0 0 0 5.63 1.76h.01c5.46 0 9.91-4.45 9.91-9.9C21.97 6.45 17.5 2 12.04 2zm5.8 14.07c-.24.68-1.42 1.31-1.95 1.36-.5.05-1.13.21-3.66-.77-3.07-1.21-5.04-4.34-5.2-4.54-.15-.2-1.24-1.65-1.24-3.15s.79-2.24 1.07-2.54c.28-.31.61-.38.82-.38l.59.01c.19 0 .44-.07.69.53.24.6.82 2.07.89 2.22.07.15.12.32.02.52-.1.2-.15.32-.3.5l-.45.52c-.15.15-.31.32-.13.62.18.3.79 1.31 1.7 2.12 1.17 1.04 2.16 1.36 2.46 1.51.3.15.48.13.66-.08.18-.2.76-.89.96-1.19.2-.3.4-.25.67-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.13.07.73-.17 1.41z"/></svg>
     Join Whatsapp Group
   </button>
@@ -192,6 +193,117 @@ var fetchOngoingWorkshopDetails=async function(){
   }catch(error){console.log(error);}
 };
 // fetchOngoingWorkshopDetails();
+
+var defaultWhatsAppUrl = "https://chat.whatsapp.com/EZzUNyMTkklAxMMQNZw6so";
+var whatsAppUrl = defaultWhatsAppUrl;
+
+if(typeof LIVE_CONFIG !== 'undefined' && LIVE_CONFIG.tyWhatsAppUrl){
+  whatsAppUrl = LIVE_CONFIG.tyWhatsAppUrl;
+}
+
+function safeRedirect(url) {
+  if (!url) return;
+  var target = url.trim();
+  if (!/^(https?:)?\/\//i.test(target) && !/^mailto:/i.test(target) && !/^tel:/i.test(target)) {
+    target = 'https://' + target;
+  }
+  window.location.href = target;
+}
+
+var wa = document.getElementById("whatsAppBtn");
+if(wa){
+  wa.addEventListener("click", function(e){
+    e.preventDefault();
+    safeRedirect(whatsAppUrl);
+  });
+}
+/* ============ CMS VISUAL EDITOR INTEGRATION ============ */
+(function() {
+  var isEditMode = false;
+  var redirectKey = 'tyWhatsAppUrl';
+  var buttonLabel = 'WhatsApp Group Link';
+
+  window.addEventListener('message', function(event) {
+    var msg = event.data;
+    if (!msg) return;
+
+    if (msg.type === 'init_cms_state') {
+      if (msg.config && msg.config[redirectKey]) {
+        whatsAppUrl = msg.config[redirectKey];
+      }
+      isEditMode = msg.enabled;
+      updateVisuals();
+    } else if (msg.type === 'toggle_edit_mode') {
+      isEditMode = msg.enabled;
+      updateVisuals();
+    } else if (msg.type === 'update_value') {
+      if (msg.key === redirectKey) {
+        whatsAppUrl = msg.value;
+      }
+    }
+  });
+
+  // Notify parent window that child is ready to receive config
+  if (window.self !== window.top) {
+    window.parent.postMessage({ type: 'iframe_ready' }, '*');
+  }
+
+  function updateVisuals() {
+    var buttons = document.querySelectorAll('.btn, .cta, .wa-btn');
+    var existingStyle = document.getElementById('cms-injected-styles');
+    
+    if (isEditMode) {
+      if (!existingStyle) {
+        var style = document.createElement('style');
+        style.id = 'cms-injected-styles';
+        style.innerHTML = `
+          .cms-editable-highlight {
+            outline: 3px dashed #E6B53D !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 20px rgba(230, 181, 61, 0.7) !important;
+            cursor: pointer !important;
+            position: relative !important;
+            transition: all 0.2s ease !important;
+          }
+          .cms-editable-highlight:hover {
+            transform: scale(1.02) !important;
+            outline-color: #ffc107 !important;
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      buttons.forEach(function(btn) {
+        btn.classList.add('cms-editable-highlight');
+        btn.onclick = null;
+        btn.setAttribute('onclick', 'return false;');
+        
+        if (!btn.dataset.hasCmsListener) {
+          btn.dataset.hasCmsListener = 'true';
+          // Replace button/clone to clear all existing event listeners
+          var cloned = btn.cloneNode(true);
+          btn.parentNode.replaceChild(cloned, btn);
+          
+          cloned.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.parent.postMessage({
+              type: 'request_edit',
+              key: redirectKey,
+              label: buttonLabel,
+              currentVal: whatsAppUrl
+            }, '*');
+          });
+        }
+      });
+    } else {
+      if (existingStyle) existingStyle.remove();
+      buttons.forEach(function(btn) {
+        btn.classList.remove('cms-editable-highlight');
+      });
+    }
+  }
+})();
 </script>
 </body>
 </html>

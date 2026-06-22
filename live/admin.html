@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="../onlylogo.PNG" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Funnel CMS | Intrinsic Value Equity Advisors</title>
+    <meta name="description" content="Visual configuration manager for the live funnel website.">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Identity Services SDK -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="live_config.js"></script>
+    
+    <style>
+        :root {
+            --ink: #091221;
+            --ink-2: #0D1E3D;
+            --ink-3: #13284f;
+            --surface: #ffffff;
+            --accent: #2E6BE6;
+            --accent-d: #1A4FBE;
+            --gold: #B98A1E;
+            --gold-bright: #E6B53D;
+            --text-primary: #ffffff;
+            --text-muted: #8794AB;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at top right, #15294d 0%, var(--ink-2) 40%, var(--ink) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ----------------------------------------------------
+           ADMIN AUTHENTICATION / LOGIN CARD
+           ---------------------------------------------------- */
+        .admin-login-container {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+            background: radial-gradient(circle at top right, #15294d 0%, var(--ink-2) 40%, var(--ink) 100%);
+        }
+
+        .iv-admin-login-card {
+            max-width: 420px;
+            width: 100%;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(25, 25, 25, 0.75), rgba(10, 10, 10, 0.95));
+            border: 1px solid rgba(230, 181, 61, 0.25);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(230, 181, 61, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            text-align: center;
+            transition: all var(--transition-normal);
+            animation: fadeInCard 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInCard {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .iv-admin-login-card:hover {
+            border-color: rgba(230, 181, 61, 0.4);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(230, 181, 61, 0.2);
+        }
+
+        .iv-logo-preview {
+            width: 70px;
+            margin: 0 auto 20px;
+        }
+
+        .iv-admin-login-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.03em;
+        }
+
+        .iv-admin-login-card p.intro {
+            margin: 0 0 30px 0;
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .iv-google-btn-container {
+            display: flex;
+            justify-content: center;
+            margin: 24px 0;
+            min-height: 40px;
+        }
+
+        .iv-mock-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            margin: 24px 0;
+        }
+
+        .iv-mock-divider::before,
+        .iv-mock-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .iv-mock-divider:not(:empty)::before { margin-right: 12px; }
+        .iv-mock-divider:not(:empty)::after { margin-left: 12px; }
+
+        .iv-admin-btn {
+            width: 100%;
+            padding: 13px;
+            border-radius: 12px;
+            border: 1px dashed rgba(230, 181, 61, 0.4);
+            background: rgba(230, 181, 61, 0.05);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-family: inherit;
+        }
+
+        .iv-admin-btn:hover {
+            border-color: var(--gold-bright);
+            background: rgba(230, 181, 61, 0.12);
+            box-shadow: 0 4px 15px rgba(230, 181, 61, 0.15);
+            transform: translateY(-1.5px);
+        }
+
+        .iv-admin-error-box {
+            margin-top: 20px;
+            padding: 14px 18px;
+            background: rgba(217, 83, 79, 0.1);
+            border: 1px solid rgba(217, 83, 79, 0.3);
+            border-radius: 12px;
+            color: #d9534f;
+            font-size: 13px;
+            display: none;
+            text-align: left;
+            line-height: 1.45;
+        }
+
+        /* ----------------------------------------------------
+           CMS MANAGER DASHBOARD LAYOUT
+           ---------------------------------------------------- */
+        .cms-dashboard {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Top Header Bar */
+        .cms-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(10, 20, 40, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 10;
+        }
+
+        .cms-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cms-brand img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .cms-brand h2 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #fff;
+        }
+
+        .cms-brand span {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: rgba(230, 181, 61, 0.15);
+            color: var(--gold-bright);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        /* User badge info */
+        .cms-user-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cms-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1.5px solid var(--gold-bright);
+            object-fit: cover;
+        }
+
+        .cms-user-details {
+            text-align: right;
+            line-height: 1.2;
+        }
+
+        .cms-username {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .cms-useremail {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .cms-logout-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-muted);
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin-left: 15px;
+        }
+
+        .cms-logout-btn:hover {
+            background: rgba(217, 83, 79, 0.08);
+            border-color: rgba(217, 83, 79, 0.3);
+            color: #d9534f;
+        }
+
+        /* CMS Control Toolbar */
+        .cms-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 30px;
+            background: rgba(5, 10, 22, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 9;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .cms-controls-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .cms-selector-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cms-selector-label {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .cms-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: #fff;
+            padding: 8px 14px;
+            font-size: 13.5px;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .cms-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(46, 107, 230, 0.2);
+        }
+
+        /* Edit Mode Switch Styling */
+        .edit-switch-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .switch-label {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.15);
+            transition: .3s;
+            border-radius: 34px;
+            border: 1px solid var(--border-color);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--text-muted);
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--gold-bright);
+            border-color: var(--gold-bright);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+            background-color: #000;
+        }
+
+        .edit-status-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .edit-status-indicator.off {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+        }
+
+        .edit-status-indicator.on {
+            background: rgba(230, 181, 61, 0.15);
+            color: var(--gold-bright);
+            animation: pulse-border 1.5s infinite alternate;
+        }
+
+        @keyframes pulse-border {
+            from { box-shadow: 0 0 4px rgba(230, 181, 61, 0.2); }
+            to { box-shadow: 0 0 12px rgba(230, 181, 61, 0.6); }
+        }
+
+        /* Action Buttons Right */
+        .cms-controls-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cms-action-btn {
+            background: linear-gradient(135deg, var(--accent), var(--accent-d));
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(46, 107, 230, 0.25);
+            transition: all var(--transition-fast);
+        }
+
+        .cms-action-btn:hover {
+            transform: translateY(-1.5px);
+            box-shadow: 0 6px 20px rgba(46, 107, 230, 0.4);
+        }
+
+        .cms-action-btn:active {
+            transform: translateY(0);
+        }
+
+        .cms-action-btn.secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            box-shadow: none;
+        }
+
+        .cms-action-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Visual Preview Layout - Full Width */
+        .dashboard-body {
+            display: flex;
+            flex: 1;
+            position: relative;
+            height: calc(100vh - 110px);
+        }
+
+        .preview-container {
+            flex: 1;
+            position: relative;
+            background: #0f1624;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        /* Iframe loading overlay spinner */
+        .preview-loader {
+            position: absolute;
+            inset: 0;
+            background: rgba(9, 18, 33, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .preview-loader.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 3.5px solid rgba(230, 181, 61, 0.15);
+            border-top: 3.5px solid var(--gold-bright);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ----------------------------------------------------
+           MODALS & DIALOGS
+           ---------------------------------------------------- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(7, 14, 26, 0.85);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: linear-gradient(145deg, #152033, #0b111c);
+            border: 1px solid rgba(230, 181, 61, 0.35);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 520px;
+            padding: 30px;
+            box-shadow: 0 40px 90px -20px rgba(0, 0, 0, 0.8), 0 0 30px rgba(230, 181, 61, 0.1);
+            animation: rise 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--gold-bright);
+            padding-left: 12px;
+            color: #fff;
+        }
+
+        .modal-desc {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            margin-bottom: 22px;
+            line-height: 1.5;
+        }
+
+        .modal-field {
+            margin-bottom: 24px;
+        }
+
+        .modal-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gold-bright);
+            margin-bottom: 8px;
+        }
+
+        .modal-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 14.5px;
+            outline: none;
+            transition: all var(--transition-fast);
+        }
+
+        .modal-input:focus {
+            border-color: var(--gold-bright);
+            box-shadow: 0 0 12px rgba(230, 181, 61, 0.2);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Toast notifications */
+        .toast-notice {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #132a1e, #0e1c14);
+            border: 1px solid #1f9d5c;
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 13.5px;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================== 1. LOGIN CONTAINER ================== -->
+    <div class="admin-login-container" id="adminLoginSection">
+        <div class="iv-admin-login-card">
+            <img class="iv-logo-preview" src="../logo.png" alt="Intrinsic Value Logo">
+            <h3>Live Funnel CMS</h3>
+            <p class="intro">Secure visual editor for Intrinsic Value webinars and lead campaigns.</p>
+            
+            <!-- Google Sign-in Signpost -->
+            <div class="iv-google-btn-container">
+                <div id="g_id_onload"
+                     data-client_id="401614238694-vrh7s1nq778753efm7lllaip0vqfclar.apps.googleusercontent.com"
+                     data-context="signin"
+                     data-ux_mode="popup"
+                     data-callback="handleCredentialResponse"
+                     data-auto_select="false">
+                </div>
+                <div class="g_id_signin"
+                     data-type="standard"
+                     data-shape="pill"
+                     data-theme="filled_black"
+                     data-text="signin_with"
+                     data-size="large"
+                     data-logo_alignment="left">
+                </div>
+            </div>
+
+            <div class="iv-mock-divider">OR</div>
+            
+            <div class="iv-mock-login-container">
+                <button type="button" class="iv-admin-btn" onclick="bypassAuthentication()">
+                    <i class="fa-solid fa-flask-vial"></i> Bypass Login (Development Mode)
+                </button>
+            </div>
+
+            <div class="iv-admin-error-box" id="loginErrorMessage"></div>
+        </div>
+    </div>
+
+    <!-- ================== 2. MAIN CMS DASHBOARD ================== -->
+    <div class="cms-dashboard" id="adminDashboardSection">
+        
+        <!-- Header Bar -->
+        <header class="cms-header">
+            <div class="cms-brand">
+                <img src="../logo.png" alt="Intrinsic Value Logo">
+                <h2>Live Funnel CMS</h2>
+                <span>Visual Manager</span>
+            </div>
+            
+            <div class="cms-user-badge">
+                <img class="cms-avatar" id="adminAvatar" src="https://lh3.googleusercontent.com/a/default-user=s100" alt="Avatar">
+                <div class="cms-user-details">
+                    <div class="cms-username" id="adminName">Administrator</div>
+                    <div class="cms-useremail" id="adminEmail">admin@intrinsicvalueequity.in</div>
+                </div>
+                <button class="cms-logout-btn" id="adminLogoutButton"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+            </div>
+        </header>
+
+        <!-- CMS Control Toolbar -->
+        <section class="cms-toolbar">
+            <div class="cms-controls-left">
+                
+                <!-- Page switcher -->
+                <div class="cms-selector-group">
+                    <span class="cms-selector-label"><i class="fa-solid fa-file-code"></i> Funnel Page:</span>
+                    <select class="cms-select" id="pageSelector">
+                        <option value="index.html">Registration Page (index.html)</option>
+                        <option value="vsl.html">VSL Page (vsl.html)</option>
+                        <option value="ty.html">Thank You Page (ty.html)</option>
+                    </select>
+                </div>
+
+                <!-- Edit Switch -->
+                <div class="edit-switch-container">
+                    <span class="switch-label">Edit Mode:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="editModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="edit-status-indicator off" id="editStatusText">OFF</span>
+                </div>
+
+            </div>
+
+            <div class="cms-controls-right">
+                <button class="cms-action-btn secondary" id="previewChangesBtn"><i class="fa-solid fa-rotate-right"></i> Reload Page</button>
+                <button class="cms-action-btn" id="saveCmsBtn"><i class="fa-solid fa-circle-down"></i> Save & Download Config</button>
+            </div>
+        </section>
+
+        <!-- Dashboard Body with Full Width Iframe -->
+        <main class="dashboard-body">
+            
+            <!-- Preview Viewport -->
+            <div class="preview-container">
+                <div class="preview-loader" id="previewLoader">
+                    <div class="spinner"></div>
+                    <p style="font-size: 14px; font-weight: 600; color: var(--gold-bright);">Loading funnel page preview...</p>
+                </div>
+                <iframe class="preview-iframe" id="previewIframe" src="index.html"></iframe>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- ================== 3. EDIT POPUP DIALOGS ================== -->
+    <div class="modal-overlay" id="editModalOverlay">
+        <div class="modal-box">
+            <h3 class="modal-title" id="editModalTitle">Edit Button Redirection</h3>
+            <p class="modal-desc" id="editModalDesc">Provide a new destination link. Tapping the button on the live site will instantly forward users to this link.</p>
+            
+            <div class="modal-field">
+                <label class="modal-label" for="editModalInput">Redirection Link / URL</label>
+                <input class="modal-input" type="text" id="editModalInput" placeholder="e.g. https://..." />
+            </div>
+
+            <div class="modal-actions">
+                <button class="cms-action-btn secondary" onclick="closeEditModal()"><i class="fa-solid fa-xmark"></i> Cancel</button>
+                <button class="cms-action-btn" onclick="saveLinkEdit()"><i class="fa-solid fa-check"></i> Update Link</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast Notice -->
+    <div class="toast-notice" id="cmsToast">
+        <i class="fa-solid fa-circle-check" style="font-size: 18px; color: #1f9d5c;"></i>
+        <span id="cmsToastMsg">Configuration saved successfully!</span>
+    </div>
+
+    <!-- ================== 4. ENGINE SCRIPTS ================== -->
+    <script>
+        // Whitelisted Admin emails
+        var ALLOWED_ADMINS = [
+            "harshitsaraan@gmail.com",
+            "arpitajena762@gmail.com",
+            "nikhilgangil333@gmail.com",
+            "intrinsicvalueequity@gmail.com",
+            "gvaibhav870@gmail.com",
+            "valuemev.jayate@gmail.com"
+        ];
+
+        var liveCmsState = {
+            indexRedirectUrl: "https://premium.intrinsicvalueequity.in/checkout/28180dfc-84a9-488e-854e-9f7958a1b8d7",
+            vslCheckoutUrl: "https://premium.intrinsicvalueequity.in/checkout/28180dfc-84a9-488e-854e-9f7958a1b8d7",
+            tyWhatsAppUrl: "https://chat.whatsapp.com/EZzUNyMTkklAxMMQNZw6so"
+        };
+
+        var currentEditingKey = ''; // 'indexRedirectUrl', 'vslCheckoutUrl', or 'tyWhatsAppUrl'
+
+        // 1. Google OAuth Authentication Handlers
+        window.handleCredentialResponse = function(response) {
+            try {
+                var cred = response.credential;
+                var base64Url = cred.split('.')[1];
+                var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                var payload = JSON.parse(decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join('')));
+
+                if (payload && payload.email) {
+                    var email = payload.email.toLowerCase().trim();
+                    if (ALLOWED_ADMINS.indexOf(email) !== -1) {
+                        setSession(payload);
+                    } else {
+                        showError("Access Denied: '" + email + "' is not whitelisted in ALLOWED_ADMINS.");
+                    }
+                }
+            } catch (err) {
+                console.error("JWT decoding failed:", err);
+                showError("Authentication parsing error. Please try again.");
+            }
+        };
+
+        function setSession(payload) {
+            var session = {
+                name: payload.name || "Administrator",
+                email: payload.email,
+                picture: payload.picture || "https://lh3.googleusercontent.com/a/default-user=s100",
+                exp: Date.now() + 60 * 60 * 1000 // 1 hour session
+            };
+            sessionStorage.setItem('live_admin_session', JSON.stringify(session));
+            updateAuthState();
+            loadConfigData();
+        }
+
+        function bypassAuthentication() {
+            var payload = {
+                name: "Developer (Local Bypass)",
+                email: "dev@intrinsicvalueequity.in",
+                picture: "https://lh3.googleusercontent.com/a/default-user=s100"
+            };
+            setSession(payload);
+            showToast("Bypassed authentication (Developer Sandbox Mode).");
+        }
+
+        function updateAuthState() {
+            var sessionStr = sessionStorage.getItem('live_admin_session');
+            var loginSection = document.getElementById('adminLoginSection');
+            var dashSection = document.getElementById('adminDashboardSection');
+            
+            if (sessionStr) {
+                var session = JSON.parse(sessionStr);
+                if (Date.now() > session.exp) {
+                    logoutAdmin();
+                    return;
+                }
+                
+                // Show dashboard, hide login
+                loginSection.style.display = 'none';
+                dashSection.style.display = 'flex';
+                
+                document.getElementById('adminAvatar').src = session.picture;
+                document.getElementById('adminName').textContent = session.name;
+                document.getElementById('adminEmail').textContent = session.email;
+            } else {
+                loginSection.style.display = 'flex';
+                dashSection.style.display = 'none';
+            }
+        }
+
+        function logoutAdmin() {
+            sessionStorage.removeItem('live_admin_session');
+            updateAuthState();
+        }
+
+        function showError(msg) {
+            var errorBox = document.getElementById('loginErrorMessage');
+            errorBox.textContent = msg;
+            errorBox.style.display = 'block';
+        }
+
+        // 2. Configuration Loader
+        function loadConfigData() {
+            if (typeof LIVE_CONFIG !== 'undefined') {
+                liveCmsState = Object.assign({}, liveCmsState, LIVE_CONFIG);
+            }
+            reloadIframe();
+        }
+
+        // 3. Iframe Loader & Controller
+        var iframe = document.getElementById('previewIframe');
+        var pageSelector = document.getElementById('pageSelector');
+        var loader = document.getElementById('previewLoader');
+        var editModeToggle = document.getElementById('editModeToggle');
+
+        function reloadIframe() {
+            loader.classList.add('active');
+            var selectedPage = pageSelector.value;
+            iframe.src = selectedPage + "?t=" + Date.now();
+        }
+
+        iframe.addEventListener('load', function() {
+            loader.classList.remove('active');
+            injectEditorBehavior();
+        });
+
+        pageSelector.addEventListener('change', function() {
+            reloadIframe();
+        });
+
+        document.getElementById('previewChangesBtn').addEventListener('click', function() {
+            reloadIframe();
+        });
+
+        // 4. In-Context Injector Engine (via cross-window postMessage protocol)
+        function injectEditorBehavior() {
+            var isEditMode = editModeToggle.checked;
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    type: 'toggle_edit_mode',
+                    enabled: isEditMode
+                }, '*');
+            }
+        }
+
+        // Listen for communication from the iframe pages
+        window.addEventListener('message', function(event) {
+            var msg = event.data;
+            if (!msg) return;
+
+            if (msg.type === 'iframe_ready') {
+                // Initialize the loaded page with the current config and edit mode state
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({
+                        type: 'init_cms_state',
+                        config: liveCmsState,
+                        enabled: editModeToggle.checked
+                    }, '*');
+                }
+            } else if (msg.type === 'request_edit') {
+                openEditModal(msg.key, msg.label, msg.currentVal);
+            }
+        });
+
+        // Toggle Switch handler
+        var editStatusText = document.getElementById('editStatusText');
+        editModeToggle.addEventListener('change', function() {
+            var isEditMode = editModeToggle.checked;
+            if (isEditMode) {
+                editStatusText.textContent = "ON";
+                editStatusText.className = "edit-status-indicator on";
+                showToast("Edit Mode: ON. Click any highlighted button to edit its link.");
+                injectEditorBehavior();
+            } else {
+                editStatusText.textContent = "OFF";
+                editStatusText.className = "edit-status-indicator off";
+                showToast("Edit Mode: OFF. Page preview restored to normal.");
+                injectEditorBehavior();
+                reloadIframe();
+            }
+        });
+
+        // 5. In-context Link Edit Modal
+        function openEditModal(key, name, currentVal) {
+            currentEditingKey = key;
+            var overlay = document.getElementById('editModalOverlay');
+            document.getElementById('editModalTitle').textContent = "Configure " + name;
+            var input = document.getElementById('editModalInput');
+            input.value = currentVal || '';
+            overlay.classList.add('open');
+            setTimeout(function() {
+                input.focus();
+                input.select();
+            }, 50);
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModalOverlay').classList.remove('open');
+        }
+
+        function saveLinkEdit() {
+            var newVal = document.getElementById('editModalInput').value.trim();
+            if (currentEditingKey) {
+                liveCmsState[currentEditingKey] = newVal;
+                showToast("Link updated in preview. Click 'Save & Download Config' to export!");
+                closeEditModal();
+                
+                // Propagate value change back to the iframe preview
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({
+                        type: 'update_value',
+                        key: currentEditingKey,
+                        value: newVal
+                    }, '*');
+                }
+            }
+        }
+
+        // 6. Save & Download configuration
+        document.getElementById('saveCmsBtn').addEventListener('click', function() {
+            var jsContent = "var LIVE_CONFIG = " + JSON.stringify(liveCmsState, null, 4) + ";\n";
+            var blob = new Blob([jsContent], { type: "application/javascript" });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = "live_config.js";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast("live_config.js downloaded! Put it in the /live directory to make it live.");
+        });
+
+        // 7. Toast & UI Utilities
+        function showToast(msg) {
+            var toast = document.getElementById('cmsToast');
+            document.getElementById('cmsToastMsg').textContent = msg;
+            toast.style.display = 'flex';
+            setTimeout(function() {
+                toast.style.display = 'none';
+            }, 4500);
+        }
+
+        // Init
+        document.getElementById('adminLogoutButton').addEventListener('click', logoutAdmin);
+        updateAuthState();
+        loadConfigData();
+    </script>
+</body>
+</html>

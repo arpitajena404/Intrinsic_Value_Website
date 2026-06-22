@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="style.css?v=5">
     <!-- Google Identity Services SDK -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Live Funnel Config -->
+    <script src="live/live_config.js"></script>
     <style>
         /* Admin-specific Premium Glassmorphic Styles */
         .admin-page-container {
@@ -980,6 +982,7 @@
                 <button class="iv-cms-tab-link" data-tab="tab-team-testimonials">Team & Reviews</button>
                 <button class="iv-cms-tab-link" data-tab="tab-footer-faqs">FAQs & Footer</button>
                 <button class="iv-cms-tab-link" data-tab="tab-pricing">Plans & Pricing</button>
+                <button class="iv-cms-tab-link" data-tab="tab-live-funnel">Live Funnel</button>
                 <button class="iv-cms-tab-link" data-tab="tab-export">Export & Build</button>
             </div>
 
@@ -1417,6 +1420,34 @@
 
                 </div>
 
+                <!-- TAB 7: LIVE FUNNEL CMS -->
+                <div id="tab-live-funnel" class="iv-cms-tab-content">
+                    
+                    <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Live Funnel Redirect Links</h4>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+                        Configure the redirection links for the three buttons across the live funnel pages (Registration, VSL, and Thank You).
+                    </p>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label" for="cmsLiveIndexRedirect">1. Registration Form Submit Redirect Link (index.html)</label>
+                        <input type="text" id="cmsLiveIndexRedirect" class="iv-cms-input" placeholder="e.g. vsl.html or https://live.intrinsicvalueequity.in/vsl.html" />
+                        <p class="iv-cms-help-text" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Where users are redirected after filling the form on the landing page.</p>
+                    </div>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label" for="cmsLiveVslCheckout">2. VSL "Apply for a Strategy Call" Link (vsl.html)</label>
+                        <input type="text" id="cmsLiveVslCheckout" class="iv-cms-input" placeholder="e.g. https://premium.intrinsicvalueequity.in/checkout/..." />
+                        <p class="iv-cms-help-text" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">The target URL of the main CTA button on the Video Sales Letter (VSL) page.</p>
+                    </div>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label" for="cmsLiveTyWhatsApp">3. Thank You "Join Whatsapp Group" Link (ty.html)</label>
+                        <input type="text" id="cmsLiveTyWhatsApp" class="iv-cms-input" placeholder="e.g. https://chat.whatsapp.com/..." />
+                        <p class="iv-cms-help-text" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">The WhatsApp group join link presented to users on the registration confirmation page.</p>
+                    </div>
+
+                </div>
+
                 <!-- TAB 6: EXPORT & BUILD -->
                 <div id="tab-export" class="iv-cms-tab-content">
                     
@@ -1433,6 +1464,7 @@
                             <li>Save the Pricing JSON to <strong>pricing.json</strong> and run:
                                 <code style="display:block; margin: 4px 0; padding: 8px; background: #000; border-radius: 6px; border: 1px solid #333; color: var(--accent);">node scripts/update_pricing.js</code>
                             </li>
+                            <li>Save the Live Funnel JS to <strong>live/live_config.js</strong>. (No build script is required for live funnel pages; they load values dynamically at runtime).</li>
                             <li>Refresh the website pages to verify that everything works!</li>
                         </ol>
                     </div>
@@ -1462,6 +1494,22 @@
                                 </button>
                                 <button type="button" id="cmsDownloadPricingJsonBtn" class="iv-admin-btn" style="width: auto; padding: 8px 16px; font-size: 13px;">
                                     <i class="fa-solid fa-circle-down"></i> Download Pricing JSON
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="iv-cms-row" style="margin-top: 20px;">
+                        <!-- Live Funnel Config Block -->
+                        <div class="iv-cms-group" style="flex: 1; min-width: 300px;">
+                            <label class="iv-cms-label">Live Funnel Config (live_config.js)</label>
+                            <div id="cmsLiveJsonDisplay" class="iv-cms-json-box" style="height: 250px; overflow-y: auto;">Click "Generate Config" in the top-right to compile configuration.</div>
+                            <div class="iv-cms-export-actions" style="margin-top: 10px;">
+                                <button type="button" id="cmsCopyLiveJsonBtn" class="iv-admin-btn" style="width: auto; padding: 8px 16px; font-size: 13px; border-style: solid; border-color: var(--accent);">
+                                    <i class="fa-solid fa-copy"></i> Copy Live JS Config
+                                </button>
+                                <button type="button" id="cmsDownloadLiveJsonBtn" class="iv-admin-btn" style="width: auto; padding: 8px 16px; font-size: 13px;">
+                                    <i class="fa-solid fa-circle-down"></i> Download Live JS Config
                                 </button>
                             </div>
                         </div>
