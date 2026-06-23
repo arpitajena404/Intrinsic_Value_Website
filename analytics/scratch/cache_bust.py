@@ -29,6 +29,8 @@ def cache_bust_root():
         
         # Replace style.css?v=5 with style.css?v=6
         updated = content.replace('style.css?v=5', 'style.css?v=6')
+        # Replace script.js?v=3 with script.js?v=6
+        updated = updated.replace('script.js?v=3', 'script.js?v=6')
         
         if updated != content:
             with open(filepath, "w", encoding="utf-8") as f:

@@ -1997,7 +1997,7 @@ function initTeamMarquee() {
     if (cards.length === 0) return;
     
     let isPaused = false;
-    let scrollSpeed = 0.6; // Speed of auto scroll in pixels per frame
+    let scrollSpeed = 1.5; // Speed of auto scroll in pixels per frame
     let halfScrollWidth = 0;
     let animationFrameId = null;
     
