@@ -10,6 +10,20 @@
       }
     },
     {
+      "src": "/invest_biz/live_config.js",
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+      },
+      "dest": "/invest_biz/live_config.js"
+    },
+    {
+      "src": "/live/live_config.js",
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+      },
+      "dest": "/live/live_config.js"
+    },
+    {
       "src": "/nikhil-gangil-indian-value-investor",
       "status": 301,
       "headers": {

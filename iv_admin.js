@@ -1131,7 +1131,7 @@
             liveCmsState = Object.assign({}, DEFAULT_LIVE_FALLBACK_CONFIG, LIVE_CONFIG);
             populateLiveForms();
         } else {
-            fetch('live/live_config.js')
+            fetch('invest_biz/live_config.js')
                 .then(function (res) { return res.text(); })
                 .then(function (text) {
                     var match = text.match(/var\s+LIVE_CONFIG\s*=\s*([\s\S]+?);/);
@@ -1143,7 +1143,7 @@
                     populateLiveForms();
                 })
                 .catch(function (err) {
-                    console.warn("Could not load live/live_config.js directly. Loading fallback configuration:", err);
+                    console.warn("Could not load invest_biz/live_config.js directly. Loading fallback configuration:", err);
                     liveCmsState = JSON.parse(JSON.stringify(DEFAULT_LIVE_FALLBACK_CONFIG));
                     populateLiveForms();
                 });
