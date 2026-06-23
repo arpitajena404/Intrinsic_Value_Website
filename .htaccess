@@ -10,7 +10,7 @@
 RewriteEngine On
 
 # Redirect /admin to the new admin URL
-RewriteRule ^admin/?$ https://live.intrinsicvalueequity.in/invest_biz/admin.html [R=301,L]
+RewriteRule ^admin/?$ https://intrinsicvalueequity.in/invest_biz/admin.html [R=301,L]
 
 # Redirect /nikhil-gangil-indian-value-investor to /nikhil-gangil-indian-value-investor/
 RewriteRule ^nikhil-gangil-indian-value-investor$ /nikhil-gangil-indian-value-investor/ [R=301,L]

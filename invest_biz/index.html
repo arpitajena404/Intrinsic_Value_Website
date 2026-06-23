@@ -693,7 +693,7 @@ var fetchOngoingWorkshopDetails=async function(){
 fetchOngoingWorkshopDetails();
 
 /* ============ FORM SUBMISSION (integrated exactly) ============ */
-var redirectUrl="https://premium.intrinsicvalueequity.in/checkout/28180dfc-84a9-488e-854e-9f7958a1b8d7";
+var redirectUrl="https://intrinsicvalueequity.in/invest_biz/vsl.html";
 if(typeof LIVE_CONFIG !== 'undefined' && LIVE_CONFIG.indexRedirectUrl){
   redirectUrl = LIVE_CONFIG.indexRedirectUrl;
 }
@@ -798,7 +798,7 @@ submitButton.addEventListener("click",async function(e){
 
   // Notify parent window that child is ready to receive config
   if (window.self !== window.top) {
-    window.parent.postMessage({ type: 'iframe_ready' }, '*');
+    window.parent.postMessage({ type: 'iframe_ready', page: 'index.html' }, '*');
   }
 
   function updateVisuals() {

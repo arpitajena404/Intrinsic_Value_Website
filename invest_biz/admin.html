@@ -902,6 +902,9 @@
             if (!msg) return;
 
             if (msg.type === 'iframe_ready') {
+                if (msg.page) {
+                    pageSelector.value = msg.page;
+                }
                 // Initialize the loaded page with the current config and edit mode state
                 if (iframe && iframe.contentWindow) {
                     iframe.contentWindow.postMessage({

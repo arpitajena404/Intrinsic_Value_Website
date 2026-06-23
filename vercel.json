@@ -6,7 +6,7 @@
       "src": "/admin/?",
       "status": 301,
       "headers": {
-        "Location": "https://live.intrinsicvalueequity.in/invest_biz/admin.html"
+        "Location": "https://intrinsicvalueequity.in/invest_biz/admin.html"
       }
     },
     {

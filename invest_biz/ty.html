@@ -245,7 +245,7 @@ if(wa){
 
   // Notify parent window that child is ready to receive config
   if (window.self !== window.top) {
-    window.parent.postMessage({ type: 'iframe_ready' }, '*');
+    window.parent.postMessage({ type: 'iframe_ready', page: 'ty.html' }, '*');
   }
 
   function updateVisuals() {

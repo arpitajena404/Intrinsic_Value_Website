@@ -207,7 +207,7 @@ document.getElementById("applyBtn").addEventListener("click",function(){
 
   // Notify parent window that child is ready to receive config
   if (window.self !== window.top) {
-    window.parent.postMessage({ type: 'iframe_ready' }, '*');
+    window.parent.postMessage({ type: 'iframe_ready', page: 'vsl.html' }, '*');
   }
 
   function updateVisuals() {

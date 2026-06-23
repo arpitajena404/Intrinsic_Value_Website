@@ -2,7 +2,7 @@
 RewriteEngine On
 
 # Redirect /admin to the new admin URL
-RewriteRule ^admin/?$ https://live.intrinsicvalueequity.in/invest_biz/admin.html [R=301,L]
+RewriteRule ^admin/?$ https://intrinsicvalueequity.in/invest_biz/admin.html [R=301,L]
 
 # Ensure index.html is served as the default page
 DirectoryIndex index.html
