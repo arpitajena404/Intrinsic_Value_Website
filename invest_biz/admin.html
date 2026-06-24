@@ -828,6 +828,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
 
         function updateAuthState() {
+            var parentSessionStr = sessionStorage.getItem('admin_session');
+            if (parentSessionStr) {
+                try {
+                    var parentSession = JSON.parse(parentSessionStr);
+                    if (parentSession && parentSession.exp && Date.now() < parentSession.exp) {
+                        var session = {
+                            name: parentSession.name || "Administrator",
+                            email: parentSession.email,
+                            picture: parentSession.picture || "https://lh3.googleusercontent.com/a/default-user=s100",
+                            exp: parentSession.exp,
+                            sso: true
+                        };
+                        sessionStorage.setItem('live_admin_session', JSON.stringify(session));
+                    }
+                } catch (e) {
+                    console.error("Failed to parse parent admin_session:", e);
+                }
+            } else {
+                var localSessionStr = sessionStorage.getItem('live_admin_session');
+                if (localSessionStr) {
+                    try {
+                        var localSession = JSON.parse(localSessionStr);
+                        if (localSession && localSession.sso) {
+                            sessionStorage.removeItem('live_admin_session');
+                        }
+                    } catch (e) {
+                        console.error("Failed to parse local session key:", e);
+                    }
+                }
+            }
+
             var sessionStr = sessionStorage.getItem('live_admin_session');
             var loginSection = document.getElementById('adminLoginSection');
             var dashSection = document.getElementById('adminDashboardSection');
@@ -854,6 +885,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         function logoutAdmin() {
             sessionStorage.removeItem('live_admin_session');
+            sessionStorage.removeItem('admin_session');
             updateAuthState();
         }
 
