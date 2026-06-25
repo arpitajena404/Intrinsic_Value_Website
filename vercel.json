@@ -1,118 +1,185 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "routes": [
+  "redirects": [
     {
-      "src": "/admin/?",
-      "status": 301,
-      "headers": {
-        "Location": "https://intrinsicvalueequity.in/invest_biz/admin.html"
-      }
+      "source": "/admin",
+      "destination": "https://intrinsicvalueequity.in/invest_biz/admin.html",
+      "permanent": true
     },
     {
-      "src": "/invest_biz/live_config.js",
-      "headers": {
-        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
-      },
-      "dest": "/invest_biz/live_config.js"
+      "source": "/workshop",
+      "destination": "/workshop/",
+      "permanent": true
     },
     {
-      "src": "/live/live_config.js",
-      "headers": {
-        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
-      },
-      "dest": "/live/live_config.js"
+      "source": "/invest_biz",
+      "destination": "/invest_biz/",
+      "permanent": true
     },
     {
-      "src": "/nikhil-gangil-indian-value-investor",
-      "status": 301,
-      "headers": {
-        "Location": "/nikhil-gangil-indian-value-investor/"
-      }
+      "source": "/vsl",
+      "destination": "/vsl/",
+      "permanent": true
     },
     {
-      "src": "/nikhil-gangil-indian-value-investor/",
-      "dest": "/nikhil-gangil-indian-value-investor.html"
+      "source": "/nikhil-gangil-indian-value-investor",
+      "destination": "/nikhil-gangil-indian-value-investor/",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/workshop/",
+      "destination": "/workshop/index.html"
     },
     {
-      "src": "/analytics/static/(.*)",
-      "dest": "/analytics/frontend/assets/$1"
+      "source": "/invest_biz/",
+      "destination": "/invest_biz/index.html"
     },
     {
-      "src": "/analytics/css/(.*)",
-      "dest": "/analytics/frontend/css/$1"
+      "source": "/vsl/",
+      "destination": "/vsl/lp.intrinsicvalueequity.in/vsl/index.html"
     },
     {
-      "src": "/analytics/js/(.*)",
-      "dest": "/analytics/frontend/js/$1"
+      "source": "/vsl/admin",
+      "destination": "/vsl/lp.intrinsicvalueequity.in/vsl/admin.html"
     },
     {
-      "src": "/analytics/assets/(.*)",
-      "dest": "/analytics/frontend/assets/$1"
+      "source": "/vsl/vsl_config.js",
+      "destination": "/vsl/lp.intrinsicvalueequity.in/vsl/vsl_config.js"
     },
     {
-      "src": "/analytics/frontend/(.*)",
-      "dest": "/analytics/frontend/$1"
+      "source": "/connect.facebook.net/:path*",
+      "destination": "/vsl/connect.facebook.net/:path*"
     },
     {
-      "src": "/analytics/dashboard",
-      "dest": "/analytics/frontend/pages/dashboard.html"
+      "source": "/fast.wistia.com/:path*",
+      "destination": "/vsl/fast.wistia.com/:path*"
     },
     {
-      "src": "/analytics/ranking-tool",
-      "dest": "/analytics/frontend/pages/ranking-tool.html"
+      "source": "/scripts.swipepages.com/:path*",
+      "destination": "/vsl/scripts.swipepages.com/:path*"
     },
     {
-      "src": "/analytics/monthly-market-analysis",
-      "dest": "/analytics/frontend/pages/monthly-market-analysis.html"
+      "source": "/sp-events7ef2.js",
+      "destination": "/vsl/lp.intrinsicvalueequity.in/sp-events7ef2.js"
     },
     {
-      "src": "/analytics/market-valuation-index",
-      "dest": "/analytics/frontend/pages/market-valuation-index.html"
+      "source": "/cdn-cgi/:path*",
+      "destination": "/vsl/lp.intrinsicvalueequity.in/cdn-cgi/:path*"
     },
     {
-      "src": "/analytics/headwind-tailwind-indicator",
-      "dest": "/analytics/frontend/pages/headwind-tailwind-indicator.html"
+      "source": "/signals/:path*",
+      "destination": "/vsl/lp.intrinsicvalueequity.in/signals/:path*"
     },
     {
-      "src": "/analytics/portfolio-review-tool",
-      "dest": "/analytics/frontend/pages/portfolio-review-tool.html"
+      "source": "/nikhil-gangil-indian-value-investor/",
+      "destination": "/nikhil-gangil-indian-value-investor.html"
     },
     {
-      "src": "/analytics/intrinsic-theme",
-      "dest": "/analytics/frontend/pages/intrinsic-theme.html"
+      "source": "/analytics/static/:path*",
+      "destination": "/analytics/frontend/assets/:path*"
     },
     {
-      "src": "/analytics/sip",
-      "dest": "/analytics/frontend/pages/sip.html"
+      "source": "/analytics/css/:path*",
+      "destination": "/analytics/frontend/css/:path*"
     },
     {
-      "src": "/analytics/swp",
-      "dest": "/analytics/frontend/pages/swp.html"
+      "source": "/analytics/js/:path*",
+      "destination": "/analytics/frontend/js/:path*"
     },
     {
-      "src": "/analytics/lumpsum",
-      "dest": "/analytics/frontend/pages/lumpsum.html"
+      "source": "/analytics/assets/:path*",
+      "destination": "/analytics/frontend/assets/:path*"
     },
     {
-      "src": "/analytics/xirr",
-      "dest": "/analytics/frontend/pages/xirr.html"
+      "source": "/analytics/frontend/:path*",
+      "destination": "/analytics/frontend/:path*"
     },
     {
-      "src": "/analytics/gawp",
-      "dest": "/analytics/frontend/pages/gawp.html"
+      "source": "/analytics/dashboard",
+      "destination": "/analytics/frontend/pages/dashboard.html"
     },
     {
-      "src": "/analytics/tools",
-      "dest": "/analytics/frontend/pages/tools.html"
+      "source": "/analytics/ranking-tool",
+      "destination": "/analytics/frontend/pages/ranking-tool.html"
     },
     {
-      "src": "/analytics/admin",
-      "dest": "/analytics/frontend/pages/admin.html"
+      "source": "/analytics/monthly-market-analysis",
+      "destination": "/analytics/frontend/pages/monthly-market-analysis.html"
     },
     {
-      "src": "/analytics/?",
-      "dest": "/analytics/frontend/pages/dashboard.html"
+      "source": "/analytics/market-valuation-index",
+      "destination": "/analytics/frontend/pages/market-valuation-index.html"
+    },
+    {
+      "source": "/analytics/headwind-tailwind-indicator",
+      "destination": "/analytics/frontend/pages/headwind-tailwind-indicator.html"
+    },
+    {
+      "source": "/analytics/portfolio-review-tool",
+      "destination": "/analytics/frontend/pages/portfolio-review-tool.html"
+    },
+    {
+      "source": "/analytics/intrinsic-theme",
+      "destination": "/analytics/frontend/pages/intrinsic-theme.html"
+    },
+    {
+      "source": "/analytics/sip",
+      "destination": "/analytics/frontend/pages/sip.html"
+    },
+    {
+      "source": "/analytics/swp",
+      "destination": "/analytics/frontend/pages/swp.html"
+    },
+    {
+      "source": "/analytics/lumpsum",
+      "destination": "/analytics/frontend/pages/lumpsum.html"
+    },
+    {
+      "source": "/analytics/xirr",
+      "destination": "/analytics/frontend/pages/xirr.html"
+    },
+    {
+      "source": "/analytics/gawp",
+      "destination": "/analytics/frontend/pages/gawp.html"
+    },
+    {
+      "source": "/analytics/tools",
+      "destination": "/analytics/frontend/pages/tools.html"
+    },
+    {
+      "source": "/analytics/admin",
+      "destination": "/analytics/frontend/pages/admin.html"
+    },
+    {
+      "source": "/analytics",
+      "destination": "/analytics/frontend/pages/dashboard.html"
+    },
+    {
+      "source": "/analytics/",
+      "destination": "/analytics/frontend/pages/dashboard.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/invest_biz/live_config.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+        }
+      ]
+    },
+    {
+      "source": "/live/live_config.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+        }
+      ]
     }
   ]
 }
