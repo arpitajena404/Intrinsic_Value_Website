@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Specifically allow AI search bots to index for search citation/attribution
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://intrinsicvalueequity.in/sitemap.xml

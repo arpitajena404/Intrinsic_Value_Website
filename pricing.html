@@ -93,6 +93,51 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             }
         }
     </style>
+    <!-- Structured Data Schema for AI & Search Engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "serviceType": "Investment Advisory & Research Services",
+      "provider": {
+        "@type": "FinancialService",
+        "@id": "https://intrinsicvalueequity.in/#organization",
+        "name": "Intrinsic Value Equity Advisors"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Research Advisory Subscriptions",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "HNI Premium Plan",
+              "description": "Recommended for capital size 10-15 Lakhs. Includes cyclical sector rotation research recommendations."
+            },
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "price": "45000",
+              "priceCurrency": "INR",
+              "referenceQuantity": {
+                "@type": "QuantitativeValue",
+                "value": "1",
+                "unitCode": "ANN"
+              }
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Inner Circle Plan",
+              "description": "Premium advisory tier with higher capital requirements and custom query resolutions."
+            }
+          }
+        ]
+      }
+    }
+    </script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
