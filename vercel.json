@@ -99,67 +99,67 @@
     },
     {
       "source": "/analytics/dashboard",
-      "destination": "/analytics/frontend/pages/dashboard.html"
+      "destination": "/analytics/frontend/pages/dashboard"
     },
     {
       "source": "/analytics/ranking-tool",
-      "destination": "/analytics/frontend/pages/ranking-tool.html"
+      "destination": "/analytics/frontend/pages/ranking-tool"
     },
     {
       "source": "/analytics/monthly-market-analysis",
-      "destination": "/analytics/frontend/pages/monthly-market-analysis.html"
+      "destination": "/analytics/frontend/pages/monthly-market-analysis"
     },
     {
       "source": "/analytics/market-valuation-index",
-      "destination": "/analytics/frontend/pages/market-valuation-index.html"
+      "destination": "/analytics/frontend/pages/market-valuation-index"
     },
     {
       "source": "/analytics/headwind-tailwind-indicator",
-      "destination": "/analytics/frontend/pages/headwind-tailwind-indicator.html"
+      "destination": "/analytics/frontend/pages/headwind-tailwind-indicator"
     },
     {
       "source": "/analytics/portfolio-review-tool",
-      "destination": "/analytics/frontend/pages/portfolio-review-tool.html"
+      "destination": "/analytics/frontend/pages/portfolio-review-tool"
     },
     {
       "source": "/analytics/intrinsic-theme",
-      "destination": "/analytics/frontend/pages/intrinsic-theme.html"
+      "destination": "/analytics/frontend/pages/intrinsic-theme"
     },
     {
       "source": "/analytics/sip",
-      "destination": "/analytics/frontend/pages/sip.html"
+      "destination": "/analytics/frontend/pages/sip"
     },
     {
       "source": "/analytics/swp",
-      "destination": "/analytics/frontend/pages/swp.html"
+      "destination": "/analytics/frontend/pages/swp"
     },
     {
       "source": "/analytics/lumpsum",
-      "destination": "/analytics/frontend/pages/lumpsum.html"
+      "destination": "/analytics/frontend/pages/lumpsum"
     },
     {
       "source": "/analytics/xirr",
-      "destination": "/analytics/frontend/pages/xirr.html"
+      "destination": "/analytics/frontend/pages/xirr"
     },
     {
       "source": "/analytics/gawp",
-      "destination": "/analytics/frontend/pages/gawp.html"
+      "destination": "/analytics/frontend/pages/gawp"
     },
     {
       "source": "/analytics/tools",
-      "destination": "/analytics/frontend/pages/tools.html"
+      "destination": "/analytics/frontend/pages/tools"
     },
     {
       "source": "/analytics/admin",
-      "destination": "/analytics/frontend/pages/admin.html"
+      "destination": "/analytics/frontend/pages/admin"
     },
     {
       "source": "/analytics",
-      "destination": "/analytics/frontend/pages/dashboard.html"
+      "destination": "/analytics/frontend/pages/dashboard"
     },
     {
       "source": "/analytics/",
-      "destination": "/analytics/frontend/pages/dashboard.html"
+      "destination": "/analytics/frontend/pages/dashboard"
     }
   ],
   "headers": [
