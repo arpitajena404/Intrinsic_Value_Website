@@ -3060,6 +3060,9 @@
                     var commitMessage = gitCommitInput ? gitCommitInput.value.trim() : '';
                     var pat = patInput ? patInput.value.trim() : '';
                     var repo = repoInput ? repoInput.value.trim() : '';
+                    // Clean up repository format (strip full url, hostname, and .git suffix)
+                    repo = repo.replace(/^https?:\/\/github\.com\//i, '');
+                    repo = repo.replace(/\.git$/i, '');
                     var branch = 'main';
 
                     var isLocalhost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
