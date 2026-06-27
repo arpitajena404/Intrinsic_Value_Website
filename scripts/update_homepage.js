@@ -41,6 +41,27 @@ function replaceSection(sectionName, newContent) {
     console.log(`Successfully compiled section: ${sectionName}`);
 }
 
+// 0. Compile Styles block
+let stylesHtml = '';
+if (config.layout_styles) {
+    stylesHtml = '<style id="cms-compiled-homepage-styles">\n';
+    for (const selector in config.layout_styles) {
+        let rules = config.layout_styles[selector];
+        let cssSelector = selector;
+        if (selector === 'hero-section') cssSelector = '.iv-hero';
+        else if (selector === 'hero-title') cssSelector = '.iv-hero-h1';
+        else if (selector === 'hero-desc') cssSelector = '.iv-hero-desc';
+        else if (selector === 'philosophy-card') cssSelector = '.spiral-card';
+        else if (selector === 'testimonial-card') cssSelector = '.testimonial-card';
+        else if (selector === 'team-card') cssSelector = '.team-card';
+        else if (selector === 'faq-item') cssSelector = '.faq-item';
+        
+        stylesHtml += `    ${cssSelector} {\n        ${rules}\n    }\n`;
+    }
+    stylesHtml += '</style>';
+}
+replaceSection('HOMEPAGE_STYLES', stylesHtml);
+
 // 1. Navigation Menu
 function generateNavHtml(prefix) {
     return config.navigation.map(link => {
@@ -55,28 +76,28 @@ replaceSection('NAV', navHtml);
 
 // 2. Hero Left Column
 const heroCtaTarget = config.hero.cta_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
-const heroLeftHtml = `                        <div class="iv-hero-tag">${config.hero.tag}</div>
+const heroLeftHtml = `                        <div class="iv-hero-tag cms-editable-highlight" data-field="hero.tag">${config.hero.tag}</div>
 
-                        <h1 class="iv-hero-h1">
+                        <h1 class="iv-hero-h1 cms-editable-highlight" data-field="hero.heading_html">
                             ${config.hero.heading_html}
                         </h1>
 
                         <div class="iv-hero-bar"></div>
 
-                        <p class="iv-hero-desc">
+                        <p class="iv-hero-desc cms-editable-highlight" data-field="hero.desc1">
                             ${config.hero.desc1}
                         </p>
 
-                        <p class="iv-hero-desc iv-hero-desc-2">
+                        <p class="iv-hero-desc iv-hero-desc-2 cms-editable-highlight" data-field="hero.desc2">
                             ${config.hero.desc2}
                         </p>
 
-                        <a href="${config.hero.cta_url}"${heroCtaTarget} class="iv-hero-cta">
+                        <a href="${config.hero.cta_url}"${heroCtaTarget} class="iv-hero-cta cms-editable-highlight" data-field="hero.cta_text">
                             ${config.hero.cta_text}
                             <span class="iv-hero-cta-arrow">&rarr;</span>
                         </a>
 
-                        <div class="iv-sebi-badge">${config.hero.sebi_badge}</div>`;
+                        <div class="iv-sebi-badge cms-editable-highlight" data-field="hero.sebi_badge">${config.hero.sebi_badge}</div>`;
 replaceSection('HERO_LEFT', heroLeftHtml);
 
 // 3. Hero Stats HTML Generator
@@ -86,7 +107,7 @@ function generateStatsHtml() {
         return `                            <!-- Stat Item ${idx+1} -->
                             <div class="iv-stat-item">
                                 <div class="iv-stat-num"><span class="count-up" data-target="${stat.num}">0</span>${stat.suffix}</div>
-                                <div class="iv-stat-label">${stat.label}</div>
+                                <div class="iv-stat-label cms-editable-highlight" data-field="hero.stats.${idx}.label">${stat.label}</div>
                             </div>${divider}`;
     }).join('\n');
 }
@@ -135,7 +156,7 @@ const typewriterWordsHtml = config.hero.typewriter_words.map(w => `             
 replaceSection('TYPEWRITER_WORDS', typewriterWordsHtml);
 
 // 6. Philosophy Section Title & Cards
-const philTitleHtml = `                        <h2>${config.philosophy.title}</h2>`;
+const philTitleHtml = `                        <h2 class="cms-editable-highlight" data-field="philosophy.title">${config.philosophy.title}</h2>`;
 replaceSection('PHILOSOPHY_TITLE', philTitleHtml);
 
 const philCardsHtml = config.philosophy.cards.map((card, idx) => {
@@ -144,8 +165,8 @@ const philCardsHtml = config.philosophy.cards.map((card, idx) => {
                         <div class="spiral-card" data-index="${idx}">
                             <a href="${card.link}"${targetAttr}>
                                 <div class="spiral-card-icon"><i class="${card.icon}"></i></div>
-                                <h5>${card.title}</h5>
-                                <p>${card.desc}</p>
+                                <h5 class="cms-editable-highlight" data-field="philosophy.cards.${idx}.title">${card.title}</h5>
+                                <p class="cms-editable-highlight" data-field="philosophy.cards.${idx}.desc">${card.desc}</p>
                                 <div class="spiral-card-readmore">
                                     <span>Read more</span>
                                     <span class="stm-amsterdam-arrow"></span>
@@ -157,7 +178,7 @@ replaceSection('PHILOSOPHY_CARDS', philCardsHtml);
 
 // 7. Case Studies Section Title & Companies Accordion
 const caseStudiesTitleHtml = `                        <span class="cases-pre-title">CASE STUDIES</span>
-                        <h2 class="cases-main-title">${config.case_studies.title}</h2>`;
+                        <h2 class="cases-main-title cms-editable-highlight" data-field="case_studies.title">${config.case_studies.title}</h2>`;
 replaceSection('CASE_STUDIES_TITLE', caseStudiesTitleHtml);
 
 const rowCardsHtml = config.case_studies.companies.map((comp, globalIdx) => {
@@ -207,7 +228,7 @@ replaceSection('CASE_STUDIES_COMPANIES', caseStudiesCompaniesHtml);
 // 8. News Section Display Area & Cards Row
 const firstNewsItem = config.news.items[0] || { quote: "", source: "" };
 const newsDisplayHtml = `                        <span class="featured-pre-title">FEATURED</span>
-                        <h2 class="featured-main-title">${config.news.title}</h2>
+                        <h2 class="featured-main-title cms-editable-highlight" data-field="news.title">${config.news.title}</h2>
 
                         <div class="featured-quote-container">
                             <blockquote class="featured-quote">"${firstNewsItem.quote}"</blockquote>
@@ -249,7 +270,7 @@ replaceSection('NEWS_CARDS', newsCardsHtml);
 
 // 9. Testimonials Section Title & Cards Track
 const testimonialsTitleHtml = `                    <span class="testimonials-pre-title">Reviews</span>
-                    <h2 class="testimonials-main-title">${config.testimonials.title}</h2>`;
+                    <h2 class="testimonials-main-title cms-editable-highlight" data-field="testimonials.title">${config.testimonials.title}</h2>`;
 replaceSection('TESTIMONIALS_TITLE', testimonialsTitleHtml);
 
 const testimonialsCardsHtml = config.testimonials.items.map((item, idx) => {
@@ -259,19 +280,19 @@ const testimonialsCardsHtml = config.testimonials.items.map((item, idx) => {
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="${item.avatar || 'testimonials_images/avatar_page_1.jpg'}" alt="${item.name}" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.${idx}.quote">
                                 "${item.quote}"
                             </div>
                             <div class="testimonial-author">
-                                <h6>${item.name}</h6>
-                                <div class="position">${item.position}</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.${idx}.name">${item.name}</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.${idx}.position">${item.position}</div>
                             </div>
                         </div>`;
 }).join('\n');
 replaceSection('TESTIMONIALS_CARDS', testimonialsCardsHtml);
 
 // 10. Team Section Title & Cards Row
-const teamTitleHtml = `                        <h2 class="team-section-heading">
+const teamTitleHtml = `                        <h2 class="team-section-heading cms-editable-highlight" data-field="team.title">
                             ${config.team.title}
                         </h2>`;
 replaceSection('TEAM_TITLE', teamTitleHtml);
@@ -289,8 +310,8 @@ const teamCardsHtml = config.team.members.map((member, idx) => {
                                         <img src="${member.photo || 'profile.jpeg'}" alt="${member.name}" class="team-avatar">
                                     </div>
                                     <div class="team-info">
-                                        <h3 class="team-name">${member.name}</h3>
-                                        <p class="team-role">${member.role}</p>
+                                        <h3 class="team-name cms-editable-highlight" data-field="team.members.${idx}.name">${member.name}</h3>
+                                        <p class="team-role cms-editable-highlight" data-field="team.members.${idx}.role">${member.role}</p>
 ${linkedinHtml}
                                     </div>
                                 </div>`;
@@ -299,7 +320,7 @@ replaceSection('TEAM_CARDS', teamCardsHtml);
 
 // 11. FAQ Section Title & List Accordion
 const faqTitleHtml = `                <span class="faq-pre-title">COMMON QUERIES</span>
-                <h2 class="faq-main-title">${config.faqs.title}</h2>
+                <h2 class="faq-main-title cms-editable-highlight" data-field="faqs.title">${config.faqs.title}</h2>
                 <p class="faq-sub-title">Can't find the answer you're looking for? Reach out to us at <a class="faq-email-link">info@intrinsicvalueequity.in</a></p>`;
 replaceSection('FAQ_TITLE', faqTitleHtml);
 
@@ -307,7 +328,7 @@ const faqListHtml = config.faqs.items.map((item, idx) => {
     return `                <!-- FAQ Item ${idx + 1} -->
                 <div class="faq-item">
                     <div class="faq-question-header">
-                        <h3 class="faq-question">${item.question}</h3>
+                        <h3 class="faq-question cms-editable-highlight" data-field="faqs.items.${idx}.question">${item.question}</h3>
                         <div class="faq-icon">
                             <span class="line horizontal"></span>
                             <span class="line vertical"></span>
@@ -315,7 +336,7 @@ const faqListHtml = config.faqs.items.map((item, idx) => {
                     </div>
                     <div class="faq-accent-bar"></div>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner">
+                        <div class="faq-answer-inner cms-editable-highlight" data-field="faqs.items.${idx}.answer">
                             ${item.answer}
                         </div>
                     </div>
@@ -324,7 +345,7 @@ const faqListHtml = config.faqs.items.map((item, idx) => {
 replaceSection('FAQ_LIST', faqListHtml);
 
 // 12. Footer Section Brand & Links
-const footerBrandHtml = `                    <p class="footer-desc">
+const footerBrandHtml = `                    <p class="footer-desc cms-editable-highlight" data-field="footer.desc">
                         ${config.footer.desc}
                     </p>`;
 replaceSection('FOOTER_BRAND', footerBrandHtml);
@@ -341,12 +362,20 @@ const footerImportantHtml = config.footer.important_info.map(link => {
 }).join('\n');
 replaceSection('FOOTER_IMPORTANT_INFO', footerImportantHtml);
 
-const footerDisclaimerHtml = `                <div class="footer-disclaimers">
-                    <p class="disclaimer-text">
-                        ${config.footer.disclaimer}
+const footerBottomHtml = `            <div class="footer-bottom">
+                <div class="footer-disclaimers">
+                    <p class="disclaimer-text cms-editable-highlight" data-field="footer.disclaimer_p1">
+                        ${config.footer.disclaimer_p1}
                     </p>
-                </div>`;
-replaceSection('FOOTER_DISCLAIMER', footerDisclaimerHtml);
+                    <p class="disclaimer-text cms-editable-highlight" data-field="footer.disclaimer_p2">
+                        ${config.footer.disclaimer_p2}
+                    </p>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; <span class="cms-editable-highlight" data-field="footer.copyright_year">${config.footer.copyright_year}</span> Intrinsic Value Equity Advisors. All rights reserved.</p>
+                </div>
+            </div>`;
+replaceSection('FOOTER_BOTTOM', footerBottomHtml);
 
 // 13. Footer Apps
 const playStoreTarget = config.footer.apps?.play_store?.new_tab !== false ? ' target="_blank" rel="noopener noreferrer"' : '';
@@ -412,7 +441,7 @@ ${phoneLinksHtml}
                         </svg>
                     </div>
                     <div class="contact-text">
-                        <a href="mailto:${config.footer.contact?.email || ''}" class="contact-link">${config.footer.contact?.email || ''}</a>
+                        <a href="mailto:${config.footer.contact?.email || ''}" class="contact-link cms-editable-highlight" data-field="footer.contact.email">${config.footer.contact?.email || ''}</a>
                     </div>
                 </div>
                 <div class="contact-item contact-item-address">
@@ -423,7 +452,7 @@ ${phoneLinksHtml}
                         </svg>
                     </div>
                     <div class="contact-text">
-                        <span>${config.footer.contact?.address || ''}</span>
+                        <span class="cms-editable-highlight" data-field="footer.contact.address">${config.footer.contact?.address || ''}</span>
                     </div>
                 </div>
                 <div class="contact-item">
@@ -542,3 +571,86 @@ function updateAllPagesNavigation() {
 }
 
 updateAllPagesNavigation();
+
+function updateAllPagesFooterBottom() {
+    const rootDir = path.join(__dirname, '..');
+    
+    function walkAndFindHtml(dir, fileList = []) {
+        const files = fs.readdirSync(dir);
+        for (const file of files) {
+            const filePath = path.join(dir, file);
+            const stat = fs.statSync(filePath);
+            if (stat.isDirectory()) {
+                if (file !== '.git' && file !== 'node_modules' && file !== 'analytics' && file !== 'CS reports') {
+                    walkAndFindHtml(filePath, fileList);
+                }
+            } else if (file.endsWith('.html')) {
+                fileList.push(filePath);
+            }
+        }
+        return fileList;
+    }
+    const htmlFiles = walkAndFindHtml(rootDir);
+    for (const filePath of htmlFiles) {
+        let content = fs.readFileSync(filePath, 'utf8').replace(/\r\n/g, '\n');
+        let modified = false;
+        
+        // 1. Inject markers if they don't exist
+        if (!content.includes('CMS_FOOTER_BOTTOM_START')) {
+            const startIdx = content.indexOf('<div class="footer-bottom">');
+            const endIdx = content.indexOf('</footer>');
+            if (startIdx !== -1 && endIdx !== -1) {
+                const lastDivIdx = content.lastIndexOf('</div>', endIdx - 1);
+                const footerBottomCloseIdx = content.lastIndexOf('</div>', lastDivIdx - 1) + '</div>'.length;
+                
+                if (footerBottomCloseIdx > startIdx) {
+                    const before = content.substring(0, startIdx);
+                    const blockToReplace = content.substring(startIdx, footerBottomCloseIdx);
+                    const after = content.substring(footerBottomCloseIdx);
+                    
+                    content = before + `<!-- CMS_FOOTER_BOTTOM_START -->\n` + blockToReplace + `\n<!-- CMS_FOOTER_BOTTOM_END -->` + after;
+                    modified = true;
+                    console.log(`Injected footer bottom markers into: ${path.relative(rootDir, filePath)}`);
+                }
+            }
+        }
+        
+        // 2. Update footer bottom content
+        if (content.includes('CMS_FOOTER_BOTTOM_START')) {
+            const startMarker = '<!-- CMS_FOOTER_BOTTOM_START -->';
+            const endMarker = '<!-- CMS_FOOTER_BOTTOM_END -->';
+            const startIndex = content.indexOf(startMarker);
+            const endIndex = content.indexOf(endMarker);
+            
+            if (startIndex !== -1 && endIndex !== -1) {
+                const spaces = '            ';
+                const compiledFooterBottom = `${spaces}<div class="footer-bottom">
+                    <div class="footer-disclaimers">
+                        <p class="disclaimer-text cms-editable-highlight" data-field="footer.disclaimer_p1">
+                            ${config.footer.disclaimer_p1}
+                        </p>
+                        <p class="disclaimer-text cms-editable-highlight" data-field="footer.disclaimer_p2">
+                            ${config.footer.disclaimer_p2}
+                        </p>
+                    </div>
+                    <div class="footer-copyright">
+                        <p>&copy; <span class="cms-editable-highlight" data-field="footer.copyright_year">${config.footer.copyright_year}</span> Intrinsic Value Equity Advisors. All rights reserved.</p>
+                    </div>
+                </div>`;
+                
+                const before = content.substring(0, startIndex + startMarker.length);
+                const after = content.substring(endIndex);
+                
+                content = before + "\n" + compiledFooterBottom + "\n" + after;
+                modified = true;
+                console.log(`Updated footer bottom in: ${path.relative(rootDir, filePath)}`);
+            }
+        }
+        
+        if (modified) {
+            fs.writeFileSync(filePath, content, 'utf8');
+        }
+    }
+}
+
+updateAllPagesFooterBottom();

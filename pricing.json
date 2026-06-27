@@ -118,5 +118,12 @@
                 "Fee/Year": "Custom"
             }
         }
-    ]
+    ],
+    "layout_styles": {
+        "pricing-page-section": "padding: 4rem 0 6rem 0; background-color: var(--bg-primary);",
+        "pricing-title": "font-size: clamp(32px, 5vw, 44px); font-weight: 800; color: var(--text-primary); margin: 0 0 12px 0; letter-spacing: -0.5px; text-align: center;",
+        "pricing-subtitle": "color: var(--text-muted); font-size: 16px; max-width: 600px; margin: 0 auto; line-height: 1.6; text-align: center;",
+        "pricing-card-3d": "background: rgba(18, 18, 18, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 24px;",
+        "comparison-table-wrapper": "background: rgba(18, 18, 18, 0.6); padding: 30px; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px;"
+    }
 }

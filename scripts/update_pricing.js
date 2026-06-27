@@ -38,15 +38,32 @@ function compileFile(filePath) {
         html = before + "\n" + newContent + "\n" + after;
     }
     
+    // 0. Compile Styles block
+    let stylesHtml = '';
+    if (config.layout_styles) {
+        stylesHtml = '<style id="cms-compiled-pricing-styles">\n';
+        for (const selector in config.layout_styles) {
+            let rules = config.layout_styles[selector];
+            let cssSelector = selector;
+            if (selector === 'pricing-title') cssSelector = '.cms-pricing-title';
+            else if (selector === 'pricing-subtitle') cssSelector = '.cms-pricing-subtitle';
+            else if (selector === 'pricing-page-section') cssSelector = '.pricing-page-section';
+            else if (selector === 'pricing-card-3d') cssSelector = '.pricing-card-3d';
+            else if (selector === 'comparison-table-wrapper') cssSelector = '.comparison-table-wrapper';
+            
+            stylesHtml += `    ${cssSelector} {\n        ${rules}\n    }\n`;
+        }
+        stylesHtml += '</style>';
+    }
+    replaceSection('PRICING_STYLES', stylesHtml);
+
     // 1. Pricing Title and Subtitle (if markers exist)
-    replaceSection('PRING_TITLE', `<h1 style="font-size: clamp(32px, 5vw, 44px); font-weight: 800; color: var(--text-primary); margin: 0 0 12px 0; letter-spacing: -0.5px;">${config.pricing_title}</h1>`);
-    // Fallback spelling
-    replaceSection('PRICING_TITLE', `<h1 style="font-size: clamp(32px, 5vw, 44px); font-weight: 800; color: var(--text-primary); margin: 0 0 12px 0; letter-spacing: -0.5px;">${config.pricing_title}</h1>`);
+    replaceSection('PRING_TITLE', `<h1 class="cms-pricing-title cms-editable-highlight" data-field="pricing_title">${config.pricing_title}</h1>`);
+    replaceSection('PRICING_TITLE', `<h1 class="cms-pricing-title cms-editable-highlight" data-field="pricing_title">${config.pricing_title}</h1>`);
+    replaceSection('PRICING_SUBTITLE', `<p class="cms-pricing-subtitle cms-editable-highlight" data-field="pricing_subtitle">${config.pricing_subtitle}</p>`);
     
-    replaceSection('PRICING_SUBTITLE', `<p style="color: var(--text-muted); font-size: 16px; max-width: 600px; margin: 0 auto; line-height: 1.6;">${config.pricing_subtitle}</p>`);
-    
-    replaceSection('COMPARISON_TITLE', `<h2 class="comparison-main-title">${config.comparison_title}</h2>`);
-    replaceSection('COMPARISON_SUBTITLE', `<p class="comparison-subtitle">${config.comparison_subtitle}</p>`);
+    replaceSection('COMPARISON_TITLE', `<h2 class="comparison-main-title cms-editable-highlight" data-field="comparison_title">${config.comparison_title}</h2>`);
+    replaceSection('COMPARISON_SUBTITLE', `<p class="comparison-subtitle cms-editable-highlight" data-field="comparison_subtitle">${config.comparison_subtitle}</p>`);
     
     // 2. Pricing Cards Grid
     const cardsHtml = config.cards.map((card, idx) => {
@@ -56,20 +73,20 @@ function compileFile(filePath) {
                         <div class="pricing-card-3d" data-index="${idx}"${startAttr}${endAttr} style="opacity: 1; transform: none;">
                             <div class="pricing-card-glow"></div>
                             <div class="pricing-card-header">
-                                <h3 class="pricing-plan-name">${card.name}</h3>
+                                <h3 class="pricing-plan-name cms-editable-highlight" data-field="cards.${idx}.name">${card.name}</h3>
 
                                 <div class="pricing-meta-item">
                                     <span class="pricing-meta-label">MINIMUM CAPITAL</span>
-                                    <span class="pricing-meta-value">${card.min_capital}</span>
+                                    <span class="pricing-meta-value cms-editable-highlight" data-field="cards.${idx}.min_capital">${card.min_capital}</span>
                                 </div>
 
                                 <div class="pricing-card-divider"></div>
 
                                 <div class="pricing-price-box">
-                                    <span class="pricing-price">${card.price_display}</span>
+                                    <span class="pricing-price cms-editable-highlight" data-field="cards.${idx}.price_display">${card.price_display}</span>
                                 </div>
 
-                                <div class="pricing-duration">${card.duration}</div>
+                                <div class="pricing-duration cms-editable-highlight" data-field="cards.${idx}.duration">${card.duration}</div>
 
                                 <div class="pricing-card-divider"></div>
                             </div>
@@ -89,7 +106,7 @@ function compileFile(filePath) {
     config.table_plans.forEach((plan, idx) => {
         const isHighlight = plan.highlight || idx === 1;
         const highlightClass = isHighlight ? ' class="highlight-col"' : '';
-        tableHtml += `                                    <th${highlightClass}>${plan.name}</th>\n`;
+        tableHtml += `                                    <th${highlightClass}><span class="cms-editable-highlight" data-field="table_plans.${idx}.name">${plan.name}</span></th>\n`;
     });
     tableHtml += `                                </tr>
                             </thead>

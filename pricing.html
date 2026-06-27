@@ -93,6 +93,25 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             }
         }
     </style>
+    <!-- CMS_PRICING_STYLES_START -->
+<style id="cms-compiled-pricing-styles">
+    .pricing-page-section {
+        padding: 4rem 0 6rem 0; background-color: var(--bg-primary);
+    }
+    .cms-pricing-title {
+        font-size: clamp(32px, 5vw, 44px); font-weight: 800; color: var(--text-primary); margin: 0 0 12px 0; letter-spacing: -0.5px; text-align: center;
+    }
+    .cms-pricing-subtitle {
+        color: var(--text-muted); font-size: 16px; max-width: 600px; margin: 0 auto; line-height: 1.6; text-align: center;
+    }
+    .pricing-card-3d {
+        background: rgba(18, 18, 18, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 24px;
+    }
+    .comparison-table-wrapper {
+        background: rgba(18, 18, 18, 0.6); padding: 30px; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px;
+    }
+</style>
+<!-- CMS_PRICING_STYLES_END -->
     <!-- Structured Data Schema for AI & Search Engines -->
     <script type="application/ld+json">
     {
@@ -195,17 +214,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
          MAIN CONTENT - PRICING DETAILS PAGE
          ========================================================================== -->
     <main style="padding-top: calc(var(--header-height) + 2rem); min-height: calc(100vh - 200px);">
-        <div class="pricing-page-section">
+        <div class="pricing-page-section" data-cms-style-target="pricing-page-section" data-cms-label="Pricing Section">
             <div class="container">
                 
                 <!-- Page Header -->
                 <div style="text-align: center; margin-bottom: 4rem;">
                     <!-- CMS_PRICING_TITLE_START -->
-<h1 style="font-size: clamp(32px, 5vw, 44px); font-weight: 800; color: var(--text-primary); margin: 0 0 12px 0; letter-spacing: -0.5px;">Intrinsic Value Pricing</h1>
+<h1 class="cms-pricing-title cms-editable-highlight" data-field="pricing_title">Intrinsic Value Pricing</h1>
 <!-- CMS_PRICING_TITLE_END -->
                     <div style="width: 60px; height: 4px; background-color: var(--accent); margin: 0 auto 20px auto; border-radius: 2px;"></div>
                     <!-- CMS_PRICING_SUBTITLE_START -->
-<p style="color: var(--text-muted); font-size: 16px; max-width: 600px; margin: 0 auto; line-height: 1.6;">Select the perfect advisory tier aligned with your capital size and research requirement.</p>
+<p class="cms-pricing-subtitle cms-editable-highlight" data-field="pricing_subtitle">Select the perfect advisory tier aligned with your capital size and research requirement.</p>
 <!-- CMS_PRICING_SUBTITLE_END -->
                 </div>
                 
@@ -217,20 +236,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <div class="pricing-card-3d" data-index="0" data-start="45000" data-end="39871" style="opacity: 1; transform: none;">
                             <div class="pricing-card-glow"></div>
                             <div class="pricing-card-header">
-                                <h3 class="pricing-plan-name">HNI Premium</h3>
+                                <h3 class="pricing-plan-name cms-editable-highlight" data-field="cards.0.name">HNI Premium</h3>
 
                                 <div class="pricing-meta-item">
                                     <span class="pricing-meta-label">MINIMUM CAPITAL</span>
-                                    <span class="pricing-meta-value">10 - 15 Lakhs</span>
+                                    <span class="pricing-meta-value cms-editable-highlight" data-field="cards.0.min_capital">10 - 15 Lakhs</span>
                                 </div>
 
                                 <div class="pricing-card-divider"></div>
 
                                 <div class="pricing-price-box">
-                                    <span class="pricing-price"><span class="price-current">₹39,871 <span class="price-suffix">incl. GST</span></span> <span class="price-original">₹45,000</span></span>
+                                    <span class="pricing-price cms-editable-highlight" data-field="cards.0.price_display"><span class="price-current">₹39,871 <span class="price-suffix">incl. GST</span></span> <span class="price-original">₹45,000</span></span>
                                 </div>
 
-                                <div class="pricing-duration">1 Year Subscription</div>
+                                <div class="pricing-duration cms-editable-highlight" data-field="cards.0.duration">1 Year Subscription</div>
 
                                 <div class="pricing-card-divider"></div>
                             </div>
@@ -243,20 +262,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <div class="pricing-card-3d" data-index="1" style="opacity: 1; transform: none;">
                             <div class="pricing-card-glow"></div>
                             <div class="pricing-card-header">
-                                <h3 class="pricing-plan-name">Inner Circle</h3>
+                                <h3 class="pricing-plan-name cms-editable-highlight" data-field="cards.1.name">Inner Circle</h3>
 
                                 <div class="pricing-meta-item">
                                     <span class="pricing-meta-label">MINIMUM CAPITAL</span>
-                                    <span class="pricing-meta-value">2 Crore+</span>
+                                    <span class="pricing-meta-value cms-editable-highlight" data-field="cards.1.min_capital">2 Crore+</span>
                                 </div>
 
                                 <div class="pricing-card-divider"></div>
 
                                 <div class="pricing-price-box">
-                                    <span class="pricing-price">₹1.51 Lacs + GST / year</span>
+                                    <span class="pricing-price cms-editable-highlight" data-field="cards.1.price_display">₹1.51 Lacs + GST / year</span>
                                 </div>
 
-                                <div class="pricing-duration">1 Year Subscription</div>
+                                <div class="pricing-duration cms-editable-highlight" data-field="cards.1.duration">1 Year Subscription</div>
 
                                 <div class="pricing-card-divider"></div>
                             </div>
@@ -269,20 +288,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <div class="pricing-card-3d" data-index="2" style="opacity: 1; transform: none;">
                             <div class="pricing-card-glow"></div>
                             <div class="pricing-card-header">
-                                <h3 class="pricing-plan-name">Invest Biz</h3>
+                                <h3 class="pricing-plan-name cms-editable-highlight" data-field="cards.2.name">Invest Biz</h3>
 
                                 <div class="pricing-meta-item">
                                     <span class="pricing-meta-label">MINIMUM CAPITAL</span>
-                                    <span class="pricing-meta-value">5 Cr+ (Business money only)</span>
+                                    <span class="pricing-meta-value cms-editable-highlight" data-field="cards.2.min_capital">5 Cr+ (Business money only)</span>
                                 </div>
 
                                 <div class="pricing-card-divider"></div>
 
                                 <div class="pricing-price-box">
-                                    <span class="pricing-price">Custom Pricing</span>
+                                    <span class="pricing-price cms-editable-highlight" data-field="cards.2.price_display">Custom Pricing</span>
                                 </div>
 
-                                <div class="pricing-duration">Quarterly Billing</div>
+                                <div class="pricing-duration cms-editable-highlight" data-field="cards.2.duration">Quarterly Billing</div>
 
                                 <div class="pricing-card-divider"></div>
                             </div>
@@ -298,23 +317,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div id="comparison-section" class="comparison-section">
                     <div class="comparison-title-area">
                         <!-- CMS_COMPARISON_TITLE_START -->
-<h2 class="comparison-main-title">Advisory Tiers Comparison</h2>
+<h2 class="comparison-main-title cms-editable-highlight" data-field="comparison_title">Advisory Tiers Comparison</h2>
 <!-- CMS_COMPARISON_TITLE_END -->
                         <div style="width: 50px; height: 3px; background-color: var(--accent); margin: 10px auto 15px auto; border-radius: 1.5px;"></div>
                         <!-- CMS_COMPARISON_SUBTITLE_START -->
-<p class="comparison-subtitle">Compare the exact features, query resolutions, and platforms for each tier.</p>
+<p class="comparison-subtitle cms-editable-highlight" data-field="comparison_subtitle">Compare the exact features, query resolutions, and platforms for each tier.</p>
 <!-- CMS_COMPARISON_SUBTITLE_END -->
                     </div>
 
-                    <div class="comparison-table-wrapper">
+                    <div class="comparison-table-wrapper" data-cms-style-target="comparison-table-wrapper" data-cms-label="Table Wrapper">
                         <!-- CMS_COMPARISON_TABLE_START -->
 <table class="comparison-table show-plan-1">
                             <thead>
                                 <tr>
                                     <th>Parameters</th>
-                                    <th>HNI Premium</th>
-                                    <th class="highlight-col">Inner Circle</th>
-                                    <th>Invest Biz</th>
+                                    <th><span class="cms-editable-highlight" data-field="table_plans.0.name">HNI Premium</span></th>
+                                    <th class="highlight-col"><span class="cms-editable-highlight" data-field="table_plans.1.name">Inner Circle</span></th>
+                                    <th><span class="cms-editable-highlight" data-field="table_plans.2.name">Invest Biz</span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -570,19 +589,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
             </div>
             
+            <!-- CMS_FOOTER_BOTTOM_START -->
             <div class="footer-bottom">
-                <div class="footer-disclaimers">
-                    <p class="disclaimer-text">
-                        Investment in securities market are subjected to market risks, Read all the related documents carefully before investing.
-                    </p>
-                    <p class="disclaimer-text">
-                        Disclaimer: Registration granted by SEBI and certification from NISM in no way guarantee performance of the Research Analyst or provide any assurance of returns to investor.
-                    </p>
+                    <div class="footer-disclaimers">
+                        <p class="disclaimer-text cms-editable-highlight" data-field="footer.disclaimer_p1">
+                            Investment in securities market are subjected to market risks, Read all the related documents carefully before investing.
+                        </p>
+                        <p class="disclaimer-text cms-editable-highlight" data-field="footer.disclaimer_p2">
+                            Disclaimer: Registration granted by SEBI and certification from NISM in no way guarantee performance of the Research Analyst or provide any assurance of returns to investor.
+                        </p>
+                    </div>
+                    <div class="footer-copyright">
+                        <p>&copy; <span class="cms-editable-highlight" data-field="footer.copyright_year">2022</span> Intrinsic Value Equity Advisors. All rights reserved.</p>
+                    </div>
                 </div>
-                <div class="footer-copyright">
-                    <p>&copy; 2026 Intrinsic Value Equity Advisors. All rights reserved.</p>
-                </div>
-            </div>
+<!-- CMS_FOOTER_BOTTOM_END -->
         </div>
     </footer>
 
@@ -606,5 +627,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- Link Logic Script -->
     <script src="script.js?v=6"></script>
+    <script src="main_cms_controller.js"></script>
 </body>
 </html>

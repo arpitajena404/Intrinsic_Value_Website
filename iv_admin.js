@@ -1103,31 +1103,59 @@
 
     // Load configurations safely
     function loadCmsData() {
-        fetch('homepage_config.json')
-            .then(function (res) { return res.json(); })
-            .then(function (data) {
-                cmsState = data;
+        var pendingCms = localStorage.getItem('pending_homepage_config');
+        if (pendingCms) {
+            try {
+                cmsState = JSON.parse(pendingCms);
                 populateCmsForms();
-            })
-            .catch(function (err) {
-                console.warn("Could not fetch homepage_config.json directly. Loading fallback configuration:", err);
-                cmsState = JSON.parse(JSON.stringify(DEFAULT_FALLBACK_CONFIG));
-                populateCmsForms();
-            });
+            } catch (e) {
+                console.error("Error parsing pending_homepage_config", e);
+            }
+        } else {
+            fetch('homepage_config.json')
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    cmsState = data;
+                    populateCmsForms();
+                })
+                .catch(function (err) {
+                    console.warn("Could not fetch homepage_config.json directly. Loading fallback configuration:", err);
+                    cmsState = JSON.parse(JSON.stringify(DEFAULT_FALLBACK_CONFIG));
+                    populateCmsForms();
+                });
+        }
 
-        fetch('pricing.json')
-            .then(function (res) { return res.json(); })
-            .then(function (data) {
-                pricingCmsState = data;
+        var pendingPricing = localStorage.getItem('pending_pricing_config');
+        if (pendingPricing) {
+            try {
+                pricingCmsState = JSON.parse(pendingPricing);
                 populatePricingForms();
-            })
-            .catch(function (err) {
-                console.warn("Could not fetch pricing.json directly. Loading fallback configuration:", err);
-                pricingCmsState = JSON.parse(JSON.stringify(DEFAULT_PRICING_FALLBACK_CONFIG));
-                populatePricingForms();
-            });
+            } catch (e) {
+                console.error("Error parsing pending_pricing_config", e);
+            }
+        } else {
+            fetch('pricing.json')
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    pricingCmsState = data;
+                    populatePricingForms();
+                })
+                .catch(function (err) {
+                    console.warn("Could not fetch pricing.json directly. Loading fallback configuration:", err);
+                    pricingCmsState = JSON.parse(JSON.stringify(DEFAULT_PRICING_FALLBACK_CONFIG));
+                    populatePricingForms();
+                });
+        }
 
-        if (typeof LIVE_CONFIG !== 'undefined') {
+        var pendingLive = localStorage.getItem('pending_live_config');
+        if (pendingLive) {
+            try {
+                liveCmsState = JSON.parse(pendingLive);
+                populateLiveForms();
+            } catch (e) {
+                console.error("Error parsing pending_live_config", e);
+            }
+        } else if (typeof LIVE_CONFIG !== 'undefined') {
             liveCmsState = Object.assign({}, DEFAULT_LIVE_FALLBACK_CONFIG, LIVE_CONFIG);
             populateLiveForms();
         } else {
@@ -1625,7 +1653,9 @@
         cmsState.faqs.title = document.getElementById('cms-faq-title').value;
         
         cmsState.footer.desc = document.getElementById('cms-footer-desc').value;
-        cmsState.footer.disclaimer = document.getElementById('cms-footer-disclaimer').value;
+        cmsState.footer.disclaimer_p1 = document.getElementById('cms-footer-disclaimer-p1').value;
+        cmsState.footer.disclaimer_p2 = document.getElementById('cms-footer-disclaimer-p2').value;
+        cmsState.footer.copyright_year = document.getElementById('cms-footer-copyright-year').value;
 
         // Apps
         cmsState.footer.apps = cmsState.footer.apps || {};
@@ -2654,6 +2684,50 @@
         }
     }
 
+    function saveConfigToServer(filePath, configState) {
+        // Save to localStorage for browser persistence (supports offline / static hosting edit sessions)
+        if (filePath === 'homepage_config.json') {
+            localStorage.setItem('pending_homepage_config', JSON.stringify(configState));
+        } else if (filePath === 'pricing.json') {
+            localStorage.setItem('pending_pricing_config', JSON.stringify(configState));
+        } else if (filePath === 'blogs.json') {
+            localStorage.setItem('pending_blogs_config', JSON.stringify(configState));
+        } else if (filePath === 'live_config.js') {
+            localStorage.setItem('pending_live_config', JSON.stringify(configState));
+        }
+
+        // Highlight the push button to indicate unsaved pending edits
+        var pushBtn = document.getElementById('gitPushBtn');
+        if (pushBtn) {
+            pushBtn.style.boxShadow = '0 0 12px var(--accent)';
+            pushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub';
+        }
+
+        if (window.location.protocol.indexOf('http') !== -1 && window.location.hostname === 'localhost') {
+            fetch('/api/save-config', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    config: configState,
+                    filePath: filePath
+                })
+            })
+            .then(function (res) { return res.json(); })
+            .then(function (result) {
+                if (result && result.success) {
+                    console.log("[CMS Admin] Saved to server successfully: " + filePath);
+                } else {
+                    console.warn("[CMS Admin] Failed to save config to server: " + (result ? result.message : "unknown"));
+                }
+            })
+            .catch(function (err) {
+                console.error("[CMS Admin] Error calling save-config API", err);
+            });
+        }
+    }
+
     function bindCmsWorkspaceEvents() {
         var workspace = document.getElementById('homepageCmsWorkspace');
         var openBtn = document.getElementById('openCmsBtn');
@@ -2664,6 +2738,15 @@
         
         if (openBtn && workspace) {
             openBtn.addEventListener('click', function () {
+                workspace.classList.remove('mode-pricing');
+                workspace.classList.add('mode-homepage');
+                document.getElementById('cmsWorkspaceTitle').innerText = "Homepage CMS Workspace";
+                
+                var iframe = document.getElementById('previewIframe');
+                if (iframe) {
+                    iframe.src = "index.html";
+                }
+                
                 workspace.style.display = 'block';
                 loadCmsData();
                 var firstTabLink = document.querySelector('.iv-cms-tab-link[data-tab="tab-hero-nav"]');
@@ -2674,6 +2757,15 @@
         var openPricingBtn = document.getElementById('openPricingCmsBtn');
         if (openPricingBtn && workspace) {
             openPricingBtn.addEventListener('click', function () {
+                workspace.classList.remove('mode-homepage');
+                workspace.classList.add('mode-pricing');
+                document.getElementById('cmsWorkspaceTitle').innerText = "Pricing & Plans CMS Workspace";
+                
+                var iframe = document.getElementById('previewIframe');
+                if (iframe) {
+                    iframe.src = "pricing.html";
+                }
+                
                 workspace.style.display = 'block';
                 loadCmsData();
                 var pricingTabLink = document.querySelector('.iv-cms-tab-link[data-tab="tab-pricing"]');
@@ -2683,6 +2775,12 @@
 
         if (closeBtn && workspace) {
             closeBtn.addEventListener('click', function () {
+                compileCmsState();
+                compilePricingCmsState();
+                compileLiveCmsState();
+                saveConfigToServer('homepage_config.json', cmsState);
+                saveConfigToServer('pricing.json', pricingCmsState);
+                saveConfigToServer('live_config.js', liveCmsState);
                 workspace.style.display = 'none';
             });
         }
@@ -2692,6 +2790,9 @@
                 compileCmsState();
                 compilePricingCmsState();
                 compileLiveCmsState();
+                saveConfigToServer('homepage_config.json', cmsState);
+                saveConfigToServer('pricing.json', pricingCmsState);
+                saveConfigToServer('live_config.js', liveCmsState);
                 var exportTabLink = document.querySelector('.iv-cms-tab-link[data-tab="tab-export"]');
                 if (exportTabLink) exportTabLink.click();
             });
@@ -2814,6 +2915,316 @@
                 renderComplianceAudits();
             });
         }
+
+        // Responsive Device Preview toggler
+        var deviceBtns = document.querySelectorAll('.btn-device-toggle');
+        var previewPane = document.querySelector('.iv-cms-preview-pane');
+        if (deviceBtns && previewPane) {
+            deviceBtns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    deviceBtns.forEach(function(b) { b.classList.remove('active'); });
+                    btn.classList.add('active');
+                    
+                    var device = btn.getAttribute('data-device');
+                    if (device === 'phone') {
+                        previewPane.classList.remove('device-laptop');
+                        previewPane.classList.add('device-phone');
+                    } else {
+                        previewPane.classList.remove('device-phone');
+                        previewPane.classList.add('device-laptop');
+                    }
+                });
+            });
+        }
+
+        // Toggle Sidebar Layout (Left Pane)
+        var toggleLayoutBtn = document.getElementById('toggleLayoutBtn');
+        var editorPane = document.querySelector('.iv-cms-editor-pane');
+        if (toggleLayoutBtn && editorPane) {
+            toggleLayoutBtn.addEventListener('click', function() {
+                if (editorPane.style.display === 'none' || editorPane.style.display === '') {
+                    editorPane.style.display = 'flex';
+                } else {
+                    editorPane.style.display = 'none';
+                }
+            });
+        }
+
+        // Highlight Elements Checkbox
+        var editModeToggle = document.getElementById('editModeToggle');
+        if (editModeToggle) {
+            editModeToggle.addEventListener('change', function() {
+                var iframe = document.getElementById('previewIframe');
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({
+                        type: 'toggle_edit_mode',
+                        enabled: editModeToggle.checked
+                    }, '*');
+                }
+            });
+        }
+
+        // Auto sync state to iframe when parent form inputs change
+        if (workspace) {
+            workspace.addEventListener('input', function(e) {
+                if (e.target.closest('input') || e.target.closest('textarea') || e.target.closest('select')) {
+                    syncAllToIframe();
+                }
+            });
+            workspace.addEventListener('change', function(e) {
+                if (e.target.closest('input') || e.target.closest('textarea') || e.target.closest('select')) {
+                    syncAllToIframe();
+                }
+                if (e.target.closest('button') || e.target.closest('a')) {
+                    setTimeout(syncAllToIframe, 50);
+                }
+            });
+        }
+
+        // Parent Message Event Listener
+        window.addEventListener('message', function(event) {
+            var msg = event.data;
+            if (!msg) return;
+
+            if (msg.type === 'iframe_ready') {
+                currentPreviewPage = msg.page || 'index.html';
+                console.log("[CMS Admin] Preview Iframe ready (" + currentPreviewPage + "), syncing state...");
+                syncAllToIframe();
+            } else if (msg.type === 'update_cms_state_from_iframe') {
+                var targetConfig = msg.isPricing ? pricingCmsState : cmsState;
+                setNestedKey(targetConfig, msg.key, msg.value);
+                if (msg.isPricing) {
+                    populatePricingForms();
+                } else {
+                    populateCmsForms();
+                }
+            }
+        });
+
+        // Load settings from localStorage
+        var patInput = document.getElementById('gitPatInput');
+        var repoInput = document.getElementById('gitRepoInput');
+        
+        if (patInput) {
+            patInput.value = localStorage.getItem('git_pat') || '';
+            patInput.addEventListener('input', function() {
+                localStorage.setItem('git_pat', patInput.value.trim());
+            });
+        }
+        
+        if (repoInput) {
+            repoInput.value = localStorage.getItem('git_repo') || '';
+            repoInput.addEventListener('input', function() {
+                localStorage.setItem('git_repo', repoInput.value.trim());
+            });
+        }
+
+        // Highlight push button if there are already pending unsaved edits in localStorage on load
+        if (localStorage.getItem('pending_homepage_config') || localStorage.getItem('pending_pricing_config') || localStorage.getItem('pending_blogs_config') || localStorage.getItem('pending_live_config')) {
+            if (gitPushBtn) {
+                gitPushBtn.style.boxShadow = '0 0 12px var(--accent)';
+                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub';
+            }
+        }
+
+        if (gitPushBtn) {
+            gitPushBtn.addEventListener('click', function () {
+                var commitMessage = gitCommitInput ? gitCommitInput.value.trim() : '';
+                var pat = patInput ? patInput.value.trim() : '';
+                var repo = repoInput ? repoInput.value.trim() : '';
+                var branch = 'main';
+
+                if (pat && repo) {
+                    // Direct browser-to-GitHub commit logic (online / serverless static hosts)
+                    gitPushBtn.disabled = true;
+                    gitPushBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Committing...';
+                    if (gitStatusMsg) {
+                        gitStatusMsg.style.display = 'block';
+                        gitStatusMsg.style.color = '#FF8C00';
+                        gitStatusMsg.innerText = 'Initializing API connection...';
+                    }
+                    
+                    // Collect pending files to commit
+                    var filesToCommit = [];
+                    
+                    var pendingCms = localStorage.getItem('pending_homepage_config');
+                    if (pendingCms) {
+                        filesToCommit.push({ path: 'homepage_config.json', content: pendingCms });
+                    }
+                    var pendingPricing = localStorage.getItem('pending_pricing_config');
+                    if (pendingPricing) {
+                        filesToCommit.push({ path: 'pricing.json', content: pendingPricing });
+                    }
+                    var pendingBlogs = localStorage.getItem('pending_blogs_config');
+                    if (pendingBlogs) {
+                        filesToCommit.push({ path: 'blogs.json', content: pendingBlogs });
+                    }
+                    var pendingLive = localStorage.getItem('pending_live_config');
+                    if (pendingLive) {
+                        var liveContentStr = "var LIVE_CONFIG = " + JSON.stringify(JSON.parse(pendingLive), null, 4) + ";\n";
+                        filesToCommit.push({ path: 'live_config.js', content: liveContentStr });
+                    }
+                    
+                    if (filesToCommit.length === 0) {
+                        gitPushBtn.disabled = false;
+                        gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                        if (gitStatusMsg) {
+                            gitStatusMsg.style.color = '#EA4335';
+                            gitStatusMsg.innerText = 'No unsaved edits found. Make changes in CMS workspace first!';
+                        }
+                        return;
+                    }
+                    
+                    var currentFileIdx = 0;
+                    
+                    function commitNextFile() {
+                        if (currentFileIdx >= filesToCommit.length) {
+                            // All files committed!
+                            localStorage.removeItem('pending_homepage_config');
+                            localStorage.removeItem('pending_pricing_config');
+                            localStorage.removeItem('pending_blogs_config');
+                            localStorage.removeItem('pending_live_config');
+                            
+                            gitPushBtn.disabled = false;
+                            gitPushBtn.style.boxShadow = 'none';
+                            gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                            if (gitCommitInput) gitCommitInput.value = '';
+                            
+                            if (gitStatusMsg) {
+                                gitStatusMsg.style.color = '#34A853';
+                                gitStatusMsg.innerText = 'Successfully pushed all edits directly to GitHub!\n\nThis will trigger the GitHub Action build workflow to recompile templates and deploy the final pages live.';
+                            }
+                            return;
+                        }
+                        
+                        var fileObj = filesToCommit[currentFileIdx];
+                        if (gitStatusMsg) {
+                            gitStatusMsg.innerText = 'Processing file ' + (currentFileIdx + 1) + ' of ' + filesToCommit.length + ' (' + fileObj.path + ')...';
+                        }
+                        
+                        // 1. Fetch file SHA
+                        var getUrl = 'https://api.github.com/repos/' + repo + '/contents/' + fileObj.path + '?ref=' + branch;
+                        fetch(getUrl, {
+                            headers: {
+                                'Authorization': 'token ' + pat,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        })
+                        .then(function(res) {
+                            if (res.status === 200) {
+                                return res.json().then(function(data) { return data.sha; });
+                            } else if (res.status === 404) {
+                                return null;
+                            } else {
+                                throw new Error('Failed to fetch file metadata (HTTP ' + res.status + ')');
+                            }
+                        })
+                        .then(function(sha) {
+                            // 2. Commit file content
+                            var putUrl = 'https://api.github.com/repos/' + repo + '/contents/' + fileObj.path;
+                            var encodedContent = btoa(unescape(encodeURIComponent(fileObj.content)));
+                            
+                            var bodyData = {
+                                message: commitMessage || ('CMS Update: ' + fileObj.path),
+                                content: encodedContent,
+                                branch: branch
+                            };
+                            if (sha) {
+                                bodyData.sha = sha;
+                            }
+                            
+                            return fetch(putUrl, {
+                                method: 'PUT',
+                                headers: {
+                                    'Authorization': 'token ' + pat,
+                                    'Accept': 'application/vnd.github.v3+json',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(bodyData)
+                            });
+                        })
+                        .then(function(res) {
+                            if (!res.ok) {
+                                return res.json().then(function(data) {
+                                    throw new Error(data.message || 'HTTP error ' + res.status);
+                                });
+                            }
+                            return res.json();
+                        })
+                        .then(function(data) {
+                            console.log('Committed ' + fileObj.path + ' successfully!');
+                            currentFileIdx++;
+                            commitNextFile();
+                        })
+                        .catch(function(err) {
+                            gitPushBtn.disabled = false;
+                            gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                            if (gitStatusMsg) {
+                                gitStatusMsg.style.color = '#EA4335';
+                                gitStatusMsg.innerText = 'Deployment Failed on ' + fileObj.path + ':\n' + err.message;
+                            }
+                        });
+                    }
+                    
+                    commitNextFile();
+                } else {
+                    // Local fallback using local server.py endpoint
+                    if (window.location.hostname !== 'localhost') {
+                        gitPushBtn.disabled = false;
+                        gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                        alert('To publish changes online, you must fill in your GitHub Personal Access Token and Repository info in the settings fields.');
+                        if (gitStatusMsg) {
+                            gitStatusMsg.style.color = '#EA4335';
+                            gitStatusMsg.innerText = 'Error: Missing GitHub credentials configuration.';
+                        }
+                        return;
+                    }
+
+                    gitPushBtn.disabled = true;
+                    gitPushBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Pushing...';
+                    if (gitStatusMsg) {
+                        gitStatusMsg.style.display = 'block';
+                        gitStatusMsg.style.color = '#FF8C00';
+                        gitStatusMsg.innerText = 'Connecting to server and deploying to GitHub...';
+                    }
+                    
+                    fetch('/api/git-push', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ commitMessage: commitMessage })
+                    })
+                    .then(function (res) {
+                        return res.json().then(function (data) {
+                            if (!res.ok) {
+                                throw new Error(data.message || 'HTTP error ' + res.status);
+                            }
+                            return data;
+                        });
+                    })
+                    .then(function (data) {
+                        gitPushBtn.disabled = false;
+                        gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                        if (gitStatusMsg) {
+                            gitStatusMsg.style.color = '#34A853';
+                            gitStatusMsg.innerText = data.message;
+                        }
+                        if (gitCommitInput) {
+                            gitCommitInput.value = '';
+                        }
+                    })
+                    .catch(function (err) {
+                        gitPushBtn.disabled = false;
+                        gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                        if (gitStatusMsg) {
+                            gitStatusMsg.style.color = '#EA4335';
+                            gitStatusMsg.innerText = 'Deployment Failed:\n' + err.message;
+                        }
+                    });
+                }
+            });
+        }
     }
 
     // ----------------------------------------------------
@@ -2824,17 +3235,27 @@
     var currentEditingBlogIndex = -1;
 
     function loadBlogsCmsData() {
-        fetch('blogs.json')
-            .then(function (res) { return res.json(); })
-            .then(function (data) {
-                blogsState = data;
+        var pendingBlogs = localStorage.getItem('pending_blogs_config');
+        if (pendingBlogs) {
+            try {
+                blogsState = JSON.parse(pendingBlogs);
                 renderBlogsList();
-            })
-            .catch(function (err) {
-                console.warn("Could not fetch blogs.json directly.", err);
-                blogsState = [];
-                renderBlogsList();
-            });
+            } catch(e) {
+                console.error("Error parsing pending_blogs_config", e);
+            }
+        } else {
+            fetch('blogs.json')
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    blogsState = data;
+                    renderBlogsList();
+                })
+                .catch(function (err) {
+                    console.warn("Could not fetch blogs.json directly.", err);
+                    blogsState = [];
+                    renderBlogsList();
+                });
+        }
     }
 
     function renderBlogsList() {
@@ -3232,6 +3653,8 @@
 
         if (closeBtn && workspace) {
             closeBtn.addEventListener('click', function () {
+                compileBlogsCmsState();
+                saveConfigToServer('blogs.json', blogsState);
                 workspace.style.display = 'none';
             });
         }
@@ -3239,6 +3662,7 @@
         if (saveBtn) {
             saveBtn.addEventListener('click', function () {
                 compileBlogsCmsState();
+                saveConfigToServer('blogs.json', blogsState);
                 var exportTabLink = document.getElementById('tab-btn-blogs-export');
                 if (exportTabLink) exportTabLink.click();
             });

@@ -21,6 +21,31 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- CMS_PRICING_STYLES_START -->
+<style id="cms-compiled-pricing-styles">
+    .pricing-page-section {
+        padding: 4rem 0 6rem 0; background-color: var(--bg-primary);
+    }
+    .cms-pricing-title {
+        font-size: clamp(32px, 5vw, 44px); font-weight: 800; color: var(--text-primary); margin: 0 0 12px 0; letter-spacing: -0.5px; text-align: center;
+    }
+    .cms-pricing-subtitle {
+        color: var(--text-muted); font-size: 16px; max-width: 600px; margin: 0 auto; line-height: 1.6; text-align: center;
+    }
+    .pricing-card-3d {
+        background: rgba(18, 18, 18, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 24px;
+    }
+    .comparison-table-wrapper {
+        background: rgba(18, 18, 18, 0.6); padding: 30px; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px;
+    }
+</style>
+<!-- CMS_PRICING_STYLES_END -->
+    
+    <!-- CMS_HOMEPAGE_STYLES_START -->
+<style id="cms-compiled-homepage-styles">
+</style>
+<!-- CMS_HOMEPAGE_STYLES_END -->
+    
     <!-- Structured Data Schema for AI & Search Engines -->
     <script type="application/ld+json">
     {
@@ -149,40 +174,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
          ========================================================================== -->
     <main class="scroll-stack">
         <div class="sticky-viewport">
-            <section class="iv-hero">
+            <section class="iv-hero" data-cms-style-target="hero-section" data-cms-label="Hero Section">
                 <div class="container iv-hero-inner">
 
                     <!-- LEFT Column: Text, Badge, Typewriter Title & Description -->
                     <div class="iv-hero-left">
                         <!-- CMS_HERO_LEFT_START -->
-                        <div class="iv-hero-tag">SEBI Registered Research Analyst</div>
+                        <div class="iv-hero-tag cms-editable-highlight" data-field="hero.tag">SEBI Registered Research Analyst</div>
 
-                        <h1 class="iv-hero-h1">
+                        <h1 class="iv-hero-h1 cms-editable-highlight" data-field="hero.heading_html">
                             Accelerate<br>
                             <span class="iv-typing-container"><span class="iv-typing-text"></span></span>
                         </h1>
 
                         <div class="iv-hero-bar"></div>
 
-                        <p class="iv-hero-desc">
+                        <p class="iv-hero-desc cms-editable-highlight" data-field="hero.desc1">
                             Discover the power of systematic <strong>sector rotation investing</strong> paired with
                             precise <strong>value unlocking</strong> strategies. Our methodology targets high-quality,
                             overlooked businesses positioned for major structural turnarounds and multi-year growth.
                         </p>
 
-                        <p class="iv-hero-desc iv-hero-desc-2">
+                        <p class="iv-hero-desc iv-hero-desc-2 cms-editable-highlight" data-field="hero.desc2">
                             At Intrinsic Value, alpha is a natural result of a robust, data-driven strategy.
                             <strong>Capital protection, strict risk management, and process</strong> govern every stock
                             recommendation. We are a SEBI-registered equity research analyst service dedicated to
                             sustainable wealth creation.
                         </p>
 
-                        <a href="pricing.html" class="iv-hero-cta">
+                        <a href="pricing.html" class="iv-hero-cta cms-editable-highlight" data-field="hero.cta_text">
                             Accelerate Your Wealth Now
                             <span class="iv-hero-cta-arrow">&rarr;</span>
                         </a>
 
-                        <div class="iv-sebi-badge">SEBI Registered · INH000009047</div>
+                        <div class="iv-sebi-badge cms-editable-highlight" data-field="hero.sebi_badge">SEBI Registered · INH000009047</div>
 <!-- CMS_HERO_LEFT_END -->
 
                         <!-- Stats Box for Mobile View only -->
@@ -192,28 +217,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             <!-- Stat Item 1 -->
                             <div class="iv-stat-item">
                                 <div class="iv-stat-num"><span class="count-up" data-target="15">0</span>+</div>
-                                <div class="iv-stat-label">Years of Experience</div>
+                                <div class="iv-stat-label cms-editable-highlight" data-field="hero.stats.0.label">Years of Experience</div>
                             </div>
                             <div class="iv-stat-divider"></div>
 
                             <!-- Stat Item 2 -->
                             <div class="iv-stat-item">
                                 <div class="iv-stat-num"><span class="count-up" data-target="3000">0</span>+</div>
-                                <div class="iv-stat-label">Clients Serviced</div>
+                                <div class="iv-stat-label cms-editable-highlight" data-field="hero.stats.1.label">Clients Serviced</div>
                             </div>
                             <div class="iv-stat-divider"></div>
 
                             <!-- Stat Item 3 -->
                             <div class="iv-stat-item">
                                 <div class="iv-stat-num"><span class="count-up" data-target="300">0</span>cr+</div>
-                                <div class="iv-stat-label">Peak AUA</div>
+                                <div class="iv-stat-label cms-editable-highlight" data-field="hero.stats.2.label">Peak AUA</div>
                             </div>
                             <div class="iv-stat-divider"></div>
 
                             <!-- Stat Item 4 -->
                             <div class="iv-stat-item">
                                 <div class="iv-stat-num"><span class="count-up" data-target="70">0</span>+</div>
-                                <div class="iv-stat-label">Stocks Recommended</div>
+                                <div class="iv-stat-label cms-editable-highlight" data-field="hero.stats.3.label">Stocks Recommended</div>
                             </div>
 <!-- CMS_HERO_STATS_MOBILE_END --></div>
                     </div>
@@ -252,28 +277,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             <!-- Stat Item 1 -->
                             <div class="iv-stat-item">
                                 <div class="iv-stat-num"><span class="count-up" data-target="15">0</span>+</div>
-                                <div class="iv-stat-label">Years of Experience</div>
+                                <div class="iv-stat-label cms-editable-highlight" data-field="hero.stats.0.label">Years of Experience</div>
                             </div>
                             <div class="iv-stat-divider"></div>
 
                             <!-- Stat Item 2 -->
                             <div class="iv-stat-item">
                                 <div class="iv-stat-num"><span class="count-up" data-target="3000">0</span>+</div>
-                                <div class="iv-stat-label">Clients Serviced</div>
+                                <div class="iv-stat-label cms-editable-highlight" data-field="hero.stats.1.label">Clients Serviced</div>
                             </div>
                             <div class="iv-stat-divider"></div>
 
                             <!-- Stat Item 3 -->
                             <div class="iv-stat-item">
                                 <div class="iv-stat-num"><span class="count-up" data-target="300">0</span>cr+</div>
-                                <div class="iv-stat-label">Peak AUA</div>
+                                <div class="iv-stat-label cms-editable-highlight" data-field="hero.stats.2.label">Peak AUA</div>
                             </div>
                             <div class="iv-stat-divider"></div>
 
                             <!-- Stat Item 4 -->
                             <div class="iv-stat-item">
                                 <div class="iv-stat-num"><span class="count-up" data-target="70">0</span>+</div>
-                                <div class="iv-stat-label">Stocks Recommended</div>
+                                <div class="iv-stat-label cms-editable-highlight" data-field="hero.stats.3.label">Stocks Recommended</div>
                             </div>
 <!-- CMS_HERO_STATS_END --></div>
                     </div>
@@ -287,7 +312,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="spiral-philosophy-sticky" id="philosophy">
                 <div class="spiral-philosophy-title">
                     <!-- CMS_PHILOSOPHY_TITLE_START -->
-                        <h2>Investment philosophy<em>.</em></h2>
+                        <h2 class="cms-editable-highlight" data-field="philosophy.title">Investment philosophy<em>.</em></h2>
 <!-- CMS_PHILOSOPHY_TITLE_END -->
                 </div>
                 <div class="spiral-scene">
@@ -297,8 +322,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <div class="spiral-card" data-index="0">
                             <a href="#services_item1">
                                 <div class="spiral-card-icon"><i class="fas fa-sort-numeric-up"></i></div>
-                                <h5>Numbers don’t lie</h5>
-                                <p>Our Research is based on Numbers not narratives, while there is nothing wrong with
+                                <h5 class="cms-editable-highlight" data-field="philosophy.cards.0.title">Numbers don’t lie</h5>
+                                <p class="cms-editable-highlight" data-field="philosophy.cards.0.desc">Our Research is based on Numbers not narratives, while there is nothing wrong with
                                     Growth stories, a lot of over valued narratives end up very badly when the Tide is
                                     over. If you have numbers you don’t need a story, if you don’t have numbers, story
                                     can’t help you. Remember Cons are the best story tellers.</p>
@@ -312,8 +337,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <div class="spiral-card" data-index="1">
                             <a href="#services_item2">
                                 <div class="spiral-card-icon"><i class="fas fa-hand-holding-usd"></i></div>
-                                <h5>Charlie Munger at Ben Graham</h5>
-                                <p>If we can Buy Charlie’s stocks at Benjamin Graham prices, it will be some thing
+                                <h5 class="cms-editable-highlight" data-field="philosophy.cards.1.title">Charlie Munger at Ben Graham</h5>
+                                <p class="cms-editable-highlight" data-field="philosophy.cards.1.desc">If we can Buy Charlie’s stocks at Benjamin Graham prices, it will be some thing
                                     Extraordinary- Mohnish Pabrai <br>
                                     We are trying to achieve that.</p>
                                 <div class="spiral-card-readmore">
@@ -326,8 +351,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <div class="spiral-card" data-index="2">
                             <a href="#services_item3">
                                 <div class="spiral-card-icon"><i class="fas fa-industry"></i></div>
-                                <h5>Industry Experience</h5>
-                                <p>Having worked in Engineering companies , Founders have an unparallel advantage over
+                                <h5 class="cms-editable-highlight" data-field="philosophy.cards.2.title">Industry Experience</h5>
+                                <p class="cms-editable-highlight" data-field="philosophy.cards.2.desc">Having worked in Engineering companies , Founders have an unparallel advantage over
                                     those who have always seen business from annual reports lenses. Some times, you need
                                     to Zoom in.</p>
                                 <div class="spiral-card-readmore">
@@ -340,8 +365,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <div class="spiral-card" data-index="3">
                             <a href="#services_item4">
                                 <div class="spiral-card-icon"><i class="fas fa-chess"></i></div>
-                                <h5>Skin in the Game</h5>
-                                <p>We practice what we preach and we preach what we practice. We are investors first,
+                                <h5 class="cms-editable-highlight" data-field="philosophy.cards.3.title">Skin in the Game</h5>
+                                <p class="cms-editable-highlight" data-field="philosophy.cards.3.desc">We practice what we preach and we preach what we practice. We are investors first,
                                     advisors after.</p>
                                 <div class="spiral-card-readmore">
                                     <span>Read more</span>
@@ -353,8 +378,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <div class="spiral-card" data-index="4">
                             <a href="#services_item5">
                                 <div class="spiral-card-icon"><i class="fa fa-line-chart"></i></div>
-                                <h5>No loss is profit</h5>
-                                <p>Our concept of Buying at Minimum intrinsic value gives us Huge margin of safety
+                                <h5 class="cms-editable-highlight" data-field="philosophy.cards.4.title">No loss is profit</h5>
+                                <p class="cms-editable-highlight" data-field="philosophy.cards.4.desc">Our concept of Buying at Minimum intrinsic value gives us Huge margin of safety
                                     against any unforeseen events or future unpredictability. We are rigid on not having
                                     loss, Profit is just the natural outcome.</p>
                                 <div class="spiral-card-readmore">
@@ -367,8 +392,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <div class="spiral-card" data-index="5">
                             <a href="#services_item6">
                                 <div class="spiral-card-icon"><i class="fas fa-glass-martini-alt"></i></div>
-                                <h5><s>Biases</s></h5>
-                                <p>Every strategy has opportunities as well as Traps. A defined Process, check lists and
+                                <h5 class="cms-editable-highlight" data-field="philosophy.cards.5.title"><s>Biases</s></h5>
+                                <p class="cms-editable-highlight" data-field="philosophy.cards.5.desc">Every strategy has opportunities as well as Traps. A defined Process, check lists and
                                     due diligence help us make unbiased decisions.</p>
                                 <div class="spiral-card-readmore">
                                     <span>Read more</span>
@@ -380,8 +405,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <div class="spiral-card" data-index="6">
                             <a href="#services_item7">
                                 <div class="spiral-card-icon"><i class="fa fa-piggy-bank"></i></div>
-                                <h5>Buying Peace in Chaos</h5>
-                                <p>When the whole narrative is creating chaos against your investment decision, buying
+                                <h5 class="cms-editable-highlight" data-field="philosophy.cards.6.title">Buying Peace in Chaos</h5>
+                                <p class="cms-editable-highlight" data-field="philosophy.cards.6.desc">When the whole narrative is creating chaos against your investment decision, buying
                                     at such level is difficult but that is the most peaceful thing to do.</p>
                                 <div class="spiral-card-readmore">
                                     <span>Read more</span>
@@ -393,8 +418,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <div class="spiral-card" data-index="7">
                             <a href="#services_item8">
                                 <div class="spiral-card-icon"><i class="fas fa-coffee"></i></div>
-                                <h5>Patience</h5>
-                                <p>Patience is not Gyan, Patience is the strategy. Long term attitude puts you in Diff
+                                <h5 class="cms-editable-highlight" data-field="philosophy.cards.7.title">Patience</h5>
+                                <p class="cms-editable-highlight" data-field="philosophy.cards.7.desc">Patience is not Gyan, Patience is the strategy. Long term attitude puts you in Diff
                                     league of investors.</p>
                                 <div class="spiral-card-readmore">
                                     <span>Read more</span>
@@ -406,8 +431,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <div class="spiral-card" data-index="8">
                             <a href="#services_item9">
                                 <div class="spiral-card-icon"><i class="fas fa-solid fa-gears"></i></div>
-                                <h5>Archive</h5>
-                                <p>HNI research Lab lets you Access our Old research, Newsletters, meetups and
+                                <h5 class="cms-editable-highlight" data-field="philosophy.cards.8.title">Archive</h5>
+                                <p class="cms-editable-highlight" data-field="philosophy.cards.8.desc">HNI research Lab lets you Access our Old research, Newsletters, meetups and
                                     everything else. Which makes you master of value investing over the time.</p>
                                 <div class="spiral-card-readmore">
                                     <span>Read more</span>
@@ -431,7 +456,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <div class="featured-display">
                         <!-- CMS_NEWS_DISPLAY_START -->
                         <span class="featured-pre-title">FEATURED</span>
-                        <h2 class="featured-main-title">Recognized by the <em>Best</em>.</h2>
+                        <h2 class="featured-main-title cms-editable-highlight" data-field="news.title">Recognized by the <em>Best</em>.</h2>
 
                         <div class="featured-quote-container">
                             <blockquote class="featured-quote">"Gold up 6.5%, small-caps down 7.5%: Where investors should invest in 2026"</blockquote>
@@ -710,7 +735,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <div class="cases-title-block">
                         <!-- CMS_CASE_STUDIES_TITLE_START -->
                         <span class="cases-pre-title">CASE STUDIES</span>
-                        <h2 class="cases-main-title">Proven Wealth Unlocking <em>Cases</em>.</h2>
+                        <h2 class="cases-main-title cms-editable-highlight" data-field="case_studies.title">Proven Wealth Unlocking <em>Cases</em>.</h2>
 <!-- CMS_CASE_STUDIES_TITLE_END -->
                     </div>
 
@@ -1087,7 +1112,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <div class="homepage-team-section">
                         <div class="team-header-wrapper" style="margin-top: 1rem; margin-bottom: 1.5rem;">
                             <!-- CMS_TEAM_TITLE_START -->
-                        <h2 class="team-section-heading">
+                        <h2 class="team-section-heading cms-editable-highlight" data-field="team.title">
                             <span class="text-white">Meet Our</span><span class="text-orange">Team.</span>
                         </h2>
 <!-- CMS_TEAM_TITLE_END -->
@@ -1100,8 +1125,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                         <img src="profile.jpeg" alt="Nikhil Gangil" class="team-avatar">
                                     </div>
                                     <div class="team-info">
-                                        <h3 class="team-name">Nikhil Gangil</h3>
-                                        <p class="team-role">Founder & Research Analyst</p>
+                                        <h3 class="team-name cms-editable-highlight" data-field="team.members.0.name">Nikhil Gangil</h3>
+                                        <p class="team-role cms-editable-highlight" data-field="team.members.0.role">Founder & Research Analyst</p>
 
                                     </div>
                                 </div>
@@ -1110,8 +1135,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                         <img src="testimonials_images/ragini.jpeg" alt="Ragini Gupta" class="team-avatar">
                                     </div>
                                     <div class="team-info">
-                                        <h3 class="team-name">Ragini Gupta</h3>
-                                        <p class="team-role">Marketing Head</p>
+                                        <h3 class="team-name cms-editable-highlight" data-field="team.members.1.name">Ragini Gupta</h3>
+                                        <p class="team-role cms-editable-highlight" data-field="team.members.1.role">Marketing Head</p>
 
                                     </div>
                                 </div>
@@ -1120,8 +1145,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                         <img src="testimonials_images/mahesh.jpg" alt="Mahesh Ekdare" class="team-avatar">
                                     </div>
                                     <div class="team-info">
-                                        <h3 class="team-name">Mahesh Ekdare</h3>
-                                        <p class="team-role">Head - Business Development & Operation</p>
+                                        <h3 class="team-name cms-editable-highlight" data-field="team.members.2.name">Mahesh Ekdare</h3>
+                                        <p class="team-role cms-editable-highlight" data-field="team.members.2.role">Head - Business Development & Operation</p>
 
                                     </div>
                                 </div>
@@ -1130,8 +1155,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                         <img src="testimonials_images/vaibhav.jpg" alt="Vaibhav Gupta" class="team-avatar">
                                     </div>
                                     <div class="team-info">
-                                        <h3 class="team-name">Vaibhav Gupta</h3>
-                                        <p class="team-role">Operation Manager</p>
+                                        <h3 class="team-name cms-editable-highlight" data-field="team.members.3.name">Vaibhav Gupta</h3>
+                                        <p class="team-role cms-editable-highlight" data-field="team.members.3.role">Operation Manager</p>
 
                                     </div>
                                 </div>
@@ -1140,8 +1165,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                         <img src="testimonials_images/anil.png" alt="Anil Ghavalkar" class="team-avatar">
                                     </div>
                                     <div class="team-info">
-                                        <h3 class="team-name">Anil Ghavalkar</h3>
-                                        <p class="team-role">Business Development Manager</p>
+                                        <h3 class="team-name cms-editable-highlight" data-field="team.members.4.name">Anil Ghavalkar</h3>
+                                        <p class="team-role cms-editable-highlight" data-field="team.members.4.role">Business Development Manager</p>
 
                                     </div>
                                 </div>
@@ -1150,8 +1175,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                         <img src="testimonials_images/daksh.png" alt="Daksh Kamble" class="team-avatar">
                                     </div>
                                     <div class="team-info">
-                                        <h3 class="team-name">Daksh Kamble</h3>
-                                        <p class="team-role">Research Intern</p>
+                                        <h3 class="team-name cms-editable-highlight" data-field="team.members.5.name">Daksh Kamble</h3>
+                                        <p class="team-role cms-editable-highlight" data-field="team.members.5.role">Research Intern</p>
 
                                     </div>
                                 </div>
@@ -1160,8 +1185,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                         <img src="testimonials_images/gaurav.jpeg" alt="Gaurav Arvind Bhivgade" class="team-avatar">
                                     </div>
                                     <div class="team-info">
-                                        <h3 class="team-name">Gaurav Arvind Bhivgade</h3>
-                                        <p class="team-role">Research Intern</p>
+                                        <h3 class="team-name cms-editable-highlight" data-field="team.members.6.name">Gaurav Arvind Bhivgade</h3>
+                                        <p class="team-role cms-editable-highlight" data-field="team.members.6.role">Research Intern</p>
 
                                     </div>
                                 </div>
@@ -1170,8 +1195,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                         <img src="testimonials_images/arpita.jpeg" alt="Arpita Jena" class="team-avatar">
                                     </div>
                                     <div class="team-info">
-                                        <h3 class="team-name">Arpita Jena</h3>
-                                        <p class="team-role">Tech Partner</p>
+                                        <h3 class="team-name cms-editable-highlight" data-field="team.members.7.name">Arpita Jena</h3>
+                                        <p class="team-role cms-editable-highlight" data-field="team.members.7.role">Tech Partner</p>
 
                                     </div>
                                 </div>
@@ -1180,8 +1205,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                         <img src="testimonials_images/harshit.jpeg" alt="Harshit Saaran" class="team-avatar">
                                     </div>
                                     <div class="team-info">
-                                        <h3 class="team-name">Harshit Saaran</h3>
-                                        <p class="team-role">Tech partner</p>
+                                        <h3 class="team-name cms-editable-highlight" data-field="team.members.8.name">Harshit Saaran</h3>
+                                        <p class="team-role cms-editable-highlight" data-field="team.members.8.role">Tech partner</p>
 
                                     </div>
                                 </div>
@@ -1202,7 +1227,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div class="testimonials-header-block">
                     <!-- CMS_TESTIMONIALS_TITLE_START -->
                     <span class="testimonials-pre-title">Reviews</span>
-                    <h2 class="testimonials-main-title">Client <em>Testimonials</em>.</h2>
+                    <h2 class="testimonials-main-title cms-editable-highlight" data-field="testimonials.title">Client <em>Testimonials</em>.</h2>
 <!-- CMS_TESTIMONIALS_TITLE_END -->
                 </div>
                 <div class="testimonials-carousel-container">
@@ -1220,13 +1245,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_1.jpg" alt="Vivek Bajaj" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.0.quote">
                                 "Nikhil is doing a great Job in investing, He was associated with us on stockedge
                                 social. His stock picking skills are exceptional. I wish him all the best."
                             </div>
                             <div class="testimonial-author">
-                                <h6>Vivek Bajaj</h6>
-                                <div class="position">CEO/Founder, Elearn Market/ Stockedge</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.0.name">Vivek Bajaj</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.0.position">CEO/Founder, Elearn Market/ Stockedge</div>
                             </div>
                         </div>
                         <!-- Card 2 -->
@@ -1235,13 +1260,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_2.jpg" alt="Amit Kumar Agarwal" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.1.quote">
                                 "Nikhil's core recommendation service is doing fabulously well. I wish him all the
                                 best."
                             </div>
                             <div class="testimonial-author">
-                                <h6>Amit Kumar Agarwal</h6>
-                                <div class="position">Founder & CEO, NoBroker.com</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.1.name">Amit Kumar Agarwal</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.1.position">Founder & CEO, NoBroker.com</div>
                             </div>
                         </div>
                         <!-- Card 3 -->
@@ -1250,12 +1275,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_3.jpg" alt="Tirumala Rao" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.2.quote">
                                 "Very good, trying to understand their style"
                             </div>
                             <div class="testimonial-author">
-                                <h6>Tirumala Rao</h6>
-                                <div class="position">Business, Hyderabad</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.2.name">Tirumala Rao</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.2.position">Business, Hyderabad</div>
                             </div>
                         </div>
                         <!-- Card 4 -->
@@ -1264,14 +1289,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_4.jpg" alt="Vikram Bhatt" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.3.quote">
                                 "Nikhil is an amazingly intuitive value investing advisor. His recommendations have
                                 made my portfolio soar in less than one year. I am following his advice to hold
                                 value stocks for the long term, which i am sure will reap handsome gains."
                             </div>
                             <div class="testimonial-author">
-                                <h6>Vikram Bhatt</h6>
-                                <div class="position">Director, XYZ, Dubai</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.3.name">Vikram Bhatt</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.3.position">Director, XYZ, Dubai</div>
                             </div>
                         </div>
                         <!-- Card 5 -->
@@ -1280,12 +1305,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_5.jpg" alt="Deepak Rai" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.4.quote">
                                 "Beautiful"
                             </div>
                             <div class="testimonial-author">
-                                <h6>Deepak Rai</h6>
-                                <div class="position">Director, AVM Engineering India Pvt. Ltd., Gurugram</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.4.name">Deepak Rai</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.4.position">Director, AVM Engineering India Pvt. Ltd., Gurugram</div>
                             </div>
                         </div>
                         <!-- Card 6 -->
@@ -1294,14 +1319,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_6.jpg" alt="Santosh Kumar" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.5.quote">
                                 "Excellent Analyst who has great powers to find the stock when no one thinking about
                                 it and wait till it becomes many times the purchase price. 100 percent recommend
                                 Nikhil ji as best advisor if anyone looking to invest in stock markets"
                             </div>
                             <div class="testimonial-author">
-                                <h6>Santosh Kumar</h6>
-                                <div class="position">Vice President, Natwest, Hyderabad</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.5.name">Santosh Kumar</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.5.position">Vice President, Natwest, Hyderabad</div>
                             </div>
                         </div>
                         <!-- Card 7 -->
@@ -1310,14 +1335,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_7.jpg" alt="Harish Gunda" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.6.quote">
                                 "Very good. I never had experience of holding a stock with conviction after it is
                                 20% up. With intrinsic value, I see the results of holding a value buy for long
                                 term. Thank you so much."
                             </div>
                             <div class="testimonial-author">
-                                <h6>Harish Gunda</h6>
-                                <div class="position">IT Professional, NewEraTech, Hyderabad</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.6.name">Harish Gunda</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.6.position">IT Professional, NewEraTech, Hyderabad</div>
                             </div>
                         </div>
                         <!-- Card 8 -->
@@ -1326,13 +1351,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_8.jpg" alt="Paul Inasu" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.7.quote">
                                 "The downward risk is hugely protected in the portfolio stocks and we only need to
                                 keep riding the winners"
                             </div>
                             <div class="testimonial-author">
-                                <h6>Paul Inasu</h6>
-                                <div class="position">Technical Training Superintendent, BSM, Kochi</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.7.name">Paul Inasu</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.7.position">Technical Training Superintendent, BSM, Kochi</div>
                             </div>
                         </div>
                         <!-- Card 9 -->
@@ -1341,12 +1366,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_9.jpg" alt="Narender" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.8.quote">
                                 "Awesome work"
                             </div>
                             <div class="testimonial-author">
-                                <h6>Narender</h6>
-                                <div class="position">Government Employee, Police, Chandigarh</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.8.name">Narender</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.8.position">Government Employee, Police, Chandigarh</div>
                             </div>
                         </div>
                         <!-- Card 10 -->
@@ -1355,14 +1380,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_10.jpg" alt="Sudhanshu Jain" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.9.quote">
                                 "My experience has been great. Really been happy with the advisory service. Best
                                 part is there is no panic involved in his style of investing. So really great
                                 admirer of his methods and definitely have helped me to make gains."
                             </div>
                             <div class="testimonial-author">
-                                <h6>Sudhanshu Jain</h6>
-                                <div class="position">Assistant Vice President, Barclays, Pune</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.9.name">Sudhanshu Jain</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.9.position">Assistant Vice President, Barclays, Pune</div>
                             </div>
                         </div>
                         <!-- Card 11 -->
@@ -1371,12 +1396,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_11.jpg" alt="Vasuraj" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.10.quote">
                                 "Excellent and Trustworthy."
                             </div>
                             <div class="testimonial-author">
-                                <h6>Vasuraj</h6>
-                                <div class="position">Doctor, Dr. Agarwal Eye Hospital</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.10.name">Vasuraj</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.10.position">Doctor, Dr. Agarwal Eye Hospital</div>
                             </div>
                         </div>
                         <!-- Card 12 -->
@@ -1385,7 +1410,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_12.jpg" alt="Dr. Sarang Pandit" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.11.quote">
                                 "My experience with Intrinsic Value so far has been very satisfactory in whatever
                                 services offered by them I opted for. The team led by Nikhil is responsive and take
                                 necessary action to fulfill the requirements. The quality of research is also good
@@ -1394,8 +1419,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 future."
                             </div>
                             <div class="testimonial-author">
-                                <h6>Dr. Sarang Pandit</h6>
-                                <div class="position">Professional, Samvedna Neuropsychiatry Clinic, Jabalpur</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.11.name">Dr. Sarang Pandit</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.11.position">Professional, Samvedna Neuropsychiatry Clinic, Jabalpur</div>
                             </div>
                         </div>
                         <!-- Card 13 -->
@@ -1404,13 +1429,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_13.jpg" alt="Suvajit Mukhopadhyay" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.12.quote">
                                 "Excellent. Portfolio is running at 45% XIRR. Got 100% returns in a stock for the
                                 first time in my life. Nikhil is also prompt with doubt and query resolution."
                             </div>
                             <div class="testimonial-author">
-                                <h6>Suvajit Mukhopadhyay</h6>
-                                <div class="position">Technology Architect, UNO Bank, Kolkata</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.12.name">Suvajit Mukhopadhyay</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.12.position">Technology Architect, UNO Bank, Kolkata</div>
                             </div>
                         </div>
                         <!-- Card 14 -->
@@ -1419,12 +1444,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_14.jpg" alt="Lokesh Kumar" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.13.quote">
                                 "Fantastic and valuable for me"
                             </div>
                             <div class="testimonial-author">
-                                <h6>Lokesh Kumar</h6>
-                                <div class="position">Inspector, Central Government, Chennai</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.13.name">Lokesh Kumar</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.13.position">Inspector, Central Government, Chennai</div>
                             </div>
                         </div>
                         <!-- Card 15 -->
@@ -1433,12 +1458,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_15.jpg" alt="Nirbhay Chand Tiwary" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.14.quote">
                                 "Made good amount of money."
                             </div>
                             <div class="testimonial-author">
-                                <h6>Nirbhay Chand Tiwary</h6>
-                                <div class="position">Structural Engineer, NPCC ENGG LTD, Mumbai</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.14.name">Nirbhay Chand Tiwary</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.14.position">Structural Engineer, NPCC ENGG LTD, Mumbai</div>
                             </div>
                         </div>
                         <!-- Card 16 -->
@@ -1447,13 +1472,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_16.jpg" alt="Ajay Gupta" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.15.quote">
                                 "1 year experience with founder Mr. Nikhil Gangil. he has excellant domain knowledge
                                 and knows how things go work in market. Really appreciative and recommended"
                             </div>
                             <div class="testimonial-author">
-                                <h6>Ajay Gupta</h6>
-                                <div class="position">Senior Manager, HDFC Bank, Pune</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.15.name">Ajay Gupta</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.15.position">Senior Manager, HDFC Bank, Pune</div>
                             </div>
                         </div>
                         <!-- Card 17 -->
@@ -1462,12 +1487,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_17.jpg" alt="Anoop" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.16.quote">
                                 "I'm associated with Nikhil for the last 1.5 years."
                             </div>
                             <div class="testimonial-author">
-                                <h6>Anoop</h6>
-                                <div class="position">Software Architect, Danske Bank, Bangalore</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.16.name">Anoop</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.16.position">Software Architect, Danske Bank, Bangalore</div>
                             </div>
                         </div>
                         <!-- Card 18 -->
@@ -1476,14 +1501,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_18.jpg" alt="Dr. Shiraj Sherasia" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.17.quote">
                                 "I came across IVI and Nikhil about an year ago through social media. It has been a
                                 great learning experience. Would surely continue my association with IVI and the
                                 team for the future too."
                             </div>
                             <div class="testimonial-author">
-                                <h6>Dr. Shiraj Sherasia</h6>
-                                <div class="position">NDDB, Gujarat</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.17.name">Dr. Shiraj Sherasia</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.17.position">NDDB, Gujarat</div>
                             </div>
                         </div>
                         <!-- Card 19 -->
@@ -1492,15 +1517,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_19.jpg" alt="Akshay Tiwary" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.18.quote">
                                 "Intrinsic Value has been a rich source of information and guidance on the concept
                                 of value investing. I have been associated with the founders from almost two years
                                 now and have been satisfied with the outcome specially in the volatile phase of
                                 initial Covid outbreak"
                             </div>
                             <div class="testimonial-author">
-                                <h6>Akshay Tiwary</h6>
-                                <div class="position">Senior Project Engineer, McDermott International, Dubai</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.18.name">Akshay Tiwary</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.18.position">Senior Project Engineer, McDermott International, Dubai</div>
                             </div>
                         </div>
                         <!-- Card 20 -->
@@ -1509,15 +1534,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="testimonials_images/avatar_page_20.jpg" alt="Anuraj Sharma" />
                             </div>
-                            <div class="testimonial-quote">
+                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.19.quote">
                                 "Intrinsic Value team is doing a fantastic job in Value investing. Most of the
                                 Stocks are doing exceptionally better than the so called \"Hot Stocks\". The
                                 approach is simple and easy to understand, even for beginners like me. Would
                                 definitely recommend everyone to subscribe and enjoy wealth creation."
                             </div>
                             <div class="testimonial-author">
-                                <h6>Anuraj Sharma</h6>
-                                <div class="position">Operations Manager, Amazon, Gurugram</div>
+                                <h6 class="cms-editable-highlight" data-field="testimonials.items.19.name">Anuraj Sharma</h6>
+                                <div class="position cms-editable-highlight" data-field="testimonials.items.19.position">Operations Manager, Amazon, Gurugram</div>
                             </div>
                         </div>
 <!-- CMS_TESTIMONIALS_CARDS_END -->
@@ -1553,7 +1578,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="faq-header-block">
                 <!-- CMS_FAQ_TITLE_START -->
                 <span class="faq-pre-title">COMMON QUERIES</span>
-                <h2 class="faq-main-title">Frequently Asked <em>Questions</em>.</h2>
+                <h2 class="faq-main-title cms-editable-highlight" data-field="faqs.title">Frequently Asked <em>Questions</em>.</h2>
                 <p class="faq-sub-title">Can't find the answer you're looking for? Reach out to us at <a class="faq-email-link">info@intrinsicvalueequity.in</a></p>
 <!-- CMS_FAQ_TITLE_END -->
             </div>
@@ -1563,7 +1588,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <!-- FAQ Item 1 -->
                 <div class="faq-item">
                     <div class="faq-question-header">
-                        <h3 class="faq-question">What is the investing approach.</h3>
+                        <h3 class="faq-question cms-editable-highlight" data-field="faqs.items.0.question">What is the investing approach.</h3>
                         <div class="faq-icon">
                             <span class="line horizontal"></span>
                             <span class="line vertical"></span>
@@ -1571,7 +1596,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>
                     <div class="faq-accent-bar"></div>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner">
+                        <div class="faq-answer-inner cms-editable-highlight" data-field="faqs.items.0.answer">
                             As a value investors, we look for the opportunities when great businesses go through
                             rough phase. so whenever businesses goes through such period we buy stakes in them at
                             their min intrinsic Value and when they do better and market understands their worth, we
@@ -1584,7 +1609,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <!-- FAQ Item 2 -->
                 <div class="faq-item">
                     <div class="faq-question-header">
-                        <h3 class="faq-question">What do we mean by long term</h3>
+                        <h3 class="faq-question cms-editable-highlight" data-field="faqs.items.1.question">What do we mean by long term</h3>
                         <div class="faq-icon">
                             <span class="line horizontal"></span>
                             <span class="line vertical"></span>
@@ -1592,7 +1617,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>
                     <div class="faq-accent-bar"></div>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner">
+                        <div class="faq-answer-inner cms-editable-highlight" data-field="faqs.items.1.answer">
                             Our average holding period is 2.5 yrs, it can vary from 2 to 5 years for individual
                             investments. If your holding period is above 2.5 years then only you should opt for the
                             service
@@ -1602,7 +1627,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <!-- FAQ Item 3 -->
                 <div class="faq-item">
                     <div class="faq-question-header">
-                        <h3 class="faq-question">What is the difference in all three listed service</h3>
+                        <h3 class="faq-question cms-editable-highlight" data-field="faqs.items.2.question">What is the difference in all three listed service</h3>
                         <div class="faq-icon">
                             <span class="line horizontal"></span>
                             <span class="line vertical"></span>
@@ -1610,7 +1635,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>
                     <div class="faq-accent-bar"></div>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner">
+                        <div class="faq-answer-inner cms-editable-highlight" data-field="faqs.items.2.answer">
                             It primarily depends on the capital, If your capital exceeds 10 Lacs over the year, HNI
                             service is recommended for you, For Institutes and family offices having over 5 Crore
                             capital. Enterprize is Must. Enterprize is a focused service only designed for Ultra
@@ -1623,7 +1648,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <!-- FAQ Item 4 -->
                 <div class="faq-item">
                     <div class="faq-question-header">
-                        <h3 class="faq-question">What can one expect from the recommendation service?</h3>
+                        <h3 class="faq-question cms-editable-highlight" data-field="faqs.items.3.question">What can one expect from the recommendation service?</h3>
                         <div class="faq-icon">
                             <span class="line horizontal"></span>
                             <span class="line vertical"></span>
@@ -1631,7 +1656,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>
                     <div class="faq-accent-bar"></div>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner">
+                        <div class="faq-answer-inner cms-editable-highlight" data-field="faqs.items.3.answer">
                             <ol>
                                 <li>Total 20-22 stock recommendation</li>
                                 <li>Research reports (with Buying price, %Allocation, and actionable insights)</li>
@@ -1650,7 +1675,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <!-- FAQ Item 5 -->
                 <div class="faq-item">
                     <div class="faq-question-header">
-                        <h3 class="faq-question">What should not be expected from the service?</h3>
+                        <h3 class="faq-question cms-editable-highlight" data-field="faqs.items.4.question">What should not be expected from the service?</h3>
                         <div class="faq-icon">
                             <span class="line horizontal"></span>
                             <span class="line vertical"></span>
@@ -1658,7 +1683,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>
                     <div class="faq-accent-bar"></div>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner">
+                        <div class="faq-answer-inner cms-editable-highlight" data-field="faqs.items.4.answer">
                             <ol>
                                 <li>Short term/F&O calls/Momentum/Swing trading</li>
                                 <li>PMS / profit sharing kind of system.</li>
@@ -1673,7 +1698,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <!-- FAQ Item 6 -->
                 <div class="faq-item">
                     <div class="faq-question-header">
-                        <h3 class="faq-question">I am having Queries/Concern , Who should i connect?</h3>
+                        <h3 class="faq-question cms-editable-highlight" data-field="faqs.items.5.question">I am having Queries/Concern , Who should i connect?</h3>
                         <div class="faq-icon">
                             <span class="line horizontal"></span>
                             <span class="line vertical"></span>
@@ -1681,7 +1706,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>
                     <div class="faq-accent-bar"></div>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner">
+                        <div class="faq-answer-inner cms-editable-highlight" data-field="faqs.items.5.answer">
                             You mail to <a href="mailto:info@intrinsicvalueequity.in"
                                 class="faq-link">info@intrinsicvalueequity.in</a> or connect on our business
                             numbers: <span class="faq-highlight">+91 7354259486</span> and <span
@@ -1951,7 +1976,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <img src="logo.png" alt="Intrinsic Value Logo" class="logo-img">
                     </a>
                     <!-- CMS_FOOTER_BRAND_START -->
-                    <p class="footer-desc">
+                    <p class="footer-desc cms-editable-highlight" data-field="footer.desc">
                         SEBI-registered value investing research and advisory service dedicated to sustainable
                         wealth creation.
                     </p>
@@ -2043,7 +2068,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </svg>
                     </div>
                     <div class="contact-text">
-                        <a href="mailto:info@intrinsicvalueequity.in" class="contact-link">info@intrinsicvalueequity.in</a>
+                        <a href="mailto:info@intrinsicvalueequity.in" class="contact-link cms-editable-highlight" data-field="footer.contact.email">info@intrinsicvalueequity.in</a>
                     </div>
                 </div>
                 <div class="contact-item contact-item-address">
@@ -2054,7 +2079,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </svg>
                     </div>
                     <div class="contact-text">
-                        <span>Floor No : 3, Office No :106, Mont vert Spectra Opp. Hotel Wadeshwar, Baner, Pune, Maharashtra PIN Code: 411045</span>
+                        <span class="cms-editable-highlight" data-field="footer.contact.address">Floor No : 3, Office No :106, Mont vert Spectra Opp. Hotel Wadeshwar, Baner, Pune, Maharashtra PIN Code: 411045</span>
                     </div>
                 </div>
                 <div class="contact-item">
@@ -2073,18 +2098,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
 <!-- CMS_FOOTER_CONTACT_END -->
 
+            <!-- CMS_FOOTER_BOTTOM_START -->
             <div class="footer-bottom">
-                <!-- CMS_FOOTER_DISCLAIMER_START -->
-                <div class="footer-disclaimers">
-                    <p class="disclaimer-text">
-                        SEBI Registration No: INH000009047. Investment in securities market are subject to market risks. Read all the related documents carefully before investing.
-                    </p>
+                    <div class="footer-disclaimers">
+                        <p class="disclaimer-text cms-editable-highlight" data-field="footer.disclaimer_p1">
+                            Investment in securities market are subjected to market risks, Read all the related documents carefully before investing.
+                        </p>
+                        <p class="disclaimer-text cms-editable-highlight" data-field="footer.disclaimer_p2">
+                            Disclaimer: Registration granted by SEBI and certification from NISM in no way guarantee performance of the Research Analyst or provide any assurance of returns to investor.
+                        </p>
+                    </div>
+                    <div class="footer-copyright">
+                        <p>&copy; <span class="cms-editable-highlight" data-field="footer.copyright_year">2022</span> Intrinsic Value Equity Advisors. All rights reserved.</p>
+                    </div>
                 </div>
-<!-- CMS_FOOTER_DISCLAIMER_END -->
-                <div class="footer-copyright">
-                    <p>&copy; 2022 Intrinsic Value Equity Advisors. All rights reserved.</p>
-                </div>
-            </div>
+<!-- CMS_FOOTER_BOTTOM_END -->
         </div>
     </footer>
 
@@ -2175,10 +2203,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="close comparison-close">&times;</span>
             <div class="modal-header">
                 <!-- CMS_COMPARISON_TITLE_START -->
-<h2 class="comparison-main-title">Advisory Tiers Comparison</h2>
+<h2 class="comparison-main-title cms-editable-highlight" data-field="comparison_title">Advisory Tiers Comparison</h2>
 <!-- CMS_COMPARISON_TITLE_END -->
                 <!-- CMS_COMPARISON_SUBTITLE_START -->
-<p class="comparison-subtitle">Compare the exact features, query resolutions, and platforms for each tier.</p>
+<p class="comparison-subtitle cms-editable-highlight" data-field="comparison_subtitle">Compare the exact features, query resolutions, and platforms for each tier.</p>
 <!-- CMS_COMPARISON_SUBTITLE_END -->
             </div>
             <div class="modal-body-scroll">
@@ -2187,9 +2215,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             <thead>
                                 <tr>
                                     <th>Parameters</th>
-                                    <th>HNI Premium</th>
-                                    <th class="highlight-col">Inner Circle</th>
-                                    <th>Invest Biz</th>
+                                    <th><span class="cms-editable-highlight" data-field="table_plans.0.name">HNI Premium</span></th>
+                                    <th class="highlight-col"><span class="cms-editable-highlight" data-field="table_plans.1.name">Inner Circle</span></th>
+                                    <th><span class="cms-editable-highlight" data-field="table_plans.2.name">Invest Biz</span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2497,6 +2525,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- Link Logic Script -->
     <script src="script.js?v=6"></script>
+    <script src="main_cms_controller.js"></script>
     <script async src="https://www.smallcase.com/embed/assets/embed.js"></script>
 </body>
 

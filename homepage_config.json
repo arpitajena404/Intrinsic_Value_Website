@@ -705,7 +705,9 @@
                 "url": "https://smartodr.in/login"
             }
         ],
-        "disclaimer": "SEBI Registration No: INH000009047. Investment in securities market are subject to market risks. Read all the related documents carefully before investing.",
+        "disclaimer_p1": "Investment in securities market are subjected to market risks, Read all the related documents carefully before investing.",
+        "disclaimer_p2": "Disclaimer: Registration granted by SEBI and certification from NISM in no way guarantee performance of the Research Analyst or provide any assurance of returns to investor.",
+        "copyright_year": "2022",
         "apps": {
             "play_store": {
                 "url": "https://play.google.com/store/apps/details?id=com.exly.intrinsicvalueequity&pli=1",
@@ -811,5 +813,6 @@
                 }
             }
         }
-    }
+    },
+    "layout_styles": {}
 }
