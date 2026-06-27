@@ -1220,7 +1220,9 @@
         document.getElementById('cms-faq-title').value = cmsState.faqs.title || '';
         
         document.getElementById('cms-footer-desc').value = cmsState.footer.desc || '';
-        document.getElementById('cms-footer-disclaimer').value = cmsState.footer.disclaimer || '';
+        document.getElementById('cms-footer-disclaimer-p1').value = cmsState.footer.disclaimer_p1 || '';
+        document.getElementById('cms-footer-disclaimer-p2').value = cmsState.footer.disclaimer_p2 || '';
+        document.getElementById('cms-footer-copyright-year').value = cmsState.footer.copyright_year || '';
 
         // Apps
         document.getElementById('cms-footer-play-store-url').value = cmsState.footer.apps?.play_store?.url || '';
@@ -2684,6 +2686,26 @@
         }
     }
 
+    function syncAllToIframe() {
+        var iframe = document.getElementById('previewIframe');
+        if (!iframe || !iframe.contentWindow) return;
+
+        // Compile states
+        compileCmsState();
+        compilePricingCmsState();
+        compileLiveCmsState();
+
+        var editModeToggle = document.getElementById('editModeToggle');
+        var enabled = editModeToggle ? editModeToggle.checked : true;
+
+        iframe.contentWindow.postMessage({
+            type: 'init_cms_state',
+            homepageConfig: cmsState,
+            pricingConfig: pricingCmsState,
+            enabled: enabled
+        }, '*');
+    }
+
     function saveConfigToServer(filePath, configState) {
         // Save to localStorage for browser persistence (supports offline / static hosting edit sessions)
         if (filePath === 'homepage_config.json') {
@@ -3006,6 +3028,9 @@
         // Load settings from localStorage
         var patInput = document.getElementById('gitPatInput');
         var repoInput = document.getElementById('gitRepoInput');
+        var gitPushBtn = document.getElementById('gitPushBtn');
+        var gitCommitInput = document.getElementById('gitCommitMessage');
+        var gitStatusMsg = document.getElementById('gitStatusMessage');
         
         if (patInput) {
             patInput.value = localStorage.getItem('git_pat') || '';
