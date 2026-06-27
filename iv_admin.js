@@ -343,7 +343,7 @@
                     "Asset Class": "Equity+ SME+ ETF",
                     "Volatility / Risk": "Mid/High",
                     "Market cap": "Small/mid/micro",
-                    "Alternate assets": "when required",
+                    "Alternate assets": "When required",
                     "Holding": "2–5 years",
                     "Face to Face": "As needed",
                     "Target returns": "Index +6-9%",
