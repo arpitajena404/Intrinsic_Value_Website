@@ -9,6 +9,24 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
 
+    def do_GET(self):
+        # Clean URL rewrites for analytics sub-portal
+        if self.path.startswith('/analytics'):
+            path_part = self.path.split('?')[0]
+            if path_part.endswith('/'):
+                path_part = path_part[:-1]
+                
+            parts = [p for p in path_part.split('/') if p]
+            if len(parts) == 1:
+                self.path = '/analytics/frontend/pages/dashboard.html'
+            elif len(parts) == 2:
+                page_name = parts[1]
+                potential_file = os.path.join(DIRECTORY, 'analytics', 'frontend', 'pages', f'{page_name}.html')
+                if os.path.exists(potential_file):
+                    self.path = f'/analytics/frontend/pages/{page_name}.html'
+                    
+        return super().do_GET()
+
     def do_POST(self):
         if self.path == '/api/save-config':
             content_length = int(self.headers['Content-Length'])

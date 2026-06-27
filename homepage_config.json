@@ -19,7 +19,7 @@
         },
         {
             "text": "Analytics",
-            "url": "analytics/index.html"
+            "url": "analytics/dashboard"
         }
     ],
     "hero": {
@@ -676,7 +676,7 @@
             },
             {
                 "text": "Analytics",
-                "url": "analytics/index.html"
+                "url": "analytics/dashboard"
             }
         ],
         "important_info": [
