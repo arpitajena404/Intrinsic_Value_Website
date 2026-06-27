@@ -2782,6 +2782,7 @@
                 saveConfigToServer('pricing.json', pricingCmsState);
                 saveConfigToServer('live_config.js', liveCmsState);
                 workspace.style.display = 'none';
+                showToast("Unsaved edits stored in browser! Push to GitHub to go live.");
             });
         }
 
@@ -2795,6 +2796,7 @@
                 saveConfigToServer('live_config.js', liveCmsState);
                 var exportTabLink = document.querySelector('.iv-cms-tab-link[data-tab="tab-export"]');
                 if (exportTabLink) exportTabLink.click();
+                showToast("CMS configs compiled and saved locally in browser!");
             });
         }
 
@@ -3029,199 +3031,211 @@
 
         if (gitPushBtn) {
             gitPushBtn.addEventListener('click', function () {
-                var commitMessage = gitCommitInput ? gitCommitInput.value.trim() : '';
-                var pat = patInput ? patInput.value.trim() : '';
-                var repo = repoInput ? repoInput.value.trim() : '';
-                var branch = 'main';
+                try {
+                    var commitMessage = gitCommitInput ? gitCommitInput.value.trim() : '';
+                    var pat = patInput ? patInput.value.trim() : '';
+                    var repo = repoInput ? repoInput.value.trim() : '';
+                    var branch = 'main';
 
-                if (pat && repo) {
-                    // Direct browser-to-GitHub commit logic (online / serverless static hosts)
-                    gitPushBtn.disabled = true;
-                    gitPushBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Committing...';
-                    if (gitStatusMsg) {
-                        gitStatusMsg.style.display = 'block';
-                        gitStatusMsg.style.color = '#FF8C00';
-                        gitStatusMsg.innerText = 'Initializing API connection...';
-                    }
-                    
-                    // Collect pending files to commit
-                    var filesToCommit = [];
-                    
-                    var pendingCms = localStorage.getItem('pending_homepage_config');
-                    if (pendingCms) {
-                        filesToCommit.push({ path: 'homepage_config.json', content: pendingCms });
-                    }
-                    var pendingPricing = localStorage.getItem('pending_pricing_config');
-                    if (pendingPricing) {
-                        filesToCommit.push({ path: 'pricing.json', content: pendingPricing });
-                    }
-                    var pendingBlogs = localStorage.getItem('pending_blogs_config');
-                    if (pendingBlogs) {
-                        filesToCommit.push({ path: 'blogs.json', content: pendingBlogs });
-                    }
-                    var pendingLive = localStorage.getItem('pending_live_config');
-                    if (pendingLive) {
-                        var liveContentStr = "var LIVE_CONFIG = " + JSON.stringify(JSON.parse(pendingLive), null, 4) + ";\n";
-                        filesToCommit.push({ path: 'live_config.js', content: liveContentStr });
-                    }
-                    
-                    if (filesToCommit.length === 0) {
-                        gitPushBtn.disabled = false;
-                        gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                    var isLocalhost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+                    if (pat && repo && !isLocalhost) {
+                        // Direct browser-to-GitHub commit logic (online / serverless static hosts)
+                        gitPushBtn.disabled = true;
+                        gitPushBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Committing...';
                         if (gitStatusMsg) {
-                            gitStatusMsg.style.color = '#EA4335';
-                            gitStatusMsg.innerText = 'No unsaved edits found. Make changes in CMS workspace first!';
-                        }
-                        return;
-                    }
-                    
-                    var currentFileIdx = 0;
-                    
-                    function commitNextFile() {
-                        if (currentFileIdx >= filesToCommit.length) {
-                            // All files committed!
-                            localStorage.removeItem('pending_homepage_config');
-                            localStorage.removeItem('pending_pricing_config');
-                            localStorage.removeItem('pending_blogs_config');
-                            localStorage.removeItem('pending_live_config');
-                            
-                            gitPushBtn.disabled = false;
-                            gitPushBtn.style.boxShadow = 'none';
-                            gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
-                            if (gitCommitInput) gitCommitInput.value = '';
-                            
-                            if (gitStatusMsg) {
-                                gitStatusMsg.style.color = '#34A853';
-                                gitStatusMsg.innerText = 'Successfully pushed all edits directly to GitHub!\n\nThis will trigger the GitHub Action build workflow to recompile templates and deploy the final pages live.';
-                            }
-                            return;
+                            gitStatusMsg.style.display = 'block';
+                            gitStatusMsg.style.color = '#FF8C00';
+                            gitStatusMsg.innerText = 'Initializing API connection...';
                         }
                         
-                        var fileObj = filesToCommit[currentFileIdx];
-                        if (gitStatusMsg) {
-                            gitStatusMsg.innerText = 'Processing file ' + (currentFileIdx + 1) + ' of ' + filesToCommit.length + ' (' + fileObj.path + ')...';
+                        // Collect pending files to commit
+                        var filesToCommit = [];
+                        
+                        var pendingCms = localStorage.getItem('pending_homepage_config');
+                        if (pendingCms) {
+                            filesToCommit.push({ path: 'homepage_config.json', content: pendingCms });
+                        }
+                        var pendingPricing = localStorage.getItem('pending_pricing_config');
+                        if (pendingPricing) {
+                            filesToCommit.push({ path: 'pricing.json', content: pendingPricing });
+                        }
+                        var pendingBlogs = localStorage.getItem('pending_blogs_config');
+                        if (pendingBlogs) {
+                            filesToCommit.push({ path: 'blogs.json', content: pendingBlogs });
+                        }
+                        var pendingLive = localStorage.getItem('pending_live_config');
+                        if (pendingLive) {
+                            var liveContentStr = "var LIVE_CONFIG = " + JSON.stringify(JSON.parse(pendingLive), null, 4) + ";\n";
+                            filesToCommit.push({ path: 'live_config.js', content: liveContentStr });
                         }
                         
-                        // 1. Fetch file SHA
-                        var getUrl = 'https://api.github.com/repos/' + repo + '/contents/' + fileObj.path + '?ref=' + branch;
-                        fetch(getUrl, {
-                            headers: {
-                                'Authorization': 'token ' + pat,
-                                'Accept': 'application/vnd.github.v3+json'
-                            }
-                        })
-                        .then(function(res) {
-                            if (res.status === 200) {
-                                return res.json().then(function(data) { return data.sha; });
-                            } else if (res.status === 404) {
-                                return null;
-                            } else {
-                                throw new Error('Failed to fetch file metadata (HTTP ' + res.status + ')');
-                            }
-                        })
-                        .then(function(sha) {
-                            // 2. Commit file content
-                            var putUrl = 'https://api.github.com/repos/' + repo + '/contents/' + fileObj.path;
-                            var encodedContent = btoa(unescape(encodeURIComponent(fileObj.content)));
-                            
-                            var bodyData = {
-                                message: commitMessage || ('CMS Update: ' + fileObj.path),
-                                content: encodedContent,
-                                branch: branch
-                            };
-                            if (sha) {
-                                bodyData.sha = sha;
-                            }
-                            
-                            return fetch(putUrl, {
-                                method: 'PUT',
-                                headers: {
-                                    'Authorization': 'token ' + pat,
-                                    'Accept': 'application/vnd.github.v3+json',
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(bodyData)
-                            });
-                        })
-                        .then(function(res) {
-                            if (!res.ok) {
-                                return res.json().then(function(data) {
-                                    throw new Error(data.message || 'HTTP error ' + res.status);
-                                });
-                            }
-                            return res.json();
-                        })
-                        .then(function(data) {
-                            console.log('Committed ' + fileObj.path + ' successfully!');
-                            currentFileIdx++;
-                            commitNextFile();
-                        })
-                        .catch(function(err) {
+                        if (filesToCommit.length === 0) {
                             gitPushBtn.disabled = false;
                             gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
                             if (gitStatusMsg) {
                                 gitStatusMsg.style.color = '#EA4335';
-                                gitStatusMsg.innerText = 'Deployment Failed on ' + fileObj.path + ':\n' + err.message;
+                                gitStatusMsg.innerText = 'No unsaved edits found. Make changes in CMS workspace first!';
+                            }
+                            return;
+                        }
+                        
+                        var currentFileIdx = 0;
+                        
+                        function commitNextFile() {
+                            if (currentFileIdx >= filesToCommit.length) {
+                                // All files committed!
+                                localStorage.removeItem('pending_homepage_config');
+                                localStorage.removeItem('pending_pricing_config');
+                                localStorage.removeItem('pending_blogs_config');
+                                localStorage.removeItem('pending_live_config');
+                                
+                                gitPushBtn.disabled = false;
+                                gitPushBtn.style.boxShadow = 'none';
+                                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                                if (gitCommitInput) gitCommitInput.value = '';
+                                
+                                if (gitStatusMsg) {
+                                    gitStatusMsg.style.color = '#34A853';
+                                    gitStatusMsg.innerText = 'Successfully pushed all edits directly to GitHub!\n\nThis will trigger the GitHub Action build workflow to recompile templates and deploy the final pages live.';
+                                }
+                                return;
+                            }
+                            
+                            var fileObj = filesToCommit[currentFileIdx];
+                            if (gitStatusMsg) {
+                                gitStatusMsg.innerText = 'Processing file ' + (currentFileIdx + 1) + ' of ' + filesToCommit.length + ' (' + fileObj.path + ')...';
+                            }
+                            
+                            // 1. Fetch file SHA
+                            var getUrl = 'https://api.github.com/repos/' + repo + '/contents/' + fileObj.path + '?ref=' + branch;
+                            fetch(getUrl, {
+                                headers: {
+                                    'Authorization': 'token ' + pat,
+                                    'Accept': 'application/vnd.github.v3+json'
+                                }
+                            })
+                            .then(function(res) {
+                                if (res.status === 200) {
+                                    return res.json().then(function(data) { return data.sha; });
+                                } else if (res.status === 404) {
+                                    return null;
+                               } else {
+                                    throw new Error('Failed to fetch file metadata (HTTP ' + res.status + ')');
+                                }
+                            })
+                            .then(function(sha) {
+                                // 2. Commit file content
+                                var putUrl = 'https://api.github.com/repos/' + repo + '/contents/' + fileObj.path;
+                                var encodedContent = btoa(unescape(encodeURIComponent(fileObj.content)));
+                                
+                                var bodyData = {
+                                    message: commitMessage || ('CMS Update: ' + fileObj.path),
+                                    content: encodedContent,
+                                    branch: branch
+                                };
+                                if (sha) {
+                                    bodyData.sha = sha;
+                                }
+                                
+                                return fetch(putUrl, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Authorization': 'token ' + pat,
+                                        'Accept': 'application/vnd.github.v3+json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(bodyData)
+                                });
+                            })
+                            .then(function(res) {
+                                if (!res.ok) {
+                                    return res.json().then(function(data) {
+                                        throw new Error(data.message || 'HTTP error ' + res.status);
+                                    });
+                                }
+                                return res.json();
+                            })
+                            .then(function(data) {
+                                console.log('Committed ' + fileObj.path + ' successfully!');
+                                currentFileIdx++;
+                                commitNextFile();
+                            })
+                            .catch(function(err) {
+                                gitPushBtn.disabled = false;
+                                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                                if (gitStatusMsg) {
+                                    gitStatusMsg.style.color = '#EA4335';
+                                    gitStatusMsg.innerText = 'Deployment Failed on ' + fileObj.path + ':\n' + err.message;
+                                }
+                            });
+                        }
+                        
+                        commitNextFile();
+                    } else {
+                        // Local fallback using local server.py endpoint
+                        if (!isLocalhost) {
+                            gitPushBtn.disabled = false;
+                            gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                            alert('To publish changes online, you must fill in your GitHub Personal Access Token and Repository info in the settings fields.');
+                            if (gitStatusMsg) {
+                                gitStatusMsg.style.color = '#EA4335';
+                                gitStatusMsg.innerText = 'Error: Missing GitHub credentials configuration.';
+                            }
+                            return;
+                        }
+
+                        gitPushBtn.disabled = true;
+                        gitPushBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Pushing...';
+                        if (gitStatusMsg) {
+                            gitStatusMsg.style.display = 'block';
+                            gitStatusMsg.style.color = '#FF8C00';
+                            gitStatusMsg.innerText = 'Connecting to server and deploying to GitHub...';
+                        }
+                        
+                        fetch('/api/git-push', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ commitMessage: commitMessage })
+                        })
+                        .then(function (res) {
+                            return res.json().then(function (data) {
+                                if (!res.ok) {
+                                    throw new Error(data.message || 'HTTP error ' + res.status);
+                                }
+                                return data;
+                            });
+                        })
+                        .then(function (data) {
+                            gitPushBtn.disabled = false;
+                            gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                            if (gitStatusMsg) {
+                                gitStatusMsg.style.color = '#34A853';
+                                gitStatusMsg.innerText = data.message;
+                            }
+                            if (gitCommitInput) {
+                                gitCommitInput.value = '';
+                            }
+                        })
+                        .catch(function (err) {
+                            gitPushBtn.disabled = false;
+                            gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                            if (gitStatusMsg) {
+                                gitStatusMsg.style.color = '#EA4335';
+                                gitStatusMsg.innerText = 'Deployment Failed:\n' + err.message;
                             }
                         });
                     }
-                    
-                    commitNextFile();
-                } else {
-                    // Local fallback using local server.py endpoint
-                    if (window.location.hostname !== 'localhost') {
-                        gitPushBtn.disabled = false;
-                        gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
-                        alert('To publish changes online, you must fill in your GitHub Personal Access Token and Repository info in the settings fields.');
-                        if (gitStatusMsg) {
-                            gitStatusMsg.style.color = '#EA4335';
-                            gitStatusMsg.innerText = 'Error: Missing GitHub credentials configuration.';
-                        }
-                        return;
-                    }
-
-                    gitPushBtn.disabled = true;
-                    gitPushBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Pushing...';
+                } catch (e) {
+                    gitPushBtn.disabled = false;
+                    gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
                     if (gitStatusMsg) {
                         gitStatusMsg.style.display = 'block';
-                        gitStatusMsg.style.color = '#FF8C00';
-                        gitStatusMsg.innerText = 'Connecting to server and deploying to GitHub...';
+                        gitStatusMsg.style.color = '#EA4335';
+                        gitStatusMsg.innerText = 'Execution Error: ' + e.message + '\n' + e.stack;
                     }
-                    
-                    fetch('/api/git-push', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ commitMessage: commitMessage })
-                    })
-                    .then(function (res) {
-                        return res.json().then(function (data) {
-                            if (!res.ok) {
-                                throw new Error(data.message || 'HTTP error ' + res.status);
-                            }
-                            return data;
-                        });
-                    })
-                    .then(function (data) {
-                        gitPushBtn.disabled = false;
-                        gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
-                        if (gitStatusMsg) {
-                            gitStatusMsg.style.color = '#34A853';
-                            gitStatusMsg.innerText = data.message;
-                        }
-                        if (gitCommitInput) {
-                            gitCommitInput.value = '';
-                        }
-                    })
-                    .catch(function (err) {
-                        gitPushBtn.disabled = false;
-                        gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
-                        if (gitStatusMsg) {
-                            gitStatusMsg.style.color = '#EA4335';
-                            gitStatusMsg.innerText = 'Deployment Failed:\n' + err.message;
-                        }
-                    });
                 }
             });
         }
@@ -3656,6 +3670,7 @@
                 compileBlogsCmsState();
                 saveConfigToServer('blogs.json', blogsState);
                 workspace.style.display = 'none';
+                showToast("Unsaved edits stored in browser! Push to GitHub to go live.");
             });
         }
 
@@ -3665,6 +3680,7 @@
                 saveConfigToServer('blogs.json', blogsState);
                 var exportTabLink = document.getElementById('tab-btn-blogs-export');
                 if (exportTabLink) exportTabLink.click();
+                showToast("Blogs config compiled and saved locally in browser!");
             });
         }
 
