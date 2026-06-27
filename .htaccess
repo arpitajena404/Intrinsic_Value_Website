@@ -9,6 +9,12 @@
 
 RewriteEngine On
 
+# Route raw asset requests back to the analytics subfolder
+RewriteRule ^css/(.*)$ analytics/frontend/css/$1 [L]
+RewriteRule ^js/(.*)$ analytics/frontend/js/$1 [L]
+RewriteRule ^assets/(.*)$ analytics/frontend/assets/$1 [L]
+RewriteRule ^static/(.*)$ analytics/frontend/assets/$1 [L]
+
 # Redirect /admin to the new admin URL
 RewriteRule ^admin/?$ https://intrinsicvalueequity.in/invest_biz/admin.html [R=301,L]
 

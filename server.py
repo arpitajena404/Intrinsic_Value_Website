@@ -24,6 +24,15 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
                 potential_file = os.path.join(DIRECTORY, 'analytics', 'frontend', 'pages', f'{page_name}.html')
                 if os.path.exists(potential_file):
                     self.path = f'/analytics/frontend/pages/{page_name}.html'
+        
+        # Route clean URL root asset requests back to the analytics folders
+        elif self.path.startswith('/css/') or self.path.startswith('/js/') or self.path.startswith('/assets/') or self.path.startswith('/static/'):
+            root_asset_path = os.path.join(DIRECTORY, self.path.lstrip('/'))
+            if not os.path.exists(root_asset_path):
+                if self.path.startswith('/static/'):
+                    self.path = '/analytics/frontend/assets/' + self.path[8:]
+                else:
+                    self.path = '/analytics/frontend' + self.path
                     
         return super().do_GET()
 

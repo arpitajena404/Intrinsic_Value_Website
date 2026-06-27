@@ -78,6 +78,22 @@
       "destination": "/nikhil-gangil-indian-value-investor.html"
     },
     {
+      "source": "/css/:path*",
+      "destination": "/analytics/frontend/css/:path*"
+    },
+    {
+      "source": "/js/:path*",
+      "destination": "/analytics/frontend/js/:path*"
+    },
+    {
+      "source": "/assets/:path*",
+      "destination": "/analytics/frontend/assets/:path*"
+    },
+    {
+      "source": "/static/:path*",
+      "destination": "/analytics/frontend/assets/:path*"
+    },
+    {
       "source": "/analytics/static/:path*",
       "destination": "/analytics/frontend/assets/:path*"
     },
