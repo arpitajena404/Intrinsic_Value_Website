@@ -330,7 +330,7 @@
                     "Access": "Single",
                     "Platform": "App",
                     "Model portfolio": "Equity research",
-                    "Who should join": "Retail investors",
+                    "Who should join": "Professional / HNI/ Self Employed",
                     "Fee/Year": "39,871+GST"
                 }
             },
@@ -354,7 +354,7 @@
                     "Access": "2 people",
                     "Platform": "WhatsApp plus App",
                     "Model portfolio": "Focused Model Portfolio",
-                    "Who should join": "Entrepreneurs/&#8203;Professionals",
+                    "Who should join": "Founders/ Entrepreneurs/ Wealthy",
                     "Fee/Year": "1.51 Lacs +GST"
                 }
             },
@@ -378,7 +378,7 @@
                     "Access": "Multi",
                     "Platform": "Personalized WA Group",
                     "Model portfolio": "Business worthy",
-                    "Who should join": "Companies with Business Cash",
+                    "Who should join": "Corporates with Cash Holdings",
                     "Fee/Year": "Custom"
                 }
             }
