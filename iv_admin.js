@@ -1112,7 +1112,7 @@
                 console.error("Error parsing pending_homepage_config", e);
             }
         } else {
-            fetch('homepage_config.json')
+            fetch('homepage_config.json?t=' + Date.now())
                 .then(function (res) { return res.json(); })
                 .then(function (data) {
                     cmsState = data;
@@ -1134,7 +1134,7 @@
                 console.error("Error parsing pending_pricing_config", e);
             }
         } else {
-            fetch('pricing.json')
+            fetch('pricing.json?t=' + Date.now())
                 .then(function (res) { return res.json(); })
                 .then(function (data) {
                     pricingCmsState = data;
@@ -1159,7 +1159,7 @@
             liveCmsState = Object.assign({}, DEFAULT_LIVE_FALLBACK_CONFIG, LIVE_CONFIG);
             populateLiveForms();
         } else {
-            fetch('invest_biz/live_config.js')
+            fetch('invest_biz/live_config.js?t=' + Date.now())
                 .then(function (res) { return res.text(); })
                 .then(function (text) {
                     var match = text.match(/var\s+LIVE_CONFIG\s*=\s*([\s\S]+?);/);
@@ -3286,7 +3286,7 @@
                 console.error("Error parsing pending_blogs_config", e);
             }
         } else {
-            fetch('blogs.json')
+            fetch('blogs.json?t=' + Date.now())
                 .then(function (res) { return res.json(); })
                 .then(function (data) {
                     blogsState = data;

@@ -21,8 +21,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <link rel="stylesheet" href="style.css?v=6">
     <!-- Google Identity Services SDK -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <!-- Live Funnel Config -->
-    <script src="invest_biz/live_config.js"></script>
+    <script>
+        (function() {
+            var s = document.createElement('script');
+            s.src = "invest_biz/live_config.js?t=" + Date.now();
+            document.head.appendChild(s);
+        })();
+    </script>
     <style>
         /* Admin-specific Premium Glassmorphic Styles */
         .admin-page-container {
