@@ -2686,6 +2686,29 @@
         }
     }
 
+    function setNestedKey(obj, path, value) {
+        var parts = path.split('.');
+        var current = obj;
+        for (var i = 0; i < parts.length - 1; i++) {
+            if (!current[parts[i]]) {
+                current[parts[i]] = {};
+            }
+            current = current[parts[i]];
+        }
+        current[parts[parts.length - 1]] = value;
+    }
+
+    function getNestedKey(obj, path) {
+        if (!obj) return undefined;
+        var parts = path.split('.');
+        var current = obj;
+        for (var i = 0; i < parts.length; i++) {
+            if (current === null || current === undefined) return undefined;
+            current = current[parts[i]];
+        }
+        return current;
+    }
+
     function syncAllToIframe() {
         var iframe = document.getElementById('previewIframe');
         if (!iframe || !iframe.contentWindow) return;
