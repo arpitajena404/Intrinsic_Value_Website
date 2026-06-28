@@ -3121,98 +3121,141 @@
                             return;
                         }
                         
-                        var currentFileIdx = 0;
-                        
-                        function commitNextFile() {
-                            if (currentFileIdx >= filesToCommit.length) {
-                                // All files committed!
-                                localStorage.removeItem('pending_homepage_config');
-                                localStorage.removeItem('pending_pricing_config');
-                                localStorage.removeItem('pending_blogs_config');
-                                localStorage.removeItem('pending_live_config');
-                                
-                                gitPushBtn.disabled = false;
-                                gitPushBtn.style.boxShadow = 'none';
-                                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
-                                if (gitCommitInput) gitCommitInput.value = '';
-                                
-                                if (gitStatusMsg) {
-                                    gitStatusMsg.style.color = '#34A853';
-                                    gitStatusMsg.innerText = 'Successfully pushed all edits directly to GitHub!\n\nThis will trigger the GitHub Action build workflow to recompile templates and deploy the final pages live.';
+                        if (gitStatusMsg) {
+                            gitStatusMsg.innerText = 'Fetching latest branch head...';
+                        }
+
+                        var headers = {
+                            'Authorization': 'token ' + pat,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        };
+
+                        var lastCommitSha, baseTreeSha, newTreeSha, newCommitSha;
+
+                        // 1. Get branch head
+                        fetch('https://api.github.com/repos/' + repo + '/git/ref/heads/' + branch, { headers: headers })
+                            .then(function(res) {
+                                if (res.status === 404) {
+                                    throw new Error('Branch main not found. Check repository path or token.');
                                 }
-                                return;
-                            }
-                            
-                            var fileObj = filesToCommit[currentFileIdx];
-                            if (gitStatusMsg) {
-                                gitStatusMsg.innerText = 'Processing file ' + (currentFileIdx + 1) + ' of ' + filesToCommit.length + ' (' + fileObj.path + ')...';
-                            }
-                            
-                            // 1. Fetch file SHA
-                            var getUrl = 'https://api.github.com/repos/' + repo + '/contents/' + fileObj.path + '?ref=' + branch;
-                            fetch(getUrl, {
-                                headers: {
-                                    'Authorization': 'token ' + pat,
-                                    'Accept': 'application/vnd.github.v3+json'
+                                if (!res.ok) {
+                                    throw new Error('Failed to fetch branch reference (HTTP ' + res.status + ')');
                                 }
+                                return res.json();
+                            })
+                            .then(function(data) {
+                                lastCommitSha = data.object.sha;
+                                if (gitStatusMsg) gitStatusMsg.innerText = 'Fetching base tree...';
+                                // 2. Get tree of the last commit
+                                return fetch('https://api.github.com/repos/' + repo + '/git/commits/' + lastCommitSha, { headers: headers });
                             })
                             .then(function(res) {
-                                if (res.status === 200) {
-                                    return res.json().then(function(data) { return data.sha; });
-                                } else if (res.status === 404) {
-                                    return null;
-                               } else {
-                                    throw new Error('Failed to fetch file metadata (HTTP ' + res.status + ')');
-                                }
+                                if (!res.ok) throw new Error('Failed to fetch commit tree (HTTP ' + res.status + ')');
+                                return res.json();
                             })
-                            .then(function(sha) {
-                                // 2. Commit file content
-                                var putUrl = 'https://api.github.com/repos/' + repo + '/contents/' + fileObj.path;
-                                var encodedContent = btoa(unescape(encodeURIComponent(fileObj.content)));
-                                
-                                var bodyData = {
-                                    message: commitMessage || ('CMS Update: ' + fileObj.path),
-                                    content: encodedContent,
-                                    branch: branch
-                                };
-                                if (sha) {
-                                    bodyData.sha = sha;
-                                }
-                                
-                                return fetch(putUrl, {
-                                    method: 'PUT',
-                                    headers: {
-                                        'Authorization': 'token ' + pat,
-                                        'Accept': 'application/vnd.github.v3+json',
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify(bodyData)
+                            .then(function(data) {
+                                baseTreeSha = data.tree.sha;
+                                if (gitStatusMsg) gitStatusMsg.innerText = 'Creating new commit tree...';
+
+                                // Map filesToCommit to git tree objects
+                                var treeData = filesToCommit.map(function(f) {
+                                    return {
+                                        path: f.path,
+                                        mode: '100644',
+                                        type: 'blob',
+                                        content: f.content
+                                    };
+                                });
+
+                                // 3. Create a new tree
+                                return fetch('https://api.github.com/repos/' + repo + '/git/trees', {
+                                    method: 'POST',
+                                    headers: headers,
+                                    body: JSON.stringify({
+                                        base_tree: baseTreeSha,
+                                        tree: treeData
+                                    })
                                 });
                             })
                             .then(function(res) {
                                 if (!res.ok) {
-                                    return res.json().then(function(data) {
-                                        throw new Error(data.message || 'HTTP error ' + res.status);
+                                    return res.json().then(function(d) {
+                                        throw new Error('Failed to create tree: ' + (d.message || res.status));
                                     });
                                 }
                                 return res.json();
                             })
                             .then(function(data) {
-                                console.log('Committed ' + fileObj.path + ' successfully!');
-                                currentFileIdx++;
-                                commitNextFile();
+                                newTreeSha = data.sha;
+                                if (gitStatusMsg) gitStatusMsg.innerText = 'Creating new commit...';
+
+                                // 4. Create new commit pointing to new tree
+                                return fetch('https://api.github.com/repos/' + repo + '/git/commits', {
+                                    method: 'POST',
+                                    headers: headers,
+                                    body: JSON.stringify({
+                                        message: commitMessage || 'CMS Update',
+                                        tree: newTreeSha,
+                                        parents: [lastCommitSha]
+                                    })
+                                });
+                            })
+                            .then(function(res) {
+                                if (!res.ok) {
+                                    return res.json().then(function(d) {
+                                        throw new Error('Failed to create commit: ' + (d.message || res.status));
+                                    });
+                                }
+                                return res.json();
+                            })
+                            .then(function(data) {
+                                newCommitSha = data.sha;
+                                if (gitStatusMsg) gitStatusMsg.innerText = 'Updating branch reference...';
+
+                                // 5. Update branch ref (heads/main) to point to new commit
+                                return fetch('https://api.github.com/repos/' + repo + '/git/refs/heads/' + branch, {
+                                    method: 'PATCH',
+                                    headers: headers,
+                                    body: JSON.stringify({
+                                        sha: newCommitSha,
+                                        force: false
+                                    })
+                                });
+                            })
+                            .then(function(res) {
+                                if (!res.ok) {
+                                    return res.json().then(function(d) {
+                                        throw new Error('Failed to update branch reference: ' + (d.message || res.status));
+                                    });
+                                }
+                                return res.json();
+                            })
+                            .then(function(data) {
+                                // All files committed in ONE single commit!
+                                localStorage.removeItem('pending_homepage_config');
+                                localStorage.removeItem('pending_pricing_config');
+                                localStorage.removeItem('pending_blogs_config');
+                                localStorage.removeItem('pending_live_config');
+
+                                gitPushBtn.disabled = false;
+                                gitPushBtn.style.boxShadow = 'none';
+                                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                                if (gitCommitInput) gitCommitInput.value = '';
+
+                                if (gitStatusMsg) {
+                                    gitStatusMsg.style.color = '#34A853';
+                                    gitStatusMsg.innerText = 'Successfully pushed all edits in a single commit directly to GitHub!\n\nThis will trigger the GitHub Action build workflow to recompile templates and deploy the final pages live.';
+                                }
                             })
                             .catch(function(err) {
                                 gitPushBtn.disabled = false;
                                 gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
                                 if (gitStatusMsg) {
                                     gitStatusMsg.style.color = '#EA4335';
-                                    gitStatusMsg.innerText = 'Deployment Failed on ' + fileObj.path + ':\n' + err.message;
+                                    gitStatusMsg.innerText = 'Deployment Failed:\n' + err.message;
                                 }
                             });
-                        }
-                        
-                        commitNextFile();
                     } else {
                         // Local fallback using local server.py endpoint
                         if (!isLocalhost) {
