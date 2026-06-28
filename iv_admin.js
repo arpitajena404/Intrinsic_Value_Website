@@ -3054,6 +3054,19 @@
             }
         }
 
+        var clearCacheBtn = document.getElementById('clearCacheBtn');
+        if (clearCacheBtn) {
+            clearCacheBtn.addEventListener('click', function() {
+                if (confirm("Are you sure you want to discard all unsaved edits stored in this browser's cache and reload the latest configuration files from the server? This cannot be undone.")) {
+                    localStorage.removeItem('pending_homepage_config');
+                    localStorage.removeItem('pending_pricing_config');
+                    localStorage.removeItem('pending_blogs_config');
+                    localStorage.removeItem('pending_live_config');
+                    window.location.reload();
+                }
+            });
+        }
+
         if (gitPushBtn) {
             gitPushBtn.addEventListener('click', function () {
                 try {
