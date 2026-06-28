@@ -83,8 +83,40 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(500)
                 self.send_header('Content-Type', 'application/json')
                 self.end_headers()
-                response = {'success': False, 'message': str(e)}
                 self.wfile.write(json.dumps(response).encode('utf-8'))
+        elif self.path == '/api/upload-file':
+            try:
+                import cgi
+                form = cgi.FieldStorage(
+                    fp=self.rfile,
+                    headers=self.headers,
+                    environ={'REQUEST_METHOD': 'POST', 'CONTENT_TYPE': self.headers['Content-Type']}
+                )
+                file_item = form['file']
+                folder = form.getfirst('folder', '')
+                
+                if file_item.filename:
+                    fn = os.path.basename(file_item.filename)
+                    target_dir = os.path.join(DIRECTORY, folder)
+                    os.makedirs(target_dir, exist_ok=True)
+                    
+                    with open(os.path.join(target_dir, fn), 'wb') as f:
+                        f.write(file_item.file.read())
+                        
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'application/json')
+                    self.send_header('Access-Control-Allow-Origin', '*')
+                    self.end_headers()
+                    self.wfile.write(b'{"success":true,"message":"File uploaded locally successfully."}')
+                    return
+                else:
+                    raise ValueError("No file found in request")
+            except Exception as e:
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({'success': False, 'message': str(e)}).encode('utf-8'))
         elif self.path == '/api/git-push':
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)

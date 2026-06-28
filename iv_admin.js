@@ -1064,6 +1064,14 @@
     // Simulated file upload configurations
     var simulatedUploadTargetId = '';
     var simulatedUploadFolder = '';
+    
+    // Load pending file uploads from localStorage
+    var pendingUploads = [];
+    try {
+        pendingUploads = JSON.parse(localStorage.getItem('pending_file_uploads')) || [];
+    } catch(e) {
+        pendingUploads = [];
+    }
 
     window.simulateFileUpload = function(targetInputId, folderName) {
         simulatedUploadTargetId = targetInputId;
@@ -1083,21 +1091,60 @@
             } else {
                 path = file.name;
             }
-            if (simulatedUploadTargetId && simulatedUploadTargetId.indexOf('blog-block-temp-upload-id-') === 0) {
-                var blockIdx = parseInt(simulatedUploadTargetId.replace('blog-block-temp-upload-id-', ''));
-                if (currentEditingBlog && currentEditingBlog.blocks && currentEditingBlog.blocks[blockIdx]) {
-                    currentEditingBlog.blocks[blockIdx].url = path;
-                    renderBlogElements();
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var base64Data = e.target.result.split(',')[1];
+                
+                // Add to pending uploads, overwriting duplicates
+                pendingUploads = pendingUploads.filter(function(up) { return up.path !== path; });
+                pendingUploads.push({
+                    path: path,
+                    content: base64Data,
+                    encoding: 'base64'
+                });
+                localStorage.setItem('pending_file_uploads', JSON.stringify(pendingUploads));
+
+                // If this is local development, write to Python server if active
+                var isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+                if (isLocal) {
+                    var formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('folder', simulatedUploadFolder);
+                    fetch('/api/upload-file', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) { console.log("Local upload success:", data); })
+                    .catch(function(err) { console.warn("Local upload skipped/failed:", err); });
                 }
-                alert("File selected: " + file.name + "\n\nIMPORTANT: Since this is a static site run on a browser environment, you MUST manually copy this file into the local project folder '" + simulatedUploadFolder + "/' so the site can reference it correctly.");
-            } else {
-                var targetInput = document.getElementById(simulatedUploadTargetId);
-                if (targetInput) {
-                    targetInput.value = path;
-                    targetInput.dispatchEvent(new Event('input'));
-                    alert("File selected: " + file.name + "\n\nIMPORTANT: Since this is a static site run on a browser environment, you MUST manually copy this file into the local project folder '" + simulatedUploadFolder + "/' so the site can reference it correctly.");
+
+                // Highlight the push button to indicate unsaved edits
+                var pushBtn = document.getElementById('gitPushBtn');
+                if (pushBtn) {
+                    pushBtn.style.boxShadow = '0 0 12px var(--accent)';
+                    pushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub';
                 }
-            }
+
+                // Populate target inputs
+                if (simulatedUploadTargetId && simulatedUploadTargetId.indexOf('blog-block-temp-upload-id-') === 0) {
+                    var blockIdx = parseInt(simulatedUploadTargetId.replace('blog-block-temp-upload-id-', ''));
+                    if (currentEditingBlog && currentEditingBlog.blocks && currentEditingBlog.blocks[blockIdx]) {
+                        currentEditingBlog.blocks[blockIdx].url = path;
+                        renderBlogElements();
+                    }
+                    showToast("File '" + file.name + "' selected for blog! Ready to publish to GitHub.");
+                } else {
+                    var targetInput = document.getElementById(simulatedUploadTargetId);
+                    if (targetInput) {
+                        targetInput.value = path;
+                        targetInput.dispatchEvent(new Event('input'));
+                        showToast("File '" + file.name + "' selected! Ready to publish to GitHub.");
+                    }
+                }
+            };
+            reader.readAsDataURL(file);
         }
     };
 
@@ -3118,21 +3165,30 @@
                         
                         var pendingCms = localStorage.getItem('pending_homepage_config');
                         if (pendingCms) {
-                            filesToCommit.push({ path: 'homepage_config.json', content: pendingCms });
+                            filesToCommit.push({ path: 'homepage_config.json', content: pendingCms, encoding: 'utf-8' });
                         }
                         var pendingPricing = localStorage.getItem('pending_pricing_config');
                         if (pendingPricing) {
-                            filesToCommit.push({ path: 'pricing.json', content: pendingPricing });
+                            filesToCommit.push({ path: 'pricing.json', content: pendingPricing, encoding: 'utf-8' });
                         }
                         var pendingBlogs = localStorage.getItem('pending_blogs_config');
                         if (pendingBlogs) {
-                            filesToCommit.push({ path: 'blogs.json', content: pendingBlogs });
+                            filesToCommit.push({ path: 'blogs.json', content: pendingBlogs, encoding: 'utf-8' });
                         }
                         var pendingLive = localStorage.getItem('pending_live_config');
                         if (pendingLive) {
                             var liveContentStr = "var LIVE_CONFIG = " + JSON.stringify(JSON.parse(pendingLive), null, 4) + ";\n";
-                            filesToCommit.push({ path: 'live_config.js', content: liveContentStr });
+                            filesToCommit.push({ path: 'live_config.js', content: liveContentStr, encoding: 'utf-8' });
                         }
+
+                        // Append pending binary file uploads!
+                        pendingUploads.forEach(function(up) {
+                            filesToCommit.push({
+                                path: up.path,
+                                content: up.content,
+                                encoding: 'base64'
+                            });
+                        });
                         
                         if (filesToCommit.length === 0) {
                             gitPushBtn.disabled = false;
@@ -3179,17 +3235,44 @@
                             })
                             .then(function(data) {
                                 baseTreeSha = data.tree.sha;
-                                if (gitStatusMsg) gitStatusMsg.innerText = 'Creating new commit tree...';
+                                if (gitStatusMsg) gitStatusMsg.innerText = 'Creating blobs on GitHub...';
 
-                                // Map filesToCommit to git tree objects
-                                var treeData = filesToCommit.map(function(f) {
-                                    return {
-                                        path: f.path,
-                                        mode: '100644',
-                                        type: 'blob',
-                                        content: f.content
-                                    };
+                                // Upload all files to commit as blobs
+                                var blobPromises = filesToCommit.map(function(fileObj) {
+                                    var encodedContent = fileObj.encoding === 'base64' ? 
+                                        fileObj.content : 
+                                        btoa(unescape(encodeURIComponent(fileObj.content)));
+                                        
+                                    return fetch('https://api.github.com/repos/' + repo + '/git/blobs', {
+                                        method: 'POST',
+                                        headers: headers,
+                                        body: JSON.stringify({
+                                            content: encodedContent,
+                                            encoding: 'base64'
+                                        })
+                                    })
+                                    .then(function(r) {
+                                        if (!r.ok) {
+                                            return r.json().then(function(d) {
+                                                throw new Error('Failed to create blob for ' + fileObj.path + ': ' + (d.message || r.status));
+                                            });
+                                        }
+                                        return r.json();
+                                    })
+                                    .then(function(blobData) {
+                                        return {
+                                            path: fileObj.path,
+                                            mode: '100644',
+                                            type: 'blob',
+                                            sha: blobData.sha
+                                        };
+                                    });
                                 });
+
+                                return Promise.all(blobPromises);
+                            })
+                            .then(function(treeData) {
+                                if (gitStatusMsg) gitStatusMsg.innerText = 'Creating new commit tree...';
 
                                 // 3. Create a new tree
                                 return fetch('https://api.github.com/repos/' + repo + '/git/trees', {
@@ -3260,6 +3343,8 @@
                                 localStorage.removeItem('pending_pricing_config');
                                 localStorage.removeItem('pending_blogs_config');
                                 localStorage.removeItem('pending_live_config');
+                                localStorage.removeItem('pending_file_uploads');
+                                pendingUploads = [];
 
                                 gitPushBtn.disabled = false;
                                 gitPushBtn.style.boxShadow = 'none';
