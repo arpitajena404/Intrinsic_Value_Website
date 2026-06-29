@@ -1133,6 +1133,7 @@
                     if (currentEditingBlog && currentEditingBlog.blocks && currentEditingBlog.blocks[blockIdx]) {
                         currentEditingBlog.blocks[blockIdx].url = path;
                         renderBlogElements();
+                        updateLivePreview();
                     }
                     showToast("File '" + file.name + "' selected for blog! Ready to publish to GitHub.");
                 } else {
@@ -2703,6 +2704,8 @@
                         targetContent.classList.add('active');
                     }
 
+                    var iframe = document.getElementById('blogsPreviewIframe');
+
                     if (tabId === 'tab-blogs-edit') {
                         if (!currentEditingBlog) {
                             var newId = blogsState.length > 0 ? Math.max.apply(Math, blogsState.map(function(b) { return b.id || 0; })) + 1 : 1001;
@@ -2723,6 +2726,14 @@
                             currentEditingBlogIndex = -1;
                         }
                         renderBlogEditor();
+                        updateLivePreview();
+                        if (iframe) {
+                            iframe.src = 'blog-detail.html?preview=true';
+                        }
+                    } else {
+                        if (iframe && iframe.src.indexOf('blogs.html') === -1) {
+                            iframe.src = 'blogs.html?preview=true';
+                        }
                     }
 
                     if (tabId === 'tab-blogs-export') {
@@ -3455,6 +3466,26 @@
     var currentEditingBlog = null;
     var currentEditingBlogIndex = -1;
 
+    window.updateLivePreview = function() {
+        if (!currentEditingBlog) return;
+        
+        currentEditingBlog.title = document.getElementById('blog-edit-title').value.trim();
+        currentEditingBlog.slug = document.getElementById('blog-edit-slug').value.trim();
+        currentEditingBlog.category = document.getElementById('blog-edit-category').value.trim() || "Uncategorized";
+        currentEditingBlog.date = document.getElementById('blog-edit-date').value.trim();
+        currentEditingBlog.image = document.getElementById('blog-edit-image').value.trim() || null;
+        currentEditingBlog.readingTime = document.getElementById('blog-edit-time').value.trim() || "3 min read";
+        currentEditingBlog.gradient = document.getElementById('blog-edit-gradient').value.trim() || "linear-gradient(135deg, #FF8C00, #121212)";
+        currentEditingBlog.excerpt = document.getElementById('blog-edit-excerpt').value.trim();
+        
+        localStorage.setItem('preview_blog_data', JSON.stringify(currentEditingBlog));
+        
+        var iframe = document.getElementById('blogsPreviewIframe');
+        if (iframe && iframe.contentWindow) {
+            iframe.contentWindow.postMessage('update_blog_preview', '*');
+        }
+    };
+
     function loadBlogsCmsData() {
         var pendingBlogs = localStorage.getItem('pending_blogs_config');
         if (pendingBlogs) {
@@ -3551,7 +3582,20 @@
     window.deleteBlog = function (index) {
         if (confirm("Are you sure you want to delete the blog post: \"" + blogsState[index].title + "\"?")) {
             blogsState.splice(index, 1);
+            localStorage.setItem('pending_blogs_config', JSON.stringify(blogsState));
             renderBlogsList();
+            
+            // Highlight the push button to indicate unsaved edits
+            var pushBtn = document.getElementById('gitPushBtn');
+            if (pushBtn) {
+                pushBtn.style.boxShadow = '0 0 12px var(--accent)';
+                pushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub';
+            }
+            
+            var iframe = document.getElementById('blogsPreviewIframe');
+            if (iframe) {
+                iframe.src = 'blogs.html?preview=true';
+            }
         }
     };
 
@@ -3576,17 +3620,46 @@
                     });
                 } else if (tagName === 'p') {
                     var img = node.querySelector('img');
+                    var iframe = node.querySelector('iframe');
+                    var video = node.querySelector('video');
                     if (img) {
                         blocks.push({
                             type: 'photo',
                             url: img.getAttribute('src') || ''
                         });
+                    } else if (iframe) {
+                        blocks.push({
+                            type: 'video',
+                            url: iframe.getAttribute('src') || ''
+                        });
+                    } else if (video) {
+                        var source = video.querySelector('source');
+                        blocks.push({
+                            type: 'video',
+                            url: source ? source.getAttribute('src') : (video.getAttribute('src') || '')
+                        });
                     } else {
                         var inner = node.innerHTML.trim();
                         if (inner) {
+                            var tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = inner;
+                            var links = tempDiv.querySelectorAll('a');
+                            links.forEach(function (a) {
+                                var md = '[' + a.innerText + '](' + a.getAttribute('href') + ')';
+                                a.outerHTML = md;
+                            });
+                            
+                            var cleanedText = tempDiv.innerHTML
+                                .replace(/<br\s*\/?>/gi, '\n')
+                                .replace(/&amp;/g, '&')
+                                .replace(/&lt;/g, '<')
+                                .replace(/&gt;/g, '>')
+                                .replace(/&quot;/g, '"')
+                                .replace(/&#039;/g, "'");
+
                             blocks.push({
                                 type: 'paragraph',
-                                text: inner.replace(/<br\s*\/?>/gi, '\n')
+                                text: cleanedText
                             });
                         }
                     }
@@ -3594,6 +3667,17 @@
                     blocks.push({
                         type: 'photo',
                         url: node.getAttribute('src') || ''
+                    });
+                } else if (tagName === 'iframe') {
+                    blocks.push({
+                        type: 'video',
+                        url: node.getAttribute('src') || ''
+                    });
+                } else if (tagName === 'video') {
+                    var source = node.querySelector('source');
+                    blocks.push({
+                        type: 'video',
+                        url: source ? source.getAttribute('src') : (node.getAttribute('src') || '')
                     });
                 } else {
                     var innerHtml = node.outerHTML.trim();
@@ -3666,6 +3750,9 @@
             } else if (block.type === 'photo') {
                 labelColor = '#3498db';
                 icon = 'fa-image';
+            } else if (block.type === 'video') {
+                labelColor = '#e74c3c';
+                icon = 'fa-video';
             }
             
             var upDisabled = index === 0 ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : '';
@@ -3693,20 +3780,29 @@
             if (block.type === 'heading') {
                 blockHtml += `
                     <div class="iv-cms-group" style="margin-bottom: 0;">
-                        <input type="text" class="iv-cms-input" style="font-size: 16px; font-weight: 700; color: var(--accent);" value="${escapeHtml(block.text || '')}" oninput="updateBlogElement(${index}, this.value)" placeholder="Enter highlighted heading text...">
+                        <input type="text" class="iv-cms-input" style="font-size: 16px; font-weight: 700; color: var(--accent);" value="${escapeHtml(block.text || '')}" oninput="updateBlogElement(${index}, this.value); updateLivePreview();" placeholder="Enter highlighted heading text...">
                     </div>
                 `;
             } else if (block.type === 'paragraph') {
                 blockHtml += `
                     <div class="iv-cms-group" style="margin-bottom: 0;">
-                        <textarea class="iv-cms-textarea" style="min-height: 100px; font-size: 14px; line-height: 1.6;" oninput="updateBlogElement(${index}, this.value)" placeholder="Enter paragraph content...">${escapeHtml(block.text || '')}</textarea>
+                        <textarea class="iv-cms-textarea" style="min-height: 100px; font-size: 14px; line-height: 1.6;" oninput="updateBlogElement(${index}, this.value); updateLivePreview();" placeholder="Enter paragraph content... Markdown link format: [Text](URL) supported">${escapeHtml(block.text || '')}</textarea>
                     </div>
                 `;
             } else if (block.type === 'photo') {
                 blockHtml += `
                     <div class="iv-cms-group" style="margin-bottom: 0;">
                         <div style="display: flex; gap: 8px;">
-                            <input type="text" class="iv-cms-input" style="flex: 1;" value="${escapeHtml(block.url || '')}" oninput="updateBlogElement(${index}, this.value)" placeholder="Enter image URL/path (e.g. images/my-image.jpg)">
+                            <input type="text" class="iv-cms-input" style="flex: 1;" value="${escapeHtml(block.url || '')}" oninput="updateBlogElement(${index}, this.value); updateLivePreview();" placeholder="Enter image URL/path (e.g. images/my-image.jpg)">
+                            <button type="button" class="iv-cms-btn-add" style="width: auto; padding: 0 16px;" onclick="simulateFileUploadForBlock(${index})">Upload</button>
+                        </div>
+                    </div>
+                `;
+            } else if (block.type === 'video') {
+                blockHtml += `
+                    <div class="iv-cms-group" style="margin-bottom: 0;">
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" class="iv-cms-input" style="flex: 1;" value="${escapeHtml(block.url || '')}" oninput="updateBlogElement(${index}, this.value); updateLivePreview();" placeholder="Enter YouTube watch/embed URL or direct MP4 link">
                             <button type="button" class="iv-cms-btn-add" style="width: auto; padding: 0 16px;" onclick="simulateFileUploadForBlock(${index})">Upload</button>
                         </div>
                     </div>
@@ -3720,17 +3816,19 @@
 
     window.addBlogElement = function (type) {
         currentEditingBlog.blocks = currentEditingBlog.blocks || [];
-        if (type === 'photo') {
-            currentEditingBlog.blocks.push({ type: 'photo', url: '' });
+        if (type === 'photo' || type === 'video') {
+            currentEditingBlog.blocks.push({ type: type, url: '' });
         } else {
             currentEditingBlog.blocks.push({ type: type, text: '' });
         }
         renderBlogElements();
+        updateLivePreview();
     };
 
     window.removeBlogElement = function (index) {
         currentEditingBlog.blocks.splice(index, 1);
         renderBlogElements();
+        updateLivePreview();
     };
 
     window.moveBlogElement = function (index, direction) {
@@ -3741,12 +3839,13 @@
             blocks[index] = blocks[targetIndex];
             blocks[targetIndex] = temp;
             renderBlogElements();
+            updateLivePreview();
         }
     };
 
     window.updateBlogElement = function (index, value) {
         var block = currentEditingBlog.blocks[index];
-        if (block.type === 'photo') {
+        if (block.type === 'photo' || block.type === 'video') {
             block.url = value;
         } else {
             block.text = value;
@@ -3791,7 +3890,15 @@
             blogsState[currentEditingBlogIndex] = currentEditingBlog;
         }
 
+        localStorage.setItem('pending_blogs_config', JSON.stringify(blogsState));
         renderBlogsList();
+        
+        // Highlight the push button to indicate unsaved edits
+        var pushBtn = document.getElementById('gitPushBtn');
+        if (pushBtn) {
+            pushBtn.style.boxShadow = '0 0 12px var(--accent)';
+            pushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub';
+        }
         
         var listTabLink = document.getElementById('tab-btn-blogs-list');
         if (listTabLink) listTabLink.click();
@@ -3806,20 +3913,39 @@
 
     function compileBlocksToHtml(blocks) {
         var html = '';
+        if (!blocks) return html;
         blocks.forEach(function (block) {
             if (block.type === 'heading') {
                 html += '<h2 class="blog-highlighted-heading">' + escapeHtml(block.text) + '</h2>\n';
             } else if (block.type === 'paragraph') {
                 var paragraphs = block.text.split('\n\n').filter(function (p) { return p.trim() !== ''; });
                 paragraphs.forEach(function (p) {
-                    var formattedText = p.replace(/\n/g, '<br />');
+                    var formattedText = escapeHtml(p).replace(/\n/g, '<br />');
+                    formattedText = formattedText.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
                     html += '<p>' + formattedText + '</p>\n';
                 });
             } else if (block.type === 'photo') {
                 html += '<p><img loading="lazy" decoding="async" class="aligncenter" src="' + escapeHtml(block.url) + '" alt="" /></p>\n';
+            } else if (block.type === 'video') {
+                var videoUrl = block.url || '';
+                if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                    var embedUrl = getYouTubeEmbedUrl(videoUrl);
+                    html += '<p><iframe loading="lazy" width="100%" height="450" src="' + escapeHtml(embedUrl) + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>\n';
+                } else if (videoUrl) {
+                    html += '<p><video controls style="width: 100%; max-height: 500px;"><source src="' + escapeHtml(videoUrl) + '" type="video/mp4">Your browser does not support the video tag.</video></p>\n';
+                }
             }
         });
         return html;
+    }
+
+    function getYouTubeEmbedUrl(url) {
+        var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        var match = url.match(regExp);
+        if (match && match[2].length == 11) {
+            return "https://www.youtube.com/embed/" + match[2];
+        }
+        return url;
     }
 
     function compileBlogsCmsState() {
@@ -3898,6 +4024,21 @@
         if (downloadBtn) {
             downloadBtn.addEventListener('click', downloadBlogsJsonFile);
         }
+
+        // Device toggle listeners for Blogs Preview
+        var deviceBtns = document.querySelectorAll('.btn-device-toggle-blog');
+        var previewPane = document.querySelector('#blogsCmsWorkspace .iv-cms-preview-pane');
+        deviceBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                deviceBtns.forEach(function (b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                var dev = btn.getAttribute('data-device');
+                if (previewPane) {
+                    previewPane.classList.remove('device-laptop', 'device-phone');
+                    previewPane.classList.add('device-' + dev);
+                }
+            });
+        });
     }
 
     // Initialize on DOM load

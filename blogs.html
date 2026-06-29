@@ -254,48 +254,66 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.addEventListener("DOMContentLoaded", function() {
         const blogGrid = document.getElementById('blog-grid');
         const blogFilters = document.getElementById('blog-filters');
-        let allBlogs = [];
+        const urlParams = new URLSearchParams(window.location.search);
+        const isPreview = urlParams.get('preview') === 'true';
 
-        // Fetch blogs.json
-        fetch('blogs.json')
-            .then(response => response.json())
-            .then(data => {
-                allBlogs = data;
-                
-                // Extract unique categories (ignoring "Uncategorized" if multiple exist, otherwise listing them)
-                const categories = new Set();
-                allBlogs.forEach(blog => {
-                    if (blog.category) {
-                        categories.add(blog.category);
-                    }
+        // Fetch blogs.json or read from localStorage pending config
+        if (isPreview && localStorage.getItem('pending_blogs_config')) {
+            try {
+                allBlogs = JSON.parse(localStorage.getItem('pending_blogs_config'));
+                initBlogsFiltersAndRender();
+            } catch(e) {
+                console.error('Error parsing pending_blogs_config for preview', e);
+                fetchBlogsJson();
+            }
+        } else {
+            fetchBlogsJson();
+        }
+
+        function fetchBlogsJson() {
+            fetch('blogs.json?t=' + Date.now())
+                .then(response => response.json())
+                .then(data => {
+                    allBlogs = data;
+                    initBlogsFiltersAndRender();
+                })
+                .catch(err => {
+                    console.error('Error loading blogs:', err);
+                    blogGrid.innerHTML = '<p class="error-msg" style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 4rem 0;">Error loading blogs. Please try again later.</p>';
                 });
+        }
 
-                // Build filters dynamically
-                let filtersHtml = '<button class="filter-btn active" data-category="all">All</button>';
-                categories.forEach(cat => {
-                    filtersHtml += `<button class="filter-btn" data-category="${cat}">${cat}</button>`;
-                });
-                blogFilters.innerHTML = filtersHtml;
-
-                // Render all blogs initially
-                renderBlogs('all');
-
-                // Add filter click event listeners
-                blogFilters.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('filter-btn')) {
-                        const buttons = blogFilters.querySelectorAll('.filter-btn');
-                        buttons.forEach(btn => btn.classList.remove('active'));
-                        e.target.classList.add('active');
-                        
-                        const category = e.target.getAttribute('data-category');
-                        renderBlogs(category);
-                    }
-                });
-            })
-            .catch(err => {
-                console.error('Error loading blogs:', err);
-                blogGrid.innerHTML = '<p class="error-msg" style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 4rem 0;">Error loading blogs. Please try again later.</p>';
+        function initBlogsFiltersAndRender() {
+            // Extract unique categories
+            const categories = new Set();
+            allBlogs.forEach(blog => {
+                if (blog.category) {
+                    categories.add(blog.category);
+                }
             });
+
+            // Build filters dynamically
+            let filtersHtml = '<button class="filter-btn active" data-category="all">All</button>';
+            categories.forEach(cat => {
+                filtersHtml += `<button class="filter-btn" data-category="${cat}">${cat}</button>`;
+            });
+            blogFilters.innerHTML = filtersHtml;
+
+            // Render all blogs initially
+            renderBlogs('all');
+
+            // Add filter click event listeners
+            blogFilters.addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-btn')) {
+                    const buttons = blogFilters.querySelectorAll('.filter-btn');
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    const category = e.target.getAttribute('data-category');
+                    renderBlogs(category);
+                }
+            });
+        }
 
         function renderBlogs(filterCategory) {
             let filtered = allBlogs;
@@ -307,6 +325,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 blogGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 4rem 0;">No blogs found in this category.</p>';
                 return;
             }
+
+            const previewQuery = isPreview ? '&preview=true' : '';
 
             blogGrid.innerHTML = filtered.map(blog => {
                 const thumbHtml = blog.image 
@@ -324,12 +344,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <time datetime="${blog.rawDate || ''}">${blog.date}</time>
                             </div>
                             <h2 class="blog-card-title">
-                                <a href="blog-detail.html?post=${encodeURIComponent(blog.slug)}">${blog.title}</a>
+                                <a href="blog-detail.html?post=${encodeURIComponent(blog.slug)}${previewQuery}">${blog.title}</a>
                             </h2>
                             <p class="blog-card-excerpt">
                                 ${blog.excerpt}
                             </p>
-                            <a href="blog-detail.html?post=${encodeURIComponent(blog.slug)}" class="blog-card-link">
+                            <a href="blog-detail.html?post=${encodeURIComponent(blog.slug)}${previewQuery}" class="blog-card-link">
                                 Read More
                                 <span>&rarr;</span>
                             </a>
