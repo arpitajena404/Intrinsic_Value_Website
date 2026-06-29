@@ -1,6 +1,6 @@
 var WORKSHOP_CONFIG = {
     "workshopDateText": "28th June, Sunday  | 11:00 AM",
-    "countdownTarget": "2026-04-05T11:00:00",
+    "countdownTarget": "2026-06-28T11:00:00",
     "checkoutUrl": "https://premium.intrinsicvalueequity.in/checkout/d712f080-745a-4171-8487-c03ebfd9e176",
     "youtubeVideo1": "https://www.youtube.com/watch?v=lXyYY8I9e44",
     "youtubeVideo2": "https://www.youtube.com/watch?v=knvVbwdm0TE",
