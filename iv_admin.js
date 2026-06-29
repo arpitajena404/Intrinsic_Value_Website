@@ -2705,8 +2705,19 @@
                     }
 
                     var iframe = document.getElementById('blogsPreviewIframe');
+                    var sidebar = document.getElementById('blogsEditorSidebar');
+                    var postSaveBtn = document.getElementById('blogPostSaveBtn');
+                    var postCancelBtn = document.getElementById('blogPostCancelBtn');
+                    var standardSaveBtn = document.getElementById('blogsSaveBtn');
+                    var standardCloseBtn = document.getElementById('closeBlogsCmsBtn');
 
                     if (tabId === 'tab-blogs-edit') {
+                        if (sidebar) sidebar.style.display = 'none';
+                        if (postSaveBtn) postSaveBtn.style.display = 'inline-block';
+                        if (postCancelBtn) postCancelBtn.style.display = 'inline-block';
+                        if (standardSaveBtn) standardSaveBtn.style.display = 'none';
+                        if (standardCloseBtn) standardCloseBtn.style.display = 'none';
+
                         if (!currentEditingBlog) {
                             var newId = blogsState.length > 0 ? Math.max.apply(Math, blogsState.map(function(b) { return b.id || 0; })) + 1 : 1001;
                             currentEditingBlog = {
@@ -2731,6 +2742,12 @@
                             iframe.src = 'blog-detail.html?preview=true';
                         }
                     } else {
+                        if (sidebar) sidebar.style.display = 'flex';
+                        if (postSaveBtn) postSaveBtn.style.display = 'none';
+                        if (postCancelBtn) postCancelBtn.style.display = 'none';
+                        if (standardSaveBtn) standardSaveBtn.style.display = 'inline-block';
+                        if (standardCloseBtn) standardCloseBtn.style.display = 'inline-block';
+
                         if (iframe && iframe.src.indexOf('blogs.html') === -1) {
                             iframe.src = 'blogs.html?preview=true';
                         }
@@ -4038,6 +4055,36 @@
                     previewPane.classList.add('device-' + dev);
                 }
             });
+        });
+
+        // Listen for messages from preview iframe (Visual Inline Editor)
+        window.addEventListener('message', function(event) {
+            if (!event.data) return;
+            
+            if (event.data.type === 'trigger_file_upload') {
+                simulateFileUpload(event.data.targetId, 'images');
+            } else if (event.data.type === 'update_blog_state') {
+                currentEditingBlog = event.data.blog;
+                
+                // Sync current state to hidden inputs to keep DOM values matching
+                var tInput = document.getElementById('blog-edit-title');
+                var sInput = document.getElementById('blog-edit-slug');
+                var cInput = document.getElementById('blog-edit-category');
+                var dInput = document.getElementById('blog-edit-date');
+                var iInput = document.getElementById('blog-edit-image');
+                var rInput = document.getElementById('blog-edit-time');
+                var gInput = document.getElementById('blog-edit-gradient');
+                var eInput = document.getElementById('blog-edit-excerpt');
+
+                if (tInput) tInput.value = currentEditingBlog.title || "";
+                if (sInput) sInput.value = currentEditingBlog.slug || "";
+                if (cInput) cInput.value = currentEditingBlog.category || "";
+                if (dInput) dInput.value = currentEditingBlog.date || "";
+                if (iInput) iInput.value = currentEditingBlog.image || "";
+                if (rInput) rInput.value = currentEditingBlog.readingTime || "";
+                if (gInput) gInput.value = currentEditingBlog.gradient || "";
+                if (eInput) eInput.value = currentEditingBlog.excerpt || "";
+            }
         });
     }
 

@@ -2052,6 +2052,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <h3>Blogs & Articles CMS</h3>
                 </div>
                 <div class="iv-cms-header-actions">
+                    <!-- Edit Mode Actions -->
+                    <button id="blogPostSaveBtn" class="iv-admin-btn" style="display: none; background: var(--accent); color: var(--text-dark); width: auto; padding: 10px 20px; font-weight: bold; border: none; outline: none; border-radius: 4px;" onclick="saveCurrentBlog()">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Post & Return
+                    </button>
+                    <button id="blogPostCancelBtn" class="iv-admin-btn" style="display: none; border: 1px solid var(--border-color); background: transparent; color: var(--text-muted); width: auto; padding: 10px 20px; border-radius: 4px;" onclick="cancelBlogEdit()">
+                        Cancel
+                    </button>
+
+                    <!-- Standard Actions -->
                     <button id="blogsSaveBtn" class="iv-admin-btn" style="border-style: solid; border-color: var(--accent); background: rgba(255, 140, 0, 0.1); width: auto; padding: 10px 20px;">
                         <i class="fa-solid fa-cloud-arrow-up"></i> Generate JSON
                     </button>
@@ -2065,7 +2074,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="iv-cms-workspace-split">
                 
                 <!-- Left Pane: Editor Forms -->
-                <div class="iv-cms-editor-pane" style="display: flex; flex: 0 0 500px; width: 500px; min-width: 500px; flex-direction: column; height: 100%; overflow: hidden; background: #252525; border-right: 1px solid rgba(255, 255, 255, 0.1);">
+                <div class="iv-cms-editor-pane" id="blogsEditorSidebar" style="display: flex; flex: 0 0 500px; width: 500px; min-width: 500px; flex-direction: column; height: 100%; overflow: hidden; background: #252525; border-right: 1px solid rgba(255, 255, 255, 0.1);">
                     <!-- Tabs Navigation -->
                     <div class="iv-cms-tabs-nav">
                         <button class="iv-cms-tab-link active" id="tab-btn-blogs-list" data-tab="tab-blogs-list">Manage Blogs</button>
