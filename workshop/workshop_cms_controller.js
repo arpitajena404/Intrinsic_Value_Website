@@ -23,7 +23,8 @@
         box2Text: "On Zoom",
         box3Text: "Actionable Workshop",
         box4Text: "100% Practical Strategy",
-        box5Text: "Language: English"
+        box5Text: "Language: English",
+        experienceText: "11+ years of experience"
     };
 
     var isEditMode = false;
@@ -145,6 +146,13 @@
 
         var box5 = document.querySelector('[data-id="76775251"] .elementor-heading-title');
         if (box5) box5.innerText = config.box5Text;
+
+        // Apply experience texts
+        var expEl1 = document.querySelector('[data-id="f7132d0"] .elementor-icon-list-item:nth-child(2) .elementor-icon-list-text');
+        if (expEl1) expEl1.innerText = config.experienceText || "11+ years of experience";
+
+        var expEl2 = document.querySelector('[data-id="6c71720d"] .elementor-icon-list-text');
+        if (expEl2) expEl2.innerText = config.experienceText || "11+ years of experience";
 
         // Load YouTube videos
         loadVideo('[data-id="84a0e89"] .elementor-video', config.youtubeVideo1);
@@ -382,6 +390,37 @@
                 };
             }
 
+            // Bind click & highlight for Experience Text
+            var expEl1 = document.querySelector('[data-id="f7132d0"] .elementor-icon-list-item:nth-child(2)');
+            if (expEl1) {
+                expEl1.classList.add('cms-editable-highlight');
+                expEl1.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.parent.postMessage({
+                        type: 'request_edit',
+                        key: 'experienceText',
+                        label: 'Years of Experience Text',
+                        currentVal: config.experienceText || "11+ years of experience"
+                    }, '*');
+                };
+            }
+
+            var expEl2 = document.querySelector('[data-id="6c71720d"]');
+            if (expEl2) {
+                expEl2.classList.add('cms-editable-highlight');
+                expEl2.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.parent.postMessage({
+                        type: 'request_edit',
+                        key: 'experienceText',
+                        label: 'Years of Experience Text',
+                        currentVal: config.experienceText || "11+ years of experience"
+                    }, '*');
+                };
+            }
+
             // Highlight Youtube Videos
             var vid1 = document.querySelector('[data-id="84a0e89"]');
             if (vid1) vid1.classList.add('cms-editable-highlight');
@@ -399,7 +438,7 @@
             // Re-apply video embeds with overlays
             applyConfig();
 
-        } else {
+         } else {
             if (existingStyle) existingStyle.remove();
             
             var targets = [
@@ -414,7 +453,9 @@
                 '[data-id="76775251"]',
                 '[data-id="84a0e89"]',
                 '[data-id="20f4b2e"]',
-                '[data-id="5e58f49"]'
+                '[data-id="5e58f49"]',
+                '[data-id="f7132d0"] .elementor-icon-list-item:nth-child(2)',
+                '[data-id="6c71720d"]'
             ];
             targets.forEach(function(sel) {
                 var el = document.querySelector(sel);

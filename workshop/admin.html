@@ -836,6 +836,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>
                 </div>
 
+                <!-- Years of Experience Text -->
+                <div class="input-group">
+                    <label for="inputExperience">Years of Experience Text</label>
+                    <div class="input-control-wrapper">
+                        <input type="text" id="inputExperience" placeholder="e.g. 11+ years of experience">
+                        <button class="edit-btn" onclick="openEditModal('experienceText', 'Years of Experience Text', liveCmsState.experienceText)"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </div>
+                </div>
+
                 <h4 class="panel-section-title">Capacity & Seats</h4>
 
                 <!-- Workshop Capacity -->
@@ -1188,6 +1197,46 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             return day + suffix + ' ' + month + ', ' + weekday + '  | ' + hours + ':' + minStr + ' ' + ampm;
         }
 
+        // Helper to parse human-readable workshop date string
+        function parseWorkshopDate(text) {
+            if (!text) return null;
+            text = text.trim().replace(/\s+/g, ' ');
+            var regex = /(\d+)(?:st|nd|rd|th)?\s+([A-Za-z]+)(?:,\s*[A-Za-z]+)?\s*(?:\||at)?\s*(\d{1,2}):(\d{2})\s*(AM|PM|am|pm)/i;
+            var match = text.match(regex);
+            if (!match) {
+                var parsed = new Date(text);
+                return isNaN(parsed.getTime()) ? null : parsed;
+            }
+            
+            var day = parseInt(match[1], 10);
+            var monthName = match[2].toLowerCase();
+            var hours = parseInt(match[3], 10);
+            var minutes = parseInt(match[4], 10);
+            var ampm = match[5].toLowerCase();
+            
+            var months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+            var monthIndex = -1;
+            for (var i = 0; i < months.length; i++) {
+                if (monthName.indexOf(months[i].substring(0, 3)) === 0) {
+                    monthIndex = i;
+                    break;
+                }
+            }
+            if (monthIndex === -1) return null;
+            
+            if (ampm === 'pm' && hours < 12) hours += 12;
+            if (ampm === 'am' && hours === 12) hours = 0;
+            
+            var now = new Date();
+            var year = now.getFullYear();
+            var targetDate = new Date(year, monthIndex, day, hours, minutes, 0);
+            
+            if (targetDate.getTime() < now.getTime() - (30 * 24 * 60 * 60 * 1000)) {
+                targetDate.setFullYear(year + 1);
+            }
+            return targetDate;
+        }
+
         // 2. Load config
         function loadConfigData() {
             if (typeof WORKSHOP_CONFIG !== 'undefined') {
@@ -1199,6 +1248,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         function syncInputsFromState() {
             document.getElementById('inputDateText').value = liveCmsState.workshopDateText || '';
+            document.getElementById('inputExperience').value = liveCmsState.experienceText || '';
             document.getElementById('inputCapacity').value = liveCmsState.workshopCapacity || '';
             document.getElementById('inputSeats').value = liveCmsState.seatsLeft || '';
             document.getElementById('inputCheckoutUrl').value = liveCmsState.checkoutUrl || '';
@@ -1283,8 +1333,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         // 4. Input field listeners
         document.getElementById('inputDateText').addEventListener('input', function() {
-            liveCmsState.workshopDateText = this.value;
-            propagateChange('workshopDateText', liveCmsState.workshopDateText);
+            var newVal = this.value;
+            liveCmsState.workshopDateText = newVal;
+            propagateChange('workshopDateText', newVal);
+
+            var parsedDate = parseWorkshopDate(newVal);
+            if (parsedDate) {
+                var yyyy = parsedDate.getFullYear();
+                var mm = String(parsedDate.getMonth() + 1).padStart(2, '0');
+                var dd = String(parsedDate.getDate()).padStart(2, '0');
+                var hh = String(parsedDate.getHours()).padStart(2, '0');
+                var min = String(parsedDate.getMinutes()).padStart(2, '0');
+                var ss = "00";
+                var isoStr = yyyy + "-" + mm + "-" + dd + "T" + hh + ":" + min + ":" + ss;
+                
+                liveCmsState.countdownTarget = isoStr;
+                propagateChange('countdownTarget', isoStr);
+                
+                var datePart = yyyy + "-" + mm + "-" + dd + "T" + hh + ":" + min;
+                document.getElementById('inputCountdown').value = datePart;
+            }
+        });
+
+        document.getElementById('inputExperience').addEventListener('input', function() {
+            liveCmsState.experienceText = this.value;
+            propagateChange('experienceText', liveCmsState.experienceText);
         });
 
         document.getElementById('inputCapacity').addEventListener('input', function() {
@@ -1420,10 +1493,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     liveCmsState.workshopDateText = formattedDateText;
                     document.getElementById('inputDateText').value = formattedDateText;
                     propagateChange('workshopDateText', formattedDateText);
+                } else if (currentEditingKey === 'workshopDateText' && newVal) {
+                    var parsedDate = parseWorkshopDate(newVal);
+                    if (parsedDate) {
+                        var yyyy = parsedDate.getFullYear();
+                        var mm = String(parsedDate.getMonth() + 1).padStart(2, '0');
+                        var dd = String(parsedDate.getDate()).padStart(2, '0');
+                        var hh = String(parsedDate.getHours()).padStart(2, '0');
+                        var min = String(parsedDate.getMinutes()).padStart(2, '0');
+                        var ss = "00";
+                        var isoStr = yyyy + "-" + mm + "-" + dd + "T" + hh + ":" + min + ":" + ss;
+                        
+                        liveCmsState.countdownTarget = isoStr;
+                        propagateChange('countdownTarget', isoStr);
+                    }
                 }
                 liveCmsState[currentEditingKey] = newVal;
                 syncInputsFromState();
-                showToast("Updated in preview. Click 'Save & Download Config' to export!");
+                showToast("Updated in preview. Click 'Save' or 'Publish to GitHub' to apply!");
                 closeEditModal();
                 propagateChange(currentEditingKey, newVal);
             }

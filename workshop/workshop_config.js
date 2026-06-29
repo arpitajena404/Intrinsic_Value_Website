@@ -11,5 +11,6 @@ var WORKSHOP_CONFIG = {
     "box2Text": "On Zoom",
     "box3Text": "Actionable Workshop",
     "box4Text": "100% Practical Strategy",
-    "box5Text": "Language: Hinglish"
+    "box5Text": "Language: Hinglish",
+    "experienceText": "11+ years of experience"
 };
