@@ -3117,7 +3117,7 @@
         }
 
         // Highlight push button if there are already pending unsaved edits in localStorage on load
-        if (localStorage.getItem('pending_homepage_config') || localStorage.getItem('pending_pricing_config') || localStorage.getItem('pending_blogs_config') || localStorage.getItem('pending_live_config')) {
+        if (localStorage.getItem('pending_homepage_config') || localStorage.getItem('pending_pricing_config') || localStorage.getItem('pending_blogs_config') || localStorage.getItem('pending_live_config') || localStorage.getItem('pending_vsl_config') || localStorage.getItem('pending_workshop_config')) {
             if (gitPushBtn) {
                 gitPushBtn.style.boxShadow = '0 0 12px var(--accent)';
                 gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub';
@@ -3132,6 +3132,8 @@
                     localStorage.removeItem('pending_pricing_config');
                     localStorage.removeItem('pending_blogs_config');
                     localStorage.removeItem('pending_live_config');
+                    localStorage.removeItem('pending_vsl_config');
+                    localStorage.removeItem('pending_workshop_config');
                     window.location.reload();
                 }
             });
@@ -3179,6 +3181,17 @@
                         if (pendingLive) {
                             var liveContentStr = "var LIVE_CONFIG = " + JSON.stringify(JSON.parse(pendingLive), null, 4) + ";\n";
                             filesToCommit.push({ path: 'live_config.js', content: liveContentStr, encoding: 'utf-8' });
+                            filesToCommit.push({ path: 'invest_biz/live_config.js', content: liveContentStr, encoding: 'utf-8' });
+                        }
+                        var pendingVsl = localStorage.getItem('pending_vsl_config');
+                        if (pendingVsl) {
+                            var vslContentStr = "var VSL_CONFIG = " + JSON.stringify(JSON.parse(pendingVsl), null, 4) + ";\n";
+                            filesToCommit.push({ path: 'vsl/lp.intrinsicvalueequity.in/vsl/vsl_config.js', content: vslContentStr, encoding: 'utf-8' });
+                        }
+                        var pendingWorkshop = localStorage.getItem('pending_workshop_config');
+                        if (pendingWorkshop) {
+                            var workshopContentStr = "var WORKSHOP_CONFIG = " + JSON.stringify(JSON.parse(pendingWorkshop), null, 4) + ";\n";
+                            filesToCommit.push({ path: 'workshop/workshop_config.js', content: workshopContentStr, encoding: 'utf-8' });
                         }
 
                         // Append pending binary file uploads!
@@ -3343,6 +3356,8 @@
                                 localStorage.removeItem('pending_pricing_config');
                                 localStorage.removeItem('pending_blogs_config');
                                 localStorage.removeItem('pending_live_config');
+                                localStorage.removeItem('pending_vsl_config');
+                                localStorage.removeItem('pending_workshop_config');
                                 localStorage.removeItem('pending_file_uploads');
                                 pendingUploads = [];
 

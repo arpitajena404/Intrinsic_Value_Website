@@ -803,8 +803,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
 
             <div style="display: flex; gap: 10px;">
-                <button class="cms-action-btn secondary" id="saveCmsBtn"><i class="fa-solid fa-save"></i> Save</button>
-                <button class="cms-action-btn" id="gitPushBtn" onclick="openGitModal()"><i class="fa-brands fa-github"></i> Publish to GitHub</button>
+                <button class="cms-action-btn" id="saveCmsBtn"><i class="fa-solid fa-save"></i> Save Changes</button>
             </div>
         </section>
 
@@ -870,39 +869,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
     </div>
 
-    <!-- ================== GITHUB DEPLOYMENT MODAL ================== -->
-    <div class="modal-overlay" id="gitModalOverlay">
-        <div class="modal-card" style="border-color: rgba(46, 107, 230, 0.45);">
-            <header class="modal-header" style="border-bottom-color: rgba(46, 107, 230, 0.15);">
-                <h4 style="color: var(--accent); display: flex; align-items: center; gap: 8px;"><i class="fa-brands fa-github"></i> Publish to GitHub</h4>
-                <button class="modal-close-btn" onclick="closeGitModal()"><i class="fa-solid fa-xmark"></i></button>
-            </header>
-            <div class="modal-body" style="padding-top: 15px;">
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.45;">Commit and publish your VSL changes directly to the repository.</p>
-                
-                <div id="gitConfigCheck" style="display: none; background: rgba(217, 83, 79, 0.1); border: 1px solid rgba(217, 83, 79, 0.3); padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 13px; color: #d9534f; text-align: left; line-height: 1.45;">
-                    <i class="fa-solid fa-triangle-exclamation"></i> GitHub Credentials not found! Please configure your PAT and Repository on the main Admin Panel first.
-                </div>
 
-                <div id="gitConfigFields">
-                    <div style="margin-bottom: 12px;">
-                        <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--gold-bright); margin-bottom: 6px;">Target Repository</label>
-                        <input class="modal-input" type="text" id="gitRepoDisplay" disabled style="background: rgba(255,255,255,0.02); color: #aaa; border-color: rgba(255,255,255,0.06);" />
-                    </div>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--gold-bright); margin-bottom: 6px;">Commit Message</label>
-                        <input class="modal-input" type="text" id="gitCommitMsgInput" placeholder="e.g. Update VSL video link" />
-                    </div>
-                </div>
-
-                <div id="gitStatusMsg" style="margin-bottom: 15px; display: none; font-size: 12px; font-family: monospace; text-align: left; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px; max-height: 100px; overflow-y: auto; white-space: pre-wrap;"></div>
-            </div>
-            <footer class="modal-footer">
-                <button class="modal-btn cancel" onclick="closeGitModal()">Cancel</button>
-                <button class="modal-btn confirm" id="gitSubmitPushBtn" onclick="submitGitPush()" style="background: var(--accent); color: #fff;">Publish Changes</button>
-            </footer>
-        </div>
-    </div>
 
     <!-- ===== 4. CMS TOAST CONTAINER ===== -->
     <div class="cms-toast" id="cmsToast">
@@ -1186,8 +1153,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             }
         }
 
-        // 6. Save & Download configuration
+        // 6. Save configuration to Cache
         document.getElementById('saveCmsBtn').addEventListener('click', function() {
+            // Save to browser localStorage cache
+            localStorage.setItem('pending_vsl_config', JSON.stringify(liveCmsState));
+
             if (window.location.protocol.indexOf('http') !== -1) {
                 fetch('/api/save-config', {
                     method: 'POST',
@@ -1200,211 +1170,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 .then(function(res) { return res.json(); })
                 .then(function(result) {
                     if (result && result.success) {
-                        showToast("Saved directly to disk (vsl_config.js updated successfully)!");
+                        showToast("Saved to local cache and direct disk file successfully!");
                     } else {
-                        triggerDownload();
+                        showToast("Saved to local cache! Go to the main Admin Panel to publish edits.");
                     }
                 })
                 .catch(function(err) {
-                    console.warn("Direct save failed, falling back to download:", err);
-                    triggerDownload();
+                    console.warn("Direct save failed, falling back to cache notice:", err);
+                    showToast("Saved to local cache! Go to the main Admin Panel to publish edits.");
                 });
             } else {
-                triggerDownload();
-            }
-
-            function triggerDownload() {
-                var jsContent = "var VSL_CONFIG = " + JSON.stringify(liveCmsState, null, 4) + ";\n";
-                var blob = new Blob([jsContent], { type: "application/javascript" });
-                var url = URL.createObjectURL(blob);
-                var a = document.createElement('a');
-                a.href = url;
-                a.download = "vsl_config.js";
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                showToast("vsl_config.js downloaded! Put it in the /vsl directory to make it live.");
+                showToast("Saved to local cache! Go to the main Admin Panel to publish edits.");
             }
         });
-
-        // GitHub Integration Scripts
-        window.openGitModal = function() {
-            var overlay = document.getElementById('gitModalOverlay');
-            var pat = localStorage.getItem('git_pat');
-            var repo = localStorage.getItem('git_repo');
-            var checkDiv = document.getElementById('gitConfigCheck');
-            var fieldsDiv = document.getElementById('gitConfigFields');
-            var submitBtn = document.getElementById('gitSubmitPushBtn');
-            var statusDiv = document.getElementById('gitStatusMsg');
-
-            if (statusDiv) {
-                statusDiv.style.display = 'none';
-                statusDiv.innerText = '';
-            }
-
-            if (!pat || !repo) {
-                if (checkDiv) checkDiv.style.display = 'block';
-                if (fieldsDiv) fieldsDiv.style.display = 'none';
-                if (submitBtn) submitBtn.disabled = true;
-            } else {
-                if (checkDiv) checkDiv.style.display = 'none';
-                if (fieldsDiv) fieldsDiv.style.display = 'block';
-                if (submitBtn) submitBtn.disabled = false;
-                document.getElementById('gitRepoDisplay').value = repo;
-                document.getElementById('gitCommitMsgInput').value = 'CMS Update: ' + new Date().toLocaleString();
-            }
-
-            overlay.classList.add('open');
-        };
-
-        window.closeGitModal = function() {
-            document.getElementById('gitModalOverlay').classList.remove('open');
-        };
-
-        window.submitGitPush = function() {
-            var pat = localStorage.getItem('git_pat');
-            var repo = localStorage.getItem('git_repo');
-            var commitMessage = document.getElementById('gitCommitMsgInput').value.trim();
-            var submitBtn = document.getElementById('gitSubmitPushBtn');
-            var statusDiv = document.getElementById('gitStatusMsg');
-
-            if (!pat || !repo) return;
-
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Publishing...';
-            if (statusDiv) {
-                statusDiv.style.display = 'block';
-                statusDiv.style.color = '#B98A1E';
-                statusDiv.innerText = 'Connecting to GitHub...';
-            }
-
-            var liveContentStr = "var VSL_CONFIG = " + JSON.stringify(liveCmsState, null, 4) + ";\n";
-            var filesToCommit = [
-                { path: 'vsl/lp.intrinsicvalueequity.in/vsl/vsl_config.js', content: liveContentStr }
-            ];
-
-            var headers = {
-                'Authorization': 'token ' + pat,
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
-            };
-
-            var lastCommitSha, baseTreeSha, newTreeSha, newCommitSha;
-
-            fetch('https://api.github.com/repos/' + repo + '/git/ref/heads/main', { headers: headers })
-                .then(function(res) {
-                    if (!res.ok) throw new Error('Failed to fetch branch reference (HTTP ' + res.status + ')');
-                    return res.json();
-                })
-                .then(function(data) {
-                    lastCommitSha = data.object.sha;
-                    if (statusDiv) statusDiv.innerText = 'Fetching commit tree...';
-                    return fetch('https://api.github.com/repos/' + repo + '/git/commits/' + lastCommitSha, { headers: headers });
-                })
-                .then(function(res) {
-                    if (!res.ok) throw new Error('Failed to fetch commit tree (HTTP ' + res.status + ')');
-                    return res.json();
-                })
-                .then(function(data) {
-                    baseTreeSha = data.tree.sha;
-                    if (statusDiv) statusDiv.innerText = 'Creating blobs on GitHub...';
-
-                    var blobPromises = filesToCommit.map(function(fileObj) {
-                        var encodedContent = btoa(unescape(encodeURIComponent(fileObj.content)));
-                        return fetch('https://api.github.com/repos/' + repo + '/git/blobs', {
-                            method: 'POST',
-                            headers: headers,
-                            body: JSON.stringify({
-                                content: encodedContent,
-                                encoding: 'base64'
-                            })
-                        })
-                        .then(function(r) {
-                            if (!r.ok) throw new Error('Failed to create blob for ' + fileObj.path);
-                            return r.json();
-                        })
-                        .then(function(blobData) {
-                            return {
-                                path: fileObj.path,
-                                mode: '100644',
-                                type: 'blob',
-                                sha: blobData.sha
-                            };
-                        });
-                    });
-
-                    return Promise.all(blobPromises);
-                })
-                .then(function(treeData) {
-                    if (statusDiv) statusDiv.innerText = 'Creating new tree...';
-                    return fetch('https://api.github.com/repos/' + repo + '/git/trees', {
-                        method: 'POST',
-                        headers: headers,
-                        body: JSON.stringify({
-                            base_tree: baseTreeSha,
-                            tree: treeData
-                        })
-                    });
-                })
-                .then(function(res) {
-                    if (!res.ok) throw new Error('Failed to create tree');
-                    return res.json();
-                })
-                .then(function(data) {
-                    newTreeSha = data.sha;
-                    if (statusDiv) statusDiv.innerText = 'Creating commit...';
-                    return fetch('https://api.github.com/repos/' + repo + '/git/commits', {
-                        method: 'POST',
-                        headers: headers,
-                        body: JSON.stringify({
-                            message: commitMessage || 'CMS VSL Config Update',
-                            tree: newTreeSha,
-                            parents: [lastCommitSha]
-                        })
-                    });
-                })
-                .then(function(res) {
-                    if (!res.ok) throw new Error('Failed to create commit');
-                    return res.json();
-                })
-                .then(function(data) {
-                    newCommitSha = data.sha;
-                    if (statusDiv) statusDiv.innerText = 'Updating branch reference...';
-                    return fetch('https://api.github.com/repos/' + repo + '/git/refs/heads/main', {
-                        method: 'PATCH',
-                        headers: headers,
-                        body: JSON.stringify({
-                            sha: newCommitSha,
-                            force: false
-                        })
-                    });
-                })
-                .then(function(res) {
-                    if (!res.ok) throw new Error('Failed to update reference');
-                    return res.json();
-                })
-                .then(function() {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = 'Publish Changes';
-                    if (statusDiv) {
-                        statusDiv.style.color = '#1f9d5c';
-                        statusDiv.innerText = 'Successfully published changes to GitHub!';
-                    }
-                    setTimeout(function() {
-                        closeGitModal();
-                        showToast("Published directly to GitHub successfully!");
-                    }, 1000);
-                })
-                .catch(function(err) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = 'Publish Changes';
-                    if (statusDiv) {
-                        statusDiv.style.color = '#d9534f';
-                        statusDiv.innerText = 'Error: ' + err.message;
-                    }
-                });
-        };
 
         // 7. Toast & UI Utilities
         function showToast(msg) {
