@@ -67,6 +67,8 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
                     var_name = "VSL_CONFIG"
                     if "live_config" in file_path:
                         var_name = "LIVE_CONFIG"
+                    elif "workshop" in file_path:
+                        var_name = "WORKSHOP_CONFIG"
                     
                     js_content = f"var {var_name} = {json.dumps(config, indent=4)};\n"
                     
