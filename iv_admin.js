@@ -1064,6 +1064,14 @@
     // Simulated file upload configurations
     var simulatedUploadTargetId = '';
     var simulatedUploadFolder = '';
+    
+    // Load pending file uploads from localStorage
+    var pendingUploads = [];
+    try {
+        pendingUploads = JSON.parse(localStorage.getItem('pending_file_uploads')) || [];
+    } catch(e) {
+        pendingUploads = [];
+    }
 
     window.simulateFileUpload = function(targetInputId, folderName) {
         simulatedUploadTargetId = targetInputId;
@@ -1083,21 +1091,61 @@
             } else {
                 path = file.name;
             }
-            if (simulatedUploadTargetId && simulatedUploadTargetId.indexOf('blog-block-temp-upload-id-') === 0) {
-                var blockIdx = parseInt(simulatedUploadTargetId.replace('blog-block-temp-upload-id-', ''));
-                if (currentEditingBlog && currentEditingBlog.blocks && currentEditingBlog.blocks[blockIdx]) {
-                    currentEditingBlog.blocks[blockIdx].url = path;
-                    renderBlogElements();
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var base64Data = e.target.result.split(',')[1];
+                
+                // Add to pending uploads, overwriting duplicates
+                pendingUploads = pendingUploads.filter(function(up) { return up.path !== path; });
+                pendingUploads.push({
+                    path: path,
+                    content: base64Data,
+                    encoding: 'base64'
+                });
+                localStorage.setItem('pending_file_uploads', JSON.stringify(pendingUploads));
+
+                // If this is local development, write to Python server if active
+                var isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+                if (isLocal) {
+                    var formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('folder', simulatedUploadFolder);
+                    fetch('/api/upload-file', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) { console.log("Local upload success:", data); })
+                    .catch(function(err) { console.warn("Local upload skipped/failed:", err); });
                 }
-                alert("File selected: " + file.name + "\n\nIMPORTANT: Since this is a static site run on a browser environment, you MUST manually copy this file into the local project folder '" + simulatedUploadFolder + "/' so the site can reference it correctly.");
-            } else {
-                var targetInput = document.getElementById(simulatedUploadTargetId);
-                if (targetInput) {
-                    targetInput.value = path;
-                    targetInput.dispatchEvent(new Event('input'));
-                    alert("File selected: " + file.name + "\n\nIMPORTANT: Since this is a static site run on a browser environment, you MUST manually copy this file into the local project folder '" + simulatedUploadFolder + "/' so the site can reference it correctly.");
+
+                // Highlight the push button to indicate unsaved edits
+                var pushBtn = document.getElementById('gitPushBtn');
+                if (pushBtn) {
+                    pushBtn.style.boxShadow = '0 0 12px var(--accent)';
+                    pushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub';
                 }
-            }
+
+                // Populate target inputs
+                if (simulatedUploadTargetId && simulatedUploadTargetId.indexOf('blog-block-temp-upload-id-') === 0) {
+                    var blockIdx = parseInt(simulatedUploadTargetId.replace('blog-block-temp-upload-id-', ''));
+                    if (currentEditingBlog && currentEditingBlog.blocks && currentEditingBlog.blocks[blockIdx]) {
+                        currentEditingBlog.blocks[blockIdx].url = path;
+                        renderBlogElements();
+                        updateLivePreview();
+                    }
+                    showToast("File '" + file.name + "' selected for blog! Ready to publish to GitHub.");
+                } else {
+                    var targetInput = document.getElementById(simulatedUploadTargetId);
+                    if (targetInput) {
+                        targetInput.value = path;
+                        targetInput.dispatchEvent(new Event('input'));
+                        showToast("File '" + file.name + "' selected! Ready to publish to GitHub.");
+                    }
+                }
+            };
+            reader.readAsDataURL(file);
         }
     };
 
@@ -1112,7 +1160,7 @@
                 console.error("Error parsing pending_homepage_config", e);
             }
         } else {
-            fetch('homepage_config.json')
+            fetch('homepage_config.json?t=' + Date.now())
                 .then(function (res) { return res.json(); })
                 .then(function (data) {
                     cmsState = data;
@@ -1134,7 +1182,7 @@
                 console.error("Error parsing pending_pricing_config", e);
             }
         } else {
-            fetch('pricing.json')
+            fetch('pricing.json?t=' + Date.now())
                 .then(function (res) { return res.json(); })
                 .then(function (data) {
                     pricingCmsState = data;
@@ -1159,7 +1207,7 @@
             liveCmsState = Object.assign({}, DEFAULT_LIVE_FALLBACK_CONFIG, LIVE_CONFIG);
             populateLiveForms();
         } else {
-            fetch('invest_biz/live_config.js')
+            fetch('invest_biz/live_config.js?t=' + Date.now())
                 .then(function (res) { return res.text(); })
                 .then(function (text) {
                     var match = text.match(/var\s+LIVE_CONFIG\s*=\s*([\s\S]+?);/);
@@ -2656,7 +2704,20 @@
                         targetContent.classList.add('active');
                     }
 
+                    var iframe = document.getElementById('blogsPreviewIframe');
+                    var sidebar = document.getElementById('blogsEditorSidebar');
+                    var postSaveBtn = document.getElementById('blogPostSaveBtn');
+                    var postCancelBtn = document.getElementById('blogPostCancelBtn');
+                    var standardSaveBtn = document.getElementById('blogsSaveBtn');
+                    var standardCloseBtn = document.getElementById('closeBlogsCmsBtn');
+
                     if (tabId === 'tab-blogs-edit') {
+                        if (sidebar) sidebar.style.display = 'none';
+                        if (postSaveBtn) postSaveBtn.style.display = 'inline-block';
+                        if (postCancelBtn) postCancelBtn.style.display = 'inline-block';
+                        if (standardSaveBtn) standardSaveBtn.style.display = 'none';
+                        if (standardCloseBtn) standardCloseBtn.style.display = 'none';
+
                         if (!currentEditingBlog) {
                             var newId = blogsState.length > 0 ? Math.max.apply(Math, blogsState.map(function(b) { return b.id || 0; })) + 1 : 1001;
                             currentEditingBlog = {
@@ -2676,6 +2737,20 @@
                             currentEditingBlogIndex = -1;
                         }
                         renderBlogEditor();
+                        updateLivePreview();
+                        if (iframe) {
+                            iframe.src = 'blog-detail.html?preview=true';
+                        }
+                    } else {
+                        if (sidebar) sidebar.style.display = 'flex';
+                        if (postSaveBtn) postSaveBtn.style.display = 'none';
+                        if (postCancelBtn) postCancelBtn.style.display = 'none';
+                        if (standardSaveBtn) standardSaveBtn.style.display = 'inline-block';
+                        if (standardCloseBtn) standardCloseBtn.style.display = 'inline-block';
+
+                        if (iframe && iframe.src.indexOf('blogs.html') === -1) {
+                            iframe.src = 'blogs.html?preview=true';
+                        }
                     }
 
                     if (tabId === 'tab-blogs-export') {
@@ -2684,6 +2759,29 @@
                 });
             });
         }
+    }
+
+    function setNestedKey(obj, path, value) {
+        var parts = path.split('.');
+        var current = obj;
+        for (var i = 0; i < parts.length - 1; i++) {
+            if (!current[parts[i]]) {
+                current[parts[i]] = {};
+            }
+            current = current[parts[i]];
+        }
+        current[parts[parts.length - 1]] = value;
+    }
+
+    function getNestedKey(obj, path) {
+        if (!obj) return undefined;
+        var parts = path.split('.');
+        var current = obj;
+        for (var i = 0; i < parts.length; i++) {
+            if (current === null || current === undefined) return undefined;
+            current = current[parts[i]];
+        }
+        return current;
     }
 
     function syncAllToIframe() {
@@ -3047,11 +3145,26 @@
         }
 
         // Highlight push button if there are already pending unsaved edits in localStorage on load
-        if (localStorage.getItem('pending_homepage_config') || localStorage.getItem('pending_pricing_config') || localStorage.getItem('pending_blogs_config') || localStorage.getItem('pending_live_config')) {
+        if (localStorage.getItem('pending_homepage_config') || localStorage.getItem('pending_pricing_config') || localStorage.getItem('pending_blogs_config') || localStorage.getItem('pending_live_config') || localStorage.getItem('pending_vsl_config') || localStorage.getItem('pending_workshop_config')) {
             if (gitPushBtn) {
                 gitPushBtn.style.boxShadow = '0 0 12px var(--accent)';
                 gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub';
             }
+        }
+
+        var clearCacheBtn = document.getElementById('clearCacheBtn');
+        if (clearCacheBtn) {
+            clearCacheBtn.addEventListener('click', function() {
+                if (confirm("Are you sure you want to discard all unsaved edits stored in this browser's cache and reload the latest configuration files from the server? This cannot be undone.")) {
+                    localStorage.removeItem('pending_homepage_config');
+                    localStorage.removeItem('pending_pricing_config');
+                    localStorage.removeItem('pending_blogs_config');
+                    localStorage.removeItem('pending_live_config');
+                    localStorage.removeItem('pending_vsl_config');
+                    localStorage.removeItem('pending_workshop_config');
+                    window.location.reload();
+                }
+            });
         }
 
         if (gitPushBtn) {
@@ -3060,6 +3173,9 @@
                     var commitMessage = gitCommitInput ? gitCommitInput.value.trim() : '';
                     var pat = patInput ? patInput.value.trim() : '';
                     var repo = repoInput ? repoInput.value.trim() : '';
+                    // Clean up repository format (strip full url, hostname, and .git suffix)
+                    repo = repo.replace(/^https?:\/\/github\.com\//i, '');
+                    repo = repo.replace(/\.git$/i, '');
                     var branch = 'main';
 
                     var isLocalhost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
@@ -3079,21 +3195,41 @@
                         
                         var pendingCms = localStorage.getItem('pending_homepage_config');
                         if (pendingCms) {
-                            filesToCommit.push({ path: 'homepage_config.json', content: pendingCms });
+                            filesToCommit.push({ path: 'homepage_config.json', content: pendingCms, encoding: 'utf-8' });
                         }
                         var pendingPricing = localStorage.getItem('pending_pricing_config');
                         if (pendingPricing) {
-                            filesToCommit.push({ path: 'pricing.json', content: pendingPricing });
+                            filesToCommit.push({ path: 'pricing.json', content: pendingPricing, encoding: 'utf-8' });
                         }
                         var pendingBlogs = localStorage.getItem('pending_blogs_config');
                         if (pendingBlogs) {
-                            filesToCommit.push({ path: 'blogs.json', content: pendingBlogs });
+                            filesToCommit.push({ path: 'blogs.json', content: pendingBlogs, encoding: 'utf-8' });
                         }
                         var pendingLive = localStorage.getItem('pending_live_config');
                         if (pendingLive) {
                             var liveContentStr = "var LIVE_CONFIG = " + JSON.stringify(JSON.parse(pendingLive), null, 4) + ";\n";
-                            filesToCommit.push({ path: 'live_config.js', content: liveContentStr });
+                            filesToCommit.push({ path: 'live_config.js', content: liveContentStr, encoding: 'utf-8' });
+                            filesToCommit.push({ path: 'invest_biz/live_config.js', content: liveContentStr, encoding: 'utf-8' });
                         }
+                        var pendingVsl = localStorage.getItem('pending_vsl_config');
+                        if (pendingVsl) {
+                            var vslContentStr = "var VSL_CONFIG = " + JSON.stringify(JSON.parse(pendingVsl), null, 4) + ";\n";
+                            filesToCommit.push({ path: 'vsl/lp.intrinsicvalueequity.in/vsl/vsl_config.js', content: vslContentStr, encoding: 'utf-8' });
+                        }
+                        var pendingWorkshop = localStorage.getItem('pending_workshop_config');
+                        if (pendingWorkshop) {
+                            var workshopContentStr = "var WORKSHOP_CONFIG = " + JSON.stringify(JSON.parse(pendingWorkshop), null, 4) + ";\n";
+                            filesToCommit.push({ path: 'workshop/workshop_config.js', content: workshopContentStr, encoding: 'utf-8' });
+                        }
+
+                        // Append pending binary file uploads!
+                        pendingUploads.forEach(function(up) {
+                            filesToCommit.push({
+                                path: up.path,
+                                content: up.content,
+                                encoding: 'base64'
+                            });
+                        });
                         
                         if (filesToCommit.length === 0) {
                             gitPushBtn.disabled = false;
@@ -3105,98 +3241,172 @@
                             return;
                         }
                         
-                        var currentFileIdx = 0;
-                        
-                        function commitNextFile() {
-                            if (currentFileIdx >= filesToCommit.length) {
-                                // All files committed!
-                                localStorage.removeItem('pending_homepage_config');
-                                localStorage.removeItem('pending_pricing_config');
-                                localStorage.removeItem('pending_blogs_config');
-                                localStorage.removeItem('pending_live_config');
-                                
-                                gitPushBtn.disabled = false;
-                                gitPushBtn.style.boxShadow = 'none';
-                                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
-                                if (gitCommitInput) gitCommitInput.value = '';
-                                
-                                if (gitStatusMsg) {
-                                    gitStatusMsg.style.color = '#34A853';
-                                    gitStatusMsg.innerText = 'Successfully pushed all edits directly to GitHub!\n\nThis will trigger the GitHub Action build workflow to recompile templates and deploy the final pages live.';
+                        if (gitStatusMsg) {
+                            gitStatusMsg.innerText = 'Fetching latest branch head...';
+                        }
+
+                        var headers = {
+                            'Authorization': 'token ' + pat,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        };
+
+                        var lastCommitSha, baseTreeSha, newTreeSha, newCommitSha;
+
+                        // 1. Get branch head
+                        fetch('https://api.github.com/repos/' + repo + '/git/ref/heads/' + branch, { headers: headers })
+                            .then(function(res) {
+                                if (res.status === 404) {
+                                    throw new Error('Branch main not found. Check repository path or token.');
                                 }
-                                return;
-                            }
-                            
-                            var fileObj = filesToCommit[currentFileIdx];
-                            if (gitStatusMsg) {
-                                gitStatusMsg.innerText = 'Processing file ' + (currentFileIdx + 1) + ' of ' + filesToCommit.length + ' (' + fileObj.path + ')...';
-                            }
-                            
-                            // 1. Fetch file SHA
-                            var getUrl = 'https://api.github.com/repos/' + repo + '/contents/' + fileObj.path + '?ref=' + branch;
-                            fetch(getUrl, {
-                                headers: {
-                                    'Authorization': 'token ' + pat,
-                                    'Accept': 'application/vnd.github.v3+json'
+                                if (!res.ok) {
+                                    throw new Error('Failed to fetch branch reference (HTTP ' + res.status + ')');
                                 }
+                                return res.json();
+                            })
+                            .then(function(data) {
+                                lastCommitSha = data.object.sha;
+                                if (gitStatusMsg) gitStatusMsg.innerText = 'Fetching base tree...';
+                                // 2. Get tree of the last commit
+                                return fetch('https://api.github.com/repos/' + repo + '/git/commits/' + lastCommitSha, { headers: headers });
                             })
                             .then(function(res) {
-                                if (res.status === 200) {
-                                    return res.json().then(function(data) { return data.sha; });
-                                } else if (res.status === 404) {
-                                    return null;
-                               } else {
-                                    throw new Error('Failed to fetch file metadata (HTTP ' + res.status + ')');
-                                }
+                                if (!res.ok) throw new Error('Failed to fetch commit tree (HTTP ' + res.status + ')');
+                                return res.json();
                             })
-                            .then(function(sha) {
-                                // 2. Commit file content
-                                var putUrl = 'https://api.github.com/repos/' + repo + '/contents/' + fileObj.path;
-                                var encodedContent = btoa(unescape(encodeURIComponent(fileObj.content)));
-                                
-                                var bodyData = {
-                                    message: commitMessage || ('CMS Update: ' + fileObj.path),
-                                    content: encodedContent,
-                                    branch: branch
-                                };
-                                if (sha) {
-                                    bodyData.sha = sha;
-                                }
-                                
-                                return fetch(putUrl, {
-                                    method: 'PUT',
-                                    headers: {
-                                        'Authorization': 'token ' + pat,
-                                        'Accept': 'application/vnd.github.v3+json',
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify(bodyData)
+                            .then(function(data) {
+                                baseTreeSha = data.tree.sha;
+                                if (gitStatusMsg) gitStatusMsg.innerText = 'Creating blobs on GitHub...';
+
+                                // Upload all files to commit as blobs
+                                var blobPromises = filesToCommit.map(function(fileObj) {
+                                    var encodedContent = fileObj.encoding === 'base64' ? 
+                                        fileObj.content : 
+                                        btoa(unescape(encodeURIComponent(fileObj.content)));
+                                        
+                                    return fetch('https://api.github.com/repos/' + repo + '/git/blobs', {
+                                        method: 'POST',
+                                        headers: headers,
+                                        body: JSON.stringify({
+                                            content: encodedContent,
+                                            encoding: 'base64'
+                                        })
+                                    })
+                                    .then(function(r) {
+                                        if (!r.ok) {
+                                            return r.json().then(function(d) {
+                                                throw new Error('Failed to create blob for ' + fileObj.path + ': ' + (d.message || r.status));
+                                            });
+                                        }
+                                        return r.json();
+                                    })
+                                    .then(function(blobData) {
+                                        return {
+                                            path: fileObj.path,
+                                            mode: '100644',
+                                            type: 'blob',
+                                            sha: blobData.sha
+                                        };
+                                    });
+                                });
+
+                                return Promise.all(blobPromises);
+                            })
+                            .then(function(treeData) {
+                                if (gitStatusMsg) gitStatusMsg.innerText = 'Creating new commit tree...';
+
+                                // 3. Create a new tree
+                                return fetch('https://api.github.com/repos/' + repo + '/git/trees', {
+                                    method: 'POST',
+                                    headers: headers,
+                                    body: JSON.stringify({
+                                        base_tree: baseTreeSha,
+                                        tree: treeData
+                                    })
                                 });
                             })
                             .then(function(res) {
                                 if (!res.ok) {
-                                    return res.json().then(function(data) {
-                                        throw new Error(data.message || 'HTTP error ' + res.status);
+                                    return res.json().then(function(d) {
+                                        throw new Error('Failed to create tree: ' + (d.message || res.status));
                                     });
                                 }
                                 return res.json();
                             })
                             .then(function(data) {
-                                console.log('Committed ' + fileObj.path + ' successfully!');
-                                currentFileIdx++;
-                                commitNextFile();
+                                newTreeSha = data.sha;
+                                if (gitStatusMsg) gitStatusMsg.innerText = 'Creating new commit...';
+
+                                // 4. Create new commit pointing to new tree
+                                return fetch('https://api.github.com/repos/' + repo + '/git/commits', {
+                                    method: 'POST',
+                                    headers: headers,
+                                    body: JSON.stringify({
+                                        message: commitMessage || 'CMS Update',
+                                        tree: newTreeSha,
+                                        parents: [lastCommitSha]
+                                    })
+                                });
+                            })
+                            .then(function(res) {
+                                if (!res.ok) {
+                                    return res.json().then(function(d) {
+                                        throw new Error('Failed to create commit: ' + (d.message || res.status));
+                                    });
+                                }
+                                return res.json();
+                            })
+                            .then(function(data) {
+                                newCommitSha = data.sha;
+                                if (gitStatusMsg) gitStatusMsg.innerText = 'Updating branch reference...';
+
+                                // 5. Update branch ref (heads/main) to point to new commit
+                                return fetch('https://api.github.com/repos/' + repo + '/git/refs/heads/' + branch, {
+                                    method: 'PATCH',
+                                    headers: headers,
+                                    body: JSON.stringify({
+                                        sha: newCommitSha,
+                                        force: false
+                                    })
+                                });
+                            })
+                            .then(function(res) {
+                                if (!res.ok) {
+                                    return res.json().then(function(d) {
+                                        throw new Error('Failed to update branch reference: ' + (d.message || res.status));
+                                    });
+                                }
+                                return res.json();
+                            })
+                            .then(function(data) {
+                                // All files committed in ONE single commit!
+                                localStorage.removeItem('pending_homepage_config');
+                                localStorage.removeItem('pending_pricing_config');
+                                localStorage.removeItem('pending_blogs_config');
+                                localStorage.removeItem('pending_live_config');
+                                localStorage.removeItem('pending_vsl_config');
+                                localStorage.removeItem('pending_workshop_config');
+                                localStorage.removeItem('pending_file_uploads');
+                                pendingUploads = [];
+
+                                gitPushBtn.disabled = false;
+                                gitPushBtn.style.boxShadow = 'none';
+                                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                                if (gitCommitInput) gitCommitInput.value = '';
+
+                                if (gitStatusMsg) {
+                                    gitStatusMsg.style.color = '#34A853';
+                                    gitStatusMsg.innerText = 'Successfully pushed all edits in a single commit directly to GitHub!\n\nThis will trigger the GitHub Action build workflow to recompile templates and deploy the final pages live.';
+                                }
                             })
                             .catch(function(err) {
                                 gitPushBtn.disabled = false;
                                 gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
                                 if (gitStatusMsg) {
                                     gitStatusMsg.style.color = '#EA4335';
-                                    gitStatusMsg.innerText = 'Deployment Failed on ' + fileObj.path + ':\n' + err.message;
+                                    gitStatusMsg.innerText = 'Deployment Failed:\n' + err.message;
                                 }
                             });
-                        }
-                        
-                        commitNextFile();
                     } else {
                         // Local fallback using local server.py endpoint
                         if (!isLocalhost) {
@@ -3273,6 +3483,26 @@
     var currentEditingBlog = null;
     var currentEditingBlogIndex = -1;
 
+    window.updateLivePreview = function() {
+        if (!currentEditingBlog) return;
+        
+        currentEditingBlog.title = document.getElementById('blog-edit-title').value.trim();
+        currentEditingBlog.slug = document.getElementById('blog-edit-slug').value.trim();
+        currentEditingBlog.category = document.getElementById('blog-edit-category').value.trim() || "Uncategorized";
+        currentEditingBlog.date = document.getElementById('blog-edit-date').value.trim();
+        currentEditingBlog.image = document.getElementById('blog-edit-image').value.trim() || null;
+        currentEditingBlog.readingTime = document.getElementById('blog-edit-time').value.trim() || "3 min read";
+        currentEditingBlog.gradient = document.getElementById('blog-edit-gradient').value.trim() || "linear-gradient(135deg, #FF8C00, #121212)";
+        currentEditingBlog.excerpt = document.getElementById('blog-edit-excerpt').value.trim();
+        
+        localStorage.setItem('preview_blog_data', JSON.stringify(currentEditingBlog));
+        
+        var iframe = document.getElementById('blogsPreviewIframe');
+        if (iframe && iframe.contentWindow) {
+            iframe.contentWindow.postMessage('update_blog_preview', '*');
+        }
+    };
+
     function loadBlogsCmsData() {
         var pendingBlogs = localStorage.getItem('pending_blogs_config');
         if (pendingBlogs) {
@@ -3283,7 +3513,7 @@
                 console.error("Error parsing pending_blogs_config", e);
             }
         } else {
-            fetch('blogs.json')
+            fetch('blogs.json?t=' + Date.now())
                 .then(function (res) { return res.json(); })
                 .then(function (data) {
                     blogsState = data;
@@ -3369,7 +3599,20 @@
     window.deleteBlog = function (index) {
         if (confirm("Are you sure you want to delete the blog post: \"" + blogsState[index].title + "\"?")) {
             blogsState.splice(index, 1);
+            localStorage.setItem('pending_blogs_config', JSON.stringify(blogsState));
             renderBlogsList();
+            
+            // Highlight the push button to indicate unsaved edits
+            var pushBtn = document.getElementById('gitPushBtn');
+            if (pushBtn) {
+                pushBtn.style.boxShadow = '0 0 12px var(--accent)';
+                pushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub';
+            }
+            
+            var iframe = document.getElementById('blogsPreviewIframe');
+            if (iframe) {
+                iframe.src = 'blogs.html?preview=true';
+            }
         }
     };
 
@@ -3394,17 +3637,46 @@
                     });
                 } else if (tagName === 'p') {
                     var img = node.querySelector('img');
+                    var iframe = node.querySelector('iframe');
+                    var video = node.querySelector('video');
                     if (img) {
                         blocks.push({
                             type: 'photo',
                             url: img.getAttribute('src') || ''
                         });
+                    } else if (iframe) {
+                        blocks.push({
+                            type: 'video',
+                            url: iframe.getAttribute('src') || ''
+                        });
+                    } else if (video) {
+                        var source = video.querySelector('source');
+                        blocks.push({
+                            type: 'video',
+                            url: source ? source.getAttribute('src') : (video.getAttribute('src') || '')
+                        });
                     } else {
                         var inner = node.innerHTML.trim();
                         if (inner) {
+                            var tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = inner;
+                            var links = tempDiv.querySelectorAll('a');
+                            links.forEach(function (a) {
+                                var md = '[' + a.innerText + '](' + a.getAttribute('href') + ')';
+                                a.outerHTML = md;
+                            });
+                            
+                            var cleanedText = tempDiv.innerHTML
+                                .replace(/<br\s*\/?>/gi, '\n')
+                                .replace(/&amp;/g, '&')
+                                .replace(/&lt;/g, '<')
+                                .replace(/&gt;/g, '>')
+                                .replace(/&quot;/g, '"')
+                                .replace(/&#039;/g, "'");
+
                             blocks.push({
                                 type: 'paragraph',
-                                text: inner.replace(/<br\s*\/?>/gi, '\n')
+                                text: cleanedText
                             });
                         }
                     }
@@ -3412,6 +3684,17 @@
                     blocks.push({
                         type: 'photo',
                         url: node.getAttribute('src') || ''
+                    });
+                } else if (tagName === 'iframe') {
+                    blocks.push({
+                        type: 'video',
+                        url: node.getAttribute('src') || ''
+                    });
+                } else if (tagName === 'video') {
+                    var source = node.querySelector('source');
+                    blocks.push({
+                        type: 'video',
+                        url: source ? source.getAttribute('src') : (node.getAttribute('src') || '')
                     });
                 } else {
                     var innerHtml = node.outerHTML.trim();
@@ -3484,6 +3767,9 @@
             } else if (block.type === 'photo') {
                 labelColor = '#3498db';
                 icon = 'fa-image';
+            } else if (block.type === 'video') {
+                labelColor = '#e74c3c';
+                icon = 'fa-video';
             }
             
             var upDisabled = index === 0 ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : '';
@@ -3511,20 +3797,29 @@
             if (block.type === 'heading') {
                 blockHtml += `
                     <div class="iv-cms-group" style="margin-bottom: 0;">
-                        <input type="text" class="iv-cms-input" style="font-size: 16px; font-weight: 700; color: var(--accent);" value="${escapeHtml(block.text || '')}" oninput="updateBlogElement(${index}, this.value)" placeholder="Enter highlighted heading text...">
+                        <input type="text" class="iv-cms-input" style="font-size: 16px; font-weight: 700; color: var(--accent);" value="${escapeHtml(block.text || '')}" oninput="updateBlogElement(${index}, this.value); updateLivePreview();" placeholder="Enter highlighted heading text...">
                     </div>
                 `;
             } else if (block.type === 'paragraph') {
                 blockHtml += `
                     <div class="iv-cms-group" style="margin-bottom: 0;">
-                        <textarea class="iv-cms-textarea" style="min-height: 100px; font-size: 14px; line-height: 1.6;" oninput="updateBlogElement(${index}, this.value)" placeholder="Enter paragraph content...">${escapeHtml(block.text || '')}</textarea>
+                        <textarea class="iv-cms-textarea" style="min-height: 100px; font-size: 14px; line-height: 1.6;" oninput="updateBlogElement(${index}, this.value); updateLivePreview();" placeholder="Enter paragraph content... Markdown link format: [Text](URL) supported">${escapeHtml(block.text || '')}</textarea>
                     </div>
                 `;
             } else if (block.type === 'photo') {
                 blockHtml += `
                     <div class="iv-cms-group" style="margin-bottom: 0;">
                         <div style="display: flex; gap: 8px;">
-                            <input type="text" class="iv-cms-input" style="flex: 1;" value="${escapeHtml(block.url || '')}" oninput="updateBlogElement(${index}, this.value)" placeholder="Enter image URL/path (e.g. images/my-image.jpg)">
+                            <input type="text" class="iv-cms-input" style="flex: 1;" value="${escapeHtml(block.url || '')}" oninput="updateBlogElement(${index}, this.value); updateLivePreview();" placeholder="Enter image URL/path (e.g. images/my-image.jpg)">
+                            <button type="button" class="iv-cms-btn-add" style="width: auto; padding: 0 16px;" onclick="simulateFileUploadForBlock(${index})">Upload</button>
+                        </div>
+                    </div>
+                `;
+            } else if (block.type === 'video') {
+                blockHtml += `
+                    <div class="iv-cms-group" style="margin-bottom: 0;">
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" class="iv-cms-input" style="flex: 1;" value="${escapeHtml(block.url || '')}" oninput="updateBlogElement(${index}, this.value); updateLivePreview();" placeholder="Enter YouTube watch/embed URL or direct MP4 link">
                             <button type="button" class="iv-cms-btn-add" style="width: auto; padding: 0 16px;" onclick="simulateFileUploadForBlock(${index})">Upload</button>
                         </div>
                     </div>
@@ -3538,17 +3833,19 @@
 
     window.addBlogElement = function (type) {
         currentEditingBlog.blocks = currentEditingBlog.blocks || [];
-        if (type === 'photo') {
-            currentEditingBlog.blocks.push({ type: 'photo', url: '' });
+        if (type === 'photo' || type === 'video') {
+            currentEditingBlog.blocks.push({ type: type, url: '' });
         } else {
             currentEditingBlog.blocks.push({ type: type, text: '' });
         }
         renderBlogElements();
+        updateLivePreview();
     };
 
     window.removeBlogElement = function (index) {
         currentEditingBlog.blocks.splice(index, 1);
         renderBlogElements();
+        updateLivePreview();
     };
 
     window.moveBlogElement = function (index, direction) {
@@ -3559,12 +3856,13 @@
             blocks[index] = blocks[targetIndex];
             blocks[targetIndex] = temp;
             renderBlogElements();
+            updateLivePreview();
         }
     };
 
     window.updateBlogElement = function (index, value) {
         var block = currentEditingBlog.blocks[index];
-        if (block.type === 'photo') {
+        if (block.type === 'photo' || block.type === 'video') {
             block.url = value;
         } else {
             block.text = value;
@@ -3609,7 +3907,15 @@
             blogsState[currentEditingBlogIndex] = currentEditingBlog;
         }
 
+        localStorage.setItem('pending_blogs_config', JSON.stringify(blogsState));
         renderBlogsList();
+        
+        // Highlight the push button to indicate unsaved edits
+        var pushBtn = document.getElementById('gitPushBtn');
+        if (pushBtn) {
+            pushBtn.style.boxShadow = '0 0 12px var(--accent)';
+            pushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub';
+        }
         
         var listTabLink = document.getElementById('tab-btn-blogs-list');
         if (listTabLink) listTabLink.click();
@@ -3624,20 +3930,39 @@
 
     function compileBlocksToHtml(blocks) {
         var html = '';
+        if (!blocks) return html;
         blocks.forEach(function (block) {
             if (block.type === 'heading') {
                 html += '<h2 class="blog-highlighted-heading">' + escapeHtml(block.text) + '</h2>\n';
             } else if (block.type === 'paragraph') {
                 var paragraphs = block.text.split('\n\n').filter(function (p) { return p.trim() !== ''; });
                 paragraphs.forEach(function (p) {
-                    var formattedText = p.replace(/\n/g, '<br />');
+                    var formattedText = escapeHtml(p).replace(/\n/g, '<br />');
+                    formattedText = formattedText.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
                     html += '<p>' + formattedText + '</p>\n';
                 });
             } else if (block.type === 'photo') {
                 html += '<p><img loading="lazy" decoding="async" class="aligncenter" src="' + escapeHtml(block.url) + '" alt="" /></p>\n';
+            } else if (block.type === 'video') {
+                var videoUrl = block.url || '';
+                if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                    var embedUrl = getYouTubeEmbedUrl(videoUrl);
+                    html += '<p><iframe loading="lazy" width="100%" height="450" src="' + escapeHtml(embedUrl) + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>\n';
+                } else if (videoUrl) {
+                    html += '<p><video controls style="width: 100%; max-height: 500px;"><source src="' + escapeHtml(videoUrl) + '" type="video/mp4">Your browser does not support the video tag.</video></p>\n';
+                }
             }
         });
         return html;
+    }
+
+    function getYouTubeEmbedUrl(url) {
+        var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        var match = url.match(regExp);
+        if (match && match[2].length == 11) {
+            return "https://www.youtube.com/embed/" + match[2];
+        }
+        return url;
     }
 
     function compileBlogsCmsState() {
@@ -3716,6 +4041,51 @@
         if (downloadBtn) {
             downloadBtn.addEventListener('click', downloadBlogsJsonFile);
         }
+
+        // Device toggle listeners for Blogs Preview
+        var deviceBtns = document.querySelectorAll('.btn-device-toggle-blog');
+        var previewPane = document.querySelector('#blogsCmsWorkspace .iv-cms-preview-pane');
+        deviceBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                deviceBtns.forEach(function (b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                var dev = btn.getAttribute('data-device');
+                if (previewPane) {
+                    previewPane.classList.remove('device-laptop', 'device-phone');
+                    previewPane.classList.add('device-' + dev);
+                }
+            });
+        });
+
+        // Listen for messages from preview iframe (Visual Inline Editor)
+        window.addEventListener('message', function(event) {
+            if (!event.data) return;
+            
+            if (event.data.type === 'trigger_file_upload') {
+                simulateFileUpload(event.data.targetId, 'images');
+            } else if (event.data.type === 'update_blog_state') {
+                currentEditingBlog = event.data.blog;
+                
+                // Sync current state to hidden inputs to keep DOM values matching
+                var tInput = document.getElementById('blog-edit-title');
+                var sInput = document.getElementById('blog-edit-slug');
+                var cInput = document.getElementById('blog-edit-category');
+                var dInput = document.getElementById('blog-edit-date');
+                var iInput = document.getElementById('blog-edit-image');
+                var rInput = document.getElementById('blog-edit-time');
+                var gInput = document.getElementById('blog-edit-gradient');
+                var eInput = document.getElementById('blog-edit-excerpt');
+
+                if (tInput) tInput.value = currentEditingBlog.title || "";
+                if (sInput) sInput.value = currentEditingBlog.slug || "";
+                if (cInput) cInput.value = currentEditingBlog.category || "";
+                if (dInput) dInput.value = currentEditingBlog.date || "";
+                if (iInput) iInput.value = currentEditingBlog.image || "";
+                if (rInput) rInput.value = currentEditingBlog.readingTime || "";
+                if (gInput) gInput.value = currentEditingBlog.gradient || "";
+                if (eInput) eInput.value = currentEditingBlog.excerpt || "";
+            }
+        });
     }
 
     // Initialize on DOM load

@@ -805,7 +805,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
             </div>
 
-            <button class="cms-action-btn" id="saveCmsBtn"><i class="fa-solid fa-circle-down"></i> Save & Download Config</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="cms-action-btn" id="saveCmsBtn"><i class="fa-solid fa-save"></i> Save Changes</button>
+            </div>
         </section>
 
         <!-- Main Editor workspace -->
@@ -830,6 +832,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <div class="input-control-wrapper">
                         <input type="text" id="inputDateText" placeholder="e.g. 5th April, Sunday | 11:00 AM">
                         <button class="edit-btn" onclick="openEditModal('workshopDateText', 'Date/Time Header Text', liveCmsState.workshopDateText)"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </div>
+                </div>
+
+                <!-- Years of Experience Text -->
+                <div class="input-group">
+                    <label for="inputExperience">Years of Experience Text</label>
+                    <div class="input-control-wrapper">
+                        <input type="text" id="inputExperience" placeholder="e.g. 11+ years of experience">
+                        <button class="edit-btn" onclick="openEditModal('experienceText', 'Years of Experience Text', liveCmsState.experienceText)"><i class="fa-solid fa-pen-to-square"></i></button>
                     </div>
                 </div>
 
@@ -974,6 +985,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </footer>
         </div>
     </div>
+
+
 
     <!-- ===== 4. CMS TOAST CONTAINER ===== -->
     <div class="cms-toast" id="cmsToast">
@@ -1151,6 +1164,46 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             return day + suffix + ' ' + month + ', ' + weekday + '  | ' + hours + ':' + minStr + ' ' + ampm;
         }
 
+        // Helper to parse human-readable workshop date string
+        function parseWorkshopDate(text) {
+            if (!text) return null;
+            text = text.trim().replace(/\s+/g, ' ');
+            var regex = /(\d+)(?:st|nd|rd|th)?\s+([A-Za-z]+)(?:,\s*[A-Za-z]+)?\s*(?:\||at)?\s*(\d{1,2}):(\d{2})\s*(AM|PM|am|pm)/i;
+            var match = text.match(regex);
+            if (!match) {
+                var parsed = new Date(text);
+                return isNaN(parsed.getTime()) ? null : parsed;
+            }
+            
+            var day = parseInt(match[1], 10);
+            var monthName = match[2].toLowerCase();
+            var hours = parseInt(match[3], 10);
+            var minutes = parseInt(match[4], 10);
+            var ampm = match[5].toLowerCase();
+            
+            var months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+            var monthIndex = -1;
+            for (var i = 0; i < months.length; i++) {
+                if (monthName.indexOf(months[i].substring(0, 3)) === 0) {
+                    monthIndex = i;
+                    break;
+                }
+            }
+            if (monthIndex === -1) return null;
+            
+            if (ampm === 'pm' && hours < 12) hours += 12;
+            if (ampm === 'am' && hours === 12) hours = 0;
+            
+            var now = new Date();
+            var year = now.getFullYear();
+            var targetDate = new Date(year, monthIndex, day, hours, minutes, 0);
+            
+            if (targetDate.getTime() < now.getTime() - (30 * 24 * 60 * 60 * 1000)) {
+                targetDate.setFullYear(year + 1);
+            }
+            return targetDate;
+        }
+
         // 2. Load config
         function loadConfigData() {
             if (typeof WORKSHOP_CONFIG !== 'undefined') {
@@ -1162,6 +1215,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         function syncInputsFromState() {
             document.getElementById('inputDateText').value = liveCmsState.workshopDateText || '';
+            document.getElementById('inputExperience').value = liveCmsState.experienceText || '';
             document.getElementById('inputCapacity').value = liveCmsState.workshopCapacity || '';
             document.getElementById('inputSeats').value = liveCmsState.seatsLeft || '';
             document.getElementById('inputCheckoutUrl').value = liveCmsState.checkoutUrl || '';
@@ -1246,8 +1300,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         // 4. Input field listeners
         document.getElementById('inputDateText').addEventListener('input', function() {
-            liveCmsState.workshopDateText = this.value;
-            propagateChange('workshopDateText', liveCmsState.workshopDateText);
+            var newVal = this.value;
+            liveCmsState.workshopDateText = newVal;
+            propagateChange('workshopDateText', newVal);
+
+            var parsedDate = parseWorkshopDate(newVal);
+            if (parsedDate) {
+                var yyyy = parsedDate.getFullYear();
+                var mm = String(parsedDate.getMonth() + 1).padStart(2, '0');
+                var dd = String(parsedDate.getDate()).padStart(2, '0');
+                var hh = String(parsedDate.getHours()).padStart(2, '0');
+                var min = String(parsedDate.getMinutes()).padStart(2, '0');
+                var ss = "00";
+                var isoStr = yyyy + "-" + mm + "-" + dd + "T" + hh + ":" + min + ":" + ss;
+                
+                liveCmsState.countdownTarget = isoStr;
+                propagateChange('countdownTarget', isoStr);
+                
+                var datePart = yyyy + "-" + mm + "-" + dd + "T" + hh + ":" + min;
+                document.getElementById('inputCountdown').value = datePart;
+            }
+        });
+
+        document.getElementById('inputExperience').addEventListener('input', function() {
+            liveCmsState.experienceText = this.value;
+            propagateChange('experienceText', liveCmsState.experienceText);
         });
 
         document.getElementById('inputCapacity').addEventListener('input', function() {
@@ -1383,59 +1460,57 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     liveCmsState.workshopDateText = formattedDateText;
                     document.getElementById('inputDateText').value = formattedDateText;
                     propagateChange('workshopDateText', formattedDateText);
+                } else if (currentEditingKey === 'workshopDateText' && newVal) {
+                    var parsedDate = parseWorkshopDate(newVal);
+                    if (parsedDate) {
+                        var yyyy = parsedDate.getFullYear();
+                        var mm = String(parsedDate.getMonth() + 1).padStart(2, '0');
+                        var dd = String(parsedDate.getDate()).padStart(2, '0');
+                        var hh = String(parsedDate.getHours()).padStart(2, '0');
+                        var min = String(parsedDate.getMinutes()).padStart(2, '0');
+                        var ss = "00";
+                        var isoStr = yyyy + "-" + mm + "-" + dd + "T" + hh + ":" + min + ":" + ss;
+                        
+                        liveCmsState.countdownTarget = isoStr;
+                        propagateChange('countdownTarget', isoStr);
+                    }
                 }
                 liveCmsState[currentEditingKey] = newVal;
                 syncInputsFromState();
-                showToast("Updated in preview. Click 'Save & Download Config' to export!");
+                showToast("Updated in preview. Click 'Save' or 'Publish to GitHub' to apply!");
                 closeEditModal();
                 propagateChange(currentEditingKey, newVal);
             }
         }
 
-        // 6. Save & Download config
+        // 6. Save configuration to Cache
         document.getElementById('saveCmsBtn').addEventListener('click', function() {
-            // First, try to save directly to disk if running on a local HTTP server
+            // Save to browser localStorage cache
+            localStorage.setItem('pending_workshop_config', JSON.stringify(liveCmsState));
+
             if (window.location.protocol.indexOf('http') !== -1) {
                 fetch('/api/save-config', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         config: liveCmsState,
                         filePath: 'workshop/workshop_config.js'
                     })
                 })
-                .then(function(res) {
-                    return res.json();
-                })
+                .then(function(res) { return res.json(); })
                 .then(function(result) {
                     if (result && result.success) {
-                        showToast("Saved directly to disk (workshop_config.js updated successfully)!");
+                        showToast("Saved to local cache and direct disk file successfully!");
                     } else {
-                        triggerDownload();
+                        showToast("Saved to local cache! Go to the main Admin Panel to publish edits.");
                     }
                 })
                 .catch(function(err) {
-                    console.warn("Direct save failed, falling back to download:", err);
-                    triggerDownload();
+                    console.warn("Direct save failed, falling back to cache notice:", err);
+                    showToast("Saved to local cache! Go to the main Admin Panel to publish edits.");
                 });
             } else {
-                triggerDownload();
-            }
-
-            function triggerDownload() {
-                var jsContent = "var WORKSHOP_CONFIG = " + JSON.stringify(liveCmsState, null, 4) + ";\n";
-                var blob = new Blob([jsContent], { type: "application/javascript" });
-                var url = URL.createObjectURL(blob);
-                var a = document.createElement('a');
-                a.href = url;
-                a.download = "workshop_config.js";
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                showToast("workshop_config.js downloaded! Put it in the /workshop directory to make it live.");
+                showToast("Saved to local cache! Go to the main Admin Panel to publish edits.");
             }
         });
 

@@ -29,63 +29,63 @@
     },
     {
       "src": "/dashboard",
-      "dest": "frontend/pages/dashboard.html"
+      "dest": "frontend/pages/dashboard"
     },
     {
       "src": "/ranking-tool",
-      "dest": "frontend/pages/ranking-tool.html"
+      "dest": "frontend/pages/ranking-tool"
     },
     {
       "src": "/monthly-market-analysis",
-      "dest": "frontend/pages/monthly-market-analysis.html"
+      "dest": "frontend/pages/monthly-market-analysis"
     },
     {
       "src": "/market-valuation-index",
-      "dest": "frontend/pages/market-valuation-index.html"
+      "dest": "frontend/pages/market-valuation-index"
     },
     {
       "src": "/headwind-tailwind-indicator",
-      "dest": "frontend/pages/headwind-tailwind-indicator.html"
+      "dest": "frontend/pages/headwind-tailwind-indicator"
     },
     {
       "src": "/portfolio-review-tool",
-      "dest": "frontend/pages/portfolio-review-tool.html"
+      "dest": "frontend/pages/portfolio-review-tool"
     },
     {
       "src": "/intrinsic-theme",
-      "dest": "frontend/pages/intrinsic-theme.html"
+      "dest": "frontend/pages/intrinsic-theme"
     },
     {
       "src": "/sip",
-      "dest": "frontend/pages/sip.html"
+      "dest": "frontend/pages/sip"
     },
     {
       "src": "/swp",
-      "dest": "frontend/pages/swp.html"
+      "dest": "frontend/pages/swp"
     },
     {
       "src": "/lumpsum",
-      "dest": "frontend/pages/lumpsum.html"
+      "dest": "frontend/pages/lumpsum"
     },
     {
       "src": "/xirr",
-      "dest": "frontend/pages/xirr.html"
+      "dest": "frontend/pages/xirr"
     },
     {
       "src": "/gawp",
-      "dest": "frontend/pages/gawp.html"
+      "dest": "frontend/pages/gawp"
     },
     {
       "src": "/tools",
-      "dest": "frontend/pages/tools.html"
+      "dest": "frontend/pages/tools"
     },
     {
       "src": "/admin",
-      "dest": "frontend/pages/admin.html"
+      "dest": "frontend/pages/admin"
     },
     {
       "src": "/",
-      "dest": "frontend/pages/dashboard.html"
+      "dest": "frontend/pages/dashboard"
     }
   ]
 }

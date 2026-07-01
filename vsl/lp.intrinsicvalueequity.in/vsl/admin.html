@@ -802,7 +802,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
             </div>
 
-            <button class="cms-action-btn" id="saveCmsBtn"><i class="fa-solid fa-circle-down"></i> Save & Download Config</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="cms-action-btn" id="saveCmsBtn"><i class="fa-solid fa-save"></i> Save Changes</button>
+            </div>
         </section>
 
         <!-- Main Editor workspace -->
@@ -866,6 +868,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </footer>
         </div>
     </div>
+
+
 
     <!-- ===== 4. CMS TOAST CONTAINER ===== -->
     <div class="cms-toast" id="cmsToast">
@@ -1149,50 +1153,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             }
         }
 
-        // 6. Save & Download configuration
+        // 6. Save configuration to Cache
         document.getElementById('saveCmsBtn').addEventListener('click', function() {
-            // First, try to save directly to disk if running on a local HTTP server
+            // Save to browser localStorage cache
+            localStorage.setItem('pending_vsl_config', JSON.stringify(liveCmsState));
+
             if (window.location.protocol.indexOf('http') !== -1) {
                 fetch('/api/save-config', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         config: liveCmsState,
                         filePath: 'vsl/lp.intrinsicvalueequity.in/vsl/vsl_config.js'
                     })
                 })
-                .then(function(res) {
-                    return res.json();
-                })
+                .then(function(res) { return res.json(); })
                 .then(function(result) {
                     if (result && result.success) {
-                        showToast("Saved directly to disk (vsl_config.js updated successfully)!");
+                        showToast("Saved to local cache and direct disk file successfully!");
                     } else {
-                        triggerDownload();
+                        showToast("Saved to local cache! Go to the main Admin Panel to publish edits.");
                     }
                 })
                 .catch(function(err) {
-                    console.warn("Direct save failed, falling back to download:", err);
-                    triggerDownload();
+                    console.warn("Direct save failed, falling back to cache notice:", err);
+                    showToast("Saved to local cache! Go to the main Admin Panel to publish edits.");
                 });
             } else {
-                triggerDownload();
-            }
-
-            function triggerDownload() {
-                var jsContent = "var VSL_CONFIG = " + JSON.stringify(liveCmsState, null, 4) + ";\n";
-                var blob = new Blob([jsContent], { type: "application/javascript" });
-                var url = URL.createObjectURL(blob);
-                var a = document.createElement('a');
-                a.href = url;
-                a.download = "vsl_config.js";
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                showToast("vsl_config.js downloaded! Put it in the /vsl directory to make it live.");
+                showToast("Saved to local cache! Go to the main Admin Panel to publish edits.");
             }
         });
 

@@ -140,15 +140,8 @@
       var query2 = parts2[1] ? '?' + parts2[1] : '';
       if (base2 === '/') base2 = '/dashboard';
 
-      if (basePath === '') {
-        // Vercel (or any root-level deployment) — use clean URLs handled by vercel.json
-        return base2 + query2;
-      } else {
-        // Subfolder deployment (Hostinger, local HTTP server) — link directly to HTML files
-        // so no .htaccess rewriting is needed
-        var pageName2 = base2.startsWith('/') ? base2.substring(1) : base2;
-        return basePath + '/frontend/pages/' + pageName2 + '.html' + query2;
-      }
+      // Always use clean URLs for HTTP/HTTPS deployments
+      return basePath + base2 + query2;
     }
   }
 

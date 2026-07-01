@@ -14,6 +14,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blogs | Intrinsic Value Equity Advisors</title>
     <meta name="description" content="Read our latest insights, newsletters, and equity research articles on value investing and market cycles.">
+    <link rel="canonical" href="https://intrinsicvalueequity.in/blogs" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://intrinsicvalueequity.in/blogs" />
+    <meta property="og:title" content="Blogs | Intrinsic Value Equity Advisors" />
+    <meta property="og:description" content="Read our latest insights, newsletters, and equity research articles on value investing and market cycles." />
+    <meta property="og:image" content="https://intrinsicvalueequity.in/logo.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://intrinsicvalueequity.in/blogs" />
+    <meta name="twitter:title" content="Blogs | Intrinsic Value Equity Advisors" />
+    <meta name="twitter:description" content="Read our latest insights, newsletters, and equity research articles on value investing and market cycles." />
+    <meta name="twitter:image" content="https://intrinsicvalueequity.in/logo.png" />
     <!-- Link Stylesheet -->
     <link rel="stylesheet" href="style.css?v=6">
 </head>
@@ -50,7 +65,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <li><a href="pricing.html" class="nav-link">Service</a></li>
                     <li><a href="about.html" class="nav-link">About Us</a></li>
                     <li><a href="blogs.html" class="nav-link">Blogs</a></li>
-                    <li><a href="analytics/index.html" class="nav-link">Analytics</a></li>
+                    <li><a href="analytics/dashboard" class="nav-link">Analytics</a></li>
 <!-- CMS_NAV_END -->
                     <li><a href="https://premium.intrinsicvalueequity.in/eud/courses" class="nav-link" target="_blank" rel="noopener noreferrer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Client Login</a></li>
                     <li class="nav-actions-mobile">
@@ -254,48 +269,66 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.addEventListener("DOMContentLoaded", function() {
         const blogGrid = document.getElementById('blog-grid');
         const blogFilters = document.getElementById('blog-filters');
-        let allBlogs = [];
+        const urlParams = new URLSearchParams(window.location.search);
+        const isPreview = urlParams.get('preview') === 'true';
 
-        // Fetch blogs.json
-        fetch('blogs.json')
-            .then(response => response.json())
-            .then(data => {
-                allBlogs = data;
-                
-                // Extract unique categories (ignoring "Uncategorized" if multiple exist, otherwise listing them)
-                const categories = new Set();
-                allBlogs.forEach(blog => {
-                    if (blog.category) {
-                        categories.add(blog.category);
-                    }
+        // Fetch blogs.json or read from localStorage pending config
+        if (isPreview && localStorage.getItem('pending_blogs_config')) {
+            try {
+                allBlogs = JSON.parse(localStorage.getItem('pending_blogs_config'));
+                initBlogsFiltersAndRender();
+            } catch(e) {
+                console.error('Error parsing pending_blogs_config for preview', e);
+                fetchBlogsJson();
+            }
+        } else {
+            fetchBlogsJson();
+        }
+
+        function fetchBlogsJson() {
+            fetch('blogs.json?t=' + Date.now())
+                .then(response => response.json())
+                .then(data => {
+                    allBlogs = data;
+                    initBlogsFiltersAndRender();
+                })
+                .catch(err => {
+                    console.error('Error loading blogs:', err);
+                    blogGrid.innerHTML = '<p class="error-msg" style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 4rem 0;">Error loading blogs. Please try again later.</p>';
                 });
+        }
 
-                // Build filters dynamically
-                let filtersHtml = '<button class="filter-btn active" data-category="all">All</button>';
-                categories.forEach(cat => {
-                    filtersHtml += `<button class="filter-btn" data-category="${cat}">${cat}</button>`;
-                });
-                blogFilters.innerHTML = filtersHtml;
-
-                // Render all blogs initially
-                renderBlogs('all');
-
-                // Add filter click event listeners
-                blogFilters.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('filter-btn')) {
-                        const buttons = blogFilters.querySelectorAll('.filter-btn');
-                        buttons.forEach(btn => btn.classList.remove('active'));
-                        e.target.classList.add('active');
-                        
-                        const category = e.target.getAttribute('data-category');
-                        renderBlogs(category);
-                    }
-                });
-            })
-            .catch(err => {
-                console.error('Error loading blogs:', err);
-                blogGrid.innerHTML = '<p class="error-msg" style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 4rem 0;">Error loading blogs. Please try again later.</p>';
+        function initBlogsFiltersAndRender() {
+            // Extract unique categories
+            const categories = new Set();
+            allBlogs.forEach(blog => {
+                if (blog.category) {
+                    categories.add(blog.category);
+                }
             });
+
+            // Build filters dynamically
+            let filtersHtml = '<button class="filter-btn active" data-category="all">All</button>';
+            categories.forEach(cat => {
+                filtersHtml += `<button class="filter-btn" data-category="${cat}">${cat}</button>`;
+            });
+            blogFilters.innerHTML = filtersHtml;
+
+            // Render all blogs initially
+            renderBlogs('all');
+
+            // Add filter click event listeners
+            blogFilters.addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-btn')) {
+                    const buttons = blogFilters.querySelectorAll('.filter-btn');
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    const category = e.target.getAttribute('data-category');
+                    renderBlogs(category);
+                }
+            });
+        }
 
         function renderBlogs(filterCategory) {
             let filtered = allBlogs;
@@ -307,6 +340,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 blogGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 4rem 0;">No blogs found in this category.</p>';
                 return;
             }
+
+            const previewQuery = isPreview ? '&preview=true' : '';
 
             blogGrid.innerHTML = filtered.map(blog => {
                 const thumbHtml = blog.image 
@@ -324,12 +359,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <time datetime="${blog.rawDate || ''}">${blog.date}</time>
                             </div>
                             <h2 class="blog-card-title">
-                                <a href="blog-detail.html?post=${encodeURIComponent(blog.slug)}">${blog.title}</a>
+                                <a href="blog-detail.html?post=${encodeURIComponent(blog.slug)}${previewQuery}">${blog.title}</a>
                             </h2>
                             <p class="blog-card-excerpt">
                                 ${blog.excerpt}
                             </p>
-                            <a href="blog-detail.html?post=${encodeURIComponent(blog.slug)}" class="blog-card-link">
+                            <a href="blog-detail.html?post=${encodeURIComponent(blog.slug)}${previewQuery}" class="blog-card-link">
                                 Read More
                                 <span>&rarr;</span>
                             </a>

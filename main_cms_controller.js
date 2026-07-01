@@ -590,7 +590,8 @@
         var isPricingField = (pageName === 'pricing.html') || 
                              (fieldPath.indexOf('pricing_') === 0) || 
                              (fieldPath.indexOf('comparison_') === 0) || 
-                             (fieldPath.indexOf('cards') === 0);
+                             (fieldPath.indexOf('cards') === 0) ||
+                             (fieldPath.indexOf('table_plans') === 0);
 
         var configObj = isPricingField ? pricingConfig : homepageConfig;
         var currentValue = getNestedKey(configObj, fieldPath);
@@ -601,6 +602,7 @@
         // Create popover elements
         var popover = document.createElement('div');
         popover.className = 'cms-inline-popover';
+        activePopover = popover;
 
         var header = document.createElement('div');
         header.className = 'cms-popover-header';

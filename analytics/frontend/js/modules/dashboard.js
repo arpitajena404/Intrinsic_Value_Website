@@ -7,6 +7,11 @@
         var view = btn.getAttribute("data-quick-view");
         if (!view) return;
 
+        if (view === "tools") {
+          window.location.href = "https://premium.intrinsicvalueequity.in/checkout/98ce69d1-d43b-47b2-a06c-f816b3ee8c91";
+          return;
+        }
+
         var filename = view + ".html";
         if (view === "ranking") {
           filename = "ranking-tool.html";

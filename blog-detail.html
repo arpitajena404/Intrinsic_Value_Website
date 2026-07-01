@@ -15,9 +15,359 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog Post | Intrinsic Value Equity Advisors</title>
     <meta name="description" content="Read our detailed equity research article and investing insights.">
+    <link rel="canonical" href="https://intrinsicvalueequity.in/blog-detail" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://intrinsicvalueequity.in/blog-detail" />
+    <meta property="og:title" content="Blog Post | Intrinsic Value Equity Advisors" />
+    <meta property="og:description" content="Read our detailed equity research article and investing insights." />
+    <meta property="og:image" content="https://intrinsicvalueequity.in/logo.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://intrinsicvalueequity.in/blog-detail" />
+    <meta name="twitter:title" content="Blog Post | Intrinsic Value Equity Advisors" />
+    <meta name="twitter:description" content="Read our detailed equity research article and investing insights." />
+    <meta name="twitter:image" content="https://intrinsicvalueequity.in/logo.png" />
     <!-- Link Stylesheet -->
     <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <style id="blogsInlineEditorStyles">
+        /* Inline Editor Specific Styles */
+        body.preview-edit-mode {
+            padding-top: 0 !important; /* Let top bar sit nicely */
+        }
+        body.preview-edit-mode .main-header {
+            display: none !important; /* Hide original website header in visual preview editor */
+        }
+        body.preview-edit-mode main {
+            padding-top: 0 !important;
+        }
+
+        .blogs-editor-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #141414;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 8px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 9998;
+            height: 48px;
+            box-sizing: border-box;
+        }
+        .topbar-title-badge {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .topbar-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .topbar-btn:hover {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+        }
+
+        /* Inline Text Elements Focus & Hover */
+        body.preview-edit-mode [contenteditable="true"] {
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        body.preview-edit-mode [contenteditable="true"]:hover {
+            outline: 1px dashed rgba(255, 140, 0, 0.4);
+            border-radius: 4px;
+            background: rgba(255, 140, 0, 0.02);
+        }
+        body.preview-edit-mode [contenteditable="true"]:focus {
+            outline: 2px dashed var(--accent);
+            border-radius: 4px;
+            background: rgba(255, 140, 0, 0.06);
+            padding: 2px 4px;
+        }
+
+        /* Post Hero Image Wrapper Hover */
+        body.preview-edit-mode .post-hero-image-wrapper {
+            position: relative;
+        }
+        body.preview-edit-mode .hero-image-edit-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            cursor: pointer;
+            z-index: 5;
+            transition: background 0.3s;
+        }
+        body.preview-edit-mode .post-hero-image-wrapper:hover .hero-image-edit-overlay {
+            display: flex;
+        }
+
+        /* Block Wrapper & Hover Action Toolbars */
+        .preview-block-wrapper {
+            position: relative;
+            padding: 8px 0;
+            margin-bottom: 8px;
+            transition: background 0.2s;
+        }
+        body.preview-edit-mode .preview-block-wrapper:hover {
+            background: rgba(255, 255, 255, 0.01);
+        }
+        .block-actions-toolbar {
+            position: absolute;
+            right: 0;
+            top: -24px;
+            display: none;
+            gap: 4px;
+            background: #1c1c1c;
+            border: 1px solid rgba(255, 140, 0, 0.3);
+            padding: 3px;
+            border-radius: 4px;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        body.preview-edit-mode .preview-block-wrapper:hover .block-actions-toolbar {
+            display: flex;
+        }
+        .toolbar-btn {
+            background: transparent;
+            color: #fff;
+            border: none;
+            padding: 3px 6px;
+            font-size: 11px;
+            cursor: pointer;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .toolbar-btn:hover {
+            background: var(--accent);
+            color: #000;
+        }
+        .toolbar-btn.btn-delete:hover {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        /* Inline Blocks Dotted Adder Line */
+        .inline-block-adder {
+            position: relative;
+            display: none; /* Only show in edit mode */
+            align-items: center;
+            justify-content: center;
+            height: 32px;
+            margin: 8px 0;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            cursor: pointer;
+            z-index: 99;
+        }
+        body.preview-edit-mode .inline-block-adder {
+            display: flex;
+        }
+        .inline-block-adder:hover {
+            opacity: 1;
+        }
+        .inline-block-adder::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 1px;
+            border-top: 1px dashed var(--accent);
+            z-index: 1;
+            opacity: 0.5;
+        }
+        .adder-button {
+            position: relative;
+            z-index: 2;
+            background: #1a1a1a;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 4px 16px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: transform 0.2s, background 0.2s;
+        }
+        .adder-button:hover {
+            transform: scale(1.05);
+            background: var(--accent);
+            color: #000;
+        }
+
+        /* Adder Selection Menu Popover */
+        .adder-menu-popover {
+            position: absolute;
+            background: #1c1c1c;
+            border: 1px solid rgba(255, 140, 0, 0.25);
+            border-radius: 8px;
+            padding: 6px;
+            display: none;
+            z-index: 999;
+            flex-direction: column;
+            width: 170px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            top: 34px;
+        }
+        .adder-menu-item {
+            background: transparent;
+            color: #fff;
+            border: none;
+            text-align: left;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .adder-menu-item:hover {
+            background: var(--accent);
+            color: #000;
+        }
+
+        /* Settings Overlay Modal */
+        .blogs-settings-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 5, 0.9);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            box-sizing: border-box;
+            padding: 20px;
+        }
+        .settings-modal-content {
+            background: #1c1c1c;
+            border: 1px solid rgba(255, 140, 0, 0.2);
+            padding: 30px;
+            border-radius: 12px;
+            width: 500px;
+            max-width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            box-sizing: border-box;
+        }
+        .settings-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 12px;
+        }
+        .settings-modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0;
+        }
+        .settings-close-btn {
+            background: transparent;
+            border: none;
+            color: #888;
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .settings-close-btn:hover {
+            color: #fff;
+        }
+        .settings-group {
+            margin-bottom: 16px;
+        }
+        .settings-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #aaa;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .settings-input, .settings-textarea {
+            width: 100%;
+            background: #111;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .settings-input:focus, .settings-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .settings-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .settings-footer {
+            margin-top: 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        .settings-btn-save {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .settings-btn-save:hover {
+            filter: brightness(1.1);
+        }
+    </style>
 </head>
 
 
@@ -54,7 +404,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <li><a href="pricing.html" class="nav-link">Service</a></li>
                     <li><a href="about.html" class="nav-link">About Us</a></li>
                     <li><a href="blogs.html" class="nav-link">Blogs</a></li>
-                    <li><a href="analytics/index.html" class="nav-link">Analytics</a></li>
+                    <li><a href="analytics/dashboard" class="nav-link">Analytics</a></li>
 <!-- CMS_NAV_END -->
                     <li><a href="https://premium.intrinsicvalueequity.in/eud/courses" class="nav-link" target="_blank"
                             rel="noopener noreferrer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
@@ -305,6 +655,441 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             const imgEl = document.getElementById('dyn-hero-image');
             const contentEl = document.getElementById('dyn-content');
 
+            const isPreview = urlParams.get('preview') === 'true';
+            if (isPreview) {
+                // Add editor class to body
+                document.body.classList.add('preview-edit-mode');
+                
+                // Inject Top bar
+                const topBar = document.createElement('div');
+                topBar.className = 'blogs-editor-topbar';
+                topBar.innerHTML = `
+                    <div class="topbar-title-badge">
+                        <i class="fa-solid fa-pen-nib"></i> Live Visual Editor
+                    </div>
+                    <div class="topbar-actions">
+                        <button class="topbar-btn" id="btn-open-settings" title="Blog Settings">
+                            <i class="fa-solid fa-gear"></i> Settings
+                        </button>
+                    </div>
+                `;
+                document.body.insertBefore(topBar, document.body.firstChild);
+                
+                // Inject Settings modal
+                const modal = document.createElement('div');
+                modal.className = 'blogs-settings-overlay';
+                modal.id = 'blog-settings-modal';
+                modal.innerHTML = `
+                    <div class="settings-modal-content">
+                        <div class="settings-modal-header">
+                            <h3 class="settings-modal-title"><i class="fa-solid fa-gear"></i> Blog Settings</h3>
+                            <button class="settings-close-btn" id="btn-close-settings">&times;</button>
+                        </div>
+                        <div class="settings-group">
+                            <label class="settings-label">URL Slug</label>
+                            <input type="text" id="settings-slug" class="settings-input" placeholder="e.g. 20-stocks-destroyed-investors">
+                        </div>
+                        <div class="settings-group">
+                            <label class="settings-label">Short Excerpt (Grid Description)</label>
+                            <textarea id="settings-excerpt" class="settings-textarea" placeholder="Summarize the post..."></textarea>
+                        </div>
+                        <div class="settings-group">
+                            <label class="settings-label">Background Gradient Fallback</label>
+                            <input type="text" id="settings-gradient" class="settings-input" placeholder="e.g. linear-gradient(...)">
+                        </div>
+                        <div class="settings-footer">
+                            <button class="settings-btn-save" id="btn-save-settings">Apply Settings</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                let currentPost = null;
+                
+                function updateFromPreviewData(fullRender = false) {
+                    const previewDataStr = localStorage.getItem('preview_blog_data');
+                    if (previewDataStr) {
+                        try {
+                            currentPost = JSON.parse(previewDataStr);
+                            document.title = `${currentPost.title || 'Preview'} | Intrinsic Value`;
+                            
+                            // Update top fields if not actively typing
+                            if (fullRender || document.activeElement !== titleEl) {
+                                titleEl.textContent = currentPost.title || 'Untitled Post';
+                            }
+                            if (fullRender || document.activeElement !== dateEl) {
+                                dateEl.textContent = currentPost.date || '--';
+                            }
+                            if (fullRender || document.activeElement !== timeEl) {
+                                timeEl.textContent = currentPost.readingTime || '--';
+                            }
+                            if (fullRender || document.activeElement !== badgeEl) {
+                                badgeEl.textContent = currentPost.category || 'Uncategorized';
+                            }
+                            
+                            // Hero image populator
+                            if (fullRender || !imgEl.querySelector('img')) {
+                                if (currentPost.image) {
+                                    imgEl.innerHTML = `
+                                        <img src="${currentPost.image}" class="post-hero-image" alt="${currentPost.title}">
+                                        <div class="hero-image-edit-overlay" onclick="changeHeroImage()"><i class="fa-solid fa-camera"></i> Change Featured Image</div>
+                                    `;
+                                    imgEl.style.background = 'none';
+                                } else {
+                                    imgEl.innerHTML = `
+                                        <div style="height:350px; display:flex; align-items:center; justify-content:center; color:#888;">[No Featured Image]</div>
+                                        <div class="hero-image-edit-overlay" onclick="changeHeroImage()"><i class="fa-solid fa-camera"></i> Change Featured Image</div>
+                                    `;
+                                    imgEl.style.background = currentPost.gradient || 'linear-gradient(135deg, #FF8C00, #121212)';
+                                }
+                            }
+                            
+                            // Compile content blocks
+                            if (fullRender) {
+                                renderAllBlocks();
+                            }
+                        } catch(e) {
+                            console.error("Error parsing preview blog data", e);
+                        }
+                    }
+                }
+                
+                function renderAllBlocks() {
+                    contentEl.innerHTML = '';
+                    if (!currentPost || !currentPost.blocks) return;
+                    
+                    // Initial Block Adder (Index 0)
+                    contentEl.appendChild(createAdderElement(0));
+                    
+                    currentPost.blocks.forEach(function (block, index) {
+                        const blockWrapper = document.createElement('div');
+                        blockWrapper.className = 'preview-block-wrapper';
+                        blockWrapper.setAttribute('data-index', index);
+                        
+                        // Action Toolbar
+                        blockWrapper.innerHTML = `
+                            <div class="block-actions-toolbar">
+                                <button class="toolbar-btn" onclick="moveBlock(${index}, -1)" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+                                <button class="toolbar-btn" onclick="moveBlock(${index}, 1)" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                                <button class="toolbar-btn btn-delete" onclick="deleteBlock(${index})" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        `;
+                        
+                        // Content Node
+                        let contentNode;
+                        if (block.type === 'heading') {
+                            contentNode = document.createElement('h2');
+                            contentNode.className = 'blog-highlighted-heading';
+                            contentNode.contentEditable = 'true';
+                            contentNode.innerText = block.text || '';
+                            contentNode.addEventListener('blur', function () {
+                                block.text = contentNode.innerText.trim();
+                                syncStateToParent();
+                            });
+                            contentNode.addEventListener('input', function() {
+                                block.text = contentNode.innerText.trim();
+                                syncStateToParent();
+                            });
+                        } else if (block.type === 'paragraph') {
+                            contentNode = document.createElement('p');
+                            contentNode.contentEditable = 'true';
+                            
+                            // Initialize with compiled HTML for viewing
+                            contentNode.innerHTML = parseLinks(escapeHtml(block.text || '').replace(/\n/g, '<br />'));
+                            
+                            contentNode.addEventListener('focus', function () {
+                                contentNode.innerText = block.text || ''; // raw markdown
+                            });
+                            contentNode.addEventListener('blur', function () {
+                                block.text = contentNode.innerText.trim();
+                                contentNode.innerHTML = parseLinks(escapeHtml(block.text).replace(/\n/g, '<br />'));
+                                syncStateToParent();
+                            });
+                            contentNode.addEventListener('input', function() {
+                                block.text = contentNode.innerText.trim();
+                                syncStateToParent();
+                            });
+                        } else if (block.type === 'photo') {
+                            contentNode = document.createElement('div');
+                            contentNode.style.textAlign = 'center';
+                            contentNode.style.position = 'relative';
+                            contentNode.innerHTML = `
+                                <img class="aligncenter" src="${escapeHtml(block.url || 'images/quality.jpg')}" alt="" style="max-width:100%; border-radius:4px;" />
+                                <div style="margin-top:8px;">
+                                    <button class="topbar-btn" style="margin:0 auto;" onclick="replacePhoto(${index})"><i class="fa-solid fa-camera"></i> Change Block Image</button>
+                                </div>
+                            `;
+                        } else if (block.type === 'video') {
+                            contentNode = document.createElement('div');
+                            contentNode.style.textAlign = 'center';
+                            contentNode.style.position = 'relative';
+                            
+                            var videoUrl = block.url || '';
+                            if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                                var embedUrl = getYouTubeEmbedUrl(videoUrl);
+                                contentNode.innerHTML = `
+                                    <iframe width="100%" height="400" src="${escapeHtml(embedUrl)}" frameborder="0" allowfullscreen style="border-radius:6px;"></iframe>
+                                    <div style="margin-top:8px;">
+                                        <button class="topbar-btn" style="margin:0 auto;" onclick="replaceVideo(${index})"><i class="fa-solid fa-video"></i> Change Video URL</button>
+                                    </div>
+                                `;
+                            } else if (videoUrl) {
+                                contentNode.innerHTML = `
+                                    <video controls style="width: 100%; max-height: 400px; border-radius:6px;"><source src="${escapeHtml(videoUrl)}" type="video/mp4"></video>
+                                    <div style="margin-top:8px;">
+                                        <button class="topbar-btn" style="margin:0 auto;" onclick="replaceVideo(${index})"><i class="fa-solid fa-video"></i> Change Video URL</button>
+                                    </div>
+                                `;
+                            } else {
+                                contentNode.innerHTML = `
+                                    <div style="background:#222; border-radius:6px; padding:40px; color:#888;">[Empty Video Block]</div>
+                                    <div style="margin-top:8px;">
+                                        <button class="topbar-btn" style="margin:0 auto;" onclick="replaceVideo(${index})"><i class="fa-solid fa-video"></i> Add Video Link</button>
+                                    </div>
+                                `;
+                            }
+                        }
+                        
+                        blockWrapper.appendChild(contentNode);
+                        contentEl.appendChild(blockWrapper);
+                        
+                        // Render adder block after this block
+                        contentEl.appendChild(createAdderElement(index + 1));
+                    });
+                }
+                
+                function createAdderElement(nextIndex) {
+                    var adder = document.createElement('div');
+                    adder.className = 'inline-block-adder';
+                    adder.setAttribute('data-next-index', nextIndex);
+                    
+                    var button = document.createElement('div');
+                    button.className = 'adder-button';
+                    button.innerHTML = '<i class="fa-solid fa-plus"></i> Add Block';
+                    
+                    var popover = document.createElement('div');
+                    popover.className = 'adder-menu-popover';
+                    popover.innerHTML = `
+                        <button class="adder-menu-item" data-action="paragraph"><i class="fa-solid fa-paragraph"></i> Paragraph</button>
+                        <button class="adder-menu-item" data-action="heading"><i class="fa-solid fa-heading"></i> Heading</button>
+                        <button class="adder-menu-item" data-action="photo"><i class="fa-solid fa-image"></i> Image</button>
+                        <button class="adder-menu-item" data-action="video"><i class="fa-solid fa-video"></i> Video</button>
+                    `;
+                    
+                    button.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        document.querySelectorAll('.adder-menu-popover').forEach(function(p) {
+                            if (p !== popover) p.style.display = 'none';
+                        });
+                        popover.style.display = popover.style.display === 'flex' ? 'none' : 'flex';
+                    });
+                    
+                    popover.querySelectorAll('.adder-menu-item').forEach(function(item) {
+                        item.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            popover.style.display = 'none';
+                            var type = item.getAttribute('data-action');
+                            insertBlock(nextIndex, type);
+                        });
+                    });
+                    
+                    adder.appendChild(button);
+                    adder.appendChild(popover);
+                    return adder;
+                }
+                
+                window.insertBlock = function(index, type) {
+                    if (!currentPost.blocks) currentPost.blocks = [];
+                    var newBlock = { type: type };
+                    if (type === 'heading' || type === 'paragraph') {
+                        newBlock.text = '';
+                    } else {
+                        newBlock.url = '';
+                    }
+                    currentPost.blocks.splice(index, 0, newBlock);
+                    syncStateToParent();
+                    renderAllBlocks();
+                };
+                
+                window.deleteBlock = function(index) {
+                    if (confirm("Delete this content block?")) {
+                        currentPost.blocks.splice(index, 1);
+                        syncStateToParent();
+                        renderAllBlocks();
+                    }
+                };
+                
+                window.moveBlock = function(index, direction) {
+                    var target = index + direction;
+                    if (target >= 0 && target < currentPost.blocks.length) {
+                        var temp = currentPost.blocks[index];
+                        currentPost.blocks[index] = currentPost.blocks[target];
+                        currentPost.blocks[target] = temp;
+                        syncStateToParent();
+                        renderAllBlocks();
+                    }
+                };
+                
+                window.replacePhoto = function(index) {
+                    window.parent.postMessage({ type: 'trigger_file_upload', targetId: 'blog-block-temp-upload-id-' + index }, '*');
+                };
+                
+                window.replaceVideo = function(index) {
+                    var url = prompt("Enter Video Link (YouTube URL or direct MP4 link):", currentPost.blocks[index].url || '');
+                    if (url !== null) {
+                        currentPost.blocks[index].url = url.trim();
+                        syncStateToParent();
+                        renderAllBlocks();
+                    }
+                };
+
+                window.changeHeroImage = function() {
+                    window.parent.postMessage({ type: 'trigger_file_upload', targetId: 'blog-edit-image' }, '*');
+                };
+
+                function compileBlocksToHtml(blocks) {
+                    var html = '';
+                    if (!blocks) return html;
+                    blocks.forEach(function (block) {
+                        if (block.type === 'heading') {
+                            html += '<h2 class="blog-highlighted-heading">' + escapeHtml(block.text) + '</h2>\n';
+                        } else if (block.type === 'paragraph') {
+                            var paragraphs = block.text.split('\n\n').filter(function (p) { return p.trim() !== ''; });
+                            paragraphs.forEach(function (p) {
+                                var formattedText = escapeHtml(p).replace(/\n/g, '<br />');
+                                formattedText = parseLinks(formattedText);
+                                html += '<p>' + formattedText + '</p>\n';
+                            });
+                        } else if (block.type === 'photo') {
+                            html += '<p><img loading="lazy" decoding="async" class="aligncenter" src="' + escapeHtml(block.url) + '" alt="" /></p>\n';
+                        } else if (block.type === 'video') {
+                            var videoUrl = block.url || '';
+                            if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                                var embedUrl = getYouTubeEmbedUrl(videoUrl);
+                                html += `<p><iframe loading="lazy" width="100%" height="450" src="${escapeHtml(embedUrl)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>\n`;
+                            } else if (videoUrl) {
+                                html += `<p><video controls style="width: 100%; max-height: 500px;"><source src="${escapeHtml(videoUrl)}" type="video/mp4">Your browser does not support the video tag.</video></p>\n`;
+                            }
+                        }
+                    });
+                    return html;
+                }
+
+                function parseLinks(text) {
+                    return text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+                }
+
+                function getYouTubeEmbedUrl(url) {
+                    var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                    var match = url.match(regExp);
+                    if (match && match[2].length == 11) {
+                        return "https://www.youtube.com/embed/" + match[2];
+                    }
+                    return url;
+                }
+
+                function escapeHtml(text) {
+                    if (!text) return '';
+                    return text.toString()
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/'/g, "&#039;");
+                }
+                
+                function syncStateToParent() {
+                    currentPost.content = compileBlocksToHtml(currentPost.blocks);
+                    localStorage.setItem('preview_blog_data', JSON.stringify(currentPost));
+                    window.parent.postMessage({
+                        type: 'update_blog_state',
+                        blog: currentPost
+                    }, '*');
+                }
+                
+                // Settings Modal Controls
+                const settingsModal = document.getElementById('blog-settings-modal');
+                const btnOpenSettings = document.getElementById('btn-open-settings');
+                const btnCloseSettings = document.getElementById('btn-close-settings');
+                const btnSaveSettings = document.getElementById('btn-save-settings');
+                
+                const inputSlug = document.getElementById('settings-slug');
+                const textareaExcerpt = document.getElementById('settings-excerpt');
+                const inputGradient = document.getElementById('settings-gradient');
+                
+                btnOpenSettings.addEventListener('click', function() {
+                    inputSlug.value = currentPost.slug || '';
+                    textareaExcerpt.value = currentPost.excerpt || '';
+                    inputGradient.value = currentPost.gradient || '';
+                    settingsModal.style.display = 'flex';
+                });
+                
+                btnCloseSettings.addEventListener('click', function() {
+                    settingsModal.style.display = 'none';
+                });
+                
+                btnSaveSettings.addEventListener('click', function() {
+                    currentPost.slug = inputSlug.value.trim();
+                    currentPost.excerpt = textareaExcerpt.value.trim();
+                    currentPost.gradient = inputGradient.value.trim();
+                    settingsModal.style.display = 'none';
+                    syncStateToParent();
+                    updateFromPreviewData(true);
+                });
+
+                // Bind contenteditable metadata inputs
+                titleEl.contentEditable = 'true';
+                dateEl.contentEditable = 'true';
+                timeEl.contentEditable = 'true';
+                badgeEl.contentEditable = 'true';
+                
+                titleEl.addEventListener('input', function() {
+                    currentPost.title = titleEl.innerText.trim();
+                    syncStateToParent();
+                });
+                dateEl.addEventListener('input', function() {
+                    currentPost.date = dateEl.innerText.trim();
+                    syncStateToParent();
+                });
+                timeEl.addEventListener('input', function() {
+                    currentPost.readingTime = timeEl.innerText.trim();
+                    syncStateToParent();
+                });
+                badgeEl.addEventListener('input', function() {
+                    currentPost.category = badgeEl.innerText.trim();
+                    syncStateToParent();
+                });
+                
+                // Document click listener to close popovers
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.inline-block-adder')) {
+                        document.querySelectorAll('.adder-menu-popover').forEach(function(p) {
+                            p.style.display = 'none';
+                        });
+                    }
+                });
+
+                updateFromPreviewData(true);
+                
+                window.addEventListener('message', function(event) {
+                    if (event.data === 'update_blog_preview') {
+                        updateFromPreviewData(true);
+                    }
+                });
+                
+                window.addEventListener('storage', function(e) {
+                    if (e.key === 'preview_blog_data') {
+                        updateFromPreviewData(true);
+                    }
+                });
+                
+                const backLink = document.querySelector('.post-back-link');
+                if (backLink) {
+                    backLink.href = 'blogs.html?preview=true';
+                }
+                return;
+            }
+
             if (!postKey) {
                 showNotFound();
                 return;
@@ -322,6 +1107,45 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         // Set document title
                         document.title = `${post.title} | Intrinsic Value`;
 
+                        // Dynamically update Canonical, Meta Description, and OG/Twitter tags
+                        const postUrl = `https://intrinsicvalueequity.in/blog-detail?post=${encodeURIComponent(post.slug)}`;
+                        const canonicalLink = document.querySelector('link[rel="canonical"]');
+                        if (canonicalLink) {
+                            canonicalLink.setAttribute('href', postUrl);
+                        }
+
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = post.content;
+                        const rawText = tempDiv.textContent || tempDiv.innerText || "";
+                        const cleanText = rawText.replace(/\s+/g, ' ').trim();
+                        const shortDesc = cleanText.length > 155 ? cleanText.substring(0, 152) + '...' : cleanText;
+
+                        const metaDesc = document.querySelector('meta[name="description"]');
+                        if (metaDesc) {
+                            metaDesc.setAttribute('content', shortDesc);
+                        }
+
+                        function setMetaTag(attr, attrVal, content) {
+                            const el = document.querySelector(`meta[${attr}="${attrVal}"]`);
+                            if (el) {
+                                el.setAttribute('content', content);
+                            }
+                        }
+
+                        setMetaTag('property', 'og:title', post.title);
+                        setMetaTag('property', 'og:description', shortDesc);
+                        setMetaTag('property', 'og:url', postUrl);
+                        if (post.image) {
+                            setMetaTag('property', 'og:image', `https://intrinsicvalueequity.in/${post.image}`);
+                        }
+
+                        setMetaTag('name', 'twitter:title', post.title);
+                        setMetaTag('name', 'twitter:description', shortDesc);
+                        setMetaTag('name', 'twitter:url', postUrl);
+                        if (post.image) {
+                            setMetaTag('name', 'twitter:image', `https://intrinsicvalueequity.in/${post.image}`);
+                        }
+
                         // Populate DOM
                         titleEl.textContent = post.title;
                         dateEl.textContent = post.date;
@@ -338,6 +1162,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         }
 
                         // Set rendered HTML content
+                        // Render video embeds or markdown links if stored in raw content
                         contentEl.innerHTML = post.content;
                     } else {
                         showNotFound();

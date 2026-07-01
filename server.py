@@ -9,6 +9,33 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
 
+    def do_GET(self):
+        # Clean URL rewrites for analytics sub-portal
+        if self.path.startswith('/analytics'):
+            path_part = self.path.split('?')[0]
+            if path_part.endswith('/'):
+                path_part = path_part[:-1]
+                
+            parts = [p for p in path_part.split('/') if p]
+            if len(parts) == 1:
+                self.path = '/analytics/frontend/pages/dashboard.html'
+            elif len(parts) == 2:
+                page_name = parts[1]
+                potential_file = os.path.join(DIRECTORY, 'analytics', 'frontend', 'pages', f'{page_name}.html')
+                if os.path.exists(potential_file):
+                    self.path = f'/analytics/frontend/pages/{page_name}.html'
+        
+        # Route clean URL root asset requests back to the analytics folders
+        elif self.path.startswith('/css/') or self.path.startswith('/js/') or self.path.startswith('/assets/') or self.path.startswith('/static/'):
+            root_asset_path = os.path.join(DIRECTORY, self.path.lstrip('/'))
+            if not os.path.exists(root_asset_path):
+                if self.path.startswith('/static/'):
+                    self.path = '/analytics/frontend/assets/' + self.path[8:]
+                else:
+                    self.path = '/analytics/frontend' + self.path
+                    
+        return super().do_GET()
+
     def do_POST(self):
         if self.path == '/api/save-config':
             content_length = int(self.headers['Content-Length'])
@@ -40,6 +67,8 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
                     var_name = "VSL_CONFIG"
                     if "live_config" in file_path:
                         var_name = "LIVE_CONFIG"
+                    elif "workshop" in file_path:
+                        var_name = "WORKSHOP_CONFIG"
                     
                     js_content = f"var {var_name} = {json.dumps(config, indent=4)};\n"
                     
@@ -56,8 +85,40 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(500)
                 self.send_header('Content-Type', 'application/json')
                 self.end_headers()
-                response = {'success': False, 'message': str(e)}
                 self.wfile.write(json.dumps(response).encode('utf-8'))
+        elif self.path == '/api/upload-file':
+            try:
+                import cgi
+                form = cgi.FieldStorage(
+                    fp=self.rfile,
+                    headers=self.headers,
+                    environ={'REQUEST_METHOD': 'POST', 'CONTENT_TYPE': self.headers['Content-Type']}
+                )
+                file_item = form['file']
+                folder = form.getfirst('folder', '')
+                
+                if file_item.filename:
+                    fn = os.path.basename(file_item.filename)
+                    target_dir = os.path.join(DIRECTORY, folder)
+                    os.makedirs(target_dir, exist_ok=True)
+                    
+                    with open(os.path.join(target_dir, fn), 'wb') as f:
+                        f.write(file_item.file.read())
+                        
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'application/json')
+                    self.send_header('Access-Control-Allow-Origin', '*')
+                    self.end_headers()
+                    self.wfile.write(b'{"success":true,"message":"File uploaded locally successfully."}')
+                    return
+                else:
+                    raise ValueError("No file found in request")
+            except Exception as e:
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({'success': False, 'message': str(e)}).encode('utf-8'))
         elif self.path == '/api/git-push':
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)
