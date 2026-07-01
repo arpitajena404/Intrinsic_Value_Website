@@ -547,7 +547,7 @@
         }
 
         if (container) {
-          // If the container itself is blurred, wrapping it prevents the overlay from getting blurred
+          // If the container itself is blurred, wrapping it prevents the overlay from getting blurred.
           if (container.classList.contains("iv-blur-value")) {
             var wrapper = container.parentElement;
             if (!wrapper.classList.contains("iv-blur-wrap-container")) {
@@ -568,6 +568,37 @@
               container.style.margin = "0";
             }
             container = wrapper;
+          } else {
+            // Check if the container is a scrollable container (e.g. table-wrap)
+            var isScrollable = container.classList.contains("iv-table-wrap") ||
+                               container.classList.contains("iv-hw-table-wrap") ||
+                               window.getComputedStyle(container).overflowY === "auto" ||
+                               window.getComputedStyle(container).overflowY === "scroll" ||
+                               window.getComputedStyle(container).overflowX === "auto" ||
+                               window.getComputedStyle(container).overflowX === "scroll";
+
+            if (isScrollable) {
+              // Instead of wrapping the scroll container itself (which blocks scrolling),
+              // we wrap the inner content of the scroll container. This ensures the overlay
+              // covers the entire scrollable height/width, but leaves the outer container
+              // scrollable by the user.
+              var innerWrapper = container.querySelector(".iv-blur-wrap-container");
+              if (!innerWrapper) {
+                innerWrapper = document.createElement("div");
+                innerWrapper.className = "iv-blur-wrap-container";
+                innerWrapper.style.position = "relative";
+                innerWrapper.style.display = "inline-block";
+                innerWrapper.style.minWidth = "100%";
+                innerWrapper.style.verticalAlign = "top";
+                
+                // Move all existing children of the scroll container into the inner wrapper
+                while (container.firstChild) {
+                  innerWrapper.appendChild(container.firstChild);
+                }
+                container.appendChild(innerWrapper);
+              }
+              container = innerWrapper;
+            }
           }
 
           // Ensure position relative is set
