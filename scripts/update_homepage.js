@@ -654,3 +654,57 @@ function updateAllPagesFooterBottom() {
 }
 
 updateAllPagesFooterBottom();
+
+// 14. Generate sitemap.xml dynamically
+function generateSitemap() {
+    console.log("Generating sitemap.xml...");
+    const staticPages = [
+        '',
+        'about',
+        'blogs',
+        'pricing',
+        'nikhil-gangil-indian-value-investor'
+    ];
+    
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+    
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Add static pages
+    staticPages.forEach(page => {
+        xml += `  <url>\n`;
+        xml += `    <loc>https://intrinsicvalueequity.in/${page}</loc>\n`;
+        xml += `    <lastmod>${today}</lastmod>\n`;
+        xml += `    <changefreq>weekly</changefreq>\n`;
+        xml += `    <priority>${page === '' ? '1.0' : '0.8'}</priority>\n`;
+        xml += `  </url>\n`;
+    });
+    
+    // Add dynamic blog pages from blogs.json
+    const blogsPath = path.join(__dirname, '../blogs.json');
+    if (fs.existsSync(blogsPath)) {
+        try {
+            const blogs = JSON.parse(fs.readFileSync(blogsPath, 'utf8'));
+            blogs.forEach(blog => {
+                if (blog.slug) {
+                    xml += `  <url>\n`;
+                    xml += `    <loc>https://intrinsicvalueequity.in/blog-detail?post=${encodeURIComponent(blog.slug)}</loc>\n`;
+                    xml += `    <lastmod>${today}</lastmod>\n`;
+                    xml += `    <changefreq>monthly</changefreq>\n`;
+                    xml += `    <priority>0.6</priority>\n`;
+                    xml += `  </url>\n`;
+                }
+            });
+        } catch (e) {
+            console.error("Error reading blogs.json for sitemap:", e);
+        }
+    }
+    
+    xml += `</urlset>\n`;
+    const sitemapPath = path.join(__dirname, '../sitemap.xml');
+    fs.writeFileSync(sitemapPath, xml, 'utf8');
+    console.log("Successfully compiled sitemap.xml!");
+}
+
+generateSitemap();

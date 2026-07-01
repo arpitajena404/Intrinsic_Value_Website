@@ -15,6 +15,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog Post | Intrinsic Value Equity Advisors</title>
     <meta name="description" content="Read our detailed equity research article and investing insights.">
+    <link rel="canonical" href="https://intrinsicvalueequity.in/blog-detail" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://intrinsicvalueequity.in/blog-detail" />
+    <meta property="og:title" content="Blog Post | Intrinsic Value Equity Advisors" />
+    <meta property="og:description" content="Read our detailed equity research article and investing insights." />
+    <meta property="og:image" content="https://intrinsicvalueequity.in/logo.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://intrinsicvalueequity.in/blog-detail" />
+    <meta name="twitter:title" content="Blog Post | Intrinsic Value Equity Advisors" />
+    <meta name="twitter:description" content="Read our detailed equity research article and investing insights." />
+    <meta name="twitter:image" content="https://intrinsicvalueequity.in/logo.png" />
     <!-- Link Stylesheet -->
     <link rel="stylesheet" href="style.css?v=6">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1091,6 +1106,45 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     if (post) {
                         // Set document title
                         document.title = `${post.title} | Intrinsic Value`;
+
+                        // Dynamically update Canonical, Meta Description, and OG/Twitter tags
+                        const postUrl = `https://intrinsicvalueequity.in/blog-detail?post=${encodeURIComponent(post.slug)}`;
+                        const canonicalLink = document.querySelector('link[rel="canonical"]');
+                        if (canonicalLink) {
+                            canonicalLink.setAttribute('href', postUrl);
+                        }
+
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = post.content;
+                        const rawText = tempDiv.textContent || tempDiv.innerText || "";
+                        const cleanText = rawText.replace(/\s+/g, ' ').trim();
+                        const shortDesc = cleanText.length > 155 ? cleanText.substring(0, 152) + '...' : cleanText;
+
+                        const metaDesc = document.querySelector('meta[name="description"]');
+                        if (metaDesc) {
+                            metaDesc.setAttribute('content', shortDesc);
+                        }
+
+                        function setMetaTag(attr, attrVal, content) {
+                            const el = document.querySelector(`meta[${attr}="${attrVal}"]`);
+                            if (el) {
+                                el.setAttribute('content', content);
+                            }
+                        }
+
+                        setMetaTag('property', 'og:title', post.title);
+                        setMetaTag('property', 'og:description', shortDesc);
+                        setMetaTag('property', 'og:url', postUrl);
+                        if (post.image) {
+                            setMetaTag('property', 'og:image', `https://intrinsicvalueequity.in/${post.image}`);
+                        }
+
+                        setMetaTag('name', 'twitter:title', post.title);
+                        setMetaTag('name', 'twitter:description', shortDesc);
+                        setMetaTag('name', 'twitter:url', postUrl);
+                        if (post.image) {
+                            setMetaTag('name', 'twitter:image', `https://intrinsicvalueequity.in/${post.image}`);
+                        }
 
                         // Populate DOM
                         titleEl.textContent = post.title;
