@@ -70,8 +70,9 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
                     
                     # Run static compilation scripts automatically
                     import subprocess
-                    if "homepage_config.json" in file_path or "pricing.json" in file_path:
+                    if "homepage_config.json" in file_path or "pricing.json" in file_path or "blogs.json" in file_path:
                         subprocess.run(['node', 'scripts/update_homepage.js'], cwd=DIRECTORY, shell=True)
+                    if "pricing.json" in file_path:
                         subprocess.run(['node', 'scripts/update_pricing.js'], cwd=DIRECTORY, shell=True)
                 else:
                     # Format javascript content based on the filename
@@ -197,6 +198,10 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
                 reset_res = subprocess.run(['git', 'reset', '--hard', 'HEAD~1'], capture_output=True, text=True, cwd=DIRECTORY, shell=True)
                 if reset_res.returncode != 0:
                     raise RuntimeError(f"git reset failed:\nStdout: {reset_res.stdout}\nStderr: {reset_res.stderr}")
+                
+                # Recompile locally to sync files
+                subprocess.run(['node', 'scripts/update_homepage.js'], cwd=DIRECTORY, shell=True)
+                subprocess.run(['node', 'scripts/update_pricing.js'], cwd=DIRECTORY, shell=True)
                 
                 # 3. Force push to remote
                 push_res = subprocess.run(['git', 'push', '--force'], capture_output=True, text=True, cwd=DIRECTORY, shell=True)
