@@ -174,6 +174,39 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 response = {'success': False, 'message': str(e)}
                 self.wfile.write(json.dumps(response).encode('utf-8'))
+        elif self.path == '/api/git-rollback':
+            try:
+                import subprocess
+                # 1. Check if there is a parent commit
+                log_res = subprocess.run(['git', 'rev-parse', '--verify', 'HEAD~1'], capture_output=True, text=True, cwd=DIRECTORY, shell=True)
+                if log_res.returncode != 0:
+                    raise RuntimeError("No previous commit found to rollback to.")
+                
+                # 2. Reset hard to parent commit
+                reset_res = subprocess.run(['git', 'reset', '--hard', 'HEAD~1'], capture_output=True, text=True, cwd=DIRECTORY, shell=True)
+                if reset_res.returncode != 0:
+                    raise RuntimeError(f"git reset failed:\nStdout: {reset_res.stdout}\nStderr: {reset_res.stderr}")
+                
+                # 3. Force push to remote
+                push_res = subprocess.run(['git', 'push', '--force'], capture_output=True, text=True, cwd=DIRECTORY, shell=True)
+                if push_res.returncode != 0:
+                    raise RuntimeError(f"git push --force failed:\nStdout: {push_res.stdout}\nStderr: {push_res.stderr}")
+                
+                output_log = f"Successfully rolled back the latest commit locally and on GitHub remote!\n\nReset output:\n{reset_res.stdout}\n\nPush output:\n{push_res.stdout}\n{push_res.stderr}"
+                
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                response = {'success': True, 'message': output_log}
+                self.wfile.write(json.dumps(response).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                response = {'success': False, 'message': str(e)}
+                self.wfile.write(json.dumps(response).encode('utf-8'))
         else:
             self.send_response(404)
             self.end_headers()

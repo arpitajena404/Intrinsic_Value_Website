@@ -3,6 +3,16 @@
   "cleanUrls": true,
   "redirects": [
     {
+      "source": "/gawp-index-a-new-lens-on-wealth-through-age-parity",
+      "destination": "/blog-detail?post=gawp-index-a-new-lens-on-wealth-through-age-parity",
+      "permanent": true
+    },
+    {
+      "source": "/gawp-index-a-new-lens-on-wealth-through-age-parity/",
+      "destination": "/blog-detail?post=gawp-index-a-new-lens-on-wealth-through-age-parity",
+      "permanent": true
+    },
+    {
       "source": "/admin",
       "destination": "https://intrinsicvalueequity.in/invest_biz/admin.html",
       "permanent": true

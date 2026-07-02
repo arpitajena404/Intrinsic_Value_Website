@@ -3167,6 +3167,174 @@
             });
         }
 
+        var gitRollbackBtn = document.getElementById('gitRollbackBtn');
+        if (gitRollbackBtn) {
+            gitRollbackBtn.addEventListener('click', function() {
+                if (confirm("Are you sure you want to rollback the latest commit? This will revert the website to how it was before the last commit. This action cannot be undone.")) {
+                    try {
+                        var pat = patInput ? patInput.value.trim() : '';
+                        var repo = repoInput ? repoInput.value.trim() : '';
+                        repo = repo.replace(/^https?:\/\/github\.com\//i, '');
+                        repo = repo.replace(/\.git$/i, '');
+                        var branch = 'main';
+
+                        var isLocalhost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+                        if (pat && repo && !isLocalhost) {
+                            gitRollbackBtn.disabled = true;
+                            gitRollbackBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Rolling back...';
+                            if (gitStatusMsg) {
+                                gitStatusMsg.style.display = 'block';
+                                gitStatusMsg.style.color = '#FF8C00';
+                                gitStatusMsg.innerText = 'Connecting to GitHub...';
+                            }
+
+                            var headers = {
+                                'Authorization': 'token ' + pat,
+                                'Accept': 'application/vnd.github.v3+json',
+                                'Content-Type': 'application/json'
+                            };
+
+                            // 1. Get branch head reference
+                            fetch('https://api.github.com/repos/' + repo + '/git/ref/heads/' + branch, { headers: headers })
+                                .then(function(res) {
+                                    if (res.status === 404) {
+                                        throw new Error('Branch main not found. Check repository path or token.');
+                                    }
+                                    if (!res.ok) {
+                                        throw new Error('Failed to fetch branch reference (HTTP ' + res.status + ')');
+                                    }
+                                    return res.json();
+                                })
+                                .then(function(data) {
+                                    var lastCommitSha = data.object.sha;
+                                    if (gitStatusMsg) gitStatusMsg.innerText = 'Retrieving details for the latest commit...';
+                                    
+                                    // 2. Fetch the commit details to find parent commit(s)
+                                    return fetch('https://api.github.com/repos/' + repo + '/git/commits/' + lastCommitSha, { headers: headers });
+                                })
+                                .then(function(res) {
+                                    if (!res.ok) throw new Error('Failed to fetch commit details (HTTP ' + res.status + ')');
+                                    return res.json();
+                                })
+                                .then(function(commitData) {
+                                    if (!commitData.parents || commitData.parents.length === 0) {
+                                        throw new Error('No previous commit found to rollback to (this appears to be the initial commit).');
+                                    }
+                                    var parentSha = commitData.parents[0].sha;
+                                    if (gitStatusMsg) gitStatusMsg.innerText = 'Resetting branch main to previous commit (' + parentSha.substring(0, 7) + ')...';
+
+                                    // 3. Update branch ref (heads/main) to point to the parent SHA, using force: true
+                                    return fetch('https://api.github.com/repos/' + repo + '/git/refs/heads/' + branch, {
+                                        method: 'PATCH',
+                                        headers: headers,
+                                        body: JSON.stringify({
+                                            sha: parentSha,
+                                            force: true
+                                        })
+                                    });
+                                })
+                                .then(function(res) {
+                                    if (!res.ok) {
+                                        return res.json().then(function(d) {
+                                            throw new Error('Failed to update branch reference: ' + (d.message || res.status));
+                                        });
+                                    }
+                                    return res.json();
+                                })
+                                .then(function(data) {
+                                    gitRollbackBtn.disabled = false;
+                                    gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
+                                    if (gitStatusMsg) {
+                                        gitStatusMsg.style.color = '#34A853';
+                                        gitStatusMsg.innerText = 'Successfully rolled back the latest commit directly on GitHub!\n\nThis will trigger the GitHub Action build workflow to redeploy the previous state live.';
+                                    }
+                                    setTimeout(function() {
+                                        if (confirm("Rollback complete. Would you like to clear browser cache and reload the page?")) {
+                                            localStorage.removeItem('pending_homepage_config');
+                                            localStorage.removeItem('pending_pricing_config');
+                                            localStorage.removeItem('pending_blogs_config');
+                                            localStorage.removeItem('pending_live_config');
+                                            localStorage.removeItem('pending_vsl_config');
+                                            localStorage.removeItem('pending_workshop_config');
+                                            window.location.reload();
+                                        }
+                                    }, 1000);
+                                })
+                                .catch(function(err) {
+                                    gitRollbackBtn.disabled = false;
+                                    gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
+                                    if (gitStatusMsg) {
+                                        gitStatusMsg.style.color = '#EA4335';
+                                        gitStatusMsg.innerText = 'Rollback Failed:\n' + err.message;
+                                    }
+                                });
+                        } else {
+                            // Local fallback using local server.py endpoint
+                            if (!isLocalhost) {
+                                alert('To publish or rollback changes online, you must fill in your GitHub Personal Access Token and Repository info in the settings fields.');
+                                if (gitStatusMsg) {
+                                    gitStatusMsg.style.color = '#EA4335';
+                                    gitStatusMsg.innerText = 'Error: Missing GitHub credentials configuration.';
+                                }
+                                return;
+                            }
+
+                            gitRollbackBtn.disabled = true;
+                            gitRollbackBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Rolling back...';
+                            if (gitStatusMsg) {
+                                gitStatusMsg.style.display = 'block';
+                                gitStatusMsg.style.color = '#FF8C00';
+                                gitStatusMsg.innerText = 'Connecting to server and rolling back latest commit...';
+                            }
+                            
+                            fetch('/api/git-rollback', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                            .then(function (res) {
+                                return res.json().then(function (data) {
+                                    if (!res.ok) {
+                                        throw new Error(data.message || 'HTTP error ' + res.status);
+                                    }
+                                    return data;
+                                });
+                            })
+                            .then(function (data) {
+                                gitRollbackBtn.disabled = false;
+                                gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
+                                if (gitStatusMsg) {
+                                    gitStatusMsg.style.color = '#34A853';
+                                    gitStatusMsg.innerText = data.message;
+                                }
+                                setTimeout(function() {
+                                    window.location.reload();
+                                }, 1500);
+                            })
+                            .catch(function (err) {
+                                gitRollbackBtn.disabled = false;
+                                gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
+                                if (gitStatusMsg) {
+                                    gitStatusMsg.style.color = '#EA4335';
+                                    gitStatusMsg.innerText = 'Rollback Failed:\n' + err.message;
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        gitRollbackBtn.disabled = false;
+                        gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
+                        if (gitStatusMsg) {
+                            gitStatusMsg.style.display = 'block';
+                            gitStatusMsg.style.color = '#EA4335';
+                            gitStatusMsg.innerText = 'Execution Error: ' + e.message + '\n' + e.stack;
+                        }
+                    }
+                }
+            });
+        }
+
         if (gitPushBtn) {
             gitPushBtn.addEventListener('click', function () {
                 try {
