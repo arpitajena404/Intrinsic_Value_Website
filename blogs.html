@@ -348,6 +348,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     ? `<img src="${blog.image}" alt="${blog.title}" class="blog-thumb" loading="lazy">`
                     : `<div style="width: 100%; height: 100%; background: ${blog.gradient}; opacity: 0.85;" class="blog-thumb"></div>`;
 
+                const postUrl = isPreview 
+                    ? `blog-detail.html?post=${encodeURIComponent(blog.slug)}&preview=true` 
+                    : `/${encodeURIComponent(blog.slug)}`;
+
                 return `
                     <article class="blog-card">
                         <div class="blog-thumb-wrapper">
@@ -359,12 +363,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <time datetime="${blog.rawDate || ''}">${blog.date}</time>
                             </div>
                             <h2 class="blog-card-title">
-                                <a href="blog-detail.html?post=${encodeURIComponent(blog.slug)}${previewQuery}">${blog.title}</a>
+                                <a href="${postUrl}">${blog.title}</a>
                             </h2>
                             <p class="blog-card-excerpt">
                                 ${blog.excerpt}
                             </p>
-                            <a href="blog-detail.html?post=${encodeURIComponent(blog.slug)}${previewQuery}" class="blog-card-link">
+                            <a href="${postUrl}" class="blog-card-link">
                                 Read More
                                 <span>&rarr;</span>
                             </a>

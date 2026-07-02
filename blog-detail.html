@@ -643,10 +643,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <script src="script.js?v=6"></script>
     <!-- Dynamic Content Renderer Script -->
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Get URL Query Parameter (?post=post-id)
+        // Immediate redirect from old query-string URL to pretty root URL (except in CMS preview)
+        (function() {
             const urlParams = new URLSearchParams(window.location.search);
             const postKey = urlParams.get('post');
+            const isPreview = urlParams.get('preview') === 'true';
+            if (postKey && !isPreview) {
+                window.location.replace('/' + encodeURIComponent(postKey));
+            }
+        })();
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get URL Query Parameter (?post=post-id) or Path Slug (/<slug>)
+            const urlParams = new URLSearchParams(window.location.search);
+            let postKey = urlParams.get('post');
+
+            if (!postKey) {
+                const pathname = window.location.pathname;
+                // Match the root-level path segment /<slug>
+                const match = pathname.match(/^\/([^\/]+)\/?$/);
+                if (match) {
+                    const slugCandidate = match[1];
+                    const excluded = ['about', 'blogs', 'pricing', 'nikhil-gangil-indian-value-investor', 'iv_admin', 'index', 'index.html'];
+                    if (!excluded.includes(slugCandidate)) {
+                        postKey = slugCandidate;
+                    }
+                }
+            }
 
             const titleEl = document.getElementById('dyn-title');
             const dateEl = document.getElementById('dyn-date');
@@ -1108,7 +1131,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         document.title = `${post.title} | Intrinsic Value`;
 
                         // Dynamically update Canonical, Meta Description, and OG/Twitter tags
-                        const postUrl = `https://intrinsicvalueequity.in/blog-detail?post=${encodeURIComponent(post.slug)}`;
+                        const postUrl = `https://intrinsicvalueequity.in/${encodeURIComponent(post.slug)}`;
                         const canonicalLink = document.querySelector('link[rel="canonical"]');
                         if (canonicalLink) {
                             canonicalLink.setAttribute('href', postUrl);

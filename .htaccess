@@ -9,6 +9,17 @@
 
 RewriteEngine On
 
+# Redirect old query-string blog URLs to clean /<slug> URLs
+RewriteCond %{THE_REQUEST} \s/+(?:blog-detail\.html|blog-detail)\?post=([^&\s]+)\s [NC]
+RewriteRule ^ /%1? [R=301,L]
+
+# Rewrite clean blog URLs /<slug> to blog-detail.html?post=<slug>
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/$1.html !-f
+RewriteCond %{REQUEST_URI} !^/(workshop|invest_biz|vsl|css|js|assets|static|images|api) [NC]
+RewriteRule ^([^/]+)/?$ blog-detail.html?post=$1 [QSA,L]
+
 # Route raw asset requests back to the analytics subfolder
 RewriteRule ^css/(.*)$ analytics/frontend/css/$1 [L]
 RewriteRule ^js/(.*)$ analytics/frontend/js/$1 [L]

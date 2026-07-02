@@ -689,7 +689,7 @@ function generateSitemap() {
             blogs.forEach(blog => {
                 if (blog.slug) {
                     xml += `  <url>\n`;
-                    xml += `    <loc>https://intrinsicvalueequity.in/blog-detail?post=${encodeURIComponent(blog.slug)}</loc>\n`;
+                    xml += `    <loc>https://intrinsicvalueequity.in/${encodeURIComponent(blog.slug)}</loc>\n`;
                     xml += `    <lastmod>${today}</lastmod>\n`;
                     xml += `    <changefreq>monthly</changefreq>\n`;
                     xml += `    <priority>0.6</priority>\n`;
