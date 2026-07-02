@@ -213,7 +213,7 @@
       ]
     },
     {
-      "source": "/(.*)\\.html",
+      "source": "/:path*.html",
       "headers": [
         {
           "key": "Cache-Control",
