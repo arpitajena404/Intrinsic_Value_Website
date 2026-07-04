@@ -1296,6 +1296,24 @@
         var years = cmsState.compliance?.years || ["2022", "2023", "2024", "2025", "2026"];
         document.getElementById('cms-regulatory-years').value = years.join(', ');
 
+        // Populate Default Display Year select options
+        var defaultYearSelect = document.getElementById('cms-grievance-default-year');
+        if (defaultYearSelect) {
+            defaultYearSelect.innerHTML = '<option value="auto">Auto (Current Year)</option>';
+            years.forEach(function (y) {
+                var opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = y;
+                defaultYearSelect.appendChild(opt);
+            });
+            defaultYearSelect.value = cmsState.compliance?.default_year || 'auto';
+        }
+
+        var defaultMonthSelect = document.getElementById('cms-grievance-default-month');
+        if (defaultMonthSelect) {
+            defaultMonthSelect.value = cmsState.compliance?.default_month || 'auto';
+        }
+
         // Populate years select in Grievance Database editor
         var yearSelectCms = document.getElementById('cms-grievance-edit-year');
         if (yearSelectCms) {
@@ -1731,6 +1749,8 @@
         cmsState.compliance = cmsState.compliance || {};
         var yearsVal = document.getElementById('cms-regulatory-years').value;
         cmsState.compliance.years = yearsVal.split(',').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
+        cmsState.compliance.default_year = document.getElementById('cms-grievance-default-year').value;
+        cmsState.compliance.default_month = document.getElementById('cms-grievance-default-month').value;
 
         var jsonText = JSON.stringify(cmsState, null, 4);
         var jsonDisplay = document.getElementById('cmsJsonDisplay');
@@ -3004,6 +3024,24 @@
                 cmsState.compliance = cmsState.compliance || {};
                 cmsState.compliance.years = val.split(',').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
                 
+                // Update default display year select options dynamically
+                var defaultYearSelect = document.getElementById('cms-grievance-default-year');
+                if (defaultYearSelect) {
+                    var prevDefVal = defaultYearSelect.value;
+                    defaultYearSelect.innerHTML = '<option value="auto">Auto (Current Year)</option>';
+                    cmsState.compliance.years.forEach(function (y) {
+                        var opt = document.createElement('option');
+                        opt.value = y;
+                        opt.textContent = y;
+                        defaultYearSelect.appendChild(opt);
+                    });
+                    if (prevDefVal === 'auto' || cmsState.compliance.years.indexOf(prevDefVal) !== -1) {
+                        defaultYearSelect.value = prevDefVal;
+                    } else {
+                        defaultYearSelect.value = 'auto';
+                    }
+                }
+                
                 var yearSelectCms = document.getElementById('cms-grievance-edit-year');
                 if (yearSelectCms) {
                     var prevVal = yearSelectCms.value;
@@ -3021,6 +3059,22 @@
                     }
                 }
                 renderGrievanceRecordEditor();
+            });
+        }
+
+        var defaultYearSelect = document.getElementById('cms-grievance-default-year');
+        if (defaultYearSelect) {
+            defaultYearSelect.addEventListener('change', function () {
+                cmsState.compliance = cmsState.compliance || {};
+                cmsState.compliance.default_year = this.value;
+            });
+        }
+
+        var defaultMonthSelect = document.getElementById('cms-grievance-default-month');
+        if (defaultMonthSelect) {
+            defaultMonthSelect.addEventListener('change', function () {
+                cmsState.compliance = cmsState.compliance || {};
+                cmsState.compliance.default_month = this.value;
             });
         }
 

@@ -2520,9 +2520,51 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 };
 // CMS_GRIEVANCE_DATA_END
 
+        // CMS_GRIEVANCE_DEFAULTS_START
+        const GRIEVANCE_DEFAULT_YEAR = "auto";
+        const GRIEVANCE_DEFAULT_MONTH = "auto";
+// CMS_GRIEVANCE_DEFAULTS_END
+
         document.addEventListener('DOMContentLoaded', () => {
             const yearSelect = document.getElementById('year-select');
             const monthSelect = document.getElementById('month-select');
+
+            // Apply default display year and month configurations on load
+            if (yearSelect && monthSelect) {
+                let targetYear = typeof GRIEVANCE_DEFAULT_YEAR !== 'undefined' ? GRIEVANCE_DEFAULT_YEAR : 'auto';
+                let targetMonth = typeof GRIEVANCE_DEFAULT_MONTH !== 'undefined' ? GRIEVANCE_DEFAULT_MONTH : 'auto';
+
+                if (targetYear === 'auto') {
+                    targetYear = new Date().getFullYear().toString();
+                }
+                if (targetMonth === 'auto') {
+                    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    targetMonth = months[new Date().getMonth()];
+                }
+
+                // Apply target display year
+                let yearFound = false;
+                for (let i = 0; i < yearSelect.options.length; i++) {
+                    if (yearSelect.options[i].value === targetYear) {
+                        yearSelect.value = targetYear;
+                        yearFound = true;
+                        break;
+                    }
+                }
+                if (!yearFound && yearSelect.options.length > 0) {
+                    yearSelect.selectedIndex = yearSelect.options.length - 1;
+                }
+
+                // Apply target display month
+                let monthFound = false;
+                for (let i = 0; i < monthSelect.options.length; i++) {
+                    if (monthSelect.options[i].value === targetMonth) {
+                        monthSelect.value = targetMonth;
+                        monthFound = true;
+                        break;
+                    }
+                }
+            }
 
             function updateGrievanceTable() {
                 if (!yearSelect || !monthSelect) return;

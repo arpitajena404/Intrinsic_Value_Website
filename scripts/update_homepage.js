@@ -21,7 +21,7 @@ function replaceSection(sectionName, newContent) {
     let startMarker = `<!-- CMS_${sectionName}_START -->`;
     let endMarker = `<!-- CMS_${sectionName}_END -->`;
     
-    if (sectionName === 'TYPEWRITER_WORDS' || sectionName === 'GRIEVANCE_DATA') {
+    if (sectionName === 'TYPEWRITER_WORDS' || sectionName === 'GRIEVANCE_DATA' || sectionName === 'GRIEVANCE_DEFAULTS') {
         startMarker = `// CMS_${sectionName}_START`;
         endMarker = `// CMS_${sectionName}_END`;
     }
@@ -491,6 +491,12 @@ replaceSection('REGULATORY_AUDITS', auditsHtml);
 // 17. Client-side Grievance Complaints Database
 const grievanceDataHtml = `        const GRIEVANCE_DATA = ${JSON.stringify(config.compliance?.grievances || {}, null, 8)};`;
 replaceSection('GRIEVANCE_DATA', grievanceDataHtml);
+
+// 17.5. Client-side Grievance Defaults
+const defaultYear = config.compliance?.default_year || "auto";
+const defaultMonth = config.compliance?.default_month || "auto";
+const grievanceDefaultsHtml = `        const GRIEVANCE_DEFAULT_YEAR = "${defaultYear}";\n        const GRIEVANCE_DEFAULT_MONTH = "${defaultMonth}";`;
+replaceSection('GRIEVANCE_DEFAULTS', grievanceDefaultsHtml);
 
 fs.writeFileSync(htmlPath, html, 'utf8');
 console.log("Statically compiled index.html successfully!");
