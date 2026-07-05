@@ -2538,12 +2538,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 let targetYear = typeof GRIEVANCE_DEFAULT_YEAR !== 'undefined' ? GRIEVANCE_DEFAULT_YEAR : 'auto';
                 let targetMonth = typeof GRIEVANCE_DEFAULT_MONTH !== 'undefined' ? GRIEVANCE_DEFAULT_MONTH : 'auto';
 
+                const now = new Date();
+                let currentYearNum = now.getFullYear();
+                let currentMonthIdx = now.getMonth(); // 0 = Jan, 11 = Dec
+
+                // Calculate previous month index for auto-display
+                let prevMonthIdx = currentMonthIdx - 1;
+                if (prevMonthIdx < 0) {
+                    prevMonthIdx = 11; // December
+                    currentYearNum -= 1; // Previous year
+                }
+
                 if (targetYear === 'auto') {
-                    targetYear = new Date().getFullYear().toString();
+                    targetYear = currentYearNum.toString();
                 }
                 if (targetMonth === 'auto') {
                     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                    targetMonth = months[new Date().getMonth()];
+                    targetMonth = months[prevMonthIdx];
                 }
 
                 // Apply target display year
