@@ -1864,9 +1864,10 @@ function initDisclosures() {
                         // Collapse
                         item.classList.remove('active');
                         panel.style.maxHeight = panel.scrollHeight + 'px';
-                        panel.offsetHeight; // Force reflow
-                        panel.style.maxHeight = '0px';
-                        panel.style.opacity = '0';
+                        requestAnimationFrame(() => {
+                            panel.style.maxHeight = '0px';
+                            panel.style.opacity = '0';
+                        });
                     } else {
                         // Expand
                         item.classList.add('active');
@@ -1910,11 +1911,14 @@ function initDisclosures() {
                                 
                                 if (parentPanel && parentPanel.style.maxHeight === 'none') {
                                     parentPanel.style.maxHeight = parentPanel.scrollHeight + 'px';
-                                    parentPanel.offsetHeight; // Force reflow
+                                    requestAnimationFrame(() => {
+                                        subPanel.style.maxHeight = '0px';
+                                        subPanel.style.opacity = '0';
+                                    });
+                                } else {
+                                    subPanel.style.maxHeight = '0px';
+                                    subPanel.style.opacity = '0';
                                 }
-                                
-                                subPanel.style.maxHeight = '0px';
-                                subPanel.style.opacity = '0';
                                 
                                 if (parentPanel) {
                                     const newParentHeight = parentPanel.scrollHeight - subPanel.scrollHeight;
@@ -1934,11 +1938,14 @@ function initDisclosures() {
                                 
                                 if (parentPanel && parentPanel.style.maxHeight === 'none') {
                                     parentPanel.style.maxHeight = parentPanel.scrollHeight + 'px';
-                                    parentPanel.offsetHeight; // Force reflow
+                                    requestAnimationFrame(() => {
+                                        subPanel.style.maxHeight = subPanel.scrollHeight + 'px';
+                                        subPanel.style.opacity = '1';
+                                    });
+                                } else {
+                                    subPanel.style.maxHeight = subPanel.scrollHeight + 'px';
+                                    subPanel.style.opacity = '1';
                                 }
-                                
-                                subPanel.style.maxHeight = subPanel.scrollHeight + 'px';
-                                subPanel.style.opacity = '1';
                                 
                                 if (parentPanel) {
                                     const newParentHeight = parentPanel.scrollHeight + subPanel.scrollHeight;
@@ -2103,13 +2110,16 @@ function initPortfolioCarousel() {
         
         if (progressBar) {
             progressBar.style.animation = 'none';
-            progressBar.offsetHeight; // trigger reflow
-            progressBar.style.animation = 'portfolioProgressAnim 7s linear forwards';
-            if (isHovered) {
-                progressBar.style.animationPlayState = 'paused';
-            } else {
-                progressBar.style.animationPlayState = 'running';
-            }
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    progressBar.style.animation = 'portfolioProgressAnim 7s linear forwards';
+                    if (isHovered) {
+                        progressBar.style.animationPlayState = 'paused';
+                    } else {
+                        progressBar.style.animationPlayState = 'running';
+                    }
+                });
+            });
         }
     }
     
@@ -2235,9 +2245,12 @@ function initPortfolioCarousel() {
         startAutoplay();
         if (progressBar) {
             progressBar.style.animation = 'none';
-            progressBar.offsetHeight; // trigger reflow
-            progressBar.style.animation = 'portfolioProgressAnim 7s linear forwards';
-            progressBar.style.animationPlayState = 'running';
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    progressBar.style.animation = 'portfolioProgressAnim 7s linear forwards';
+                    progressBar.style.animationPlayState = 'running';
+                });
+            });
         }
     }
 

@@ -1,10 +1,20 @@
 # Intrinsic Value Equity Advisors
 
-> SEBI-registered Research Analyst (Reg No: INH000009047) specializing in cyclical sector rotation and capital-protected value investing in Indian equities.
+SEBI-registered Research Analyst (Reg No: INH000009047) specializing in cyclical sector rotation and capital-protected value investing in Indian equities.
+
+## Key Resources
+- [Official Website](https://intrinsicvalueequity.in)
+- [Investment Services & Pricing](pricing.html)
+- [About Us](about.html)
+- [Blogs & Market Insights](blogs.html)
+- [Investor Grievance Redressal](Legal%20&%20Compliance/Grievance%20Redressal.html)
+- [Investor Charter](Legal%20&%20Compliance/investorcharter.html)
+- [Terms & Conditions](Legal%20&%20Compliance/tnc.html)
+- [Privacy Policy](Legal%20&%20Compliance/privacypolicy.html)
+- [Disclaimer](Legal%20&%20Compliance/disclaimer.html)
 
 ## Key Information
 - **Founder & Analyst**: Nikhil Gangil (IIT Madras Alumnus)
-- **Official Website**: https://intrinsicvalueequity.in
 - **Email Contact**: info@intrinsicvalueequity.in
 - **Office Location**: Baner, Pune, India
 - **Registration Type**: SEBI Registered Individual Research Analyst
