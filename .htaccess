@@ -9,6 +9,11 @@
 
 RewriteEngine On
 
+# Redirect trailing slash to non-trailing slash for non-existent directories/files (SEO & routing fix)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} ^/(.+)/$
+RewriteRule ^ /%1 [R=301,L]
+
 # Redirect old query-string blog URLs to clean /<slug> URLs
 RewriteCond %{THE_REQUEST} \s/+(?:blog-detail\.html|blog-detail)\?post=([^&\s]+)\s [NC]
 RewriteRule ^ /%1? [R=301,L]

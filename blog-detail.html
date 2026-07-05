@@ -1129,9 +1129,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             fetch('blogs.json')
                 .then(response => response.json())
                 .then(blogs => {
-                    // Find matching blog post by slug (decoded for robust comparison)
-                    const decodedPostKey = decodeURIComponent(postKey);
-                    const post = blogs.find(b => decodeURIComponent(b.slug) === decodedPostKey || b.slug === postKey);
+                    // Helper to fully decode URI components recursively (handles double/triple URL encoding robustly)
+                    function fullyDecode(str) {
+                        let last = '';
+                        let current = str || '';
+                        while (current !== last) {
+                            last = current;
+                            try {
+                                current = decodeURIComponent(current);
+                            } catch (e) {
+                                break;
+                            }
+                        }
+                        return current;
+                    }
+
+                    const targetKeyDecoded = fullyDecode(postKey);
+                    const post = blogs.find(b => fullyDecode(b.slug) === targetKeyDecoded);
 
                     if (post) {
                         // Set document title
