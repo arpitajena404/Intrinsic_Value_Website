@@ -31,6 +31,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <meta name="twitter:description" content="Read our detailed equity research article and investing insights." />
     <meta name="twitter:image" content="https://intrinsicvalueequity.in/logo.png" />
     <!-- Link Stylesheet -->
+        <!-- Google Fonts Preconnect & Link -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=6">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -837,7 +841,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             contentNode.style.textAlign = 'center';
                             contentNode.style.position = 'relative';
                             contentNode.innerHTML = `
-                                <img class="aligncenter" src="${escapeHtml(block.url || 'images/quality.jpg')}" alt="" style="max-width:100%; border-radius:4px;" />
+                                <img class="aligncenter" src="${escapeHtml(block.url || 'images/quality.jpg')}" alt="" style="max-width:100%; border-radius:4px;" loading="lazy" />
                                 <div style="margin-top:8px;">
                                     <button class="topbar-btn" style="margin:0 auto;" onclick="replacePhoto(${index})"><i class="fa-solid fa-camera"></i> Change Block Image</button>
                                 </div>
@@ -1177,7 +1181,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
                         // Display featured image if present, otherwise fallback to gradient
                         if (post.image) {
-                            imgEl.innerHTML = `<img src="${post.image}" class="post-hero-image" alt="${post.title}">`;
+                            imgEl.innerHTML = `<img src="${post.image}" class="post-hero-image" alt="${post.title}" loading="lazy">`;
                             imgEl.style.background = 'none';
                         } else {
                             imgEl.innerHTML = '';

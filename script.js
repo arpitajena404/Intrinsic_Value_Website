@@ -14,20 +14,20 @@ const dismissPreloader = () => {
     const preloader = document.getElementById('iv-preloader');
     if (preloader && !preloader.classList.contains('dismissed')) {
         preloader.classList.add('dismissed');
-        setTimeout(() => {
-            preloader.style.opacity = '0';
-            preloader.style.visibility = 'hidden';
-            document.body.classList.remove('preloader-active');
-            
-            // Trigger price drop animation on standalone pricing page
-            const scrollStack = document.querySelector('.scroll-stack');
-            const counterSpan = document.querySelector('.pricing-discount-counter');
-            if (!scrollStack && counterSpan) {
-                setTimeout(() => {
-                    animatePriceCounter();
-                }, 500);
-            }
-        }, 1300); // wait for 1.2s animation completion
+        // Instantly transition preloader out (0.4s fadeout)
+        preloader.style.transition = 'opacity 0.4s ease, visibility 0.4s ease';
+        preloader.style.opacity = '0';
+        preloader.style.visibility = 'hidden';
+        document.body.classList.remove('preloader-active');
+        
+        // Trigger price drop animation on standalone pricing page
+        const scrollStack = document.querySelector('.scroll-stack');
+        const counterSpan = document.querySelector('.pricing-discount-counter');
+        if (!scrollStack && counterSpan) {
+            setTimeout(() => {
+                animatePriceCounter();
+            }, 100);
+        }
     }
 };
 
@@ -36,7 +36,7 @@ if (document.readyState === 'complete') {
 } else {
     window.addEventListener('load', dismissPreloader);
     // Safety fallback (e.g. slow connections or stuck assets)
-    setTimeout(dismissPreloader, 3500);
+    setTimeout(dismissPreloader, 1500);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

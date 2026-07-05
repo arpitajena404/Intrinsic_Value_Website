@@ -192,7 +192,7 @@ const rowCardsHtml = config.case_studies.companies.map((comp, globalIdx) => {
     
     const logoTriggerHtml = comp.logo ? `
                                     <div class="company-trigger-logo-wrapper">
-                                        <img src="${comp.logo}" class="company-trigger-logo" alt="${comp.name}">
+                                        <img src="${comp.logo}" class="company-trigger-logo" alt="${comp.name}" loading="lazy">
                                     </div>` : `
                                     <div class="company-trigger-logo-wrapper placeholder-badge">
                                         <span class="company-btn-num-large">${comp.num}</span>
@@ -200,7 +200,7 @@ const rowCardsHtml = config.case_studies.companies.map((comp, globalIdx) => {
     
     const headerLogoHtml = comp.logo ? `
                                 <div class="reports-header-logo-wrapper">
-                                    <img src="${comp.logo}" class="reports-header-logo" alt="${comp.name}">
+                                    <img src="${comp.logo}" class="reports-header-logo" alt="${comp.name}" loading="lazy">
                                 </div>` : '';
     
     return `                        <!-- Company ${globalIdx + 1}: ${comp.name} -->
@@ -248,7 +248,7 @@ const newsCardsHtml = config.news.items.map((item, idx) => {
                                     <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="12" fill="#111111">${item.label.toUpperCase()}</text>
                                 </svg>`;
     } else {
-        logoHtml = `                                <img src="${item.logo}" alt="${item.label}" class="logo-icon-img">`;
+        logoHtml = `                                <img src="${item.logo}" alt="${item.label}" class="logo-icon-img" loading="lazy">`;
     }
     
     const wrapperClass = item.wrapperClass ? ` ${item.wrapperClass}` : '';
@@ -278,7 +278,7 @@ const testimonialsCardsHtml = config.testimonials.items.map((item, idx) => {
                         <div class="testimonial-card" data-index="${idx}">
                             <div class="testimonial-card-header">
                                 <div class="card-dot"></div>
-                                <img class="testimonial-avatar" src="${item.avatar || 'testimonials_images/avatar_page_1.jpg'}" alt="${item.name}" />
+                                <img class="testimonial-avatar" src="${item.avatar || 'testimonials_images/avatar_page_1.jpg'}" alt="${item.name}" loading="lazy" />
                             </div>
                             <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.${idx}.quote">
                                 "${item.quote}"
@@ -307,7 +307,7 @@ const teamCardsHtml = config.team.members.map((member, idx) => {
                                     
     return `                                <div class="team-card">
                                     <div class="team-avatar-wrapper">
-                                        <img src="${member.photo || 'profile.jpeg'}" alt="${member.name}" class="team-avatar">
+                                        <img src="${member.photo || 'profile.jpeg'}" alt="${member.name}" class="team-avatar" loading="lazy">
                                     </div>
                                     <div class="team-info">
                                         <h3 class="team-name cms-editable-highlight" data-field="team.members.${idx}.name">${member.name}</h3>
