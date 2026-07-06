@@ -64,15 +64,36 @@ replaceSection('HOMEPAGE_STYLES', stylesHtml);
 
 // 1. Navigation Menu
 function generateNavHtml(prefix) {
-    return config.navigation.map(link => {
+    let htmlList = config.navigation.map(link => {
         const isAbsolute = /^(?:https?:)?\/\//i.test(link.url) || link.url.startsWith('/') || link.url.startsWith('#');
         const url = isAbsolute ? link.url : (prefix + link.url);
         const targetAttr = link.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
         return `                    <li><a href="${url}" class="nav-link"${targetAttr}>${link.text}</a></li>`;
-    }).join('\n');
+    });
+    
+    if (config.header_buttons) {
+        const loginLink = config.header_buttons.client_login;
+        const loginTarget = loginLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+        htmlList.push(`                    <li><a href="${loginLink.url}" class="nav-link cms-editable-highlight" data-field="header_buttons.client_login.text" data-label="Client Login Text"${loginTarget}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>${loginLink.text}</a></li>`);
+        
+        const contactLink = config.header_buttons.contact_us;
+        const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+        htmlList.push(`                    <li class="nav-actions-mobile">
+                        <a href="${contactLink.url}" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>
+                    </li>`);
+    }
+    return htmlList.join('\n');
 }
 const navHtml = generateNavHtml('');
 replaceSection('NAV', navHtml);
+
+// 1.5. Nav Contact Button (Desktop)
+if (config.header_buttons) {
+    const contactLink = config.header_buttons.contact_us;
+    const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+    const contactHtml = `                <a href="${contactLink.url}" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>`;
+    replaceSection('NAV_CONTACT', contactHtml);
+}
 
 // 2. Hero Left Column
 const heroCtaTarget = config.hero.cta_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
@@ -106,7 +127,10 @@ function generateStatsHtml() {
         const divider = idx < config.hero.stats.length - 1 ? '\n                            <div class="iv-stat-divider"></div>\n' : '';
         return `                            <!-- Stat Item ${idx+1} -->
                             <div class="iv-stat-item">
-                                <div class="iv-stat-num"><span class="count-up" data-target="${stat.num}">0</span>${stat.suffix}</div>
+                                <div class="iv-stat-num">
+                                    <span class="count-up cms-editable-highlight" data-target="${stat.num}" data-field="hero.stats.${idx}.num" data-label="Stat Number ${idx+1}">${stat.num}</span>
+                                    <span class="cms-editable-highlight" data-field="hero.stats.${idx}.suffix" data-label="Stat Suffix ${idx+1}">${stat.suffix}</span>
+                                </div>
                                 <div class="iv-stat-label cms-editable-highlight" data-field="hero.stats.${idx}.label">${stat.label}</div>
                             </div>${divider}`;
     }).join('\n');
@@ -122,10 +146,10 @@ if (config.hero.media.type === 'animation') {
                         <div class="iv-hero-card">
                             <div class="iv-card-planet">🪐</div>
 
-                            <div class="iv-card-headline">
-                                <em>Compound</em> Wealth,<br>Real Value.
+                            <div class="iv-card-headline cms-editable-highlight" data-field="hero.card_headline_html" data-label="Card Headline">
+                                ${config.hero.card_headline_html || '<em>Compound</em> Wealth,<br>Real Value.'}
                             </div>
-                            <div class="iv-card-sub">Intrinsic Value Equity Advisors</div>
+                            <div class="iv-card-sub cms-editable-highlight" data-field="hero.card_sub" data-label="Card Subtitle">${config.hero.card_sub || 'Intrinsic Value Equity Advisors'}</div>
 
                             <!-- Staircase bar animation and walking figure -->
                             <div class="iv-staircase">
@@ -318,6 +342,29 @@ ${linkedinHtml}
 }).join('\n');
 replaceSection('TEAM_CARDS', teamCardsHtml);
 
+// 10.5. Portfolio Section Title & Embed Track
+if (config.portfolio) {
+    const portfolioTitleHtml = `                        <h2 class="team-section-heading cms-editable-highlight" data-field="portfolio.title" data-label="Portfolio Title">
+                            ${config.portfolio.title}
+                        </h2>`;
+    replaceSection('PORTFOLIO_TITLE', portfolioTitleHtml);
+    replaceSection('PORTFOLIO_TRACK', config.portfolio.embed_html);
+}
+
+// 10.7. Homepage Pricing Section
+if (config.homepage_pricing) {
+    const hpPricing = config.homepage_pricing;
+    const targetAttr = hpPricing.button_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+    const pricingHtml = `                    <h2 class="pricing-section-header-title cms-editable-highlight" data-field="homepage_pricing.title" data-label="Pricing Title">${hpPricing.title}</h2>
+
+                    <div style="margin-top: 2.2rem; margin-bottom: 1.5rem;">
+                        <a href="${hpPricing.button_url}"${targetAttr} class="btn-vibrate-outline cms-editable-highlight" data-field="homepage_pricing.button_text" data-label="Pricing Button Text">
+                            ${hpPricing.button_text}
+                        </a>
+                    </div>`;
+    replaceSection('HOMEPAGE_PRICING', pricingHtml);
+}
+
 // 11. FAQ Section Title & List Accordion
 const faqTitleHtml = `                <span class="faq-pre-title">COMMON QUERIES</span>
                 <h2 class="faq-main-title cms-editable-highlight" data-field="faqs.title">${config.faqs.title}</h2>
@@ -469,6 +516,22 @@ ${timingSpansHtml}
             </div>`;
 replaceSection('FOOTER_CONTACT', footerContactHtml);
 
+// 14.5. Compliance Header & Titles
+if (config.compliance) {
+    const compHeaderHtml = `                <span class="disclosures-pre-title cms-editable-highlight" data-field="compliance.pre_title" data-label="Compliance Pre-title">${config.compliance.pre_title || 'REGULATORY CORNER'}</span>
+                <h2 class="disclosures-main-title cms-editable-highlight" data-field="compliance.title" data-label="Compliance Title">${config.compliance.title || 'Transparency &amp; <em>Compliance</em>.'}</h2>
+                <p class="disclosures-sub-title cms-editable-highlight" data-field="compliance.sub_title" data-label="Compliance Description">${config.compliance.sub_title || 'Review our regulatory disclosures, client complaint statistics, and compliance audit history in accordance with SEBI guidelines.'}</p>`;
+    replaceSection('COMPLIANCE_HEADER', compHeaderHtml);
+    
+    replaceSection('COMPLIANCE_GRIEVANCE_TITLE', `                        <h3 class="disclosure-title cms-editable-highlight" data-field="compliance.title_grievance" data-label="Grievance Title">${config.compliance.title_grievance || 'Grievance Status'}</h3>`);
+    
+    replaceSection('COMPLIANCE_AUDIT_TITLE', `                        <h3 class="disclosure-title cms-editable-highlight" data-field="compliance.title_audit" data-label="Audit Title">${config.compliance.title_audit || 'Compliance Audit Status'}</h3>`);
+    
+    replaceSection('COMPLIANCE_AUDIT_INTRO', `                            <p class="disclosure-intro-text cms-editable-highlight" data-field="compliance.audit_intro" data-label="Audit Intro Text">
+                                ${config.compliance.audit_intro || '“Disclosure with respect to compliance with Annual compliance audit requirement under Regulation 25(3) of SEBI (Research Analyst) Regulations, 2014 for last financial years are as under:'}
+                            </p>`);
+}
+
 // 15. Compliance Years Options
 const yearsHtml = (config.compliance?.years || ["2022", "2023", "2024", "2025", "2026"]).map(y => {
     const selected = y === "2026" ? " selected" : "";
@@ -547,6 +610,21 @@ function updateAllPagesNavigation() {
             }
         }
         
+        // 1.5 Inject contact button markers if they don't exist
+        if (!content.includes('CMS_NAV_CONTACT_START')) {
+            const pattern = /<div class="nav-actions">\s*<a href="[^"]+" class="btn-glow"[^>]*>Contact Us<\/a>\s*<\/div>/;
+            const match = content.match(pattern);
+            if (match) {
+                const blockToReplace = match[0];
+                const contactLink = config.header_buttons.contact_us;
+                const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                const replacement = `<div class="nav-actions">\n                <!-- CMS_NAV_CONTACT_START -->\n                <a href="${contactLink.url}" class="btn-glow"${contactTarget}>${contactLink.text}</a>\n                <!-- CMS_NAV_CONTACT_END -->\n            </div>`;
+                content = content.replace(blockToReplace, replacement);
+                modified = true;
+                console.log(`Injected contact button markers into: ${path.relative(rootDir, filePath)}`);
+            }
+        }
+        
         // 2. If it has markers now, update the navigation content
         if (content.includes('CMS_NAV_START')) {
             const startMarker = '<!-- CMS_NAV_START -->';
@@ -567,6 +645,27 @@ function updateAllPagesNavigation() {
                 content = before + "\n" + relativeNavHtml + "\n" + after;
                 modified = true;
                 console.log(`Updated navigation in: ${path.relative(rootDir, filePath)}`);
+            }
+        }
+
+        // 3. If it has contact markers, update the desktop contact button
+        if (content.includes('CMS_NAV_CONTACT_START')) {
+            const startMarker = '<!-- CMS_NAV_CONTACT_START -->';
+            const endMarker = '<!-- CMS_NAV_CONTACT_END -->';
+            const startIndex = content.indexOf(startMarker);
+            const endIndex = content.indexOf(endMarker);
+            
+            if (startIndex !== -1 && endIndex !== -1) {
+                const contactLink = config.header_buttons.contact_us;
+                const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                const relativeContactHtml = `                <a href="${contactLink.url}" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>`;
+                
+                const before = content.substring(0, startIndex + startMarker.length);
+                const after = content.substring(endIndex);
+                
+                content = before + "\n" + relativeContactHtml + "\n" + after;
+                modified = true;
+                console.log(`Updated nav contact button in: ${path.relative(rootDir, filePath)}`);
             }
         }
         

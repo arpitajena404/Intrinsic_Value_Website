@@ -1249,11 +1249,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <li><a href="about.html" class="nav-link">About Us</a></li>
                     <li><a href="blogs.html" class="nav-link">Blogs</a></li>
                     <li><a href="analytics/dashboard" class="nav-link">Analytics</a></li>
+                    <li><a href="https://premium.intrinsicvalueequity.in/eud/courses" class="nav-link cms-editable-highlight" data-field="header_buttons.client_login.text" data-label="Client Login Text" target="_blank" rel="noopener noreferrer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Client Login</a></li>
+                    <li class="nav-actions-mobile">
+                        <a href="https://api.whatsapp.com/send/?phone=917354259486&text=Hello%2C%0D%0Ai+want+to+understand+about+your+services&type=phone_number&app_absent=0" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text" target="_blank" rel="noopener noreferrer">Contact Us</a>
+                    </li>
 <!-- CMS_NAV_END -->
                 </ul>
             </nav>
             <div class="nav-actions">
-                <a href="https://api.whatsapp.com/send/?phone=917354259486&text=Hello%2C%0D%0Ai+want+to+understand+about+your+services&type=phone_number&app_absent=0" class="btn-glow" target="_blank" rel="noopener noreferrer">Contact Us</a>
+                <!-- CMS_NAV_CONTACT_START -->
+                <a href="https://api.whatsapp.com/send/?phone=917354259486&text=Hello%2C%0D%0Ai+want+to+understand+about+your+services&type=phone_number&app_absent=0" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text" target="_blank" rel="noopener noreferrer">Contact Us</a>
+<!-- CMS_NAV_CONTACT_END -->
             </div>
         </div>
     </header>
@@ -1503,6 +1509,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </div>
                     </div>
 
+
+                    <h5 style="margin: 24px 0 12px 0; color: var(--text-primary);">Navbar Action Buttons</h5>
+                    <div style="font-weight: 700; font-size: 12px; margin-bottom: 8px; color: var(--accent);">Client Login Button</div>
+                    <div class="iv-cms-row" style="margin-bottom: 16px;">
+                        <div class="iv-cms-group" style="margin-bottom: 0;">
+                            <label class="iv-cms-label">Button Text</label>
+                            <input type="text" id="cms-nav-login-text" class="iv-cms-input">
+                        </div>
+                        <div class="iv-cms-group" style="margin-bottom: 0;">
+                            <label class="iv-cms-label">Button Link URL</label>
+                            <input type="text" id="cms-nav-login-url" class="iv-cms-input">
+                        </div>
+                        <div class="iv-cms-group" style="margin-bottom: 0; padding-top: 24px;">
+                            <label class="iv-cms-radio-label"><input type="checkbox" id="cms-nav-login-target"> Open in New Tab</label>
+                        </div>
+                    </div>
+                    <div style="font-weight: 700; font-size: 12px; margin-bottom: 8px; color: var(--accent);">Contact Us Button</div>
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group" style="margin-bottom: 0;">
+                            <label class="iv-cms-label">Button Text</label>
+                            <input type="text" id="cms-nav-contact-text" class="iv-cms-input">
+                        </div>
+                        <div class="iv-cms-group" style="margin-bottom: 0;">
+                            <label class="iv-cms-label">Button Link URL</label>
+                            <input type="text" id="cms-nav-contact-url" class="iv-cms-input">
+                        </div>
+                        <div class="iv-cms-group" style="margin-bottom: 0; padding-top: 24px;">
+                            <label class="iv-cms-radio-label"><input type="checkbox" id="cms-nav-contact-target"> Open in New Tab</label>
+                        </div>
+                    </div>
+
                     <h4 style="margin: 32px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Hero Section Content</h4>
                     
                     <div class="iv-cms-group">
@@ -1580,6 +1617,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             <div class="iv-cms-hint">If selecting image/video, enter path or choose local file.</div>
                         </div>
                     </div>
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Staircase Card Headline <span class="req">HTML Allowed</span></label>
+                            <textarea id="cms-hero-card-headline" class="iv-cms-textarea" style="min-height: 80px;" placeholder="e.g. <em>Compound</em> Wealth,<br>Real Value."></textarea>
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Staircase Card Subtitle</label>
+                            <input type="text" id="cms-hero-card-sub" class="iv-cms-input" placeholder="e.g. Intrinsic Value Equity Advisors">
+                        </div>
+                    </div>
 
                 </div>
 
@@ -1653,9 +1700,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </div>
                     </div>
 
+                    <h4 style="margin: 32px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Our Portfolio Slider</h4>
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Slider Section Title <span class="req">Required (HTML Allowed)</span></label>
+                        <input type="text" id="cms-portfolio-title" class="iv-cms-input" placeholder="e.g. <span class=&quot;text-white&quot;>Our </span><span class=&quot;text-orange&quot;>Portfolio</span>">
+                    </div>
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Smallcase Embedded Cards HTML <span class="req">Raw HTML Code</span></label>
+                        <textarea id="cms-portfolio-embed-html" class="iv-cms-textarea" style="min-height: 200px; font-family: monospace; font-size: 12px;" placeholder="Paste smallcase widgets or raw HTML cards here..."></textarea>
+                    </div>
+
+                    <h4 style="margin: 32px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Homepage Pricing Block</h4>
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Homepage Pricing Title <span class="req">Required (HTML Allowed)</span></label>
+                        <input type="text" id="cms-homepage-pricing-title" class="iv-cms-input">
+                    </div>
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Button Label <span class="req">Required</span></label>
+                            <input type="text" id="cms-homepage-pricing-btn-text" class="iv-cms-input">
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Button URL / Link <span class="req">Required</span></label>
+                            <input type="text" id="cms-homepage-pricing-btn-url" class="iv-cms-input">
+                        </div>
+                        <div class="iv-cms-group" style="padding-top: 24px;">
+                            <label class="iv-cms-radio-label"><input type="checkbox" id="cms-homepage-pricing-btn-target"> Open in New Tab</label>
+                        </div>
+                    </div>
+
                 </div>
 
-                <!-- TAB 4: TEAM & REVIEWS -->
                 <div id="tab-team-testimonials" class="iv-cms-tab-content">
                     
                     <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Meet Our Team</h4>
@@ -1875,6 +1950,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <div id="cms-grievance-record-editor">
                             <!-- Populated by JS -->
                         </div>
+                    </div>
+
+                    <h4 style="margin: 32px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Transparency & Compliance Headings</h4>
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Compliance Pre-Title <span class="req">Required</span></label>
+                        <input type="text" id="cms-compliance-pre-title" class="iv-cms-input" placeholder="e.g. REGULATORY CORNER">
+                    </div>
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Compliance Main Title <span class="req">Required (HTML Allowed)</span></label>
+                        <input type="text" id="cms-compliance-title" class="iv-cms-input" placeholder="e.g. Transparency &amp; <em>Compliance</em>.">
+                    </div>
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Compliance Subtitle <span class="req">Required</span></label>
+                        <textarea id="cms-compliance-subtitle" class="iv-cms-textarea" style="min-height: 80px;"></textarea>
+                    </div>
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Grievance Tab Title <span class="req">Required</span></label>
+                            <input type="text" id="cms-compliance-grievance-title" class="iv-cms-input">
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Audit Tab Title <span class="req">Required</span></label>
+                            <input type="text" id="cms-compliance-audit-title" class="iv-cms-input">
+                        </div>
+                    </div>
+                    <div class="iv-cms-group" style="margin-bottom: 32px;">
+                        <label class="iv-cms-label">Compliance Audit Intro Paragraph <span class="req">Required</span></label>
+                        <textarea id="cms-compliance-audit-intro" class="iv-cms-textarea" style="min-height: 80px;"></textarea>
                     </div>
 
                     <!-- Compliance Audits repeater -->

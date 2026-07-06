@@ -1260,6 +1260,45 @@
         document.getElementById('cms-hero-media-url').value = cmsState.hero.media.url || '';
         toggleMediaUrlField();
 
+        // Staircase Card
+        document.getElementById('cms-hero-card-headline').value = cmsState.hero.card_headline_html || '<em>Compound</em> Wealth,<br>Real Value.';
+        document.getElementById('cms-hero-card-sub').value = cmsState.hero.card_sub || 'Intrinsic Value Equity Advisors';
+
+        // Navbar Action Buttons
+        if (cmsState.header_buttons) {
+            document.getElementById('cms-nav-login-text').value = cmsState.header_buttons.client_login?.text || 'Client Login';
+            document.getElementById('cms-nav-login-url').value = cmsState.header_buttons.client_login?.url || '';
+            document.getElementById('cms-nav-login-target').checked = !!cmsState.header_buttons.client_login?.new_tab;
+            
+            document.getElementById('cms-nav-contact-text').value = cmsState.header_buttons.contact_us?.text || 'Contact Us';
+            document.getElementById('cms-nav-contact-url').value = cmsState.header_buttons.contact_us?.url || '';
+            document.getElementById('cms-nav-contact-target').checked = !!cmsState.header_buttons.contact_us?.new_tab;
+        }
+
+        // Portfolio Title & Embed html
+        if (cmsState.portfolio) {
+            document.getElementById('cms-portfolio-title').value = cmsState.portfolio.title || '';
+            document.getElementById('cms-portfolio-embed-html').value = cmsState.portfolio.embed_html || '';
+        }
+
+        // Homepage Pricing
+        if (cmsState.homepage_pricing) {
+            document.getElementById('cms-homepage-pricing-title').value = cmsState.homepage_pricing.title || '';
+            document.getElementById('cms-homepage-pricing-btn-text').value = cmsState.homepage_pricing.button_text || '';
+            document.getElementById('cms-homepage-pricing-btn-url').value = cmsState.homepage_pricing.button_url || '';
+            document.getElementById('cms-homepage-pricing-btn-target').checked = !!cmsState.homepage_pricing.button_new_tab;
+        }
+
+        // Transparency & Compliance
+        if (cmsState.compliance) {
+            document.getElementById('cms-compliance-pre-title').value = cmsState.compliance.pre_title || 'REGULATORY CORNER';
+            document.getElementById('cms-compliance-title').value = cmsState.compliance.title || 'Transparency & Compliance.';
+            document.getElementById('cms-compliance-subtitle').value = cmsState.compliance.sub_title || '';
+            document.getElementById('cms-compliance-grievance-title').value = cmsState.compliance.title_grievance || 'Grievance Status';
+            document.getElementById('cms-compliance-audit-title').value = cmsState.compliance.title_audit || 'Compliance Audit Status';
+            document.getElementById('cms-compliance-audit-intro').value = cmsState.compliance.audit_intro || '';
+        }
+
         document.getElementById('cms-philosophy-title').value = cmsState.philosophy.title || '';
         document.getElementById('cms-news-title').value = cmsState.news.title || '';
         document.getElementById('cms-case-title').value = cmsState.case_studies.title || '';
@@ -1713,6 +1752,35 @@
         cmsState.hero.media.type = document.getElementById('cms-hero-media-type').value;
         cmsState.hero.media.url = document.getElementById('cms-hero-media-url').value;
 
+        // Staircase Card
+        cmsState.hero.card_headline_html = document.getElementById('cms-hero-card-headline').value;
+        cmsState.hero.card_sub = document.getElementById('cms-hero-card-sub').value;
+
+        // Navbar Action Buttons
+        cmsState.header_buttons = cmsState.header_buttons || {};
+        cmsState.header_buttons.client_login = {
+            text: document.getElementById('cms-nav-login-text').value,
+            url: document.getElementById('cms-nav-login-url').value,
+            new_tab: document.getElementById('cms-nav-login-target').checked
+        };
+        cmsState.header_buttons.contact_us = {
+            text: document.getElementById('cms-nav-contact-text').value,
+            url: document.getElementById('cms-nav-contact-url').value,
+            new_tab: document.getElementById('cms-nav-contact-target').checked
+        };
+
+        // Portfolio Title & Embed HTML
+        cmsState.portfolio = cmsState.portfolio || {};
+        cmsState.portfolio.title = document.getElementById('cms-portfolio-title').value;
+        cmsState.portfolio.embed_html = document.getElementById('cms-portfolio-embed-html').value;
+
+        // Homepage Pricing
+        cmsState.homepage_pricing = cmsState.homepage_pricing || {};
+        cmsState.homepage_pricing.title = document.getElementById('cms-homepage-pricing-title').value;
+        cmsState.homepage_pricing.button_text = document.getElementById('cms-homepage-pricing-btn-text').value;
+        cmsState.homepage_pricing.button_url = document.getElementById('cms-homepage-pricing-btn-url').value;
+        cmsState.homepage_pricing.button_new_tab = document.getElementById('cms-homepage-pricing-btn-target').checked;
+
         cmsState.philosophy.title = document.getElementById('cms-philosophy-title').value;
         cmsState.news.title = document.getElementById('cms-news-title').value;
         cmsState.case_studies.title = document.getElementById('cms-case-title').value;
@@ -1745,8 +1813,15 @@
         var timingsVal = document.getElementById('cms-footer-contact-timings').value;
         cmsState.footer.contact.timings = timingsVal.split('\n').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
 
-        // Compliance Years
+        // Compliance Settings & Titles
         cmsState.compliance = cmsState.compliance || {};
+        cmsState.compliance.pre_title = document.getElementById('cms-compliance-pre-title').value;
+        cmsState.compliance.title = document.getElementById('cms-compliance-title').value;
+        cmsState.compliance.sub_title = document.getElementById('cms-compliance-subtitle').value;
+        cmsState.compliance.title_grievance = document.getElementById('cms-compliance-grievance-title').value;
+        cmsState.compliance.title_audit = document.getElementById('cms-compliance-audit-title').value;
+        cmsState.compliance.audit_intro = document.getElementById('cms-compliance-audit-intro').value;
+
         var yearsVal = document.getElementById('cms-regulatory-years').value;
         cmsState.compliance.years = yearsVal.split(',').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
         cmsState.compliance.default_year = document.getElementById('cms-grievance-default-year').value;

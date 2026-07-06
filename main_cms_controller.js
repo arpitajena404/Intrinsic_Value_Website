@@ -210,7 +210,7 @@
         var elements = document.querySelectorAll('[data-field]');
         elements.forEach(function (el) {
             var field = el.getAttribute('data-field');
-            if (field.indexOf('navigation') === 0) {
+            if (field.indexOf('navigation') === 0 || field.endsWith('.num') || field.endsWith('.suffix')) {
                 el.removeAttribute('contenteditable');
                 return;
             }
@@ -365,12 +365,26 @@
     // Navigation items generator
     function generateNavHtml(navigation, prefix) {
         if (!navigation) return '';
-        return navigation.map(function (link, idx) {
+        var htmlList = navigation.map(function (link, idx) {
             var isAbsolute = /^(?:https?:)?\/\//i.test(link.url) || link.url.startsWith('/') || link.url.startsWith('#');
             var url = isAbsolute ? link.url : (prefix + link.url);
             var targetAttr = link.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
             return '                    <li><a href="' + url + '" class="nav-link nav-item-el cms-editable-highlight" data-field="navigation.' + idx + '.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Navigation Link Text"' + targetAttr + '>' + link.text + '</a></li>';
-        }).join('\n');
+        });
+
+        if (homepageConfig && homepageConfig.header_buttons) {
+            var loginLink = homepageConfig.header_buttons.client_login;
+            var loginTarget = loginLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+            htmlList.push('                    <li><a href="' + loginLink.url + '" class="nav-link nav-item-el cms-editable-highlight" data-field="header_buttons.client_login.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Client Login Text"' + loginTarget + '><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>' + loginLink.text + '</a></li>');
+
+            var contactLink = homepageConfig.header_buttons.contact_us;
+            var contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+            htmlList.push('                    <li class="nav-actions-mobile">\n' +
+                          '                        <a href="' + contactLink.url + '" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' + contactTarget + '>' + contactLink.text + '</a>\n' +
+                          '                    </li>');
+        }
+
+        return htmlList.join('\n');
     }
 
     // Pricing page generators
@@ -461,6 +475,47 @@
             if (homepageConfig && homepageConfig.navigation) {
                 replaceCmsSection('NAV', generateNavHtml(homepageConfig.navigation, ''));
             }
+            if (homepageConfig && homepageConfig.header_buttons) {
+                var contactLink = homepageConfig.header_buttons.contact_us;
+                var contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                var contactHtml = '                <a href="' + contactLink.url + '" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' + contactTarget + '>' + contactLink.text + '</a>';
+                replaceCmsSection('NAV_CONTACT', contactHtml);
+            }
+            if (homepageConfig && homepageConfig.portfolio) {
+                replaceCmsSection('PORTFOLIO_TITLE', '<h2 class="team-section-heading cms-editable-highlight" data-field="portfolio.title" data-label="Portfolio Title">' + homepageConfig.portfolio.title + '</h2>');
+                replaceCmsSection('PORTFOLIO_TRACK', homepageConfig.portfolio.embed_html);
+                
+                // Re-initialize carousel and load smallcases
+                if (typeof initPortfolioCarousel === 'function') {
+                    initPortfolioCarousel();
+                }
+                if (window.scEmbedController && typeof window.scEmbedController.load === 'function') {
+                    window.scEmbedController.load();
+                }
+            }
+            if (homepageConfig && homepageConfig.homepage_pricing) {
+                var hpPricing = homepageConfig.homepage_pricing;
+                var hpTargetAttr = hpPricing.button_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                var pricingHtml = '                    <h2 class="pricing-section-header-title cms-editable-highlight" data-field="homepage_pricing.title" data-label="Pricing Title">' + hpPricing.title + '</h2>\n\n' +
+                                  '                    <div style="margin-top: 2.2rem; margin-bottom: 1.5rem;">\n' +
+                                  '                        <a href="' + hpPricing.button_url + '"' + hpTargetAttr + ' class="btn-vibrate-outline cms-editable-highlight" data-field="homepage_pricing.button_text" data-label="Pricing Button Text">\n' +
+                                  '                            ' + hpPricing.button_text + '\n' +
+                                  '                        </a>\n' +
+                                  '                    </div>';
+                replaceCmsSection('HOMEPAGE_PRICING', pricingHtml);
+            }
+            if (homepageConfig && homepageConfig.compliance) {
+                var compHeaderHtml = '                <span class="disclosures-pre-title cms-editable-highlight" data-field="compliance.pre_title" data-label="Compliance Pre-title">' + (homepageConfig.compliance.pre_title || 'REGULATORY CORNER') + '</span>\n' +
+                                     '                <h2 class="disclosures-main-title cms-editable-highlight" data-field="compliance.title" data-label="Compliance Title">' + (homepageConfig.compliance.title || 'Transparency &amp; <em>Compliance</em>.') + '</h2>\n' +
+                                     '                <p class="disclosures-sub-title cms-editable-highlight" data-field="compliance.sub_title" data-label="Compliance Description">' + (homepageConfig.compliance.sub_title || 'Review our regulatory disclosures, client complaint statistics, and compliance audit history in accordance with SEBI guidelines.') + '</p>';
+               replaceCmsSection('COMPLIANCE_HEADER', compHeaderHtml);
+               
+               replaceCmsSection('COMPLIANCE_GRIEVANCE_TITLE', '                        <h3 class="disclosure-title cms-editable-highlight" data-field="compliance.title_grievance" data-label="Grievance Title">' + (homepageConfig.compliance.title_grievance || 'Grievance Status') + '</h3>');
+               replaceCmsSection('COMPLIANCE_AUDIT_TITLE', '                        <h3 class="disclosure-title cms-editable-highlight" data-field="compliance.title_audit" data-label="Audit Title">' + (homepageConfig.compliance.title_audit || 'Compliance Audit Status') + '</h3>');
+               replaceCmsSection('COMPLIANCE_AUDIT_INTRO', '                            <p class="disclosure-intro-text cms-editable-highlight" data-field="compliance.audit_intro" data-label="Audit Intro Text">\n' +
+                                                           '                                ' + (homepageConfig.compliance.audit_intro || '“Disclosure with respect to compliance with Annual compliance audit requirement under Regulation 25(3) of SEBI (Research Analyst) Regulations, 2014 for last financial years are as under:') + '\n' +
+                                                           '                            </p>');
+            }
             if (pricingConfig) {
                 replaceCmsSection('PRICING_TITLE', generatePricingTitleHtml(pricingConfig.pricing_title));
                 replaceCmsSection('PRICING_SUBTITLE', generatePricingSubtitleHtml(pricingConfig.pricing_subtitle));
@@ -472,6 +527,12 @@
         } else if (page === 'pricing.html') {
             if (homepageConfig && homepageConfig.navigation) {
                 replaceCmsSection('NAV', generateNavHtml(homepageConfig.navigation, ''));
+            }
+            if (homepageConfig && homepageConfig.header_buttons) {
+                var contactLink = homepageConfig.header_buttons.contact_us;
+                var contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                var contactHtml = '                <a href="' + contactLink.url + '" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' + contactTarget + '>' + contactLink.text + '</a>';
+                replaceCmsSection('NAV_CONTACT', contactHtml);
             }
             if (pricingConfig) {
                 replaceCmsSection('PRICING_TITLE', generatePricingTitleHtml(pricingConfig.pricing_title));
@@ -534,6 +595,9 @@
                     if (el.innerText !== val) {
                         el.innerText = val;
                     }
+                }
+                if (el.classList.contains('count-up')) {
+                    el.setAttribute('data-target', val);
                 }
             }
         });
