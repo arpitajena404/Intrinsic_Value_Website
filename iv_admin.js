@@ -1281,6 +1281,18 @@
             document.getElementById('cms-portfolio-embed-html').value = cmsState.portfolio.embed_html || '';
         }
 
+        // About Us Profile
+        if (cmsState.about_profile) {
+            document.getElementById('cms-about-name').value = cmsState.about_profile.name || '';
+            document.getElementById('cms-about-role').value = cmsState.about_profile.role || '';
+            document.getElementById('cms-about-photo').value = cmsState.about_profile.photo || '';
+            document.getElementById('cms-about-linkedin').value = cmsState.about_profile.linkedin || '';
+            document.getElementById('cms-about-twitter').value = cmsState.about_profile.twitter || '';
+            document.getElementById('cms-about-youtube').value = cmsState.about_profile.youtube || '';
+            document.getElementById('cms-about-paragraphs').value = (cmsState.about_profile.paragraphs || []).join('\n');
+            document.getElementById('cms-about-quote').value = cmsState.about_profile.quote || '';
+        }
+
         // Homepage Pricing
         if (cmsState.homepage_pricing) {
             document.getElementById('cms-homepage-pricing-title').value = cmsState.homepage_pricing.title || '';
@@ -1780,6 +1792,21 @@
         cmsState.homepage_pricing.button_text = document.getElementById('cms-homepage-pricing-btn-text').value;
         cmsState.homepage_pricing.button_url = document.getElementById('cms-homepage-pricing-btn-url').value;
         cmsState.homepage_pricing.button_new_tab = document.getElementById('cms-homepage-pricing-btn-target').checked;
+
+        // About Us Profile
+        cmsState.about_profile = cmsState.about_profile || {};
+        cmsState.about_profile.name = document.getElementById('cms-about-name').value;
+        cmsState.about_profile.role = document.getElementById('cms-about-role').value;
+        cmsState.about_profile.photo = document.getElementById('cms-about-photo').value;
+        cmsState.about_profile.linkedin = document.getElementById('cms-about-linkedin').value;
+        cmsState.about_profile.twitter = document.getElementById('cms-about-twitter').value;
+        cmsState.about_profile.youtube = document.getElementById('cms-about-youtube').value;
+        cmsState.about_profile.quote = document.getElementById('cms-about-quote').value;
+        
+        var paragraphsVal = document.getElementById('cms-about-paragraphs').value;
+        cmsState.about_profile.paragraphs = paragraphsVal.split('\n').map(function (s) {
+            return s.trim();
+        }).filter(function (s) { return s.length > 0; });
 
         cmsState.philosophy.title = document.getElementById('cms-philosophy-title').value;
         cmsState.news.title = document.getElementById('cms-news-title').value;

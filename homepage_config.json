@@ -846,5 +846,23 @@
             "url": "https://api.whatsapp.com/send/?phone=917354259486&text=Hello%2C%0D%0Ai+want+to+understand+about+your+services&type=phone_number&app_absent=0",
             "new_tab": true
         }
+    },
+    "about_profile": {
+        "name": "Nikhil Gangil",
+        "role": "Founder & Research Analyst",
+        "photo": "profile.jpeg",
+        "linkedin": "https://www.linkedin.com/in/nikhil-gangil-intrinsic-value-equity/",
+        "twitter": "https://x.com/Intrinsic_cycle",
+        "youtube": "https://www.youtube.com/@intrinsicvalueequity",
+        "paragraphs": [
+            "Nikhil Gangil is the Founder of <strong>Intrinsic Value Equity Advisors</strong> and a long-term practitioner of value investing, with over <strong>13 years of experience</strong> in Indian equity markets.",
+            "He holds an <strong>M.Tech from IIT Madras</strong> and has previously worked with reputed oil & gas and EPC organizations such as <strong>L&T and Worley</strong>. This background has given him hands-on exposure to <strong>infrastructure, construction, steel, oil & gas, and marine-linked businesses</strong>, particularly cyclical industries.",
+            "This experience enables him to understand how business cycles evolve and how long-term value is created across different economic phases.",
+            "Nikhil's investing philosophy is built on the belief that <strong>value and growth are not opposites, but complements</strong>. As he often emphasizes, <em>\"A value investor should not underestimate growth, and a growth investor should not underestimate value.\"</em>",
+            "His core strength lies in identifying <strong>well-run businesses with sustainable growth potential</strong>, available at <strong>reasonable valuations</strong>, while maintaining a strong focus on <strong>risk management and capital protection</strong>.",
+            "Nikhil believes that if downside risks are controlled and permanent capital loss is avoided, <strong>long-term compounding and superior CAGR outcomes emerge naturally</strong> over time.",
+            "His approach to investing can be summarized in a simple philosophy:"
+        ],
+        "quote": "Buying peace in chaos is value investing."
     }
 }

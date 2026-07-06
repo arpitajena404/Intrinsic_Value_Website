@@ -210,7 +210,13 @@
         var elements = document.querySelectorAll('[data-field]');
         elements.forEach(function (el) {
             var field = el.getAttribute('data-field');
-            if (field.indexOf('navigation') === 0 || field.endsWith('.num') || field.endsWith('.suffix')) {
+            if (field.indexOf('navigation') === 0 || 
+                field.endsWith('.num') || 
+                field.endsWith('.suffix') ||
+                el.tagName === 'IMG' ||
+                field.indexOf('about_profile.linkedin') === 0 ||
+                field.indexOf('about_profile.twitter') === 0 ||
+                field.indexOf('about_profile.youtube') === 0) {
                 el.removeAttribute('contenteditable');
                 return;
             }
@@ -360,6 +366,22 @@
 
         var fragment = document.createRange().createContextualFragment(htmlString);
         parent.insertBefore(fragment, endNode);
+    }
+
+    // Team grid cards for about page
+    function generateTeamCardsHtmlForAbout(members) {
+        if (!members) return '';
+        return members.map(function (member, idx) {
+            return '                    <div class="team-card">\n' +
+                   '                        <div class="team-avatar-wrapper">\n' +
+                   '                            <img src="' + (member.photo || 'profile.jpeg') + '" alt="' + member.name + '" class="team-avatar" loading="lazy">\n' +
+                   '                        </div>\n' +
+                   '                        <div class="team-info">\n' +
+                   '                            <h3 class="team-name cms-editable-highlight" data-field="team.members.' + idx + '.name">' + member.name + '</h3>\n' +
+                   '                            <p class="team-role cms-editable-highlight" data-field="team.members.' + idx + '.role">' + member.role + '</p>\n' +
+                   '                        </div>\n' +
+                   '                    </div>';
+        }).join('\n');
     }
 
     // Navigation items generator
@@ -542,6 +564,62 @@
                 replaceCmsSection('PRICING_CARDS', generatePricingCardsHtml(pricingConfig.cards));
                 replaceCmsSection('COMPARISON_TABLE', generateComparisonTableHtml(pricingConfig));
             }
+        } else if (page === 'about.html') {
+            if (homepageConfig && homepageConfig.navigation) {
+                replaceCmsSection('NAV', generateNavHtml(homepageConfig.navigation, ''));
+            }
+            if (homepageConfig && homepageConfig.header_buttons) {
+                var contactLink = homepageConfig.header_buttons.contact_us;
+                var contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                var contactHtml = '                <a href="' + contactLink.url + '" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' + contactTarget + '>' + contactLink.text + '</a>';
+                replaceCmsSection('NAV_CONTACT', contactHtml);
+            }
+            if (homepageConfig && homepageConfig.about_profile) {
+                var ap = homepageConfig.about_profile;
+                
+                var headerHtml = '<div class="profile-title-area">\n' +
+                                 '                            <h1 class="profile-name cms-editable-highlight" data-field="about_profile.name" data-label="Bio Name">' + ap.name + '</h1>\n' +
+                                 '                            <p class="profile-subtitle cms-editable-highlight" data-field="about_profile.role" data-label="Bio Role">' + ap.role + '</p>\n' +
+                                 '                            <div class="profile-underline"></div>\n' +
+                                 '                        </div>';
+                replaceCmsSection('ABOUT_PROFILE_HEADER', headerHtml);
+                
+                var socialsHtml = '<div class="profile-socials">\n' +
+                                  '                            <a href="' + ap.linkedin + '" target="_blank" rel="noopener noreferrer" class="social-link-btn cms-editable-highlight" data-field="about_profile.linkedin" data-label="LinkedIn Link" aria-label="LinkedIn">\n' +
+                                  '                                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>\n' +
+                                  '                            </a>\n' +
+                                  '                            <a href="' + ap.twitter + '" target="_blank" rel="noopener noreferrer" class="social-link-btn cms-editable-highlight" data-field="about_profile.twitter" data-label="Twitter Link" aria-label="Twitter">\n' +
+                                  '                                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>\n' +
+                                  '                            </a>\n' +
+                                  '                            <a href="' + ap.youtube + '" target="_blank" rel="noopener noreferrer" class="social-link-btn cms-editable-highlight" data-field="about_profile.youtube" data-label="YouTube Link" aria-label="YouTube">\n' +
+                                  '                                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.163c-.272-1.016-1.071-1.815-2.087-2.087C19.574 3.543 12 3.543 12 3.543s-7.574 0-9.411.533c-1.016.272-1.815 1.071-2.087 2.087C0 8.007 0 12 0 12s0 3.993.502 5.837c.272 1.016 1.071 1.815 2.087 2.087 1.837.533 9.411.533 9.411.533s7.574 0 9.411-.533c1.016-.272 1.815-1.071 2.087-2.087.502-1.844.502-5.837.502-5.837s0-3.993-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>\n' +
+                                  '                            </a>\n' +
+                                  '                        </div>';
+                replaceCmsSection('ABOUT_PROFILE_SOCIALS', socialsHtml);
+                
+                var paragraphsHtml = '<div class="profile-paragraphs">\n' +
+                                     ap.paragraphs.map(function (p, idx) {
+                                         return '                        <p class="cms-editable-highlight" data-field="about_profile.paragraphs.' + idx + '" data-label="Bio Paragraph ' + (idx+1) + '">' + p + '</p>';
+                                     }).join('\n') +
+                                     '\n                    </div>';
+                replaceCmsSection('ABOUT_PROFILE_PARAGRAPHS', paragraphsHtml);
+                
+                var quoteHtml = '<div class="profile-quote-box">\n' +
+                                '                        <p class="quote-text cms-editable-highlight" data-field="about_profile.quote" data-label="Bio Quote">' + ap.quote + '</p>\n' +
+                                '                    </div>';
+                replaceCmsSection('ABOUT_PROFILE_QUOTE', quoteHtml);
+                
+                var photoHtml = '<div class="profile-image-col">\n' +
+                                '                    <div class="profile-img-wrapper glow-border">\n' +
+                                '                        <img src="' + (ap.photo || 'profile.jpeg') + '" alt="' + ap.name + '" class="profile-photo cms-editable-highlight" data-field="about_profile.photo" data-label="Bio Photo" loading="lazy">\n' +
+                                '                    </div>\n' +
+                                '                </div>';
+                replaceCmsSection('ABOUT_PROFILE_PHOTO', photoHtml);
+            }
+            if (homepageConfig && homepageConfig.team) {
+                replaceCmsSection('TEAM_TITLE', '                    <h2 class="team-section-title cms-editable-highlight" data-field="team.title">' + homepageConfig.team.title + '</h2>');
+                replaceCmsSection('TEAM_CARDS', generateTeamCardsHtmlForAbout(homepageConfig.team.members));
+            }
         }
 
         // Apply styles block
@@ -579,6 +657,18 @@
 
             var val = getNestedKey(configObj, field);
             if (val !== undefined && val !== null) {
+                if (el.tagName === 'A' && (field.indexOf('about_profile.linkedin') === 0 || field.indexOf('about_profile.twitter') === 0 || field.indexOf('about_profile.youtube') === 0)) {
+                    if (el.getAttribute('href') !== val) {
+                        el.setAttribute('href', val);
+                    }
+                    return;
+                }
+                if (el.tagName === 'IMG') {
+                    if (el.getAttribute('src') !== val) {
+                        el.setAttribute('src', val);
+                    }
+                    return;
+                }
                 var isHtml = /<[a-z][\s\S]*>/i.test(val) || 
                              field.indexOf('heading_html') !== -1 || 
                              field.indexOf('desc') !== -1 || 

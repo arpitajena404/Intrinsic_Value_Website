@@ -1486,6 +1486,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <button class="iv-cms-tab-link" data-tab="tab-team-testimonials">Team & Reviews</button>
                         <button class="iv-cms-tab-link" data-tab="tab-footer-faqs">FAQs & Footer</button>
                         <button class="iv-cms-tab-link" data-tab="tab-pricing">Plans & Pricing</button>
+                        <button class="iv-cms-tab-link" data-tab="tab-about-us">About Us Page</button>
                         <button class="iv-cms-tab-link" data-tab="tab-live-funnel">Live Funnel</button>
                         <button class="iv-cms-tab-link" data-tab="tab-export">Export & Build</button>
                     </div>
@@ -2056,6 +2057,56 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </div>
                     </div>
 
+                </div>
+
+                <!-- TAB 7: ABOUT US PAGE -->
+                <div id="tab-about-us" class="iv-cms-tab-content">
+                    <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">About Us - Bio Content</h4>
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Bio Name <span class="req">Required</span></label>
+                            <input type="text" id="cms-about-name" class="iv-cms-input">
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Bio Role / Subtitle <span class="req">Required</span></label>
+                            <input type="text" id="cms-about-role" class="iv-cms-input">
+                        </div>
+                    </div>
+                    
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Profile Photo Path</label>
+                        <div class="iv-cms-file-picker">
+                            <input type="text" id="cms-about-photo" class="iv-cms-input" style="flex-grow: 1;">
+                            <button type="button" class="iv-cms-file-btn" onclick="simulateFileUpload('cms-about-photo', 'profile_images')">
+                                <i class="fa-solid fa-file-image"></i> Select File
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">LinkedIn Link</label>
+                            <input type="text" id="cms-about-linkedin" class="iv-cms-input">
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">Twitter / X Link</label>
+                            <input type="text" id="cms-about-twitter" class="iv-cms-input">
+                        </div>
+                        <div class="iv-cms-group">
+                            <label class="iv-cms-label">YouTube Link</label>
+                            <input type="text" id="cms-about-youtube" class="iv-cms-input">
+                        </div>
+                    </div>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Bio Paragraphs (one per line, HTML tags allowed) <span class="req">Required</span></label>
+                        <textarea id="cms-about-paragraphs" class="iv-cms-textarea" style="min-height: 180px; font-size: 13px; line-height: 1.5;"></textarea>
+                    </div>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Callout Quote Text <span class="req">Required</span></label>
+                        <input type="text" id="cms-about-quote" class="iv-cms-input">
+                    </div>
                 </div>
 
                 <!-- TAB 7: LIVE FUNNEL CMS -->
