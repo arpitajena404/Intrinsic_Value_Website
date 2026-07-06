@@ -3489,11 +3489,17 @@
                             }, 1000);
                         })
                         .catch(function(err) {
-                            gitRollbackBtn.disabled = false;
-                            gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
-                            if (gitStatusMsg) {
-                                gitStatusMsg.style.color = '#EA4335';
-                                gitStatusMsg.innerText = 'Rollback Failed:\n' + err.message;
+                            // If it's a network error (like Failed to fetch), fallback to direct GitHub API
+                            if (pat && repo) {
+                                console.warn("[CMS Admin] Server rollback failed or offline. Falling back to direct GitHub API. Error:", err);
+                                runGitHubDirectRollback(pat, repo);
+                            } else {
+                                gitRollbackBtn.disabled = false;
+                                gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
+                                if (gitStatusMsg) {
+                                    gitStatusMsg.style.color = '#EA4335';
+                                    gitStatusMsg.innerText = 'Rollback Failed:\n' + err.message;
+                                }
                             }
                         });
                     } catch (e) {
@@ -3802,11 +3808,17 @@
                         }
                     })
                     .catch(function (err) {
-                        gitPushBtn.disabled = false;
-                        gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
-                        if (gitStatusMsg) {
-                            gitStatusMsg.style.color = '#EA4335';
-                            gitStatusMsg.innerText = 'Deployment Failed:\n' + err.message;
+                        // If it's a network error (like Failed to fetch), fallback to direct GitHub API
+                        if (pat && repo) {
+                            console.warn("[CMS Admin] Server push failed or offline. Falling back to direct GitHub API. Error:", err);
+                            runGitHubDirectPush(commitMessage, pat, repo);
+                        } else {
+                            gitPushBtn.disabled = false;
+                            gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                            if (gitStatusMsg) {
+                                gitStatusMsg.style.color = '#EA4335';
+                                gitStatusMsg.innerText = 'Deployment Failed:\n' + err.message;
+                            }
                         }
                     });
                 } catch (e) {
