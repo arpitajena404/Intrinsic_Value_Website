@@ -210,7 +210,13 @@
         var elements = document.querySelectorAll('[data-field]');
         elements.forEach(function (el) {
             var field = el.getAttribute('data-field');
-            if (field.indexOf('navigation') === 0) {
+            if (field.indexOf('navigation') === 0 || 
+                field.endsWith('.num') || 
+                field.endsWith('.suffix') ||
+                el.tagName === 'IMG' ||
+                field.indexOf('about_profile.linkedin') === 0 ||
+                field.indexOf('about_profile.twitter') === 0 ||
+                field.indexOf('about_profile.youtube') === 0) {
                 el.removeAttribute('contenteditable');
                 return;
             }
@@ -362,15 +368,45 @@
         parent.insertBefore(fragment, endNode);
     }
 
+    // Team grid cards for about page
+    function generateTeamCardsHtmlForAbout(members) {
+        if (!members) return '';
+        return members.map(function (member, idx) {
+            return '                    <div class="team-card">\n' +
+                   '                        <div class="team-avatar-wrapper">\n' +
+                   '                            <img src="' + (member.photo || 'profile.jpeg') + '" alt="' + member.name + '" class="team-avatar" loading="lazy">\n' +
+                   '                        </div>\n' +
+                   '                        <div class="team-info">\n' +
+                   '                            <h3 class="team-name cms-editable-highlight" data-field="team.members.' + idx + '.name">' + member.name + '</h3>\n' +
+                   '                            <p class="team-role cms-editable-highlight" data-field="team.members.' + idx + '.role">' + member.role + '</p>\n' +
+                   '                        </div>\n' +
+                   '                    </div>';
+        }).join('\n');
+    }
+
     // Navigation items generator
     function generateNavHtml(navigation, prefix) {
         if (!navigation) return '';
-        return navigation.map(function (link, idx) {
+        var htmlList = navigation.map(function (link, idx) {
             var isAbsolute = /^(?:https?:)?\/\//i.test(link.url) || link.url.startsWith('/') || link.url.startsWith('#');
             var url = isAbsolute ? link.url : (prefix + link.url);
             var targetAttr = link.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
             return '                    <li><a href="' + url + '" class="nav-link nav-item-el cms-editable-highlight" data-field="navigation.' + idx + '.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Navigation Link Text"' + targetAttr + '>' + link.text + '</a></li>';
-        }).join('\n');
+        });
+
+        if (homepageConfig && homepageConfig.header_buttons) {
+            var loginLink = homepageConfig.header_buttons.client_login;
+            var loginTarget = loginLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+            htmlList.push('                    <li><a href="' + loginLink.url + '" class="nav-link nav-item-el cms-editable-highlight" data-field="header_buttons.client_login.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Client Login Text"' + loginTarget + '><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>' + loginLink.text + '</a></li>');
+
+            var contactLink = homepageConfig.header_buttons.contact_us;
+            var contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+            htmlList.push('                    <li class="nav-actions-mobile">\n' +
+                          '                        <a href="' + contactLink.url + '" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' + contactTarget + '>' + contactLink.text + '</a>\n' +
+                          '                    </li>');
+        }
+
+        return htmlList.join('\n');
     }
 
     // Pricing page generators
@@ -461,6 +497,47 @@
             if (homepageConfig && homepageConfig.navigation) {
                 replaceCmsSection('NAV', generateNavHtml(homepageConfig.navigation, ''));
             }
+            if (homepageConfig && homepageConfig.header_buttons) {
+                var contactLink = homepageConfig.header_buttons.contact_us;
+                var contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                var contactHtml = '                <a href="' + contactLink.url + '" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' + contactTarget + '>' + contactLink.text + '</a>';
+                replaceCmsSection('NAV_CONTACT', contactHtml);
+            }
+            if (homepageConfig && homepageConfig.portfolio) {
+                replaceCmsSection('PORTFOLIO_TITLE', '<h2 class="team-section-heading cms-editable-highlight" data-field="portfolio.title" data-label="Portfolio Title">' + homepageConfig.portfolio.title + '</h2>');
+                replaceCmsSection('PORTFOLIO_TRACK', homepageConfig.portfolio.embed_html);
+                
+                // Re-initialize carousel and load smallcases
+                if (typeof initPortfolioCarousel === 'function') {
+                    initPortfolioCarousel();
+                }
+                if (window.scEmbedController && typeof window.scEmbedController.load === 'function') {
+                    window.scEmbedController.load();
+                }
+            }
+            if (homepageConfig && homepageConfig.homepage_pricing) {
+                var hpPricing = homepageConfig.homepage_pricing;
+                var hpTargetAttr = hpPricing.button_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                var pricingHtml = '                    <h2 class="pricing-section-header-title cms-editable-highlight" data-field="homepage_pricing.title" data-label="Pricing Title">' + hpPricing.title + '</h2>\n\n' +
+                                  '                    <div style="margin-top: 2.2rem; margin-bottom: 1.5rem;">\n' +
+                                  '                        <a href="' + hpPricing.button_url + '"' + hpTargetAttr + ' class="btn-vibrate-outline cms-editable-highlight" data-field="homepage_pricing.button_text" data-label="Pricing Button Text">\n' +
+                                  '                            ' + hpPricing.button_text + '\n' +
+                                  '                        </a>\n' +
+                                  '                    </div>';
+                replaceCmsSection('HOMEPAGE_PRICING', pricingHtml);
+            }
+            if (homepageConfig && homepageConfig.compliance) {
+                var compHeaderHtml = '                <span class="disclosures-pre-title cms-editable-highlight" data-field="compliance.pre_title" data-label="Compliance Pre-title">' + (homepageConfig.compliance.pre_title || 'REGULATORY CORNER') + '</span>\n' +
+                                     '                <h2 class="disclosures-main-title cms-editable-highlight" data-field="compliance.title" data-label="Compliance Title">' + (homepageConfig.compliance.title || 'Transparency &amp; <em>Compliance</em>.') + '</h2>\n' +
+                                     '                <p class="disclosures-sub-title cms-editable-highlight" data-field="compliance.sub_title" data-label="Compliance Description">' + (homepageConfig.compliance.sub_title || 'Review our regulatory disclosures, client complaint statistics, and compliance audit history in accordance with SEBI guidelines.') + '</p>';
+               replaceCmsSection('COMPLIANCE_HEADER', compHeaderHtml);
+               
+               replaceCmsSection('COMPLIANCE_GRIEVANCE_TITLE', '                        <h3 class="disclosure-title cms-editable-highlight" data-field="compliance.title_grievance" data-label="Grievance Title">' + (homepageConfig.compliance.title_grievance || 'Grievance Status') + '</h3>');
+               replaceCmsSection('COMPLIANCE_AUDIT_TITLE', '                        <h3 class="disclosure-title cms-editable-highlight" data-field="compliance.title_audit" data-label="Audit Title">' + (homepageConfig.compliance.title_audit || 'Compliance Audit Status') + '</h3>');
+               replaceCmsSection('COMPLIANCE_AUDIT_INTRO', '                            <p class="disclosure-intro-text cms-editable-highlight" data-field="compliance.audit_intro" data-label="Audit Intro Text">\n' +
+                                                           '                                ' + (homepageConfig.compliance.audit_intro || '“Disclosure with respect to compliance with Annual compliance audit requirement under Regulation 25(3) of SEBI (Research Analyst) Regulations, 2014 for last financial years are as under:') + '\n' +
+                                                           '                            </p>');
+            }
             if (pricingConfig) {
                 replaceCmsSection('PRICING_TITLE', generatePricingTitleHtml(pricingConfig.pricing_title));
                 replaceCmsSection('PRICING_SUBTITLE', generatePricingSubtitleHtml(pricingConfig.pricing_subtitle));
@@ -473,6 +550,12 @@
             if (homepageConfig && homepageConfig.navigation) {
                 replaceCmsSection('NAV', generateNavHtml(homepageConfig.navigation, ''));
             }
+            if (homepageConfig && homepageConfig.header_buttons) {
+                var contactLink = homepageConfig.header_buttons.contact_us;
+                var contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                var contactHtml = '                <a href="' + contactLink.url + '" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' + contactTarget + '>' + contactLink.text + '</a>';
+                replaceCmsSection('NAV_CONTACT', contactHtml);
+            }
             if (pricingConfig) {
                 replaceCmsSection('PRICING_TITLE', generatePricingTitleHtml(pricingConfig.pricing_title));
                 replaceCmsSection('PRICING_SUBTITLE', generatePricingSubtitleHtml(pricingConfig.pricing_subtitle));
@@ -480,6 +563,62 @@
                 replaceCmsSection('COMPARISON_SUBTITLE', '<p class="comparison-subtitle">' + pricingConfig.comparison_subtitle + '</p>');
                 replaceCmsSection('PRICING_CARDS', generatePricingCardsHtml(pricingConfig.cards));
                 replaceCmsSection('COMPARISON_TABLE', generateComparisonTableHtml(pricingConfig));
+            }
+        } else if (page === 'about.html') {
+            if (homepageConfig && homepageConfig.navigation) {
+                replaceCmsSection('NAV', generateNavHtml(homepageConfig.navigation, ''));
+            }
+            if (homepageConfig && homepageConfig.header_buttons) {
+                var contactLink = homepageConfig.header_buttons.contact_us;
+                var contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                var contactHtml = '                <a href="' + contactLink.url + '" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' + contactTarget + '>' + contactLink.text + '</a>';
+                replaceCmsSection('NAV_CONTACT', contactHtml);
+            }
+            if (homepageConfig && homepageConfig.about_profile) {
+                var ap = homepageConfig.about_profile;
+                
+                var headerHtml = '<div class="profile-title-area">\n' +
+                                 '                            <h1 class="profile-name cms-editable-highlight" data-field="about_profile.name" data-label="Bio Name">' + ap.name + '</h1>\n' +
+                                 '                            <p class="profile-subtitle cms-editable-highlight" data-field="about_profile.role" data-label="Bio Role">' + ap.role + '</p>\n' +
+                                 '                            <div class="profile-underline"></div>\n' +
+                                 '                        </div>';
+                replaceCmsSection('ABOUT_PROFILE_HEADER', headerHtml);
+                
+                var socialsHtml = '<div class="profile-socials">\n' +
+                                  '                            <a href="' + ap.linkedin + '" target="_blank" rel="noopener noreferrer" class="social-link-btn cms-editable-highlight" data-field="about_profile.linkedin" data-label="LinkedIn Link" aria-label="LinkedIn">\n' +
+                                  '                                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>\n' +
+                                  '                            </a>\n' +
+                                  '                            <a href="' + ap.twitter + '" target="_blank" rel="noopener noreferrer" class="social-link-btn cms-editable-highlight" data-field="about_profile.twitter" data-label="Twitter Link" aria-label="Twitter">\n' +
+                                  '                                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>\n' +
+                                  '                            </a>\n' +
+                                  '                            <a href="' + ap.youtube + '" target="_blank" rel="noopener noreferrer" class="social-link-btn cms-editable-highlight" data-field="about_profile.youtube" data-label="YouTube Link" aria-label="YouTube">\n' +
+                                  '                                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.163c-.272-1.016-1.071-1.815-2.087-2.087C19.574 3.543 12 3.543 12 3.543s-7.574 0-9.411.533c-1.016.272-1.815 1.071-2.087 2.087C0 8.007 0 12 0 12s0 3.993.502 5.837c.272 1.016 1.071 1.815 2.087 2.087 1.837.533 9.411.533 9.411.533s7.574 0 9.411-.533c1.016-.272 1.815-1.071 2.087-2.087.502-1.844.502-5.837.502-5.837s0-3.993-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>\n' +
+                                  '                            </a>\n' +
+                                  '                        </div>';
+                replaceCmsSection('ABOUT_PROFILE_SOCIALS', socialsHtml);
+                
+                var paragraphsHtml = '<div class="profile-paragraphs">\n' +
+                                     ap.paragraphs.map(function (p, idx) {
+                                         return '                        <p class="cms-editable-highlight" data-field="about_profile.paragraphs.' + idx + '" data-label="Bio Paragraph ' + (idx+1) + '">' + p + '</p>';
+                                     }).join('\n') +
+                                     '\n                    </div>';
+                replaceCmsSection('ABOUT_PROFILE_PARAGRAPHS', paragraphsHtml);
+                
+                var quoteHtml = '<div class="profile-quote-box">\n' +
+                                '                        <p class="quote-text cms-editable-highlight" data-field="about_profile.quote" data-label="Bio Quote">' + ap.quote + '</p>\n' +
+                                '                    </div>';
+                replaceCmsSection('ABOUT_PROFILE_QUOTE', quoteHtml);
+                
+                var photoHtml = '<div class="profile-image-col">\n' +
+                                '                    <div class="profile-img-wrapper glow-border">\n' +
+                                '                        <img src="' + (ap.photo || 'profile.jpeg') + '" alt="' + ap.name + '" class="profile-photo cms-editable-highlight" data-field="about_profile.photo" data-label="Bio Photo" loading="lazy">\n' +
+                                '                    </div>\n' +
+                                '                </div>';
+                replaceCmsSection('ABOUT_PROFILE_PHOTO', photoHtml);
+            }
+            if (homepageConfig && homepageConfig.team) {
+                replaceCmsSection('TEAM_TITLE', '                    <h2 class="team-section-title cms-editable-highlight" data-field="team.title">' + homepageConfig.team.title + '</h2>');
+                replaceCmsSection('TEAM_CARDS', generateTeamCardsHtmlForAbout(homepageConfig.team.members));
             }
         }
 
@@ -518,6 +657,18 @@
 
             var val = getNestedKey(configObj, field);
             if (val !== undefined && val !== null) {
+                if (el.tagName === 'A' && (field.indexOf('about_profile.linkedin') === 0 || field.indexOf('about_profile.twitter') === 0 || field.indexOf('about_profile.youtube') === 0)) {
+                    if (el.getAttribute('href') !== val) {
+                        el.setAttribute('href', val);
+                    }
+                    return;
+                }
+                if (el.tagName === 'IMG') {
+                    if (el.getAttribute('src') !== val) {
+                        el.setAttribute('src', val);
+                    }
+                    return;
+                }
                 var isHtml = /<[a-z][\s\S]*>/i.test(val) || 
                              field.indexOf('heading_html') !== -1 || 
                              field.indexOf('desc') !== -1 || 
@@ -534,6 +685,9 @@
                     if (el.innerText !== val) {
                         el.innerText = val;
                     }
+                }
+                if (el.classList.contains('count-up')) {
+                    el.setAttribute('data-target', val);
                 }
             }
         });

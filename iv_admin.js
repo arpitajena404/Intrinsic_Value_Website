@@ -1260,6 +1260,57 @@
         document.getElementById('cms-hero-media-url').value = cmsState.hero.media.url || '';
         toggleMediaUrlField();
 
+        // Staircase Card
+        document.getElementById('cms-hero-card-headline').value = cmsState.hero.card_headline_html || '<em>Compound</em> Wealth,<br>Real Value.';
+        document.getElementById('cms-hero-card-sub').value = cmsState.hero.card_sub || 'Intrinsic Value Equity Advisors';
+
+        // Navbar Action Buttons
+        if (cmsState.header_buttons) {
+            document.getElementById('cms-nav-login-text').value = cmsState.header_buttons.client_login?.text || 'Client Login';
+            document.getElementById('cms-nav-login-url').value = cmsState.header_buttons.client_login?.url || '';
+            document.getElementById('cms-nav-login-target').checked = !!cmsState.header_buttons.client_login?.new_tab;
+            
+            document.getElementById('cms-nav-contact-text').value = cmsState.header_buttons.contact_us?.text || 'Contact Us';
+            document.getElementById('cms-nav-contact-url').value = cmsState.header_buttons.contact_us?.url || '';
+            document.getElementById('cms-nav-contact-target').checked = !!cmsState.header_buttons.contact_us?.new_tab;
+        }
+
+        // Portfolio Title & Embed html
+        if (cmsState.portfolio) {
+            document.getElementById('cms-portfolio-title').value = cmsState.portfolio.title || '';
+            document.getElementById('cms-portfolio-embed-html').value = cmsState.portfolio.embed_html || '';
+        }
+
+        // About Us Profile
+        if (cmsState.about_profile) {
+            document.getElementById('cms-about-name').value = cmsState.about_profile.name || '';
+            document.getElementById('cms-about-role').value = cmsState.about_profile.role || '';
+            document.getElementById('cms-about-photo').value = cmsState.about_profile.photo || '';
+            document.getElementById('cms-about-linkedin').value = cmsState.about_profile.linkedin || '';
+            document.getElementById('cms-about-twitter').value = cmsState.about_profile.twitter || '';
+            document.getElementById('cms-about-youtube').value = cmsState.about_profile.youtube || '';
+            document.getElementById('cms-about-paragraphs').value = (cmsState.about_profile.paragraphs || []).join('\n');
+            document.getElementById('cms-about-quote').value = cmsState.about_profile.quote || '';
+        }
+
+        // Homepage Pricing
+        if (cmsState.homepage_pricing) {
+            document.getElementById('cms-homepage-pricing-title').value = cmsState.homepage_pricing.title || '';
+            document.getElementById('cms-homepage-pricing-btn-text').value = cmsState.homepage_pricing.button_text || '';
+            document.getElementById('cms-homepage-pricing-btn-url').value = cmsState.homepage_pricing.button_url || '';
+            document.getElementById('cms-homepage-pricing-btn-target').checked = !!cmsState.homepage_pricing.button_new_tab;
+        }
+
+        // Transparency & Compliance
+        if (cmsState.compliance) {
+            document.getElementById('cms-compliance-pre-title').value = cmsState.compliance.pre_title || 'REGULATORY CORNER';
+            document.getElementById('cms-compliance-title').value = cmsState.compliance.title || 'Transparency & Compliance.';
+            document.getElementById('cms-compliance-subtitle').value = cmsState.compliance.sub_title || '';
+            document.getElementById('cms-compliance-grievance-title').value = cmsState.compliance.title_grievance || 'Grievance Status';
+            document.getElementById('cms-compliance-audit-title').value = cmsState.compliance.title_audit || 'Compliance Audit Status';
+            document.getElementById('cms-compliance-audit-intro').value = cmsState.compliance.audit_intro || '';
+        }
+
         document.getElementById('cms-philosophy-title').value = cmsState.philosophy.title || '';
         document.getElementById('cms-news-title').value = cmsState.news.title || '';
         document.getElementById('cms-case-title').value = cmsState.case_studies.title || '';
@@ -1713,6 +1764,50 @@
         cmsState.hero.media.type = document.getElementById('cms-hero-media-type').value;
         cmsState.hero.media.url = document.getElementById('cms-hero-media-url').value;
 
+        // Staircase Card
+        cmsState.hero.card_headline_html = document.getElementById('cms-hero-card-headline').value;
+        cmsState.hero.card_sub = document.getElementById('cms-hero-card-sub').value;
+
+        // Navbar Action Buttons
+        cmsState.header_buttons = cmsState.header_buttons || {};
+        cmsState.header_buttons.client_login = {
+            text: document.getElementById('cms-nav-login-text').value,
+            url: document.getElementById('cms-nav-login-url').value,
+            new_tab: document.getElementById('cms-nav-login-target').checked
+        };
+        cmsState.header_buttons.contact_us = {
+            text: document.getElementById('cms-nav-contact-text').value,
+            url: document.getElementById('cms-nav-contact-url').value,
+            new_tab: document.getElementById('cms-nav-contact-target').checked
+        };
+
+        // Portfolio Title & Embed HTML
+        cmsState.portfolio = cmsState.portfolio || {};
+        cmsState.portfolio.title = document.getElementById('cms-portfolio-title').value;
+        cmsState.portfolio.embed_html = document.getElementById('cms-portfolio-embed-html').value;
+
+        // Homepage Pricing
+        cmsState.homepage_pricing = cmsState.homepage_pricing || {};
+        cmsState.homepage_pricing.title = document.getElementById('cms-homepage-pricing-title').value;
+        cmsState.homepage_pricing.button_text = document.getElementById('cms-homepage-pricing-btn-text').value;
+        cmsState.homepage_pricing.button_url = document.getElementById('cms-homepage-pricing-btn-url').value;
+        cmsState.homepage_pricing.button_new_tab = document.getElementById('cms-homepage-pricing-btn-target').checked;
+
+        // About Us Profile
+        cmsState.about_profile = cmsState.about_profile || {};
+        cmsState.about_profile.name = document.getElementById('cms-about-name').value;
+        cmsState.about_profile.role = document.getElementById('cms-about-role').value;
+        cmsState.about_profile.photo = document.getElementById('cms-about-photo').value;
+        cmsState.about_profile.linkedin = document.getElementById('cms-about-linkedin').value;
+        cmsState.about_profile.twitter = document.getElementById('cms-about-twitter').value;
+        cmsState.about_profile.youtube = document.getElementById('cms-about-youtube').value;
+        cmsState.about_profile.quote = document.getElementById('cms-about-quote').value;
+        
+        var paragraphsVal = document.getElementById('cms-about-paragraphs').value;
+        cmsState.about_profile.paragraphs = paragraphsVal.split('\n').map(function (s) {
+            return s.trim();
+        }).filter(function (s) { return s.length > 0; });
+
         cmsState.philosophy.title = document.getElementById('cms-philosophy-title').value;
         cmsState.news.title = document.getElementById('cms-news-title').value;
         cmsState.case_studies.title = document.getElementById('cms-case-title').value;
@@ -1745,8 +1840,15 @@
         var timingsVal = document.getElementById('cms-footer-contact-timings').value;
         cmsState.footer.contact.timings = timingsVal.split('\n').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
 
-        // Compliance Years
+        // Compliance Settings & Titles
         cmsState.compliance = cmsState.compliance || {};
+        cmsState.compliance.pre_title = document.getElementById('cms-compliance-pre-title').value;
+        cmsState.compliance.title = document.getElementById('cms-compliance-title').value;
+        cmsState.compliance.sub_title = document.getElementById('cms-compliance-subtitle').value;
+        cmsState.compliance.title_grievance = document.getElementById('cms-compliance-grievance-title').value;
+        cmsState.compliance.title_audit = document.getElementById('cms-compliance-audit-title').value;
+        cmsState.compliance.audit_intro = document.getElementById('cms-compliance-audit-intro').value;
+
         var yearsVal = document.getElementById('cms-regulatory-years').value;
         cmsState.compliance.years = yearsVal.split(',').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
         cmsState.compliance.default_year = document.getElementById('cms-grievance-default-year').value;
@@ -3221,6 +3323,110 @@
             });
         }
 
+        function runGitHubDirectRollback(pat, repo) {
+            if (!pat || !repo) {
+                gitRollbackBtn.disabled = false;
+                gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
+                if (gitStatusMsg) {
+                    gitStatusMsg.style.color = '#EA4335';
+                    gitStatusMsg.innerText = 'Error: Missing GitHub credentials configuration.';
+                }
+                alert('To rollback changes directly on GitHub, you must configure your GitHub PAT and Repository URL in the settings panel.');
+                return;
+            }
+
+            var cleanRepo = repo.replace(/^https?:\/\/github\.com\//i, '');
+            cleanRepo = cleanRepo.replace(/\.git$/i, '');
+            var branch = 'main';
+
+            if (gitStatusMsg) {
+                gitStatusMsg.style.display = 'block';
+                gitStatusMsg.style.color = '#FF8C00';
+                gitStatusMsg.innerText = 'Connecting to GitHub...';
+            }
+
+            var headers = {
+                'Authorization': 'token ' + pat,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            };
+
+            // 1. Get branch head reference
+            fetch('https://api.github.com/repos/' + cleanRepo + '/git/ref/heads/' + branch, { headers: headers })
+                .then(function(res) {
+                    if (res.status === 404) {
+                        throw new Error('Branch main not found. Check repository path or token.');
+                    }
+                    if (!res.ok) {
+                        throw new Error('Failed to fetch branch reference (HTTP ' + res.status + ')');
+                    }
+                    return res.json();
+                })
+                .then(function(data) {
+                    var lastCommitSha = data.object.sha;
+                    if (gitStatusMsg) gitStatusMsg.innerText = 'Retrieving details for the latest commit...';
+                    
+                    // 2. Fetch the commit details to find parent commit(s)
+                    return fetch('https://api.github.com/repos/' + cleanRepo + '/git/commits/' + lastCommitSha, { headers: headers });
+                })
+                .then(function(res) {
+                    if (!res.ok) throw new Error('Failed to fetch commit details (HTTP ' + res.status + ')');
+                    return res.json();
+                })
+                .then(function(commitData) {
+                    if (!commitData.parents || commitData.parents.length === 0) {
+                        throw new Error('No previous commit found to rollback to (this appears to be the initial commit).');
+                    }
+                    var parentSha = commitData.parents[0].sha;
+                    if (gitStatusMsg) gitStatusMsg.innerText = 'Resetting branch main to previous commit (' + parentSha.substring(0, 7) + ')...';
+
+                    // 3. Update branch ref (heads/main) to point to the parent SHA, using force: true
+                    return fetch('https://api.github.com/repos/' + cleanRepo + '/git/refs/heads/' + branch, {
+                        method: 'PATCH',
+                        headers: headers,
+                        body: JSON.stringify({
+                            sha: parentSha,
+                            force: true
+                        })
+                    });
+                })
+                .then(function(res) {
+                    if (!res.ok) {
+                        return res.json().then(function(d) {
+                            throw new Error('Failed to update branch reference: ' + (d.message || res.status));
+                        });
+                    }
+                    return res.json();
+                })
+                .then(function(data) {
+                    gitRollbackBtn.disabled = false;
+                    gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
+                    if (gitStatusMsg) {
+                        gitStatusMsg.style.color = '#34A853';
+                        gitStatusMsg.innerText = 'Successfully rolled back the latest commit directly on GitHub!\n\nThis will trigger the GitHub Action build workflow to redeploy the previous state live.';
+                    }
+                    setTimeout(function() {
+                        if (confirm("Rollback complete. Would you like to clear browser cache and reload the page?")) {
+                            localStorage.removeItem('pending_homepage_config');
+                            localStorage.removeItem('pending_pricing_config');
+                            localStorage.removeItem('pending_blogs_config');
+                            localStorage.removeItem('pending_live_config');
+                            localStorage.removeItem('pending_vsl_config');
+                            localStorage.removeItem('pending_workshop_config');
+                            window.location.reload();
+                        }
+                    }, 1000);
+                })
+                .catch(function(err) {
+                    gitRollbackBtn.disabled = false;
+                    gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
+                    if (gitStatusMsg) {
+                        gitStatusMsg.style.color = '#EA4335';
+                        gitStatusMsg.innerText = 'Rollback Failed:\n' + err.message;
+                    }
+                });
+        }
+
         var gitRollbackBtn = document.getElementById('gitRollbackBtn');
         if (gitRollbackBtn) {
             gitRollbackBtn.addEventListener('click', function() {
@@ -3228,470 +3434,400 @@
                     try {
                         var pat = patInput ? patInput.value.trim() : '';
                         var repo = repoInput ? repoInput.value.trim() : '';
-                        repo = repo.replace(/^https?:\/\/github\.com\//i, '');
-                        repo = repo.replace(/\.git$/i, '');
-                        var branch = 'main';
-
-                        var isLocalhost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-
-                        if (pat && repo && !isLocalhost) {
-                            gitRollbackBtn.disabled = true;
-                            gitRollbackBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Rolling back...';
-                            if (gitStatusMsg) {
-                                gitStatusMsg.style.display = 'block';
-                                gitStatusMsg.style.color = '#FF8C00';
-                                gitStatusMsg.innerText = 'Connecting to GitHub...';
-                            }
-
-                            var headers = {
-                                'Authorization': 'token ' + pat,
-                                'Accept': 'application/vnd.github.v3+json',
-                                'Content-Type': 'application/json'
-                            };
-
-                            // 1. Get branch head reference
-                            fetch('https://api.github.com/repos/' + repo + '/git/ref/heads/' + branch, { headers: headers })
-                                .then(function(res) {
-                                    if (res.status === 404) {
-                                        throw new Error('Branch main not found. Check repository path or token.');
-                                    }
-                                    if (!res.ok) {
-                                        throw new Error('Failed to fetch branch reference (HTTP ' + res.status + ')');
-                                    }
-                                    return res.json();
-                                })
-                                .then(function(data) {
-                                    var lastCommitSha = data.object.sha;
-                                    if (gitStatusMsg) gitStatusMsg.innerText = 'Retrieving details for the latest commit...';
-                                    
-                                    // 2. Fetch the commit details to find parent commit(s)
-                                    return fetch('https://api.github.com/repos/' + repo + '/git/commits/' + lastCommitSha, { headers: headers });
-                                })
-                                .then(function(res) {
-                                    if (!res.ok) throw new Error('Failed to fetch commit details (HTTP ' + res.status + ')');
-                                    return res.json();
-                                })
-                                .then(function(commitData) {
-                                    if (!commitData.parents || commitData.parents.length === 0) {
-                                        throw new Error('No previous commit found to rollback to (this appears to be the initial commit).');
-                                    }
-                                    var parentSha = commitData.parents[0].sha;
-                                    if (gitStatusMsg) gitStatusMsg.innerText = 'Resetting branch main to previous commit (' + parentSha.substring(0, 7) + ')...';
-
-                                    // 3. Update branch ref (heads/main) to point to the parent SHA, using force: true
-                                    return fetch('https://api.github.com/repos/' + repo + '/git/refs/heads/' + branch, {
-                                        method: 'PATCH',
-                                        headers: headers,
-                                        body: JSON.stringify({
-                                            sha: parentSha,
-                                            force: true
-                                        })
-                                    });
-                                })
-                                .then(function(res) {
-                                    if (!res.ok) {
-                                        return res.json().then(function(d) {
-                                            throw new Error('Failed to update branch reference: ' + (d.message || res.status));
-                                        });
-                                    }
-                                    return res.json();
-                                })
-                                .then(function(data) {
-                                    gitRollbackBtn.disabled = false;
-                                    gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
-                                    if (gitStatusMsg) {
-                                        gitStatusMsg.style.color = '#34A853';
-                                        gitStatusMsg.innerText = 'Successfully rolled back the latest commit directly on GitHub!\n\nThis will trigger the GitHub Action build workflow to redeploy the previous state live.';
-                                    }
-                                    setTimeout(function() {
-                                        if (confirm("Rollback complete. Would you like to clear browser cache and reload the page?")) {
-                                            localStorage.removeItem('pending_homepage_config');
-                                            localStorage.removeItem('pending_pricing_config');
-                                            localStorage.removeItem('pending_blogs_config');
-                                            localStorage.removeItem('pending_live_config');
-                                            localStorage.removeItem('pending_vsl_config');
-                                            localStorage.removeItem('pending_workshop_config');
-                                            window.location.reload();
-                                        }
-                                    }, 1000);
-                                })
-                                .catch(function(err) {
-                                    gitRollbackBtn.disabled = false;
-                                    gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
-                                    if (gitStatusMsg) {
-                                        gitStatusMsg.style.color = '#EA4335';
-                                        gitStatusMsg.innerText = 'Rollback Failed:\n' + err.message;
-                                    }
-                                });
-                        } else {
-                            // Local fallback using local server.py endpoint
-                            if (!isLocalhost) {
-                                alert('To publish or rollback changes online, you must fill in your GitHub Personal Access Token and Repository info in the settings fields.');
-                                if (gitStatusMsg) {
-                                    gitStatusMsg.style.color = '#EA4335';
-                                    gitStatusMsg.innerText = 'Error: Missing GitHub credentials configuration.';
-                                }
-                                return;
-                            }
-
-                            gitRollbackBtn.disabled = true;
-                            gitRollbackBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Rolling back...';
-                            if (gitStatusMsg) {
-                                gitStatusMsg.style.display = 'block';
-                                gitStatusMsg.style.color = '#FF8C00';
-                                gitStatusMsg.innerText = 'Connecting to server and rolling back latest commit...';
-                            }
-                            
-                            fetch('/api/git-rollback', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            })
-                            .then(function (res) {
-                                return res.json().then(function (data) {
-                                    if (!res.ok) {
-                                        throw new Error(data.message || 'HTTP error ' + res.status);
-                                    }
-                                    return data;
-                                });
-                            })
-                            .then(function (data) {
-                                gitRollbackBtn.disabled = false;
-                                gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
-                                if (gitStatusMsg) {
-                                    gitStatusMsg.style.color = '#34A853';
-                                    gitStatusMsg.innerText = data.message;
-                                }
-                                setTimeout(function() {
-                                    window.location.reload();
-                                }, 1500);
-                            })
-                            .catch(function (err) {
-                                gitRollbackBtn.disabled = false;
-                                gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
-                                if (gitStatusMsg) {
-                                    gitStatusMsg.style.color = '#EA4335';
-                                    gitStatusMsg.innerText = 'Rollback Failed:\n' + err.message;
-                                }
-                            });
-                        }
-                    } catch (e) {
-                        gitRollbackBtn.disabled = false;
-                        gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
-                        if (gitStatusMsg) {
-                            gitStatusMsg.style.display = 'block';
-                            gitStatusMsg.style.color = '#EA4335';
-                            gitStatusMsg.innerText = 'Execution Error: ' + e.message + '\n' + e.stack;
-                        }
-                    }
-                }
-            });
-        }
-
-        if (gitPushBtn) {
-            gitPushBtn.addEventListener('click', function () {
-                try {
-                    var commitMessage = gitCommitInput ? gitCommitInput.value.trim() : '';
-                    var pat = patInput ? patInput.value.trim() : '';
-                    var repo = repoInput ? repoInput.value.trim() : '';
-                    // Clean up repository format (strip full url, hostname, and .git suffix)
-                    repo = repo.replace(/^https?:\/\/github\.com\//i, '');
-                    repo = repo.replace(/\.git$/i, '');
-                    var branch = 'main';
-
-                    var isLocalhost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-
-                    if (pat && repo && !isLocalhost) {
-                        // Direct browser-to-GitHub commit logic (online / serverless static hosts)
-                        gitPushBtn.disabled = true;
-                        gitPushBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Committing...';
+                        
+                        gitRollbackBtn.disabled = true;
+                        gitRollbackBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Rolling back...';
                         if (gitStatusMsg) {
                             gitStatusMsg.style.display = 'block';
                             gitStatusMsg.style.color = '#FF8C00';
-                            gitStatusMsg.innerText = 'Initializing API connection...';
+                            gitStatusMsg.innerText = 'Connecting to server and rolling back latest commit...';
                         }
                         
-                        // Collect pending files to commit
-                        var filesToCommit = [];
-                        
-                        var pendingCms = localStorage.getItem('pending_homepage_config');
-                        if (pendingCms) {
-                            filesToCommit.push({ path: 'homepage_config.json', content: pendingCms, encoding: 'utf-8' });
-                        }
-                        var pendingPricing = localStorage.getItem('pending_pricing_config');
-                        if (pendingPricing) {
-                            filesToCommit.push({ path: 'pricing.json', content: pendingPricing, encoding: 'utf-8' });
-                        }
-                        var pendingBlogs = localStorage.getItem('pending_blogs_config');
-                        if (pendingBlogs) {
-                            filesToCommit.push({ path: 'blogs.json', content: pendingBlogs, encoding: 'utf-8' });
-                        }
-                        var pendingLive = localStorage.getItem('pending_live_config');
-                        if (pendingLive) {
-                            var liveContentStr = "var LIVE_CONFIG = " + JSON.stringify(JSON.parse(pendingLive), null, 4) + ";\n";
-                            filesToCommit.push({ path: 'live_config.js', content: liveContentStr, encoding: 'utf-8' });
-                            filesToCommit.push({ path: 'invest_biz/live_config.js', content: liveContentStr, encoding: 'utf-8' });
-                        }
-                        var pendingVsl = localStorage.getItem('pending_vsl_config');
-                        if (pendingVsl) {
-                            var vslContentStr = "var VSL_CONFIG = " + JSON.stringify(JSON.parse(pendingVsl), null, 4) + ";\n";
-                            filesToCommit.push({ path: 'vsl/lp.intrinsicvalueequity.in/vsl/vsl_config.js', content: vslContentStr, encoding: 'utf-8' });
-                        }
-                        var pendingWorkshop = localStorage.getItem('pending_workshop_config');
-                        if (pendingWorkshop) {
-                            var workshopContentStr = "var WORKSHOP_CONFIG = " + JSON.stringify(JSON.parse(pendingWorkshop), null, 4) + ";\n";
-                            filesToCommit.push({ path: 'workshop/workshop_config.js', content: workshopContentStr, encoding: 'utf-8' });
-                        }
-
-                        // Append pending binary file uploads!
-                        pendingUploads.forEach(function(up) {
-                            filesToCommit.push({
-                                path: up.path,
-                                content: up.content,
-                                encoding: 'base64'
-                            });
-                        });
-                        
-                        if (filesToCommit.length === 0) {
-                            gitPushBtn.disabled = false;
-                            gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
-                            if (gitStatusMsg) {
-                                gitStatusMsg.style.color = '#EA4335';
-                                gitStatusMsg.innerText = 'No unsaved edits found. Make changes in CMS workspace first!';
-                            }
-                            return;
-                        }
-                        
-                        if (gitStatusMsg) {
-                            gitStatusMsg.innerText = 'Fetching latest branch head...';
-                        }
-
-                        var headers = {
-                            'Authorization': 'token ' + pat,
-                            'Accept': 'application/vnd.github.v3+json',
-                            'Content-Type': 'application/json'
-                        };
-
-                        var lastCommitSha, baseTreeSha, newTreeSha, newCommitSha;
-
-                        // 1. Get branch head
-                        fetch('https://api.github.com/repos/' + repo + '/git/ref/heads/' + branch, { headers: headers })
-                            .then(function(res) {
-                                if (res.status === 404) {
-                                    throw new Error('Branch main not found. Check repository path or token.');
-                                }
-                                if (!res.ok) {
-                                    throw new Error('Failed to fetch branch reference (HTTP ' + res.status + ')');
-                                }
-                                return res.json();
-                            })
-                            .then(function(data) {
-                                lastCommitSha = data.object.sha;
-                                if (gitStatusMsg) gitStatusMsg.innerText = 'Fetching base tree...';
-                                // 2. Get tree of the last commit
-                                return fetch('https://api.github.com/repos/' + repo + '/git/commits/' + lastCommitSha, { headers: headers });
-                            })
-                            .then(function(res) {
-                                if (!res.ok) throw new Error('Failed to fetch commit tree (HTTP ' + res.status + ')');
-                                return res.json();
-                            })
-                            .then(function(data) {
-                                baseTreeSha = data.tree.sha;
-                                if (gitStatusMsg) gitStatusMsg.innerText = 'Creating blobs on GitHub...';
-
-                                // Upload all files to commit as blobs
-                                var blobPromises = filesToCommit.map(function(fileObj) {
-                                    var encodedContent = fileObj.encoding === 'base64' ? 
-                                        fileObj.content : 
-                                        btoa(unescape(encodeURIComponent(fileObj.content)));
-                                        
-                                    return fetch('https://api.github.com/repos/' + repo + '/git/blobs', {
-                                        method: 'POST',
-                                        headers: headers,
-                                        body: JSON.stringify({
-                                            content: encodedContent,
-                                            encoding: 'base64'
-                                        })
-                                    })
-                                    .then(function(r) {
-                                        if (!r.ok) {
-                                            return r.json().then(function(d) {
-                                                throw new Error('Failed to create blob for ' + fileObj.path + ': ' + (d.message || r.status));
-                                            });
-                                        }
-                                        return r.json();
-                                    })
-                                    .then(function(blobData) {
-                                        return {
-                                            path: fileObj.path,
-                                            mode: '100644',
-                                            type: 'blob',
-                                            sha: blobData.sha
-                                        };
-                                    });
-                                });
-
-                                return Promise.all(blobPromises);
-                            })
-                            .then(function(treeData) {
-                                if (gitStatusMsg) gitStatusMsg.innerText = 'Creating new commit tree...';
-
-                                // 3. Create a new tree
-                                return fetch('https://api.github.com/repos/' + repo + '/git/trees', {
-                                    method: 'POST',
-                                    headers: headers,
-                                    body: JSON.stringify({
-                                        base_tree: baseTreeSha,
-                                        tree: treeData
-                                    })
-                                });
-                            })
-                            .then(function(res) {
-                                if (!res.ok) {
-                                    return res.json().then(function(d) {
-                                        throw new Error('Failed to create tree: ' + (d.message || res.status));
-                                    });
-                                }
-                                return res.json();
-                            })
-                            .then(function(data) {
-                                newTreeSha = data.sha;
-                                if (gitStatusMsg) gitStatusMsg.innerText = 'Creating new commit...';
-
-                                // 4. Create new commit pointing to new tree
-                                return fetch('https://api.github.com/repos/' + repo + '/git/commits', {
-                                    method: 'POST',
-                                    headers: headers,
-                                    body: JSON.stringify({
-                                        message: commitMessage || 'CMS Update',
-                                        tree: newTreeSha,
-                                        parents: [lastCommitSha]
-                                    })
-                                });
-                            })
-                            .then(function(res) {
-                                if (!res.ok) {
-                                    return res.json().then(function(d) {
-                                        throw new Error('Failed to create commit: ' + (d.message || res.status));
-                                    });
-                                }
-                                return res.json();
-                            })
-                            .then(function(data) {
-                                newCommitSha = data.sha;
-                                if (gitStatusMsg) gitStatusMsg.innerText = 'Updating branch reference...';
-
-                                // 5. Update branch ref (heads/main) to point to new commit
-                                return fetch('https://api.github.com/repos/' + repo + '/git/refs/heads/' + branch, {
-                                    method: 'PATCH',
-                                    headers: headers,
-                                    body: JSON.stringify({
-                                        sha: newCommitSha,
-                                        force: false
-                                    })
-                                });
-                            })
-                            .then(function(res) {
-                                if (!res.ok) {
-                                    return res.json().then(function(d) {
-                                        throw new Error('Failed to update branch reference: ' + (d.message || res.status));
-                                    });
-                                }
-                                return res.json();
-                            })
-                            .then(function(data) {
-                                // All files committed in ONE single commit!
-                                localStorage.removeItem('pending_homepage_config');
-                                localStorage.removeItem('pending_pricing_config');
-                                localStorage.removeItem('pending_blogs_config');
-                                localStorage.removeItem('pending_live_config');
-                                localStorage.removeItem('pending_vsl_config');
-                                localStorage.removeItem('pending_workshop_config');
-                                localStorage.removeItem('pending_file_uploads');
-                                pendingUploads = [];
-
-                                gitPushBtn.disabled = false;
-                                gitPushBtn.style.boxShadow = 'none';
-                                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
-                                if (gitCommitInput) gitCommitInput.value = '';
-
-                                if (gitStatusMsg) {
-                                    gitStatusMsg.style.color = '#34A853';
-                                    gitStatusMsg.innerText = 'Successfully pushed all edits in a single commit directly to GitHub!\n\nThis will trigger the GitHub Action build workflow to recompile templates and deploy the final pages live.';
-                                }
-                            })
-                            .catch(function(err) {
-                                gitPushBtn.disabled = false;
-                                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
-                                if (gitStatusMsg) {
-                                    gitStatusMsg.style.color = '#EA4335';
-                                    gitStatusMsg.innerText = 'Deployment Failed:\n' + err.message;
-                                }
-                            });
-                    } else {
-                        // Local fallback using local server.py endpoint
-                        if (!isLocalhost) {
-                            gitPushBtn.disabled = false;
-                            gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
-                            alert('To publish changes online, you must fill in your GitHub Personal Access Token and Repository info in the settings fields.');
-                            if (gitStatusMsg) {
-                                gitStatusMsg.style.color = '#EA4335';
-                                gitStatusMsg.innerText = 'Error: Missing GitHub credentials configuration.';
-                            }
-                            return;
-                        }
-
-                        gitPushBtn.disabled = true;
-                        gitPushBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Pushing...';
-                        if (gitStatusMsg) {
-                            gitStatusMsg.style.display = 'block';
-                            gitStatusMsg.style.color = '#FF8C00';
-                            gitStatusMsg.innerText = 'Connecting to server and deploying to GitHub...';
-                        }
-                        
-                        fetch('/api/git-push', {
+                        // Try calling local server rollback API first
+                        fetch('/api/git-rollback', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify({ commitMessage: commitMessage })
+                            body: JSON.stringify({
+                                pat: pat,
+                                repo: repo
+                            })
                         })
-                        .then(function (res) {
-                            return res.json().then(function (data) {
+                        .then(function(res) {
+                            if (res.status === 404) {
+                                // Fallback to direct GitHub API if server endpoint is not found (static serverless host)
+                                console.log("[CMS Admin] /api/git-rollback not found, falling back to direct browser-to-GitHub API");
+                                runGitHubDirectRollback(pat, repo);
+                                return;
+                            }
+                            return res.json().then(function(data) {
                                 if (!res.ok) {
                                     throw new Error(data.message || 'HTTP error ' + res.status);
                                 }
                                 return data;
                             });
                         })
-                        .then(function (data) {
-                            gitPushBtn.disabled = false;
-                            gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                        .then(function(data) {
+                            if (!data) return; // handled by fallback
+                            gitRollbackBtn.disabled = false;
+                            gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
                             if (gitStatusMsg) {
                                 gitStatusMsg.style.color = '#34A853';
                                 gitStatusMsg.innerText = data.message;
                             }
-                            if (gitCommitInput) {
-                                gitCommitInput.value = '';
-                            }
+                            setTimeout(function() {
+                                if (confirm("Rollback complete. Would you like to clear browser cache and reload the page?")) {
+                                    localStorage.removeItem('pending_homepage_config');
+                                    localStorage.removeItem('pending_pricing_config');
+                                    localStorage.removeItem('pending_blogs_config');
+                                    localStorage.removeItem('pending_live_config');
+                                    localStorage.removeItem('pending_vsl_config');
+                                    localStorage.removeItem('pending_workshop_config');
+                                    window.location.reload();
+                                }
+                            }, 1000);
                         })
-                        .catch(function (err) {
+                        .catch(function(err) {
+                            // If it's a network error (like Failed to fetch), fallback to direct GitHub API
+                            if (pat && repo) {
+                                console.warn("[CMS Admin] Server rollback failed or offline. Falling back to direct GitHub API. Error:", err);
+                                runGitHubDirectRollback(pat, repo);
+                            } else {
+                                gitRollbackBtn.disabled = false;
+                                gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
+                                if (gitStatusMsg) {
+                                    gitStatusMsg.style.color = '#EA4335';
+                                    gitStatusMsg.innerText = 'Rollback Failed:\n' + err.message;
+                                }
+                            }
+                        });
+                    } catch (e) {
+                        gitRollbackBtn.disabled = false;
+                        gitRollbackBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Revert Latest Commit';
+                        if (gitStatusMsg) {
+                            gitStatusMsg.style.display = 'block';
+                            gitStatusMsg.style.color = '#EA4335';
+                            gitStatusMsg.innerText = 'Execution Error: ' + e.message;
+                        }
+                    }
+                }
+            });
+        }
+
+        function runGitHubDirectPush(commitMessage, pat, repo) {
+            if (!pat || !repo) {
+                gitPushBtn.disabled = false;
+                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                alert('To publish changes online, you must fill in your GitHub Personal Access Token and Repository info in the settings fields.');
+                if (gitStatusMsg) {
+                    gitStatusMsg.style.color = '#EA4335';
+                    gitStatusMsg.innerText = 'Error: Missing GitHub credentials configuration.';
+                }
+                return;
+            }
+
+            gitPushBtn.disabled = true;
+            gitPushBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Committing...';
+            if (gitStatusMsg) {
+                gitStatusMsg.style.display = 'block';
+                gitStatusMsg.style.color = '#FF8C00';
+                gitStatusMsg.innerText = 'Initializing API connection...';
+            }
+
+            var filesToCommit = [];
+            var pendingCms = localStorage.getItem('pending_homepage_config');
+            if (pendingCms) {
+                filesToCommit.push({ path: 'homepage_config.json', content: pendingCms, encoding: 'utf-8' });
+            }
+            var pendingPricing = localStorage.getItem('pending_pricing_config');
+            if (pendingPricing) {
+                filesToCommit.push({ path: 'pricing.json', content: pendingPricing, encoding: 'utf-8' });
+            }
+            var pendingBlogs = localStorage.getItem('pending_blogs_config');
+            if (pendingBlogs) {
+                filesToCommit.push({ path: 'blogs.json', content: pendingBlogs, encoding: 'utf-8' });
+            }
+            var pendingLive = localStorage.getItem('pending_live_config');
+            if (pendingLive) {
+                var liveContentStr = "var LIVE_CONFIG = " + JSON.stringify(JSON.parse(pendingLive), null, 4) + ";\n";
+                filesToCommit.push({ path: 'live_config.js', content: liveContentStr, encoding: 'utf-8' });
+                filesToCommit.push({ path: 'invest_biz/live_config.js', content: liveContentStr, encoding: 'utf-8' });
+            }
+            var pendingVsl = localStorage.getItem('pending_vsl_config');
+            if (pendingVsl) {
+                var vslContentStr = "var VSL_CONFIG = " + JSON.stringify(JSON.parse(pendingVsl), null, 4) + ";\n";
+                filesToCommit.push({ path: 'vsl/lp.intrinsicvalueequity.in/vsl/vsl_config.js', content: vslContentStr, encoding: 'utf-8' });
+            }
+            var pendingWorkshop = localStorage.getItem('pending_workshop_config');
+            if (pendingWorkshop) {
+                var workshopContentStr = "var WORKSHOP_CONFIG = " + JSON.stringify(JSON.parse(pendingWorkshop), null, 4) + ";\n";
+                filesToCommit.push({ path: 'workshop/workshop_config.js', content: workshopContentStr, encoding: 'utf-8' });
+            }
+
+            pendingUploads.forEach(function(up) {
+                filesToCommit.push({
+                    path: up.path,
+                    content: up.content,
+                    encoding: 'base64'
+                });
+            });
+
+            if (filesToCommit.length === 0) {
+                gitPushBtn.disabled = false;
+                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                if (gitStatusMsg) {
+                    gitStatusMsg.style.color = '#EA4335';
+                    gitStatusMsg.innerText = 'No unsaved edits found. Make changes in CMS workspace first!';
+                }
+                return;
+            }
+
+            if (gitStatusMsg) {
+                gitStatusMsg.innerText = 'Fetching latest branch head...';
+            }
+
+            var cleanRepo = repo.replace(/^https?:\/\/github\.com\//i, '').replace(/\.git$/i, '');
+            var branch = 'main';
+
+            var headers = {
+                'Authorization': 'token ' + pat,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            };
+
+            var lastCommitSha, baseTreeSha, newTreeSha, newCommitSha;
+
+            // 1. Get branch head
+            fetch('https://api.github.com/repos/' + cleanRepo + '/git/ref/heads/' + branch, { headers: headers })
+                .then(function(res) {
+                    if (res.status === 404) {
+                        throw new Error('Branch main not found. Check repository path or token.');
+                    }
+                    if (!res.ok) {
+                        throw new Error('Failed to fetch branch reference (HTTP ' + res.status + ')');
+                    }
+                    return res.json();
+                })
+                .then(function(data) {
+                    lastCommitSha = data.object.sha;
+                    if (gitStatusMsg) gitStatusMsg.innerText = 'Fetching base tree...';
+                    return fetch('https://api.github.com/repos/' + cleanRepo + '/git/commits/' + lastCommitSha, { headers: headers });
+                })
+                .then(function(res) {
+                    if (!res.ok) throw new Error('Failed to fetch commit tree (HTTP ' + res.status + ')');
+                    return res.json();
+                })
+                .then(function(data) {
+                    baseTreeSha = data.tree.sha;
+                    if (gitStatusMsg) gitStatusMsg.innerText = 'Creating blobs on GitHub...';
+
+                    var blobPromises = filesToCommit.map(function(fileObj) {
+                        var encodedContent = fileObj.encoding === 'base64' ? 
+                            fileObj.content : 
+                            btoa(unescape(encodeURIComponent(fileObj.content)));
+                            
+                        return fetch('https://api.github.com/repos/' + cleanRepo + '/git/blobs', {
+                            method: 'POST',
+                            headers: headers,
+                            body: JSON.stringify({
+                                content: encodedContent,
+                                encoding: 'base64'
+                            })
+                        })
+                        .then(function(r) {
+                            if (!r.ok) {
+                                return r.json().then(function(d) {
+                                    throw new Error('Failed to create blob for ' + fileObj.path + ': ' + (d.message || r.status));
+                                });
+                            }
+                            return r.json();
+                        })
+                        .then(function(blobData) {
+                            return {
+                                path: fileObj.path,
+                                mode: '100644',
+                                type: 'blob',
+                                sha: blobData.sha
+                            };
+                        });
+                    });
+
+                    return Promise.all(blobPromises);
+                })
+                .then(function(treeData) {
+                    if (gitStatusMsg) gitStatusMsg.innerText = 'Creating new commit tree...';
+                    return fetch('https://api.github.com/repos/' + cleanRepo + '/git/trees', {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify({
+                            base_tree: baseTreeSha,
+                            tree: treeData
+                        })
+                    });
+                })
+                .then(function(res) {
+                    if (!res.ok) {
+                        return res.json().then(function(d) {
+                            throw new Error('Failed to create tree: ' + (d.message || res.status));
+                        });
+                    }
+                    return res.json();
+                })
+                .then(function(data) {
+                    newTreeSha = data.sha;
+                    if (gitStatusMsg) gitStatusMsg.innerText = 'Creating new commit...';
+                    return fetch('https://api.github.com/repos/' + cleanRepo + '/git/commits', {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify({
+                            message: commitMessage || 'CMS Update',
+                            tree: newTreeSha,
+                            parents: [lastCommitSha]
+                        })
+                    });
+                })
+                .then(function(res) {
+                    if (!res.ok) {
+                        return res.json().then(function(d) {
+                            throw new Error('Failed to create commit: ' + (d.message || r.status));
+                        });
+                    }
+                    return res.json();
+                })
+                .then(function(data) {
+                    newCommitSha = data.sha;
+                    if (gitStatusMsg) gitStatusMsg.innerText = 'Updating branch reference...';
+                    return fetch('https://api.github.com/repos/' + cleanRepo + '/git/refs/heads/' + branch, {
+                        method: 'PATCH',
+                        headers: headers,
+                        body: JSON.stringify({
+                            sha: newCommitSha,
+                            force: false
+                        })
+                    });
+                })
+                .then(function(res) {
+                    if (!res.ok) {
+                        return res.json().then(function(d) {
+                            throw new Error('Failed to update branch reference: ' + (d.message || res.status));
+                        });
+                    }
+                    return res.json();
+                })
+                .then(function(data) {
+                    localStorage.removeItem('pending_homepage_config');
+                    localStorage.removeItem('pending_pricing_config');
+                    localStorage.removeItem('pending_blogs_config');
+                    localStorage.removeItem('pending_live_config');
+                    localStorage.removeItem('pending_vsl_config');
+                    localStorage.removeItem('pending_workshop_config');
+                    localStorage.removeItem('pending_file_uploads');
+                    pendingUploads = [];
+
+                    gitPushBtn.disabled = false;
+                    gitPushBtn.style.boxShadow = 'none';
+                    gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                    if (gitCommitInput) gitCommitInput.value = '';
+
+                    if (gitStatusMsg) {
+                        gitStatusMsg.style.color = '#34A853';
+                        gitStatusMsg.innerText = 'Successfully pushed all edits in a single commit directly to GitHub!\n\nThis will trigger the GitHub Action build workflow to recompile templates and deploy the final pages live.';
+                    }
+                })
+                .catch(function(err) {
+                    gitPushBtn.disabled = false;
+                    gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                    if (gitStatusMsg) {
+                        gitStatusMsg.style.color = '#EA4335';
+                        gitStatusMsg.innerText = 'Deployment Failed:\n' + err.message;
+                    }
+                });
+        }
+
+        var gitPushBtn = document.getElementById('gitPushBtn');
+        if (gitPushBtn) {
+            gitPushBtn.addEventListener('click', function () {
+                try {
+                    var commitMessage = gitCommitInput ? gitCommitInput.value.trim() : '';
+                    var pat = patInput ? patInput.value.trim() : '';
+                    var repo = repoInput ? repoInput.value.trim() : '';
+                    
+                    gitPushBtn.disabled = true;
+                    gitPushBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Pushing...';
+                    if (gitStatusMsg) {
+                        gitStatusMsg.style.display = 'block';
+                        gitStatusMsg.style.color = '#FF8C00';
+                        gitStatusMsg.innerText = 'Connecting to server and deploying to GitHub...';
+                    }
+                    
+                    fetch('/api/git-push', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            commitMessage: commitMessage,
+                            pat: pat,
+                            repo: repo
+                        })
+                    })
+                    .then(function (res) {
+                        if (res.status === 404) {
+                            console.log("[CMS Admin] /api/git-push not found, falling back to direct browser-to-GitHub API");
+                            runGitHubDirectPush(commitMessage, pat, repo);
+                            return;
+                        }
+                        return res.json().then(function (data) {
+                            if (!res.ok) {
+                                throw new Error(data.message || 'HTTP error ' + res.status);
+                            }
+                            return data;
+                        });
+                    })
+                    .then(function (data) {
+                        if (!data) return; // handled by fallback
+                        
+                        localStorage.removeItem('pending_homepage_config');
+                        localStorage.removeItem('pending_pricing_config');
+                        localStorage.removeItem('pending_blogs_config');
+                        localStorage.removeItem('pending_live_config');
+                        localStorage.removeItem('pending_vsl_config');
+                        localStorage.removeItem('pending_workshop_config');
+                        localStorage.removeItem('pending_file_uploads');
+                        pendingUploads = [];
+                        
+                        gitPushBtn.disabled = false;
+                        gitPushBtn.style.boxShadow = 'none';
+                        gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                        if (gitCommitInput) gitCommitInput.value = '';
+                        
+                        if (gitStatusMsg) {
+                            gitStatusMsg.style.color = '#34A853';
+                            gitStatusMsg.innerText = data.message;
+                        }
+                    })
+                    .catch(function (err) {
+                        // If it's a network error (like Failed to fetch), fallback to direct GitHub API
+                        if (pat && repo) {
+                            console.warn("[CMS Admin] Server push failed or offline. Falling back to direct GitHub API. Error:", err);
+                            runGitHubDirectPush(commitMessage, pat, repo);
+                        } else {
                             gitPushBtn.disabled = false;
                             gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
                             if (gitStatusMsg) {
                                 gitStatusMsg.style.color = '#EA4335';
                                 gitStatusMsg.innerText = 'Deployment Failed:\n' + err.message;
                             }
-                        });
-                    }
+                        }
+                    });
                 } catch (e) {
                     gitPushBtn.disabled = false;
                     gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
                     if (gitStatusMsg) {
                         gitStatusMsg.style.display = 'block';
                         gitStatusMsg.style.color = '#EA4335';
-                        gitStatusMsg.innerText = 'Execution Error: ' + e.message + '\n' + e.stack;
+                        gitStatusMsg.innerText = 'Execution Error: ' + e.message;
                     }
                 }
             });

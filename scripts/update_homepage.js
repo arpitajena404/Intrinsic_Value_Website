@@ -64,15 +64,36 @@ replaceSection('HOMEPAGE_STYLES', stylesHtml);
 
 // 1. Navigation Menu
 function generateNavHtml(prefix) {
-    return config.navigation.map(link => {
+    let htmlList = config.navigation.map(link => {
         const isAbsolute = /^(?:https?:)?\/\//i.test(link.url) || link.url.startsWith('/') || link.url.startsWith('#');
         const url = isAbsolute ? link.url : (prefix + link.url);
         const targetAttr = link.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
         return `                    <li><a href="${url}" class="nav-link"${targetAttr}>${link.text}</a></li>`;
-    }).join('\n');
+    });
+    
+    if (config.header_buttons) {
+        const loginLink = config.header_buttons.client_login;
+        const loginTarget = loginLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+        htmlList.push(`                    <li><a href="${loginLink.url}" class="nav-link cms-editable-highlight" data-field="header_buttons.client_login.text" data-label="Client Login Text"${loginTarget}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>${loginLink.text}</a></li>`);
+        
+        const contactLink = config.header_buttons.contact_us;
+        const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+        htmlList.push(`                    <li class="nav-actions-mobile">
+                        <a href="${contactLink.url}" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>
+                    </li>`);
+    }
+    return htmlList.join('\n');
 }
 const navHtml = generateNavHtml('');
 replaceSection('NAV', navHtml);
+
+// 1.5. Nav Contact Button (Desktop)
+if (config.header_buttons) {
+    const contactLink = config.header_buttons.contact_us;
+    const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+    const contactHtml = `                <a href="${contactLink.url}" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>`;
+    replaceSection('NAV_CONTACT', contactHtml);
+}
 
 // 2. Hero Left Column
 const heroCtaTarget = config.hero.cta_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
@@ -106,7 +127,10 @@ function generateStatsHtml() {
         const divider = idx < config.hero.stats.length - 1 ? '\n                            <div class="iv-stat-divider"></div>\n' : '';
         return `                            <!-- Stat Item ${idx+1} -->
                             <div class="iv-stat-item">
-                                <div class="iv-stat-num"><span class="count-up" data-target="${stat.num}">0</span>${stat.suffix}</div>
+                                <div class="iv-stat-num">
+                                    <span class="count-up cms-editable-highlight" data-target="${stat.num}" data-field="hero.stats.${idx}.num" data-label="Stat Number ${idx+1}">${stat.num}</span>
+                                    <span class="cms-editable-highlight" data-field="hero.stats.${idx}.suffix" data-label="Stat Suffix ${idx+1}">${stat.suffix}</span>
+                                </div>
                                 <div class="iv-stat-label cms-editable-highlight" data-field="hero.stats.${idx}.label">${stat.label}</div>
                             </div>${divider}`;
     }).join('\n');
@@ -122,10 +146,10 @@ if (config.hero.media.type === 'animation') {
                         <div class="iv-hero-card">
                             <div class="iv-card-planet">🪐</div>
 
-                            <div class="iv-card-headline">
-                                <em>Compound</em> Wealth,<br>Real Value.
+                            <div class="iv-card-headline cms-editable-highlight" data-field="hero.card_headline_html" data-label="Card Headline">
+                                ${config.hero.card_headline_html || '<em>Compound</em> Wealth,<br>Real Value.'}
                             </div>
-                            <div class="iv-card-sub">Intrinsic Value Equity Advisors</div>
+                            <div class="iv-card-sub cms-editable-highlight" data-field="hero.card_sub" data-label="Card Subtitle">${config.hero.card_sub || 'Intrinsic Value Equity Advisors'}</div>
 
                             <!-- Staircase bar animation and walking figure -->
                             <div class="iv-staircase">
@@ -318,6 +342,29 @@ ${linkedinHtml}
 }).join('\n');
 replaceSection('TEAM_CARDS', teamCardsHtml);
 
+// 10.5. Portfolio Section Title & Embed Track
+if (config.portfolio) {
+    const portfolioTitleHtml = `                        <h2 class="team-section-heading cms-editable-highlight" data-field="portfolio.title" data-label="Portfolio Title">
+                            ${config.portfolio.title}
+                        </h2>`;
+    replaceSection('PORTFOLIO_TITLE', portfolioTitleHtml);
+    replaceSection('PORTFOLIO_TRACK', config.portfolio.embed_html);
+}
+
+// 10.7. Homepage Pricing Section
+if (config.homepage_pricing) {
+    const hpPricing = config.homepage_pricing;
+    const targetAttr = hpPricing.button_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+    const pricingHtml = `                    <h2 class="pricing-section-header-title cms-editable-highlight" data-field="homepage_pricing.title" data-label="Pricing Title">${hpPricing.title}</h2>
+
+                    <div style="margin-top: 2.2rem; margin-bottom: 1.5rem;">
+                        <a href="${hpPricing.button_url}"${targetAttr} class="btn-vibrate-outline cms-editable-highlight" data-field="homepage_pricing.button_text" data-label="Pricing Button Text">
+                            ${hpPricing.button_text}
+                        </a>
+                    </div>`;
+    replaceSection('HOMEPAGE_PRICING', pricingHtml);
+}
+
 // 11. FAQ Section Title & List Accordion
 const faqTitleHtml = `                <span class="faq-pre-title">COMMON QUERIES</span>
                 <h2 class="faq-main-title cms-editable-highlight" data-field="faqs.title">${config.faqs.title}</h2>
@@ -469,6 +516,22 @@ ${timingSpansHtml}
             </div>`;
 replaceSection('FOOTER_CONTACT', footerContactHtml);
 
+// 14.5. Compliance Header & Titles
+if (config.compliance) {
+    const compHeaderHtml = `                <span class="disclosures-pre-title cms-editable-highlight" data-field="compliance.pre_title" data-label="Compliance Pre-title">${config.compliance.pre_title || 'REGULATORY CORNER'}</span>
+                <h2 class="disclosures-main-title cms-editable-highlight" data-field="compliance.title" data-label="Compliance Title">${config.compliance.title || 'Transparency &amp; <em>Compliance</em>.'}</h2>
+                <p class="disclosures-sub-title cms-editable-highlight" data-field="compliance.sub_title" data-label="Compliance Description">${config.compliance.sub_title || 'Review our regulatory disclosures, client complaint statistics, and compliance audit history in accordance with SEBI guidelines.'}</p>`;
+    replaceSection('COMPLIANCE_HEADER', compHeaderHtml);
+    
+    replaceSection('COMPLIANCE_GRIEVANCE_TITLE', `                        <h3 class="disclosure-title cms-editable-highlight" data-field="compliance.title_grievance" data-label="Grievance Title">${config.compliance.title_grievance || 'Grievance Status'}</h3>`);
+    
+    replaceSection('COMPLIANCE_AUDIT_TITLE', `                        <h3 class="disclosure-title cms-editable-highlight" data-field="compliance.title_audit" data-label="Audit Title">${config.compliance.title_audit || 'Compliance Audit Status'}</h3>`);
+    
+    replaceSection('COMPLIANCE_AUDIT_INTRO', `                            <p class="disclosure-intro-text cms-editable-highlight" data-field="compliance.audit_intro" data-label="Audit Intro Text">
+                                ${config.compliance.audit_intro || '“Disclosure with respect to compliance with Annual compliance audit requirement under Regulation 25(3) of SEBI (Research Analyst) Regulations, 2014 for last financial years are as under:'}
+                            </p>`);
+}
+
 // 15. Compliance Years Options
 const yearsHtml = (config.compliance?.years || ["2022", "2023", "2024", "2025", "2026"]).map(y => {
     const selected = y === "2026" ? " selected" : "";
@@ -547,6 +610,21 @@ function updateAllPagesNavigation() {
             }
         }
         
+        // 1.5 Inject contact button markers if they don't exist
+        if (!content.includes('CMS_NAV_CONTACT_START')) {
+            const pattern = /<div class="nav-actions">\s*<a href="[^"]+" class="btn-glow"[^>]*>Contact Us<\/a>\s*<\/div>/;
+            const match = content.match(pattern);
+            if (match) {
+                const blockToReplace = match[0];
+                const contactLink = config.header_buttons.contact_us;
+                const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                const replacement = `<div class="nav-actions">\n                <!-- CMS_NAV_CONTACT_START -->\n                <a href="${contactLink.url}" class="btn-glow"${contactTarget}>${contactLink.text}</a>\n                <!-- CMS_NAV_CONTACT_END -->\n            </div>`;
+                content = content.replace(blockToReplace, replacement);
+                modified = true;
+                console.log(`Injected contact button markers into: ${path.relative(rootDir, filePath)}`);
+            }
+        }
+        
         // 2. If it has markers now, update the navigation content
         if (content.includes('CMS_NAV_START')) {
             const startMarker = '<!-- CMS_NAV_START -->';
@@ -561,12 +639,47 @@ function updateAllPagesNavigation() {
                 
                 const relativeNavHtml = generateNavHtml(prefix);
                 
-                const before = content.substring(0, startIndex + startMarker.length);
-                const after = content.substring(endIndex);
+                let before = content.substring(0, startIndex + startMarker.length);
+                let after = content.substring(endIndex);
                 
                 content = before + "\n" + relativeNavHtml + "\n" + after;
                 modified = true;
                 console.log(`Updated navigation in: ${path.relative(rootDir, filePath)}`);
+
+                // Clean up any duplicate buttons trailing outside CMS_NAV_END before </ul>
+                const updatedEndMarker = '<!-- CMS_NAV_END -->';
+                const updatedEndIndex = content.indexOf(updatedEndMarker);
+                if (updatedEndIndex !== -1) {
+                    const ulIndex = content.indexOf('</ul>', updatedEndIndex);
+                    if (ulIndex !== -1) {
+                        const trailingBlock = content.substring(updatedEndIndex + updatedEndMarker.length, ulIndex);
+                        if (trailingBlock.includes('Client Login') || trailingBlock.includes('Contact Us')) {
+                            content = content.substring(0, updatedEndIndex + updatedEndMarker.length) + "\n" + content.substring(ulIndex);
+                            console.log(`Cleaned up duplicate navigation buttons in: ${path.relative(rootDir, filePath)}`);
+                        }
+                    }
+                }
+            }
+        }
+
+        // 3. If it has contact markers, update the desktop contact button
+        if (content.includes('CMS_NAV_CONTACT_START')) {
+            const startMarker = '<!-- CMS_NAV_CONTACT_START -->';
+            const endMarker = '<!-- CMS_NAV_CONTACT_END -->';
+            const startIndex = content.indexOf(startMarker);
+            const endIndex = content.indexOf(endMarker);
+            
+            if (startIndex !== -1 && endIndex !== -1) {
+                const contactLink = config.header_buttons.contact_us;
+                const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                const relativeContactHtml = `                <a href="${contactLink.url}" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>`;
+                
+                const before = content.substring(0, startIndex + startMarker.length);
+                const after = content.substring(endIndex);
+                
+                content = before + "\n" + relativeContactHtml + "\n" + after;
+                modified = true;
+                console.log(`Updated nav contact button in: ${path.relative(rootDir, filePath)}`);
             }
         }
         
@@ -659,6 +772,180 @@ function updateAllPagesFooterBottom() {
     }
 }
 
+updateAllPagesFooterBottom();
+
+// 13.5. Update Team and About Bio Sections on static pages (like about.html)
+function updateAllPagesTeam() {
+    const rootDir = path.join(__dirname, '..');
+    const filePath = path.join(rootDir, 'about.html');
+    if (!fs.existsSync(filePath)) return;
+    
+    let content = fs.readFileSync(filePath, 'utf8').replace(/\r\n/g, '\n');
+    let modified = false;
+    
+    // Compile Team Title
+    if (content.includes('CMS_TEAM_TITLE_START')) {
+        const startMarker = '<!-- CMS_TEAM_TITLE_START -->';
+        const endMarker = '<!-- CMS_TEAM_TITLE_END -->';
+        const startIndex = content.indexOf(startMarker);
+        const endIndex = content.indexOf(endMarker);
+        if (startIndex !== -1 && endIndex !== -1) {
+            const teamTitleHtml = `                    <h2 class="team-section-title cms-editable-highlight" data-field="team.title">${config.team.title}</h2>`;
+            content = content.substring(0, startIndex + startMarker.length) + "\n" + teamTitleHtml + "\n" + content.substring(endIndex);
+            modified = true;
+        }
+    }
+    
+    // Compile Team Cards
+    if (content.includes('CMS_TEAM_CARDS_START')) {
+        const startMarker = '<!-- CMS_TEAM_CARDS_START -->';
+        const endMarker = '<!-- CMS_TEAM_CARDS_END -->';
+        const startIndex = content.indexOf(startMarker);
+        const endIndex = content.indexOf(endMarker);
+        if (startIndex !== -1 && endIndex !== -1) {
+            const teamCardsHtmlForAbout = config.team.members.map((member, idx) => {
+                return `                    <div class="team-card">
+                        <div class="team-avatar-wrapper">
+                            <img src="${member.photo || 'profile.jpeg'}" alt="${member.name}" class="team-avatar" loading="lazy">
+                        </div>
+                        <div class="team-info">
+                            <h3 class="team-name cms-editable-highlight" data-field="team.members.${idx}.name">${member.name}</h3>
+                            <p class="team-role cms-editable-highlight" data-field="team.members.${idx}.role">${member.role}</p>
+                        </div>
+                    </div>`;
+            }).join('\n');
+            content = content.substring(0, startIndex + startMarker.length) + "\n" + teamCardsHtmlForAbout + "\n" + content.substring(endIndex);
+            modified = true;
+        }
+    }
+    
+    if (modified) {
+        fs.writeFileSync(filePath, content, 'utf8');
+        console.log(`Updated Team section in: about.html`);
+    }
+}
+
+function updateAllPagesAboutBio() {
+    const rootDir = path.join(__dirname, '..');
+    const filePath = path.join(rootDir, 'about.html');
+    if (!fs.existsSync(filePath)) return;
+    
+    let content = fs.readFileSync(filePath, 'utf8').replace(/\r\n/g, '\n');
+    let modified = false;
+    
+    if (!config.about_profile) return;
+    const ap = config.about_profile;
+    
+    // Compile Bio Header
+    if (content.includes('CMS_ABOUT_PROFILE_HEADER_START')) {
+        const startMarker = '<!-- CMS_ABOUT_PROFILE_HEADER_START -->';
+        const endMarker = '<!-- CMS_ABOUT_PROFILE_HEADER_END -->';
+        const startIndex = content.indexOf(startMarker);
+        const endIndex = content.indexOf(endMarker);
+        if (startIndex !== -1 && endIndex !== -1) {
+            const headerHtml = `                        <div class="profile-title-area">
+                            <h1 class="profile-name cms-editable-highlight" data-field="about_profile.name" data-label="Bio Name">${ap.name}</h1>
+                            <p class="profile-subtitle cms-editable-highlight" data-field="about_profile.role" data-label="Bio Role">${ap.role}</p>
+                            <div class="profile-underline"></div>
+                        </div>`;
+            content = content.substring(0, startIndex + startMarker.length) + "\n" + headerHtml + "\n" + content.substring(endIndex);
+            modified = true;
+        }
+    }
+    
+    // Compile Bio Socials
+    if (content.includes('CMS_ABOUT_PROFILE_SOCIALS_START')) {
+        const startMarker = '<!-- CMS_ABOUT_PROFILE_SOCIALS_START -->';
+        const endMarker = '<!-- CMS_ABOUT_PROFILE_SOCIALS_END -->';
+        const startIndex = content.indexOf(startMarker);
+        const endIndex = content.indexOf(endMarker);
+        if (startIndex !== -1 && endIndex !== -1) {
+            const socialsHtml = `                        <div class="profile-socials">
+                            <!-- LinkedIn Link -->
+                            <a href="${ap.linkedin}" target="_blank"
+                                rel="noopener noreferrer" class="social-link-btn cms-editable-highlight" data-field="about_profile.linkedin" data-label="LinkedIn Link" aria-label="LinkedIn">
+                                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                </svg>
+                            </a>
+                            <!-- Twitter/X Link -->
+                            <a href="${ap.twitter}" target="_blank" rel="noopener noreferrer"
+                                class="social-link-btn cms-editable-highlight" data-field="about_profile.twitter" data-label="Twitter Link" aria-label="Twitter">
+                                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                </svg>
+                            </a>
+                            <!-- YouTube Link -->
+                            <a href="${ap.youtube}" target="_blank"
+                                rel="noopener noreferrer" class="social-link-btn cms-editable-highlight" data-field="about_profile.youtube" data-label="YouTube Link" aria-label="YouTube">
+                                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M23.498 6.163c-.272-1.016-1.071-1.815-2.087-2.087C19.574 3.543 12 3.543 12 3.543s-7.574 0-9.411.533c-1.016.272-1.815 1.071-2.087 2.087C0 8.007 0 12 0 12s0 3.993.502 5.837c.272 1.016 1.071 1.815 2.087 2.087 1.837.533 9.411.533 9.411.533s7.574 0 9.411-.533c1.016-.272 1.815-1.071 2.087-2.087.502-1.844.502-5.837.502-5.837s0-3.993-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                                </svg>
+                            </a>
+                        </div>`;
+            content = content.substring(0, startIndex + startMarker.length) + "\n" + socialsHtml + "\n" + content.substring(endIndex);
+            modified = true;
+        }
+    }
+    
+    // Compile Bio Paragraphs
+    if (content.includes('CMS_ABOUT_PROFILE_PARAGRAPHS_START')) {
+        const startMarker = '<!-- CMS_ABOUT_PROFILE_PARAGRAPHS_START -->';
+        const endMarker = '<!-- CMS_ABOUT_PROFILE_PARAGRAPHS_END -->';
+        const startIndex = content.indexOf(startMarker);
+        const endIndex = content.indexOf(endMarker);
+        if (startIndex !== -1 && endIndex !== -1) {
+            const paragraphsHtml = `                    <div class="profile-paragraphs">\n` + 
+                ap.paragraphs.map((p, idx) => `                        <p class="cms-editable-highlight" data-field="about_profile.paragraphs.${idx}" data-label="Bio Paragraph ${idx+1}">${p}</p>`).join('\n') +
+                `\n                    </div>`;
+            content = content.substring(0, startIndex + startMarker.length) + "\n" + paragraphsHtml + "\n" + content.substring(endIndex);
+            modified = true;
+        }
+    }
+    
+    // Compile Bio Quote
+    if (content.includes('CMS_ABOUT_PROFILE_QUOTE_START')) {
+        const startMarker = '<!-- CMS_ABOUT_PROFILE_QUOTE_START -->';
+        const endMarker = '<!-- CMS_ABOUT_PROFILE_QUOTE_END -->';
+        const startIndex = content.indexOf(startMarker);
+        const endIndex = content.indexOf(endMarker);
+        if (startIndex !== -1 && endIndex !== -1) {
+            const quoteHtml = `                    <div class="profile-quote-box">
+                        <p class="quote-text cms-editable-highlight" data-field="about_profile.quote" data-label="Bio Quote">${ap.quote}</p>
+                    </div>`;
+            content = content.substring(0, startIndex + startMarker.length) + "\n" + quoteHtml + "\n" + content.substring(endIndex);
+            modified = true;
+        }
+    }
+    
+    // Compile Bio Photo
+    if (content.includes('CMS_ABOUT_PROFILE_PHOTO_START')) {
+        const startMarker = '<!-- CMS_ABOUT_PROFILE_PHOTO_START -->';
+        const endMarker = '<!-- CMS_ABOUT_PROFILE_PHOTO_END -->';
+        const startIndex = content.indexOf(startMarker);
+        const endIndex = content.indexOf(endMarker);
+        if (startIndex !== -1 && endIndex !== -1) {
+            const photoHtml = `                <div class="profile-image-col">
+                    <div class="profile-img-wrapper glow-border">
+                        <img src="${ap.photo || 'profile.jpeg'}" alt="${ap.name}" class="profile-photo cms-editable-highlight" data-field="about_profile.photo" data-label="Bio Photo" loading="lazy">
+                    </div>
+                </div>`;
+            content = content.substring(0, startIndex + startMarker.length) + "\n" + photoHtml + "\n" + content.substring(endIndex);
+            modified = true;
+        }
+    }
+    
+    if (modified) {
+        fs.writeFileSync(filePath, content, 'utf8');
+        console.log(`Updated Bio Profile section in: about.html`);
+    }
+}
+
+updateAllPagesTeam();
+updateAllPagesAboutBio();
 updateAllPagesFooterBottom();
 
 // 14. Generate sitemap.xml dynamically

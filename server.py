@@ -167,7 +167,17 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
                     raise RuntimeError(f"git commit failed:\nStdout: {commit_res.stdout}\nStderr: {commit_res.stderr}")
                 
                 # 4. git push
-                push_res = subprocess.run(['git', 'push'], capture_output=True, text=True, cwd=DIRECTORY, shell=True)
+                pat = payload.get('pat', '').strip()
+                repo = payload.get('repo', '').strip()
+                if pat and repo:
+                    repo_path = repo.replace('https://github.com/', '').replace('http://github.com/', '').rstrip('/')
+                    if not repo_path.endswith('.git'):
+                        repo_path += '.git'
+                    push_url = f"https://{pat}@github.com/{repo_path}"
+                    push_res = subprocess.run(['git', 'push', push_url, 'main'], capture_output=True, text=True, cwd=DIRECTORY, shell=True)
+                else:
+                    push_res = subprocess.run(['git', 'push'], capture_output=True, text=True, cwd=DIRECTORY, shell=True)
+                
                 if push_res.returncode != 0:
                     raise RuntimeError(f"git push failed:\nStdout: {push_res.stdout}\nStderr: {push_res.stderr}")
                 
@@ -189,6 +199,15 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
         elif self.path == '/api/git-rollback':
             try:
                 import subprocess
+                content_length = int(self.headers['Content-Length']) if 'Content-Length' in self.headers else 0
+                payload = {}
+                if content_length > 0:
+                    post_data = self.rfile.read(content_length)
+                    payload = json.loads(post_data.decode('utf-8'))
+                
+                pat = payload.get('pat', '').strip()
+                repo = payload.get('repo', '').strip()
+
                 # 1. Check if there is a parent commit
                 log_res = subprocess.run(['git', 'rev-parse', '--verify', 'HEAD~1'], capture_output=True, text=True, cwd=DIRECTORY, shell=True)
                 if log_res.returncode != 0:
@@ -204,7 +223,15 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
                 subprocess.run(['node', 'scripts/update_pricing.js'], cwd=DIRECTORY, shell=True)
                 
                 # 3. Force push to remote
-                push_res = subprocess.run(['git', 'push', '--force'], capture_output=True, text=True, cwd=DIRECTORY, shell=True)
+                if pat and repo:
+                    repo_path = repo.replace('https://github.com/', '').replace('http://github.com/', '').rstrip('/')
+                    if not repo_path.endswith('.git'):
+                        repo_path += '.git'
+                    push_url = f"https://{pat}@github.com/{repo_path}"
+                    push_res = subprocess.run(['git', 'push', '--force', push_url, 'main'], capture_output=True, text=True, cwd=DIRECTORY, shell=True)
+                else:
+                    push_res = subprocess.run(['git', 'push', '--force'], capture_output=True, text=True, cwd=DIRECTORY, shell=True)
+                
                 if push_res.returncode != 0:
                     raise RuntimeError(f"git push --force failed:\nStdout: {push_res.stdout}\nStderr: {push_res.stderr}")
                 
