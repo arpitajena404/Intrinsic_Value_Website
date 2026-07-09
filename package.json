@@ -1,0 +1,13 @@
+{
+  "name": "intrinsic-value-website",
+  "version": "1.0.0",
+  "description": "Intrinsic Value Equity Advisors website",
+  "main": "server.py",
+  "scripts": {
+    "build": "node scripts/minify.js"
+  },
+  "dependencies": {
+    "clean-css": "^5.3.3",
+    "terser": "^5.31.1"
+  }
+}

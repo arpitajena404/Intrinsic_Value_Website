@@ -887,19 +887,45 @@ function init3DSpiral() {
             }
         };
 
-        window.addEventListener('scroll', handleScrollTransitions);
-        window.addEventListener('resize', handleScrollTransitions);
+        let isLooping = false;
+        let isScrollStackVisible = false;
+        let isPhilosophyVisible = false;
+
+        function startLoop() {
+            if (!isLooping && isScrollStackVisible) {
+                isLooping = true;
+                requestAnimationFrame(animateSpiral);
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            handleScrollTransitions();
+            startLoop();
+        }, { passive: true });
+
+        window.addEventListener('resize', () => {
+            handleScrollTransitions();
+            startLoop();
+        }, { passive: true });
+
         handleScrollTransitions(); // Run initially
         
         // Continuous Animation Loop
         function animateSpiral() {
+            if (!isScrollStackVisible) {
+                isLooping = false;
+                return;
+            }
+
             if (carousel) {
                 carousel.style.transform = '';
                 carousel.currentX = 0;
             }
 
-            // Idle rotation (slowly clockwise, moving cards upward)
-            idleOffsetAngle += 0.05; 
+            // Only rotate/update helix if philosophy section is visible
+            if (isPhilosophyVisible) {
+                idleOffsetAngle += 0.05; 
+            }
             
             // Smooth linear interpolation (lerp) for scroll-driven rotation
             currentScrollOffsetAngle += (targetScrollOffsetAngle - currentScrollOffsetAngle) * 0.08;
@@ -911,6 +937,13 @@ function init3DSpiral() {
             // A. Smoothly update and apply section transitions (buttery smooth scroll transitions)
             const isMobileView = window.innerWidth <= 768;
             const sectionLerp = 0.16;
+            
+            let needsMoreFrames = false;
+
+            if (Math.abs(targetScrollOffsetAngle - currentScrollOffsetAngle) > 0.01) {
+                needsMoreFrames = true;
+            }
+
             for (const key in sectionsState) {
                 const s = sectionsState[key];
                 if (s.el) {
@@ -922,10 +955,17 @@ function init3DSpiral() {
                         s.el.style.filter = '';
                         continue;
                     }
+                    
                     s.currOpacity += (s.targetOpacity - s.currOpacity) * sectionLerp;
                     s.currY += (s.targetY - s.currY) * sectionLerp;
                     s.currScale += (s.targetScale - s.currScale) * sectionLerp;
                     
+                    if (Math.abs(s.targetOpacity - s.currOpacity) > 0.002 ||
+                        Math.abs(s.targetY - s.currY) > 0.02 ||
+                        Math.abs(s.targetScale - s.currScale) > 0.002) {
+                        needsMoreFrames = true;
+                    }
+
                     // Apply standard fade to the previous (exiting) section as it scrolls out of view
                     const isPreviousSection = (scrollDirection === 'down' && s.targetY < 0) || 
                                               (scrollDirection === 'up' && s.targetY > 0);
@@ -961,67 +1001,76 @@ function init3DSpiral() {
             }
             
             // B. Position each card along the helix track coordinates with smooth flying/fading/blur transitions
-            spiralCards.forEach((card, idx) => {
-                const angle = baseAngle + idx * spacing;
-                
-                // Wrap the angle to stay within the repeating track range [-270, 270)
-                let wrapped = (angle - startAngle) % totalRange;
-                if (wrapped < 0) wrapped += totalRange;
-                const trackAngle = startAngle + wrapped;
-                
-                const rotY = trackAngle;
-                const y = -trackAngle * ySpacingFactor; // Negative to make increasing angle translate card upward
-                
-                // 1. Fade out cards near boundaries to make wrapping jumps invisible
-                let boundaryOpacity = 1.0;
-                const fadeWidth = 80; // degrees
-                if (trackAngle < startAngle + fadeWidth) {
-                    boundaryOpacity = (trackAngle - startAngle) / fadeWidth;
-                } else if (trackAngle > (startAngle + totalRange - fadeWidth)) {
-                    boundaryOpacity = (startAngle + totalRange - trackAngle) / fadeWidth;
-                }
-                boundaryOpacity = Math.max(0, Math.min(1, boundaryOpacity));
-                
-                // 2. Continuous flying & faded/blurred rotation based on angle from front (0 degrees)
-                let normAngle = rotY % 360;
-                if (normAngle < 0) normAngle += 360;
-                
-                let angleDiff = Math.abs(normAngle);
-                if (angleDiff > 180) angleDiff = 360 - angleDiff; // [0, 180], where 0 is front, 180 is back
-                
-                let frontProgress = (180 - angleDiff) / 180; // 0 in back, 1 in front
-                let t = (1 - Math.cos(frontProgress * Math.PI)) / 2; // Smooth cosine curve
-                
-                // Lerp scale, radius (depth), depth opacity, and blur amount
-                let currentScale = 0.62 + 0.43 * t; // scales from 0.62 (back) to 1.05 (front)
-                let currentRadius = radius * (0.55 + 0.53 * t); // tight core (0.55*R) to expanded front (1.08*R)
-                
-                // Steeper opacity curve: front card is fully opaque, neighbors and back cards are highly translucent
-                let opacityExponent = window.innerWidth <= 768 ? 6.0 : 3.5;
-                let depthOpacity = 0.03 + 0.97 * Math.pow(t, opacityExponent);
-                let finalOpacity = boundaryOpacity * depthOpacity;
-                let blurAmount = (1 - t) * 7.5; // up to 7.5px blur in back, 0px in front
-                
-                // 3. Smooth hover pop factor interpolation
-                const targetHoverScale = card.isHovered ? 1.06 : 1.0;
-                card.currentHoverScale += (targetHoverScale - card.currentHoverScale) * 0.15;
-                currentScale *= card.currentHoverScale;
-                
-                // Apply computed styles
-                card.style.transform = `rotateY(${rotY.toFixed(1)}deg) translateZ(${currentRadius.toFixed(1)}px) scale(${currentScale.toFixed(3)}) translateY(${y.toFixed(1)}px)`;
-                card.style.opacity = finalOpacity.toFixed(3);
-                card.style.filter = blurAmount > 0.15 ? `blur(${blurAmount.toFixed(2)}px)` : 'none';
-                
-                // Disable clicks and visibility of back-facing/out-of-bounds cards
-                const isBackside = (normAngle > 85 && normAngle < 275);
-                if (boundaryOpacity < 0.08 || finalOpacity < 0.05) {
-                    card.style.visibility = 'hidden';
-                    card.style.pointerEvents = 'none';
-                } else {
-                    card.style.visibility = 'visible';
-                    card.style.pointerEvents = isBackside ? 'none' : 'auto';
-                }
-            });
+            if (isPhilosophyVisible) {
+                spiralCards.forEach((card, idx) => {
+                    const angle = baseAngle + idx * spacing;
+                    
+                    // Wrap the angle to stay within the repeating track range [-270, 270)
+                    let wrapped = (angle - startAngle) % totalRange;
+                    if (wrapped < 0) wrapped += totalRange;
+                    const trackAngle = startAngle + wrapped;
+                    
+                    const rotY = trackAngle;
+                    const y = -trackAngle * ySpacingFactor; // Negative to make increasing angle translate card upward
+                    
+                    // 1. Fade out cards near boundaries to make wrapping jumps invisible
+                    let boundaryOpacity = 1.0;
+                    const fadeWidth = 80; // degrees
+                    if (trackAngle < startAngle + fadeWidth) {
+                        boundaryOpacity = (trackAngle - startAngle) / fadeWidth;
+                    } else if (trackAngle > (startAngle + totalRange - fadeWidth)) {
+                        boundaryOpacity = (startAngle + totalRange - trackAngle) / fadeWidth;
+                    }
+                    boundaryOpacity = Math.max(0, Math.min(1, boundaryOpacity));
+                    
+                    // 2. Continuous flying & faded/blurred rotation based on angle from front (0 degrees)
+                    let normAngle = rotY % 360;
+                    if (normAngle < 0) normAngle += 360;
+                    
+                    let angleDiff = Math.abs(normAngle);
+                    if (angleDiff > 180) angleDiff = 360 - angleDiff; // [0, 180], where 0 is front, 180 is back
+                    
+                    let frontProgress = (180 - angleDiff) / 180; // 0 in back, 1 in front
+                    let t = (1 - Math.cos(frontProgress * Math.PI)) / 2; // Smooth cosine curve
+                    
+                    // Lerp scale, radius (depth), depth opacity, and blur amount
+                    let currentScale = 0.62 + 0.43 * t; // scales from 0.62 (back) to 1.05 (front)
+                    let currentRadius = radius * (0.55 + 0.53 * t); // tight core (0.55*R) to expanded front (1.08*R)
+                    
+                    // Steeper opacity curve: front card is fully opaque, neighbors and back cards are highly translucent
+                    let opacityExponent = window.innerWidth <= 768 ? 6.0 : 3.5;
+                    let depthOpacity = 0.03 + 0.97 * Math.pow(t, opacityExponent);
+                    let finalOpacity = boundaryOpacity * depthOpacity;
+                    let blurAmount = (1 - t) * 7.5; // up to 7.5px blur in back, 0px in front
+                    
+                    // 3. Smooth hover pop factor interpolation
+                    const targetHoverScale = card.isHovered ? 1.06 : 1.0;
+                    card.currentHoverScale += (targetHoverScale - card.currentHoverScale) * 0.15;
+                    currentScale *= card.currentHoverScale;
+                    
+                    if (Math.abs(targetHoverScale - card.currentHoverScale) > 0.002) {
+                        needsMoreFrames = true;
+                    }
+
+                    // Apply computed styles
+                    card.style.transform = `rotateY(${rotY.toFixed(1)}deg) translateZ(${currentRadius.toFixed(1)}px) scale(${currentScale.toFixed(3)}) translateY(${y.toFixed(1)}px)`;
+                    card.style.opacity = finalOpacity.toFixed(3);
+                    card.style.filter = blurAmount > 0.15 ? `blur(${blurAmount.toFixed(2)}px)` : 'none';
+                    
+                    // Disable clicks and visibility of back-facing/out-of-bounds cards
+                    const isBackside = (normAngle > 85 && normAngle < 275);
+                    if (boundaryOpacity < 0.08 || finalOpacity < 0.05) {
+                        card.style.visibility = 'hidden';
+                        card.style.pointerEvents = 'none';
+                    } else {
+                        card.style.visibility = 'visible';
+                        card.style.pointerEvents = isBackside ? 'none' : 'auto';
+                    }
+                });
+
+                // Philosophy is visible, so keep running for the idle rotation
+                needsMoreFrames = true;
+            }
             
             // C. Smoothly update and apply Pricing Section elements
             if (pricingSecEl) {
@@ -1044,6 +1093,12 @@ function init3DSpiral() {
                     pricingState.title.currScale += (pricingState.title.targetScale - pricingState.title.currScale) * pricingLerp;
                     pricingState.title.currOpacity += (pricingState.title.targetOpacity - pricingState.title.currOpacity) * pricingLerp;
                     
+                    if (Math.abs(pricingState.title.targetZ - pricingState.title.currZ) > 0.05 ||
+                        Math.abs(pricingState.title.targetScale - pricingState.title.currScale) > 0.002 ||
+                        Math.abs(pricingState.title.targetOpacity - pricingState.title.currOpacity) > 0.002) {
+                        needsMoreFrames = true;
+                    }
+
                     if (pricingState.title.el) {
                         pricingState.title.el.style.transform = `translate3d(0, 0, ${pricingState.title.currZ.toFixed(1)}px) scale(${pricingState.title.currScale.toFixed(3)})`;
                         pricingState.title.el.style.opacity = pricingState.title.currOpacity.toFixed(3);
@@ -1057,6 +1112,14 @@ function init3DSpiral() {
                         c.currRotateX += (c.targetRotateX - c.currRotateX) * pricingLerp;
                         c.currY += (c.targetY - c.currY) * pricingLerp;
                         
+                        if (Math.abs(c.targetZ - c.currZ) > 0.05 ||
+                            Math.abs(c.targetScale - c.currScale) > 0.002 ||
+                            Math.abs(c.targetOpacity - c.currOpacity) > 0.002 ||
+                            Math.abs(c.targetRotateX - c.currRotateX) > 0.05 ||
+                            Math.abs(c.targetY - c.currY) > 0.05) {
+                            needsMoreFrames = true;
+                        }
+
                         if (c.el) {
                             c.el.style.transform = `translate3d(0, ${c.currY.toFixed(1)}px, ${c.currZ.toFixed(1)}px) scale(${c.currScale.toFixed(3)}) rotateX(${c.currRotateX.toFixed(1)}deg)`;
                             c.el.style.opacity = c.currOpacity.toFixed(3);
@@ -1065,10 +1128,47 @@ function init3DSpiral() {
                 }
             }
             
-            requestAnimationFrame(animateSpiral);
+            if (needsMoreFrames) {
+                requestAnimationFrame(animateSpiral);
+            } else {
+                isLooping = false;
+            }
         }
         
-        requestAnimationFrame(animateSpiral);
+        // Setup observers for visibility checking
+        const scrollStackEl = document.querySelector('.scroll-stack');
+        if (scrollStackEl && typeof IntersectionObserver !== 'undefined') {
+            const stackObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    isScrollStackVisible = entry.isIntersecting;
+                    if (isScrollStackVisible) {
+                        startLoop();
+                    } else {
+                        isLooping = false;
+                    }
+                });
+            }, { threshold: 0.01 });
+            stackObserver.observe(scrollStackEl);
+        } else {
+            isScrollStackVisible = true;
+        }
+
+        const philSectionEl = document.getElementById('philosophy');
+        if (philSectionEl && typeof IntersectionObserver !== 'undefined') {
+            const philObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    isPhilosophyVisible = entry.isIntersecting;
+                    if (isPhilosophyVisible) {
+                        startLoop();
+                    }
+                });
+            }, { threshold: 0.01 });
+            philObserver.observe(philSectionEl);
+        } else {
+            isPhilosophyVisible = true;
+        }
+
+        startLoop();
         
         // Bind click events on cards to trigger modals natively
         const modals = document.querySelectorAll('.modal[id^="services_item"]');

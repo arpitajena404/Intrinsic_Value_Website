@@ -3,11 +3,28 @@
 
 <head>
 <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-MBWDMG3J');</script>
+<script>
+window.addEventListener('load', function() {
+    var gtmLoaded = false;
+    function loadGTM() {
+        if (gtmLoaded) return;
+        gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MBWDMG3J');
+    }
+    var timeoutId = setTimeout(loadGTM, 1800);
+    var interactions = ['scroll', 'mousemove', 'touchstart', 'click'];
+    interactions.forEach(function(e) {
+        window.addEventListener(e, function() {
+            clearTimeout(timeoutId);
+            loadGTM();
+        }, { passive: true, once: true });
+    });
+});
+</script>
 <!-- End Google Tag Manager -->
 
     <meta charset="UTF-8">
@@ -388,7 +405,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- Sleek Preloader Screen -->
     <div id="iv-preloader" class="iv-preloader">
         <div class="preloader-content">
-            <img src="logo.png" alt="Intrinsic Value Logo" class="preloader-logo">
+            <img src="logo.png" alt="Intrinsic Value Logo" class="preloader-logo" width="239" height="83">
             <div class="preloader-progress-track">
                 <div class="preloader-progress-bar"></div>
             </div>
@@ -401,7 +418,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <header class="main-header">
         <div class="container header-container">
             <a href="index.html" class="logo">
-                <img src="logo.png" alt="Intrinsic Value Logo" class="logo-img">
+                <img src="logo.png" alt="Intrinsic Value Logo" class="logo-img" width="239" height="83">
             </a>
             <nav>
                 <ul class="nav-menu">
@@ -491,7 +508,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="footer-main-grid">
                 <div class="footer-col-brand">
                     <a href="index.html" class="logo footer-logo">
-                        <img src="logo.png" alt="Intrinsic Value Logo" class="logo-img">
+                        <img src="logo.png" alt="Intrinsic Value Logo" class="logo-img" width="239" height="83">
                     </a>
                     <p class="footer-desc">
                         SEBI-registered value investing research and advisory service dedicated to sustainable wealth
@@ -647,7 +664,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
     <!-- Link Logic Script -->
-    <script src="script.js?v=6"></script>
+    <script src="script.js?v=6" defer></script>
     <!-- Dynamic Content Renderer Script -->
     <script>
         // Immediate redirect from old query-string URL to pretty root URL (except in CMS preview)
