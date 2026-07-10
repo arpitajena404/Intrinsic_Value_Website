@@ -7,6 +7,8 @@ SEBI-registered Research Analyst (Reg No: INH000009047) specializing in cyclical
 - [Investment Services & Pricing](pricing.html)
 - [About Us](about.html)
 - [Blogs & Market Insights](blogs.html)
+- [Smallcase vs. Advisory Comparison](smallcase-vs-advisory.html)
+- [Stock Screeners & Analytical Tools](analytics/tools)
 - [Investor Grievance Redressal](Legal%20&%20Compliance/Grievance%20Redressal.html)
 - [Investor Charter](Legal%20&%20Compliance/investorcharter.html)
 - [Terms & Conditions](Legal%20&%20Compliance/tnc.html)
@@ -20,10 +22,20 @@ SEBI-registered Research Analyst (Reg No: INH000009047) specializing in cyclical
 - **Registration Type**: SEBI Registered Individual Research Analyst
 
 ## Main Services & Tiers
-- **HNI Premium**: 1-year research subscription tailored for portfolios of ₹10-15 Lakhs. Offers systematic cyclical sector rotation ideas.
+- **HNI Premium (Equity Basket)**: 1-year research subscription tailored for portfolios of ₹10-15 Lakhs. Offers systematic cyclical sector rotation ideas.
 - **Inner Circle**: Premium advisory tier with direct query resolution options and high-touch cyclical research advisory.
 
+## Quantitative & Fundamental Analysis Tools
+We provide a comprehensive suite of analytical tools and stock screeners for Indian equities:
+- **Piotroski Score Screener & Ranking Tool**: Filter and sort NSE/BSE companies using sales growth, ROCE, and P/B scores.
+- **Market Valuation Tracker**: Visual gauge modeling general stock market undervaluation comfort levels based on index valuation.
+- **SIP & SWP compounding calculators**: Personal finance compounding engines with step-up modeling.
+- **XIRR compounding calculator**: Irregular cashflow validation.
+- **GAWP Index**: Age-adjusted benchmarking framework to evaluate personal wealth parity relative to compounding goals.
+
 ## Investment Philosophy
-- Data-driven cyclical sector screening.
+- Data-driven cyclical sector screening (promoter buying, sector rotation metrics).
 - Strict capital protection, downside risk management, and rigorous SEBI compliance.
-- Focused on identifying major structural turnarounds and multi-year growth opportunities.
+- Focused on identifying major structural turnarounds and multi-year growth opportunities (multibaggers).
+- We focus on buying high-quality businesses at a significant margin of safety (near Minimum Intrinsic Value) and exiting near Maximum Intrinsic Value.
+- A highly tax-optimized, direct equity research alternative to standardized Smallcases.

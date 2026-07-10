@@ -956,7 +956,9 @@ function generateSitemap() {
         'about',
         'blogs',
         'pricing',
-        'nikhil-gangil-indian-value-investor'
+        'nikhil-gangil-indian-value-investor',
+        'analytics/tools',
+        'smallcase-vs-advisory'
     ];
     
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;

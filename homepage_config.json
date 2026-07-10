@@ -18,6 +18,10 @@
             "url": "blogs.html"
         },
         {
+            "text": "Tools",
+            "url": "analytics/tools"
+        },
+        {
             "text": "Analytics",
             "url": "analytics/dashboard"
         }
@@ -675,6 +679,10 @@
             {
                 "text": "Blogs",
                 "url": "blogs.html"
+            },
+            {
+                "text": "Tools",
+                "url": "analytics/tools"
             },
             {
                 "text": "Analytics",
