@@ -1,1 +1,2423 @@
-function initPhilosophyModals(){document.querySelectorAll(".spiral-card").forEach(e=>{const t=e.querySelector("p"),a=e.querySelector("a");if(!t||!a)return;const r=t.innerHTML,o=t.textContent.trim(),s=a.getAttribute("href");if(s&&s.startsWith("#")){const e=document.querySelector(s);if(e){const t=e.querySelector("p");t&&(t.innerHTML=r)}}o.length>110&&(t.textContent=o.substring(0,110).trim()+"...")})}function init3DSpiral(){const e=document.getElementById("philosophy"),t=document.querySelector(".spiral-carousel"),a=document.querySelectorAll(".spiral-card");if(e&&t&&a.length>0){const s=()=>window.innerWidth<=480?230:window.innerWidth<=768?265:380,n=()=>window.innerWidth<=480?3:window.innerWidth<=768?2.2:1.35;a.forEach(e=>{e.isHovered=!1,e.currentHoverScale=1,e.addEventListener("mouseenter",()=>{e.isHovered=!0}),e.addEventListener("mouseleave",()=>{e.isHovered=!1})});const i=540,c=60,l=-270;let d=0,u=0,p=0,h=!1,m=0,g=0,y=0;const f=document.querySelector(".spiral-scene");f&&(f.addEventListener("touchstart",e=>{window.innerWidth<=768&&(h=!0,m=e.touches[0].clientX,g=e.touches[0].clientY,y=u)},{passive:!1}),f.addEventListener("touchmove",e=>{if(h&&window.innerWidth<=768){const t=e.touches[0].clientX,a=e.touches[0].clientY,r=t-m,o=a-g;Math.abs(r)>Math.abs(o)&&e.cancelable&&e.preventDefault();const s=y-.35*r;u=Math.max(0,Math.min(360,s))}},{passive:!1}),f.addEventListener("touchend",()=>{h=!1}));const v=document.querySelector(".iv-hero"),L=document.querySelector(".spiral-philosophy-sticky"),E=document.querySelector(".iv-featured-section"),S=document.querySelector(".iv-cases-section"),w=document.getElementById("portfolio-scroll-section"),x=document.getElementById("pricing-scroll-section"),b=document.getElementById("testimonials-section"),q={hero:{el:v,currOpacity:1,targetOpacity:1,currY:0,targetY:0,currScale:1,targetScale:1,pointerEvents:"auto"},philosophy:{el:L,currOpacity:0,targetOpacity:0,currY:60,targetY:60,currScale:.95,targetScale:.95,pointerEvents:"none"},featured:{el:E,currOpacity:0,targetOpacity:0,currY:60,targetY:60,currScale:.95,targetScale:.95,pointerEvents:"none",hasEntered:!1},cases:{el:S,currOpacity:0,targetOpacity:0,currY:60,targetY:60,currScale:.95,targetScale:.95,pointerEvents:"none",hasEntered:!1},portfolio:{el:w,currOpacity:0,targetOpacity:0,currY:60,targetY:60,currScale:.95,targetScale:.95,pointerEvents:"none"},pricing:{el:x,currOpacity:0,targetOpacity:0,currY:60,targetY:60,currScale:.95,targetScale:.95,pointerEvents:"none"},testimonials:{el:b,currOpacity:0,targetOpacity:0,currY:60,targetY:60,currScale:.95,targetScale:.95,pointerEvents:"none"}},M=document.querySelector(".pricing-title-block"),O=document.querySelectorAll(".pricing-card-3d"),Y={hasAnimatedCounter:!1,counterTimeout:null,title:{el:M,currZ:-600,targetZ:-600,currScale:.3,targetScale:.3,currOpacity:0,targetOpacity:0},cards:Array.from(O).map(e=>({el:e,currZ:-600,targetZ:-600,currScale:.3,targetScale:.3,currOpacity:0,targetOpacity:0,currRotateX:15,targetRotateX:15,currY:50,targetY:50}))},A=document.querySelector(".scroll-progress-indicator"),H=document.querySelector(".progress-circle-fg");let T="down",F=window.scrollY;const k=()=>{const e=cachedWindowHeight,t=document.querySelector(".stacked-testimonials-section");return[0,1*e,1.8*e,2.1*e,2.5*e,3*e,3.5*e,3.8*e,t&&t.classList.contains("flow-layout")?4.8*e:9.3*e]},W=()=>{if(!A||!H)return;const e=window.scrollY,t=cachedWindowHeight;e>F+4?T="down":e<F-4&&(T="up"),F=e;const a=document.querySelector(".stacked-testimonials-section");if(e>=(a&&a.classList.contains("flow-layout")?3.9*t:8.2*t))return void A.classList.remove("visible");const r=k();let o=0;for(let t=0;t<r.length-1;t++)if(e>=r[t]&&e<r[t+1]){o=(e-r[t])/(r[t+1]-r[t]);break}o=Math.max(0,Math.min(1,o));const s=2*Math.PI*18;H.style.strokeDasharray=s.toFixed(2);const n=s-o*s;H.style.strokeDashoffset=n.toFixed(2);const i=A.querySelector(".scroll-indicator-arrow");i&&(i.style.transform="up"===T?"rotate(180deg)":"rotate(0deg)"),A.classList.add("visible")};A&&A.addEventListener("click",()=>{const e=window.scrollY,t=k();let a=0,r=0;for(let o=0;o<t.length-1;o++)if(e>=t[o]&&e<t[o+1]){a=o,r=(e-t[o])/(t[o+1]-t[o]);break}e>=t[t.length-1]&&(a=t.length-1);let o=e;"down"===T?a<t.length-1&&(o=t[a+1]):r>.08?o=t[a]:a>0&&(o=t[a-1]),window.scrollTo({top:o,behavior:"smooth"})});const I=()=>{const e=window.scrollY,t=cachedWindowHeight;W();const a=1*t,r=.5*t,o=1*t,s=1*t,n=1.8*t,i=1.8*t,c=1.8*t,l=2*t,d=2.1*t,p=2.1*t,h=2.3*t,m=2.5*t,g=2.5*t,y=2.7*t,f=3*t,w=3*t,x=3.2*t,b=3.5*t,M=3.5*t,O=3.7*t,A=3.8*t;if(v&&(q.hero.targetOpacity=1,q.hero.targetScale=1,q.hero.targetY=-e,q.hero.pointerEvents=e<a?"auto":"none"),L)if(e<r)q.philosophy.targetOpacity=0,q.philosophy.targetY=.45*t,q.philosophy.targetScale=1,q.philosophy.pointerEvents="none",u="up"===T?360:0;else if(e>=r&&e<=o){const a=(e-r)/(o-r);q.philosophy.targetOpacity=a,q.philosophy.targetY=.45*t*(1-a),q.philosophy.targetScale=1,q.philosophy.pointerEvents="auto",u="up"===T?360:0}else if(e>o&&e<i){q.philosophy.targetOpacity=1,q.philosophy.targetY=0,q.philosophy.targetScale=1,q.philosophy.pointerEvents="auto";const t=(e-s)/(n-s),a=Math.max(0,Math.min(1,t));u="up"===T?360:360*a}else{const a=Math.max(0,Math.min(1,(e-i)/(l-i)));q.philosophy.targetOpacity=1,q.philosophy.targetY=-a*t,q.philosophy.targetScale=1,q.philosophy.pointerEvents=a<1?"auto":"none",u=360}if(E)if(e<c)q.featured.targetOpacity=0,q.featured.targetY=t,q.featured.targetScale=1,q.featured.pointerEvents="none",q.featured.hasEntered="up"===T;else if(e>=c&&e<=l){const a=(e-c)/(l-c);q.featured.targetOpacity=a,q.featured.targetY=.45*t*(1-a),q.featured.targetScale=1,q.featured.pointerEvents="auto",q.featured.hasEntered=!0}else if(e>l&&e<d)q.featured.targetOpacity=1,q.featured.targetY=0,q.featured.targetScale=1,q.featured.pointerEvents="auto",q.featured.hasEntered=!0;else{const a=Math.max(0,Math.min(1,(e-d)/(h-d)));q.featured.targetOpacity=1,q.featured.targetY=-a*t,q.featured.targetScale=1,q.featured.pointerEvents=a<1?"auto":"none",q.featured.hasEntered=!0}if(S)if(e<p)q.cases.targetOpacity=0,q.cases.targetY=t,q.cases.targetScale=1,q.cases.pointerEvents="none",q.cases.hasEntered="up"===T;else if(e>=p&&e<=h){const a=(e-p)/(h-p);q.cases.targetOpacity=a,q.cases.targetY=.45*t*(1-a),q.cases.targetScale=1,q.cases.pointerEvents="auto",q.cases.hasEntered=!0}else if(e>h&&e<m)q.cases.targetOpacity=1,q.cases.targetY=0,q.cases.targetScale=1,q.cases.pointerEvents="auto",q.cases.hasEntered=!0;else{const a=Math.max(0,Math.min(1,(e-m)/(y-m)));q.cases.targetOpacity=1,q.cases.targetY=-a*t,q.cases.targetScale=1,q.cases.pointerEvents=a<1?"auto":"none",q.cases.hasEntered=!0}if(q.portfolio.el)if(e<g)q.portfolio.targetOpacity=0,q.portfolio.targetY=t,q.portfolio.targetScale=1,q.portfolio.pointerEvents="none";else if(e>=g&&e<=y){const a=(e-g)/(y-g);q.portfolio.targetOpacity=a,q.portfolio.targetY=.45*t*(1-a),q.portfolio.targetScale=1,q.portfolio.pointerEvents="auto"}else if(e>y&&e<f)q.portfolio.targetOpacity=1,q.portfolio.targetY=0,q.portfolio.targetScale=1,q.portfolio.pointerEvents="auto";else{const a=Math.max(0,Math.min(1,(e-f)/(x-f)));q.portfolio.targetOpacity=1,q.portfolio.targetY=-a*t,q.portfolio.targetScale=1,q.portfolio.pointerEvents=a<1?"auto":"none"}if(q.pricing.el)if(e<w)q.pricing.targetOpacity=0,q.pricing.targetY=t,q.pricing.targetScale=1,q.pricing.pointerEvents="none",Y.title.targetZ=-600,Y.title.targetScale=.3,Y.title.targetOpacity=0,Y.cards.forEach(e=>{e.targetZ=-600,e.targetScale=.3,e.targetOpacity=0,e.targetRotateX=15,e.targetY=50}),Y.hasAnimatedCounter=!1,Y.counterTimeout&&(clearTimeout(Y.counterTimeout),Y.counterTimeout=null);else if(e>=w&&e<=x){const a=(e-w)/(x-w);q.pricing.targetOpacity=a,q.pricing.targetY=.45*t*(1-a),q.pricing.targetScale=1,q.pricing.pointerEvents="auto",Y.title.targetZ=0,Y.title.targetScale=1,Y.title.targetOpacity=1,Y.cards.forEach(e=>{e.targetZ=0,e.targetScale=1,e.targetOpacity=1,e.targetRotateX=0,e.targetY=0}),Y.counterTimeout&&(clearTimeout(Y.counterTimeout),Y.counterTimeout=null)}else if(e>x&&e<b)q.pricing.targetOpacity=1,q.pricing.targetY=0,q.pricing.targetScale=1,q.pricing.pointerEvents="auto",Y.title.targetZ=0,Y.title.targetScale=1,Y.title.targetOpacity=1,Y.cards.forEach(e=>{e.targetZ=0,e.targetScale=1,e.targetOpacity=1,e.targetRotateX=0,e.targetY=0}),Y.hasAnimatedCounter||Y.counterTimeout||(Y.counterTimeout=setTimeout(()=>{animatePriceCounter(),Y.hasAnimatedCounter=!0,Y.counterTimeout=null},500));else{const a=Math.max(0,Math.min(1,(e-b)/(O-b)));q.pricing.targetOpacity=1,q.pricing.targetY=-a*t,q.pricing.targetScale=1,q.pricing.pointerEvents=a<1?"auto":"none",Y.title.targetZ=0,Y.title.targetScale=1,Y.title.targetOpacity=1,Y.cards.forEach(e=>{e.targetZ=0,e.targetScale=1,e.targetOpacity=1,e.targetRotateX=0,e.targetY=0}),Y.counterTimeout&&(clearTimeout(Y.counterTimeout),Y.counterTimeout=null)}if(q.testimonials.el)if(e<M)q.testimonials.targetOpacity=0,q.testimonials.targetY=t,q.testimonials.targetScale=1,q.testimonials.pointerEvents="none";else if(e>=M&&e<=O){const a=(e-M)/(O-M);q.testimonials.targetOpacity=a,q.testimonials.targetY=.45*t*(1-a),q.testimonials.targetScale=1,q.testimonials.pointerEvents="auto"}else if(e>O&&e<A)q.testimonials.targetOpacity=1,q.testimonials.targetY=0,q.testimonials.targetScale=1,q.testimonials.pointerEvents="auto";else{const a=k(),r=a[a.length-1],o=Math.max(0,Math.min(1,(e-A)/(r-A)));q.testimonials.targetOpacity=1-o,q.testimonials.targetY=-o*t,q.testimonials.targetScale=1-.05*o,q.testimonials.pointerEvents=o<1?"auto":"none"}};let P=!1,D=!1,X=!1;function r(){!P&&D&&(P=!0,requestAnimationFrame(o))}function o(){if(!D)return void(P=!1);t&&(t.style.transform="",t.currentX=0),X&&(d+=.05),p+=.08*(u-p);const e=d+p,r=s(),h=n(),m=window.innerWidth<=768,g=.16;let y=!1;Math.abs(u-p)>.01&&(y=!0);for(const e in q){const t=q[e];if(t.el){if(m){t.el.style.opacity="",t.el.style.transform="",t.el.style.pointerEvents="",t.el.style.display="",t.el.style.filter="";continue}t.currOpacity+=(t.targetOpacity-t.currOpacity)*g,t.currY+=(t.targetY-t.currY)*g,t.currScale+=(t.targetScale-t.currScale)*g,(Math.abs(t.targetOpacity-t.currOpacity)>.002||Math.abs(t.targetY-t.currY)>.02||Math.abs(t.targetScale-t.currScale)>.002)&&(y=!0);let a=1;("down"===T&&t.targetY<0||"up"===T&&t.targetY>0)&&(a=1-Math.min(Math.max(Math.abs(t.currY)/cachedWindowHeight,0),1)),t.el.style.opacity=(t.currOpacity*a).toFixed(3),t.el.style.transform=`translateY(${t.currY.toFixed(2)}px) scale(${t.currScale.toFixed(3)})`,t.el.style.pointerEvents=t.pointerEvents,t.el.style.filter="",t.currOpacity<.01&&0===t.targetOpacity?t.el.style.display="none":t.el.style.display="","featured"!==e&&"cases"!==e||(t.hasEntered?t.el.classList.add("entered"):t.el.classList.remove("entered"))}}if(X&&(a.forEach((t,a)=>{let o=(e+a*c-l)%i;o<0&&(o+=i);const s=l+o,n=s,d=-s*h;let u=1;s<l+80?u=(s-l)/80:s>l+i-80&&(u=(l+i-s)/80),u=Math.max(0,Math.min(1,u));let p=n%360;p<0&&(p+=360);let m=Math.abs(p);m>180&&(m=360-m);let g=(180-m)/180,f=(1-Math.cos(g*Math.PI))/2,v=.62+.43*f,L=r*(.55+.53*f),E=window.innerWidth<=768?6:3.5,S=u*(.03+.97*Math.pow(f,E)),w=7.5*(1-f);const x=t.isHovered?1.06:1;t.currentHoverScale+=.15*(x-t.currentHoverScale),v*=t.currentHoverScale,Math.abs(x-t.currentHoverScale)>.002&&(y=!0),t.style.transform=`rotateY(${n.toFixed(1)}deg) translateZ(${L.toFixed(1)}px) scale(${v.toFixed(3)}) translateY(${d.toFixed(1)}px)`,t.style.opacity=S.toFixed(3),t.style.filter=w>.15?`blur(${w.toFixed(2)}px)`:"none";const b=p>85&&p<275;u<.08||S<.05?(t.style.visibility="hidden",t.style.pointerEvents="none"):(t.style.visibility="visible",t.style.pointerEvents=b?"none":"auto")}),y=!0),x)if(m)Y.title.el&&(Y.title.el.style.transform="",Y.title.el.style.opacity=""),Y.cards.forEach(e=>{e.el&&(e.el.style.transform="",e.el.style.opacity="")});else{const e=.08;Y.title.currZ+=(Y.title.targetZ-Y.title.currZ)*e,Y.title.currScale+=(Y.title.targetScale-Y.title.currScale)*e,Y.title.currOpacity+=(Y.title.targetOpacity-Y.title.currOpacity)*e,(Math.abs(Y.title.targetZ-Y.title.currZ)>.05||Math.abs(Y.title.targetScale-Y.title.currScale)>.002||Math.abs(Y.title.targetOpacity-Y.title.currOpacity)>.002)&&(y=!0),Y.title.el&&(Y.title.el.style.transform=`translate3d(0, 0, ${Y.title.currZ.toFixed(1)}px) scale(${Y.title.currScale.toFixed(3)})`,Y.title.el.style.opacity=Y.title.currOpacity.toFixed(3)),Y.cards.forEach(t=>{t.currZ+=(t.targetZ-t.currZ)*e,t.currScale+=(t.targetScale-t.currScale)*e,t.currOpacity+=(t.targetOpacity-t.currOpacity)*e,t.currRotateX+=(t.targetRotateX-t.currRotateX)*e,t.currY+=(t.targetY-t.currY)*e,(Math.abs(t.targetZ-t.currZ)>.05||Math.abs(t.targetScale-t.currScale)>.002||Math.abs(t.targetOpacity-t.currOpacity)>.002||Math.abs(t.targetRotateX-t.currRotateX)>.05||Math.abs(t.targetY-t.currY)>.05)&&(y=!0),t.el&&(t.el.style.transform=`translate3d(0, ${t.currY.toFixed(1)}px, ${t.currZ.toFixed(1)}px) scale(${t.currScale.toFixed(3)}) rotateX(${t.currRotateX.toFixed(1)}deg)`,t.el.style.opacity=t.currOpacity.toFixed(3))})}y?requestAnimationFrame(o):P=!1}window.addEventListener("scroll",()=>{I(),r()},{passive:!0}),window.addEventListener("resize",()=>{I(),r()},{passive:!0}),I();const C=document.querySelector(".scroll-stack");C&&"undefined"!=typeof IntersectionObserver?new IntersectionObserver(e=>{e.forEach(e=>{D=e.isIntersecting,D?r():P=!1})},{threshold:.01}).observe(C):D=!0;const Z=document.getElementById("philosophy");Z&&"undefined"!=typeof IntersectionObserver?new IntersectionObserver(e=>{e.forEach(e=>{X=e.isIntersecting,X&&r()})},{threshold:.01}).observe(Z):X=!0,r(),document.querySelectorAll('.modal[id^="services_item"]').forEach(e=>{const t=e.querySelector(".close");t&&t.addEventListener("click",t=>{t.preventDefault(),t.stopPropagation(),e.classList.remove("active"),setTimeout(()=>{e.style.display="none"},400)}),e.addEventListener("click",t=>{t.target===e&&(e.classList.remove("active"),setTimeout(()=>{e.style.display="none"},400))})}),document.querySelectorAll(".spiral-card a").forEach(e=>{e.addEventListener("click",t=>{const a=e.getAttribute("href");if(a&&a.startsWith("#")){t.preventDefault();const e=document.querySelector(a);e&&(e.style.display="flex",e.offsetWidth,e.classList.add("active"))}})})}}function initFeaturedSection(){function e(){l.length>c&&(p=l[c].offsetLeft-l[0].offsetLeft)}function t(e,t=!0){if(e<0||e>=l.length)return;const a=l[e],i=a.getAttribute("data-quote"),u=a.getAttribute("data-source"),p=parseInt(a.getAttribute("data-index"),10);l.forEach(e=>e.classList.remove("active")),l.forEach(e=>{parseInt(e.getAttribute("data-index"),10)===p&&e.classList.add("active")});const h=parseInt(l[d]?.getAttribute("data-index")||"-1",10);p!==h&&(r.classList.add("swapping"),o.classList.add("swapping"),setTimeout(()=>{r.innerHTML=i,o.innerHTML=u,r.classList.remove("swapping"),o.classList.remove("swapping")},220)),function(e){if(!n)return;const t=e*(105/(c-1));n.style.left=`${t}px`}(p),t&&function(e){if(!s)return;const t=s.clientWidth,a=e.offsetLeft-t/2+e.clientWidth/2;s.scrollTo({left:a,behavior:"smooth"})}(a),d=e}const a=document.getElementById("featured"),r=document.querySelector(".featured-quote"),o=document.querySelector(".featured-source"),s=document.querySelector(".featured-cards-row"),n=document.querySelector(".featured-pagination-dot");if(!a||!s)return;const i=Array.from(s.children),c=i.length;i.forEach(e=>{const t=e.cloneNode(!0);t.classList.remove("active"),s.appendChild(t)});const l=document.querySelectorAll(".featured-logo-card");if(0===l.length)return;let d=0,u=!1,p=0,h=null;"complete"===document.readyState?setTimeout(e,100):window.addEventListener("load",e),s.querySelectorAll("img").forEach(t=>{t.addEventListener("load",e)}),window.addEventListener("resize",e),l.forEach((e,a)=>{e.addEventListener("mouseenter",()=>{u=!0,t(a,!1)}),e.addEventListener("click",()=>{const t=e.getAttribute("data-link"),a="false"!==e.getAttribute("data-new-tab");t&&(a?window.open(t,"_blank","noopener,noreferrer"):window.location.href=t)})}),s.addEventListener("mouseenter",()=>{u=!0}),s.addEventListener("mouseleave",()=>{u=!1}),s.addEventListener("touchstart",()=>{u=!0}),s.addEventListener("touchend",()=>{setTimeout(()=>{u=!1},1500)}),e(),t(0,!1),h=requestAnimationFrame(function a(){0===p&&e(),!u&&p>0&&(s.scrollLeft+=.7,s.scrollLeft>=p&&(s.scrollLeft-=p),function(){const e=s.scrollLeft+s.clientWidth/2;let a=0,r=1/0;l.forEach((t,o)=>{const s=t.offsetLeft+t.clientWidth/2,n=Math.abs(e-s);n<r&&(r=n,a=o)});const o=parseInt(l[d]?.getAttribute("data-index")||"-1",10);parseInt(l[a]?.getAttribute("data-index"),10)!==o&&t(a,!1)}()),h=requestAnimationFrame(a)})}function initCaseStudies(){const e=document.querySelectorAll(".company-card-wrapper"),t=document.querySelector(".cases-buttons-container");0!==e.length&&e.forEach(a=>{const r=a.querySelector(".btn-company-trigger");r&&r.addEventListener("click",()=>{const r=a.classList.contains("expanded"),o=a.closest(".cases-row-container")||t;e.forEach(e=>e.classList.remove("expanded")),document.querySelectorAll(".cases-row-container").forEach(e=>e.classList.remove("has-expanded")),r||(a.classList.add("expanded"),o&&o.classList.add("has-expanded"))});const o=a.querySelector(".btn-close-reports");o&&o.addEventListener("click",e=>{e.stopPropagation(),a.classList.remove("expanded");const r=a.closest(".cases-row-container")||t;r&&r.classList.remove("has-expanded")});const s=a.querySelector(".company-reports-dropdown");s&&s.addEventListener("click",e=>{if(e.target===s){a.classList.remove("expanded");const e=a.closest(".cases-row-container")||t;e&&e.classList.remove("has-expanded")}}),a.querySelectorAll(".btn-report-item").forEach(e=>{e.addEventListener("click",e=>{e.stopPropagation()})})})}function initStatsCounters(){const e=document.querySelectorAll(".count-up");if(0===e.length)return;const t=new IntersectionObserver((e,t)=>{e.forEach(e=>{e.isIntersecting&&((e=>{const t=parseInt(e.getAttribute("data-target"),10),a=performance.now(),r=o=>{const s=o-a,n=Math.min(s/3500,1),i=n*(2-n),c=Math.floor(i*t);e.textContent=c,n<1?requestAnimationFrame(r):e.textContent=t};requestAnimationFrame(r)})(e.target),t.unobserve(e.target))})},{threshold:.1,rootMargin:"0px"});e.forEach(e=>{t.observe(e)})}function initComparisonModal(){const e=document.getElementById("comparisonModal"),t=document.querySelectorAll(".open-comparison-btn");if(e){const a=e.querySelector(".comparison-close");t.forEach(t=>{t.addEventListener("click",t=>{t.preventDefault(),t.stopPropagation(),e.style.display="flex",e.offsetWidth,e.classList.add("active"),document.body.style.overflow="hidden"})}),a&&a.addEventListener("click",t=>{t.preventDefault(),t.stopPropagation(),e.classList.remove("active"),document.body.style.overflow="",setTimeout(()=>{e.style.display="none"},400)}),e.addEventListener("click",t=>{t.target===e&&(e.classList.remove("active"),document.body.style.overflow="",setTimeout(()=>{e.style.display="none"},400))})}}function animatePriceCounter(){}function initTestimonials(){const e=document.querySelector(".stacked-testimonials-section"),t=document.querySelectorAll(".testimonial-card");if(e&&t.length>0){const a=t.length;let r=!1,o=0,s=0,n=null,i=0,c=0,l=0,d=0,u=0,p=!1,h=0,m=Date.now(),g=Date.now(),y=0,f=null;const v=()=>{const e=window.innerWidth;return e<=480?230:e<=768?380:480},L=document.querySelector(".testimonials-carousel-container");if(L){const t=t=>{if(!e.classList.contains("flow-layout"))return;r=!0,p=!1,h=0,u=0;const a=t.pageX||t.touches&&t.touches[0].pageX;o=a,l=a,d=Date.now(),s=i,m=Date.now(),n&&clearTimeout(n)},c=e=>{if(!r)return;const t=e.pageX||e.touches&&e.touches[0].pageX;if(!t)return;const n=t-o,c=v(),p=a*c;i=(s-n)%p,i<0&&(i+=p);const h=Date.now(),g=h-d;g>0&&(u=-(t-l)/g),l=t,d=h,m=h},g=()=>{if(!r)return;r=!1;const e=Date.now(),t=v();if(e-d<100&&Math.abs(u)>.1){p=!0;const e=15;h=Math.max(-e,Math.min(e,16*u))}else p=!1,y=Math.round(i/t)%a,y<0&&(y+=a),i=y*t;m=e};L.addEventListener("mousedown",a=>{e.classList.contains("flow-layout")&&(a.preventDefault(),t(a))}),window.addEventListener("mousemove",c),window.addEventListener("mouseup",g),L.addEventListener("touchstart",t,{passive:!0}),window.addEventListener("touchmove",c,{passive:!0}),window.addEventListener("touchend",g),L.addEventListener("wheel",t=>{if(e.classList.contains("flow-layout")&&Math.abs(t.deltaX)>Math.abs(t.deltaY)&&Math.abs(t.deltaX)>0){t.preventDefault(),p=!1;const e=v(),r=a*e;i=(i+.5*t.deltaX)%r,i<0&&(i+=r),m=Date.now(),n&&clearTimeout(n),n=setTimeout(()=>{y=Math.round(i/e)%a,y<0&&(y+=a),i=y*e,m=Date.now()},250)}},{passive:!1})}const E=()=>{if(f)return;const o=()=>{if(!e.classList.contains("flow-layout"))return;const s=v(),n=a*s,l=Date.now();p&&(i=(i+h)%n,i<0&&(i+=n),h*=.95,Math.abs(h)<.2&&(p=!1,h=0,y=Math.round(i/s)%a,y<0&&(y+=a),i=y*s,m=l,g=l)),!r&&!p&&l-m>2500?l-g>2500&&(y=(y+1)%a,i=y*s,g=l):r||p||(g=l);let d=i-c;d>n/2&&(d-=n),d<-n/2&&(d+=n);let u=.08;r?u=.25:p&&(u=.2),c=(c+d*u)%n,c<0&&(c+=n),Math.abs(d)<3&&!r&&!p?e.classList.add("show-corners"):e.classList.remove("show-corners"),t.forEach((e,t)=>{let a=((t*s-c+n/2)%n+n)%n-n/2;const r=Math.abs(a),o=s/2;let i=1,l=0;if(r<o){const e=1-r/o,t=1-Math.pow(1-e,3);i=1+.16*t,l=t}e.style.transform=`translate3d(${a.toFixed(1)}px, 0, 0) scale(${i.toFixed(3)})`,e.style.opacity="1",e.style.visibility="visible",e.style.zIndex=r<o?"10":"5",e.style.boxShadow=l>.01?`0 25px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(255, 140, 0, ${(.5*l).toFixed(2)})`:"",e.style.borderColor=l>.01?`rgba(255, 140, 0, ${(.08+.55*l).toFixed(2)})`:""}),f=requestAnimationFrame(o)};f=requestAnimationFrame(o)};e.classList.add("flow-layout"),e.classList.add("show-corners"),i=0,c=0,m=Date.now()-1500,g=Date.now()-1500,y=0,p=!1,h=0,r=!1,E()}}function initFAQs(){const e=document.querySelectorAll(".faq-item"),t=document.getElementById("faq");e.length>0&&e.forEach(t=>{const a=t.querySelector(".faq-question-header"),r=t.querySelector(".faq-answer");a&&r&&a.addEventListener("click",()=>{const a=t.classList.contains("active");e.forEach(e=>{if(e!==t){e.classList.remove("active");const t=e.querySelector(".faq-answer");t&&(t.style.maxHeight="0px",t.style.opacity="0")}}),a?(t.classList.remove("active"),r.style.maxHeight="0px",r.style.opacity="0"):(t.classList.add("active"),r.style.maxHeight=r.scrollHeight+"px",r.style.opacity="1")})}),t&&new IntersectionObserver((e,t)=>{e.forEach(e=>{e.isIntersecting&&(e.target.classList.add("revealed"),t.unobserve(e.target))})},{threshold:.15,rootMargin:"0px"}).observe(t)}function initDisclosures(){const e=document.querySelectorAll(".disclosure-item"),t=document.getElementById("disclosures");e.length>0&&e.forEach(t=>{const a=t.querySelector(".disclosure-header"),r=t.querySelector(".disclosure-panel");a&&r&&a.addEventListener("click",()=>{const a=t.classList.contains("active");if(e.forEach(e=>{if(e!==t){e.classList.remove("active");const t=e.querySelector(".disclosure-panel");t&&(t.style.maxHeight="0px",t.style.opacity="0")}}),a)t.classList.remove("active"),r.style.maxHeight=r.scrollHeight+"px",requestAnimationFrame(()=>{r.style.maxHeight="0px",r.style.opacity="0"});else{t.classList.add("active"),r.style.maxHeight=r.scrollHeight+"px",r.style.opacity="1";const e=a=>{"max-height"===a.propertyName&&t.classList.contains("active")&&(r.style.maxHeight="none"),r.removeEventListener("transitionend",e)};r.addEventListener("transitionend",e)}});const o=t.querySelectorAll(".sub-disclosure-item");o&&o.length>0&&o.forEach(e=>{const a=e.querySelector(".sub-disclosure-header"),r=e.querySelector(".sub-disclosure-panel");a&&r&&(e.classList.contains("active")&&(r.style.maxHeight=r.scrollHeight+"px",r.style.opacity="1"),a.addEventListener("click",a=>{a.stopPropagation();const o=e.classList.contains("active"),s=t.querySelector(".disclosure-panel");if(o){if(e.classList.remove("active"),s&&"none"===s.style.maxHeight?(s.style.maxHeight=s.scrollHeight+"px",requestAnimationFrame(()=>{r.style.maxHeight="0px",r.style.opacity="0"})):(r.style.maxHeight="0px",r.style.opacity="0"),s){const e=s.scrollHeight-r.scrollHeight;s.style.maxHeight=Math.max(0,e)+"px";const a=e=>{"max-height"===e.propertyName&&t.classList.contains("active")&&(s.style.maxHeight="none"),s.removeEventListener("transitionend",a)};s.addEventListener("transitionend",a)}}else if(e.classList.add("active"),s&&"none"===s.style.maxHeight?(s.style.maxHeight=s.scrollHeight+"px",requestAnimationFrame(()=>{r.style.maxHeight=r.scrollHeight+"px",r.style.opacity="1"})):(r.style.maxHeight=r.scrollHeight+"px",r.style.opacity="1"),s){const e=s.scrollHeight+r.scrollHeight;s.style.maxHeight=e+"px";const a=e=>{"max-height"===e.propertyName&&t.classList.contains("active")&&(s.style.maxHeight="none"),s.removeEventListener("transitionend",a)};s.addEventListener("transitionend",a)}}))})}),t&&new IntersectionObserver((e,t)=>{e.forEach(e=>{e.isIntersecting&&(e.target.classList.add("revealed"),t.unobserve(e.target))})},{threshold:.15,rootMargin:"0px"}).observe(t)}function initTeamMarquee(){function e(){o.length>r&&(n=o[r].offsetLeft-o[0].offsetLeft)}const t=document.querySelector(".team-cards-row");if(!t)return;const a=Array.from(t.children),r=a.length;a.forEach(e=>{const a=e.cloneNode(!0);t.appendChild(a)});const o=t.querySelectorAll(".team-card");if(0===o.length)return;let s=!1,n=0,i=null;"complete"===document.readyState?setTimeout(e,100):window.addEventListener("load",e),t.querySelectorAll("img").forEach(t=>{t.addEventListener("load",e)}),window.addEventListener("resize",e),t.addEventListener("mouseenter",()=>{s=!0}),t.addEventListener("mouseleave",()=>{s=!1}),t.addEventListener("touchstart",()=>{s=!0}),t.addEventListener("touchend",()=>{setTimeout(()=>{s=!1},1500)}),e(),i=requestAnimationFrame(function a(){0===n&&e(),!s&&n>0&&(t.scrollLeft+=1.5,t.scrollLeft>=n&&(t.scrollLeft-=n)),i=requestAnimationFrame(a)})}function initPortfolioCarousel(){function e(){i.forEach((e,t)=>{e.classList.remove("active","prev","next","hidden"),t===u?e.classList.add("active"):t===(u-1+p)%p?e.classList.add("prev"):t===(u+1)%p?e.classList.add("next"):e.classList.add("hidden")}),d&&(d.style.animation="none",requestAnimationFrame(()=>{requestAnimationFrame(()=>{d.style.animation="portfolioProgressAnim 7s linear forwards",d.style.animationPlayState=m?"paused":"running"})}))}function t(){a(),m||(h=setInterval(()=>{o()},7e3))}function a(){h&&(clearInterval(h),h=null)}function r(){m||t()}function o(){u=(u+1)%p,e(),r()}function s(){u=(u-1+p)%p,e(),r()}const n=document.querySelector(".portfolio-carousel-container");if(!n)return;const i=n.querySelectorAll(".portfolio-card"),c=n.querySelector(".portfolio-arrow.prev"),l=n.querySelector(".portfolio-arrow.next"),d=n.querySelector("#portfolioProgressBar");if(0===i.length)return;let u=0;const p=i.length;let h=null,m=!1;l&&l.addEventListener("click",e=>{e.stopPropagation(),o()}),c&&c.addEventListener("click",e=>{e.stopPropagation(),s()}),i.forEach(e=>{e.addEventListener("click",t=>{e.classList.contains("prev")?(t.preventDefault(),s()):e.classList.contains("next")&&(t.preventDefault(),o())})});let g=0,y=0,f=0,v=0;n.addEventListener("touchstart",e=>{g=e.changedTouches[0].screenX,f=e.changedTouches[0].screenY},{passive:!0}),n.addEventListener("touchend",e=>{y=e.changedTouches[0].screenX,v=e.changedTouches[0].screenY,function(){const e=y-g,t=v-f;Math.abs(e)>Math.abs(t)&&Math.abs(e)>50&&(e<0?s():o())}()},{passive:!0});let L=0;n.addEventListener("wheel",e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY)&&Math.abs(e.deltaX)>10){e.preventDefault();const t=Date.now();t-L>800&&(e.deltaX>0?o():s(),L=t)}},{passive:!1}),n.addEventListener("mouseenter",function(){m=!0,a(),d&&(d.style.animationPlayState="paused")}),n.addEventListener("mouseleave",function(){m=!1,t(),d&&(d.style.animation="none",requestAnimationFrame(()=>{requestAnimationFrame(()=>{d.style.animation="portfolioProgressAnim 7s linear forwards",d.style.animationPlayState="running"})}))}),e(),t()}function initMobilePricingTabs(){document.querySelectorAll(".comparison-table").forEach(e=>{e.classList.add("show-plan-1");const t=e.querySelectorAll("thead th");if(t.length<4)return;const a=t[1],r=t[2],o=t[3];a.classList.add("active-plan-tab");let s=[1];const n=t=>{const n=s.indexOf(t);-1!==n?s.length>1&&s.splice(n,1):(s.length>=2&&s.shift(),s.push(t)),e.classList.remove("show-plan-1","show-plan-2","show-plan-3"),a.classList.remove("active-plan-tab"),r.classList.remove("active-plan-tab"),o.classList.remove("active-plan-tab"),s.forEach(t=>{e.classList.add(`show-plan-${t}`),1===t&&a.classList.add("active-plan-tab"),2===t&&r.classList.add("active-plan-tab"),3===t&&o.classList.add("active-plan-tab")})};a.addEventListener("click",()=>n(1)),r.addEventListener("click",()=>n(2)),o.addEventListener("click",()=>n(3))})}let cachedWindowHeight=window.innerHeight,cachedWindowWidth=window.innerWidth;document.body.classList.add("preloader-active");const dismissPreloader=()=>{const e=document.getElementById("iv-preloader");if(e&&!e.classList.contains("dismissed")){e.classList.add("dismissed"),e.style.transition="opacity 0.4s ease, visibility 0.4s ease",e.style.opacity="0",e.style.visibility="hidden",document.body.classList.remove("preloader-active");const t=document.querySelector(".scroll-stack"),a=document.querySelector(".pricing-discount-counter");!t&&a&&setTimeout(()=>{animatePriceCounter()},100)}};"complete"===document.readyState?dismissPreloader():(window.addEventListener("load",dismissPreloader),setTimeout(dismissPreloader,1500)),document.addEventListener("DOMContentLoaded",()=>{"scrollRestoration"in history&&(history.scrollRestoration="manual"),window.scrollTo(0,0);const e=document.getElementById("iv-preloader"),t=document.querySelector(".scroll-stack"),a=document.querySelector(".pricing-discount-counter");e||t||!a||setTimeout(()=>{animatePriceCounter()},1e3);var r="localhost"===window.location.hostname||"127.0.0.1"===window.location.hostname;"http:"!==window.location.protocol&&"https:"!==window.location.protocol||r||document.querySelectorAll("a[href]").forEach(e=>{const t=e.getAttribute("href");if(t&&t.endsWith(".html")&&!t.startsWith("http")&&!t.startsWith("//")){var a=t.substring(0,t.length-5);("index"===a||a.endsWith("/index"))&&(a=a.substring(0,a.length-5)||"/"),e.setAttribute("href",a)}});const o=()=>{const e=document.querySelector(".stacked-testimonials-section");return e&&e.classList.contains("flow-layout"),4.8*cachedWindowHeight},s=document.querySelector(".scroll-stack");s&&(s.style.height=`${o()}px`),window.addEventListener("resize",()=>{const e=window.innerWidth,t=window.innerHeight;(Math.abs(e-cachedWindowWidth)>5||Math.abs(t-cachedWindowHeight)>100)&&(cachedWindowHeight=t,cachedWindowWidth=e,s&&(s.style.height=`${o()}px`))});const n=document.querySelector(".main-header");let i=window.scrollY;const c=()=>{const e=window.scrollY;e>20?n.classList.add("scrolled"):n.classList.remove("scrolled");const t=document.querySelector(".menu-trigger"),a=t&&t.classList.contains("open");e<=80||a?n.classList.remove("header-hidden"):e>i?n.classList.add("header-hidden"):n.classList.remove("header-hidden"),i=e};window.addEventListener("scroll",c),c();const l=document.getElementById("pricing-scroll-section");if(l){let e=0;l.addEventListener("scroll",()=>{const t=l.scrollTop,a=document.querySelector(".menu-trigger"),r=a&&a.classList.contains("open");t>20?n.classList.add("scrolled"):n.classList.remove("scrolled"),t<=80||r?n.classList.remove("header-hidden"):t>e?n.classList.add("header-hidden"):n.classList.remove("header-hidden"),e=t})}const d=document.querySelector(".menu-trigger"),u=document.querySelector(".nav-menu");d&&u&&(d.addEventListener("click",()=>{const e=d.classList.toggle("open");u.classList.toggle("open",e),document.body.style.overflow=e?"hidden":""}),u.querySelectorAll(".nav-link").forEach(e=>{e.addEventListener("click",()=>{d.classList.remove("open"),u.classList.remove("open"),document.body.style.overflow=""})}));const p=window.location.pathname;document.querySelectorAll(".nav-link").forEach(e=>{const t=e.getAttribute("href");p.endsWith(t)||"/"===p&&"index.html"===t?e.classList.add("active"):e.classList.remove("active")}),window.hasReachedBottom=!1,initPhilosophyModals(),init3DSpiral(),initFeaturedSection(),initCaseStudies(),initPortfolioCarousel(),initStatsCounters(),initComparisonModal(),initMobilePricingTabs(),initTestimonials(),initFAQs(),initDisclosures(),initTeamMarquee(),initPortfolioCarousel()});
+/**
+ * Intrinsic Value Equity Advisors
+ * Core Interactivity & Animations Script (Velvet Marigold Theme)
+ */
+
+// Global cached window dimensions to avoid mobile address bar scroll jumping
+let cachedWindowHeight = window.innerHeight;
+let cachedWindowWidth = window.innerWidth;
+
+// Immediately lock scrolling while preloader is active
+document.body.classList.add('preloader-active');
+
+const dismissPreloader = () => {
+    const preloader = document.getElementById('iv-preloader');
+    if (preloader && !preloader.classList.contains('dismissed')) {
+        preloader.classList.add('dismissed');
+        // Instantly transition preloader out (0.4s fadeout)
+        preloader.style.transition = 'opacity 0.4s ease, visibility 0.4s ease';
+        preloader.style.opacity = '0';
+        preloader.style.visibility = 'hidden';
+        document.body.classList.remove('preloader-active');
+        
+        // Trigger price drop animation on standalone pricing page
+        const scrollStack = document.querySelector('.scroll-stack');
+        const counterSpan = document.querySelector('.pricing-discount-counter');
+        if (!scrollStack && counterSpan) {
+            setTimeout(() => {
+                animatePriceCounter();
+            }, 100);
+        }
+    }
+};
+
+if (document.readyState === 'complete') {
+    dismissPreloader();
+} else {
+    window.addEventListener('load', dismissPreloader);
+    // Safety fallback (e.g. slow connections or stuck assets)
+    setTimeout(dismissPreloader, 1500);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Force scroll restoration to manual and scroll to top on reload/load to reset layout states
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
+    // Fallback: if there is no preloader on the page, trigger the price animation directly after a brief delay
+    const fallbackPreloader = document.getElementById('iv-preloader');
+    const fallbackScrollStack = document.querySelector('.scroll-stack');
+    const fallbackCounterSpan = document.querySelector('.pricing-discount-counter');
+    if (!fallbackPreloader && !fallbackScrollStack && fallbackCounterSpan) {
+        setTimeout(() => {
+            animatePriceCounter();
+        }, 1000);
+    }
+    // Clean up URLs for production (running on http: or https: but NOT on localhost/127.0.0.1)
+    var isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if ((window.location.protocol === 'http:' || window.location.protocol === 'https:') && !isLocalhost) {
+        document.querySelectorAll('a[href]').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && href.endsWith('.html') && !href.startsWith('http') && !href.startsWith('//')) {
+                var cleanHref = href.substring(0, href.length - 5);
+                if (cleanHref === 'index' || cleanHref.endsWith('/index')) {
+                    cleanHref = cleanHref.substring(0, cleanHref.length - 5) || '/';
+                }
+                link.setAttribute('href', cleanHref);
+            }
+        });
+    }
+
+    // Lock scroll stack height on load to prevent jumping when mobile address bar hides/shows
+    const getScrollStackHeight = () => {
+        const stackedSection = document.querySelector('.stacked-testimonials-section');
+        // If the testimonials section is present, check if it has flow-layout, or if it will be initialized to it
+        const isFlow = stackedSection ? (stackedSection.classList.contains('flow-layout') || true) : true;
+        return isFlow ? 4.8 * cachedWindowHeight : 9.3 * cachedWindowHeight;
+    };
+
+    const scrollStack = document.querySelector('.scroll-stack');
+    if (scrollStack) {
+        scrollStack.style.height = `${getScrollStackHeight()}px`;
+    }
+
+    // Update dimensions on resize, ignoring minor height shifts (like mobile browser URL bar collapsing)
+    window.addEventListener('resize', () => {
+        const newWidth = window.innerWidth;
+        const newHeight = window.innerHeight;
+        // Trigger recalculation if width changes (desktop resize) or height changes significantly (orientation swap)
+        if (Math.abs(newWidth - cachedWindowWidth) > 5 || Math.abs(newHeight - cachedWindowHeight) > 100) {
+            cachedWindowHeight = newHeight;
+            cachedWindowWidth = newWidth;
+            if (scrollStack) {
+                scrollStack.style.height = `${getScrollStackHeight()}px`;
+            }
+        }
+    });
+
+    // ==========================================================================
+    // 1. SCROLL-SENSITIVE HEADER EFFECT
+    // ==========================================================================
+    const header = document.querySelector('.main-header');
+    let lastScrollY = window.scrollY;
+    
+    const checkScroll = () => {
+        const currentScrollY = window.scrollY;
+        
+        if (currentScrollY > 20) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+
+        const menuTrigger = document.querySelector('.menu-trigger');
+        const isMenuOpen = menuTrigger && menuTrigger.classList.contains('open');
+
+        if (currentScrollY <= 80 || isMenuOpen) {
+            // Always show header at the very top of the page or if mobile menu is open
+            header.classList.remove('header-hidden');
+        } else if (currentScrollY > lastScrollY) {
+            // Scrolling down -> Hide header
+            header.classList.add('header-hidden');
+        } else {
+            // Scrolling up -> Reveal header
+            header.classList.remove('header-hidden');
+        }
+        
+        lastScrollY = currentScrollY;
+    };
+    
+    window.addEventListener('scroll', checkScroll);
+    checkScroll(); // Run on load in case page is refreshed while scrolled down
+
+    // Handle header visibility during inner scrolling of the pricing/team section
+    const pricingSection = document.getElementById('pricing-scroll-section');
+    if (pricingSection) {
+        let lastSectionScrollY = 0;
+        pricingSection.addEventListener('scroll', () => {
+            const currentSectionScrollY = pricingSection.scrollTop;
+            const menuTrigger = document.querySelector('.menu-trigger');
+            const isMenuOpen = menuTrigger && menuTrigger.classList.contains('open');
+
+            if (currentSectionScrollY > 20) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+
+            if (currentSectionScrollY <= 80 || isMenuOpen) {
+                header.classList.remove('header-hidden');
+            } else if (currentSectionScrollY > lastSectionScrollY) {
+                // Scrolling down -> Hide header
+                header.classList.add('header-hidden');
+            } else {
+                // Scrolling up -> Reveal header
+                header.classList.remove('header-hidden');
+            }
+            lastSectionScrollY = currentSectionScrollY;
+        });
+    }
+
+    // ==========================================================================
+    // 2. MOBILE MENU DRAWER CONTROLLER
+    // ==========================================================================
+    const menuTrigger = document.querySelector('.menu-trigger');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (menuTrigger && navMenu) {
+        menuTrigger.addEventListener('click', () => {
+            const isOpen = menuTrigger.classList.toggle('open');
+            navMenu.classList.toggle('open', isOpen);
+            
+            // Prevent body scroll when menu is open
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        });
+        
+        // Close menu when clicking links
+        const navLinks = navMenu.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menuTrigger.classList.remove('open');
+                navMenu.classList.remove('open');
+                document.body.style.overflow = '';
+            });
+        });
+    }
+
+
+
+    // ==========================================================================
+    // 5. CURRENT PAGE HIGHLIGHTER
+    // ==========================================================================
+    const currentPath = window.location.pathname;
+    const pageLinks = document.querySelectorAll('.nav-link');
+    
+    pageLinks.forEach(link => {
+        const linkPath = link.getAttribute('href');
+        // Simple matching logic for standard paths
+        if (currentPath.endsWith(linkPath) || (currentPath === '/' && linkPath === 'index.html')) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+
+    window.hasReachedBottom = false;
+
+    // Truncate long philosophy text and bind to modals
+    initPhilosophyModals();
+
+    // Initialize 3D Philosophy Spiral Carousel
+    init3DSpiral();
+
+    // Initialize Featured In dynamic section
+    initFeaturedSection();
+
+    // Initialize Case Studies section and modals
+    initCaseStudies();
+
+    // Initialize Portfolio Carousel
+    initPortfolioCarousel();
+
+    // Initialize Stats Counter Animation
+    initStatsCounters();
+
+    // Initialize Comparison Modal
+    initComparisonModal();
+
+    // Initialize Mobile Pricing Tabs
+    initMobilePricingTabs();
+
+    // Initialize Stacked Testimonials
+    initTestimonials();
+
+    // Initialize Collapsible FAQs
+    initFAQs();
+
+    // Initialize Regulatory Disclosures Accordion
+    initDisclosures();
+
+    // Initialize Homepage Team Marquee
+    initTeamMarquee();
+
+    // Initialize Portfolio 3D Carousel
+    initPortfolioCarousel();
+});
+
+
+
+// ==========================================================================
+// PHILOSOPHY TEXT TRUNCATION & MODAL BINDING
+// ==========================================================================
+function initPhilosophyModals() {
+    const spiralCards = document.querySelectorAll('.spiral-card');
+    spiralCards.forEach(card => {
+        const p = card.querySelector('p');
+        const link = card.querySelector('a');
+        if (!p || !link) return;
+        
+        const fullText = p.innerHTML; // get original HTML content
+        const textContent = p.textContent.trim();
+        
+        // Find the target modal
+        const modalId = link.getAttribute('href');
+        if (modalId && modalId.startsWith('#')) {
+            const targetModal = document.querySelector(modalId);
+            if (targetModal) {
+                const modalParagraph = targetModal.querySelector('p');
+                if (modalParagraph) {
+                    // Populate modal with full text from the card
+                    modalParagraph.innerHTML = fullText;
+                }
+            }
+        }
+        
+        // Truncate card text to a clean preview (e.g. 110 characters)
+        const maxLength = 110;
+        if (textContent.length > maxLength) {
+            p.textContent = textContent.substring(0, maxLength).trim() + '...';
+        }
+    });
+}
+
+// ==========================================================================
+// 3D SPIRAL PHILOSOPHY CAROUSEL
+// ==========================================================================
+function init3DSpiral() {
+    const philosophySection = document.getElementById('philosophy');
+    const carousel = document.querySelector('.spiral-carousel');
+    const spiralCards = document.querySelectorAll('.spiral-card');
+    
+    if (philosophySection && carousel && spiralCards.length > 0) {
+        // Dynamic adjustments for helix spacing depending on device width
+        const getSpiralRadius = () => {
+            return window.innerWidth <= 480 ? 230 : (window.innerWidth <= 768 ? 265 : 380);
+        };
+        
+        const getSpiralYSpacingFactor = () => {
+            return window.innerWidth <= 480 ? 3.0 : (window.innerWidth <= 768 ? 2.2 : 1.35);
+        };
+        
+        // Bind hover listeners for scale pop
+        spiralCards.forEach(card => {
+            card.isHovered = false;
+            card.currentHoverScale = 1.0;
+            card.addEventListener('mouseenter', () => {
+                card.isHovered = true;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.isHovered = false;
+            });
+        });
+        
+        // Helix geometry configuration constants
+        const totalRange = 540;   // 1.5 full turns track length (540 degrees)
+        const spacing = 60;       // 60 degrees spacing between cards (9 cards * 60 = 540)
+        const startAngle = -270;  // Track starts at -270 degrees and wraps to +270
+        
+        let idleOffsetAngle = 0;
+        let targetScrollOffsetAngle = 0;
+        let currentScrollOffsetAngle = 0;
+        
+        // touch / drag rotation for mobile view (x-axis drag rotates the 3D helix)
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let dragStartAngle = 0;
+        
+        const sceneEl = document.querySelector('.spiral-scene');
+        if (sceneEl) {
+            sceneEl.addEventListener('touchstart', (e) => {
+                if (window.innerWidth <= 768) {
+                    isDragging = true;
+                    dragStartX = e.touches[0].clientX;
+                    dragStartY = e.touches[0].clientY;
+                    dragStartAngle = targetScrollOffsetAngle;
+                }
+            }, { passive: false });
+            
+            sceneEl.addEventListener('touchmove', (e) => {
+                if (isDragging && window.innerWidth <= 768) {
+                    const clientX = e.touches[0].clientX;
+                    const clientY = e.touches[0].clientY;
+                    const deltaX = clientX - dragStartX;
+                    const deltaY = clientY - dragStartY;
+                    
+                    // If drag is primarily horizontal, prevent page scrolling so helix rotates smoothly
+                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                        if (e.cancelable) e.preventDefault();
+                    }
+                    
+                    // Drag left (negative deltaX) should rotate forward (less sensitive drag)
+                    const newAngle = dragStartAngle - deltaX * 0.35;
+                    targetScrollOffsetAngle = Math.max(0, Math.min(360, newAngle));
+                }
+            }, { passive: false });
+            
+            sceneEl.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+        }
+        
+        const heroSec = document.querySelector('.iv-hero');
+        const philosophySticky = document.querySelector('.spiral-philosophy-sticky');
+        const featuredSec = document.querySelector('.iv-featured-section');
+        const casesSec = document.querySelector('.iv-cases-section');
+        const portfolioSec = document.getElementById('portfolio-scroll-section');
+        const pricingSecEl = document.getElementById('pricing-scroll-section');
+        const testimonialsSec = document.getElementById('testimonials-section');
+
+        // Setup lerped values for the sections to make all viewport transitions buttery smooth
+        const sectionsState = {
+            hero: {
+                el: heroSec,
+                currOpacity: 1, targetOpacity: 1,
+                currY: 0, targetY: 0,
+                currScale: 1, targetScale: 1,
+                pointerEvents: 'auto'
+            },
+            philosophy: {
+                el: philosophySticky,
+                currOpacity: 0, targetOpacity: 0,
+                currY: 60, targetY: 60,
+                currScale: 0.95, targetScale: 0.95,
+                pointerEvents: 'none'
+            },
+            featured: {
+                el: featuredSec,
+                currOpacity: 0, targetOpacity: 0,
+                currY: 60, targetY: 60,
+                currScale: 0.95, targetScale: 0.95,
+                pointerEvents: 'none',
+                hasEntered: false
+            },
+            cases: {
+                el: casesSec,
+                currOpacity: 0, targetOpacity: 0,
+                currY: 60, targetY: 60,
+                currScale: 0.95, targetScale: 0.95,
+                pointerEvents: 'none',
+                hasEntered: false
+            },
+            portfolio: {
+                el: portfolioSec,
+                currOpacity: 0, targetOpacity: 0,
+                currY: 60, targetY: 60,
+                currScale: 0.95, targetScale: 0.95,
+                pointerEvents: 'none'
+            },
+            pricing: {
+                el: pricingSecEl,
+                currOpacity: 0, targetOpacity: 0,
+                currY: 60, targetY: 60,
+                currScale: 0.95, targetScale: 0.95,
+                pointerEvents: 'none'
+            },
+            testimonials: {
+                el: testimonialsSec,
+                currOpacity: 0, targetOpacity: 0,
+                currY: 60, targetY: 60,
+                currScale: 0.95, targetScale: 0.95,
+                pointerEvents: 'none'
+            }
+        };
+
+        const pricingTitle = document.querySelector('.pricing-title-block');
+        const pricingCards = document.querySelectorAll('.pricing-card-3d');
+        
+        const pricingState = {
+            hasAnimatedCounter: false,
+            counterTimeout: null,
+            title: {
+                el: pricingTitle,
+                currZ: -600, targetZ: -600,
+                currScale: 0.3, targetScale: 0.3,
+                currOpacity: 0, targetOpacity: 0
+            },
+            cards: Array.from(pricingCards).map(card => ({
+                el: card,
+                currZ: -600, targetZ: -600,
+                currScale: 0.3, targetScale: 0.3,
+                currOpacity: 0, targetOpacity: 0,
+                currRotateX: 15, targetRotateX: 15,
+                currY: 50, targetY: 50
+            }))
+        };
+
+        const scrollIndicator = document.querySelector('.scroll-progress-indicator');
+        const progressCircleFg = document.querySelector('.progress-circle-fg');
+
+        let scrollDirection = 'down';
+        let lastScrollY = window.scrollY;
+
+        const getOffsets = () => {
+            const windowHeight = cachedWindowHeight;
+            const stackedSection = document.querySelector('.stacked-testimonials-section');
+            const isFlow = stackedSection && stackedSection.classList.contains('flow-layout');
+            const endOffset = isFlow ? 4.8 * windowHeight : 9.3 * windowHeight; 
+            return [
+                0,
+                1.0 * windowHeight,
+                1.8 * windowHeight,
+                2.1 * windowHeight,
+                2.5 * windowHeight, // Portfolio
+                3.0 * windowHeight, // Pricing
+                3.5 * windowHeight, // Testimonials
+                3.8 * windowHeight, // Testimonials exit
+                endOffset
+            ];
+        };
+
+        const updateScrollIndicator = () => {
+            if (!scrollIndicator || !progressCircleFg) return;
+
+            const scrollY = window.scrollY;
+            const windowHeight = cachedWindowHeight;
+
+            // Update scroll direction
+            if (scrollY > lastScrollY + 4) {
+                scrollDirection = 'down';
+            } else if (scrollY < lastScrollY - 4) {
+                scrollDirection = 'up';
+            }
+            lastScrollY = scrollY;
+
+            // Hide indicator when reaching FAQ/Footer bottom
+            const stackedSection = document.querySelector('.stacked-testimonials-section');
+            const isFlow = stackedSection && stackedSection.classList.contains('flow-layout');
+            const hideThreshold = isFlow ? 3.9 * windowHeight : 8.2 * windowHeight;
+            if (scrollY >= hideThreshold) {
+                scrollIndicator.classList.remove('visible');
+                return;
+            }
+
+            const offsets = getOffsets();
+            let progress = 0;
+
+            for (let i = 0; i < offsets.length - 1; i++) {
+                if (scrollY >= offsets[i] && scrollY < offsets[i+1]) {
+                    progress = (scrollY - offsets[i]) / (offsets[i+1] - offsets[i]);
+                    break;
+                }
+            }
+
+            progress = Math.max(0, Math.min(1, progress));
+
+            const radius = 18;
+            const circumference = 2 * Math.PI * radius; // ~113.10
+            progressCircleFg.style.strokeDasharray = circumference.toFixed(2);
+            const offset = circumference - progress * circumference;
+            progressCircleFg.style.strokeDashoffset = offset.toFixed(2);
+
+            // Update arrow rotation based on direction
+            const arrow = scrollIndicator.querySelector('.scroll-indicator-arrow');
+            if (arrow) {
+                arrow.style.transform = scrollDirection === 'up' ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+
+            scrollIndicator.classList.add('visible');
+        };
+
+        // Add click listener to progress button to scroll directly to the next/prev section
+        if (scrollIndicator) {
+            scrollIndicator.addEventListener('click', () => {
+                const scrollY = window.scrollY;
+                const windowHeight = cachedWindowHeight;
+                const offsets = getOffsets();
+                
+                let activeIdx = 0;
+                let progress = 0;
+                
+                for (let i = 0; i < offsets.length - 1; i++) {
+                    if (scrollY >= offsets[i] && scrollY < offsets[i+1]) {
+                        activeIdx = i;
+                        progress = (scrollY - offsets[i]) / (offsets[i+1] - offsets[i]);
+                        break;
+                    }
+                }
+                
+                if (scrollY >= offsets[offsets.length - 1]) {
+                    activeIdx = offsets.length - 1;
+                }
+                
+                let targetScroll = scrollY;
+                
+                if (scrollDirection === 'down') {
+                    if (activeIdx < offsets.length - 1) {
+                        targetScroll = offsets[activeIdx + 1];
+                    }
+                } else {
+                    if (progress > 0.08) {
+                        targetScroll = offsets[activeIdx];
+                    } else if (activeIdx > 0) {
+                        targetScroll = offsets[activeIdx - 1];
+                    }
+                }
+                
+                window.scrollTo({
+                    top: targetScroll,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        const handleScrollTransitions = () => {
+            const scrollY = window.scrollY;
+            const windowHeight = cachedWindowHeight;
+
+            updateScrollIndicator();
+
+            // Define scroll transition checkpoints relative to viewport height with uniform gaps:
+            // Hero: 0.0 to 1.0
+            // Philosophy card spin: 1.0 to 1.8
+            // Featured logos: 1.8 to 2.1
+            // Case studies: 2.1 to 2.5
+            // Portfolio: 2.5 to 3.0
+            // Pricing & Team: 3.0 to 3.5
+            // Testimonials: 3.5 to 4.8
+            
+            const heroFadeEnd = 1.0 * windowHeight;
+
+            const philFadeInStart = 0.5 * windowHeight;
+            const philFadeInEnd = 1.0 * windowHeight;
+            const philSpinStart = 1.0 * windowHeight;
+            const philSpinEnd = 1.8 * windowHeight;
+            const philFadeOutStart = 1.8 * windowHeight;
+
+            const featuredFadeInStart = 1.8 * windowHeight;
+            const featuredFadeInEnd = 2.0 * windowHeight;
+            const featuredFadeOutStart = 2.1 * windowHeight;
+
+            const casesFadeInStart = 2.1 * windowHeight;
+            const casesFadeInEnd = 2.3 * windowHeight;
+            const casesFadeOutStart = 2.5 * windowHeight;
+
+            const portfolioFadeInStart = 2.5 * windowHeight;
+            const portfolioFadeInEnd = 2.7 * windowHeight;
+            const portfolioFadeOutStart = 3.0 * windowHeight;
+
+            const pricingFadeInStart = 3.0 * windowHeight;
+            const pricingFadeInEnd = 3.2 * windowHeight;
+            const pricingZoomStart = 3.2 * windowHeight;
+            const pricingZoomEnd = 3.5 * windowHeight;
+            const pricingFadeOutStart = 3.5 * windowHeight;
+
+            const testimonialsFadeInStart = 3.5 * windowHeight;
+            const testimonialsFadeInEnd = 3.7 * windowHeight;
+            const testimonialsFadeOutStart = 3.8 * windowHeight;
+
+            // 1. Hero Section Fade & Translate (outward)
+            if (heroSec) {
+                sectionsState.hero.targetOpacity = 1;
+                sectionsState.hero.targetScale = 1;
+                sectionsState.hero.targetY = -scrollY;
+                sectionsState.hero.pointerEvents = scrollY < heroFadeEnd ? 'auto' : 'none';
+            }
+
+            // 2. Philosophy Section (Entrance, Card Spin, and Exit)
+            if (philosophySticky) {
+                if (scrollY < philFadeInStart) {
+                    sectionsState.philosophy.targetOpacity = 0;
+                    sectionsState.philosophy.targetY = 0.45 * windowHeight;
+                    sectionsState.philosophy.targetScale = 1;
+                    sectionsState.philosophy.pointerEvents = 'none';
+                    targetScrollOffsetAngle = scrollDirection === 'up' ? 360 : 0;
+                } else if (scrollY >= philFadeInStart && scrollY <= philFadeInEnd) {
+                    // Entrance Phase
+                    const progress = (scrollY - philFadeInStart) / (philFadeInEnd - philFadeInStart);
+                    sectionsState.philosophy.targetOpacity = progress;
+                    sectionsState.philosophy.targetY = 0.45 * windowHeight * (1 - progress);
+                    sectionsState.philosophy.targetScale = 1;
+                    sectionsState.philosophy.pointerEvents = 'auto';
+                    targetScrollOffsetAngle = scrollDirection === 'up' ? 360 : 0;
+                } else if (scrollY > philFadeInEnd && scrollY < philFadeOutStart) {
+                    // Active Spin Phase
+                    sectionsState.philosophy.targetOpacity = 1;
+                    sectionsState.philosophy.targetY = 0;
+                    sectionsState.philosophy.targetScale = 1;
+                    sectionsState.philosophy.pointerEvents = 'auto';
+
+                    const spinProgress = (scrollY - philSpinStart) / (philSpinEnd - philSpinStart);
+                    const clampedProgress = Math.max(0, Math.min(1, spinProgress));
+                    targetScrollOffsetAngle = scrollDirection === 'up' ? 360 : (clampedProgress * 360);
+                } else {
+                    // Exiting Philosophy Section (scrollY >= philFadeOutStart) - scroll up naturally
+                    const progress = Math.max(0, Math.min(1, (scrollY - philFadeOutStart) / (featuredFadeInEnd - philFadeOutStart)));
+                    sectionsState.philosophy.targetOpacity = 1;
+                    sectionsState.philosophy.targetY = -progress * windowHeight;
+                    sectionsState.philosophy.targetScale = 1;
+                    sectionsState.philosophy.pointerEvents = progress < 1 ? 'auto' : 'none';
+                    targetScrollOffsetAngle = 360;
+                }
+            }
+
+            // 3. Featured Section Fade & Translate (inward & outward)
+            if (featuredSec) {
+                if (scrollY < featuredFadeInStart) {
+                    sectionsState.featured.targetOpacity = 0;
+                    sectionsState.featured.targetY = windowHeight;
+                    sectionsState.featured.targetScale = 1;
+                    sectionsState.featured.pointerEvents = 'none';
+                    sectionsState.featured.hasEntered = scrollDirection === 'up';
+                } else if (scrollY >= featuredFadeInStart && scrollY <= featuredFadeInEnd) {
+                    // Entrance Phase
+                    const progress = (scrollY - featuredFadeInStart) / (featuredFadeInEnd - featuredFadeInStart);
+                    sectionsState.featured.targetOpacity = progress;
+                    sectionsState.featured.targetY = 0.45 * windowHeight * (1 - progress);
+                    sectionsState.featured.targetScale = 1;
+                    sectionsState.featured.pointerEvents = 'auto';
+                    sectionsState.featured.hasEntered = true;
+                } else if (scrollY > featuredFadeInEnd && scrollY < featuredFadeOutStart) {
+                    // Active Phase
+                    sectionsState.featured.targetOpacity = 1;
+                    sectionsState.featured.targetY = 0;
+                    sectionsState.featured.targetScale = 1;
+                    sectionsState.featured.pointerEvents = 'auto';
+                    sectionsState.featured.hasEntered = true;
+                } else {
+                    // Exiting Featured Section (scrollY >= featuredFadeOutStart) - scroll up naturally
+                    const progress = Math.max(0, Math.min(1, (scrollY - featuredFadeOutStart) / (casesFadeInEnd - featuredFadeOutStart)));
+                    sectionsState.featured.targetOpacity = 1;
+                    sectionsState.featured.targetY = -progress * windowHeight;
+                    sectionsState.featured.targetScale = 1;
+                    sectionsState.featured.pointerEvents = progress < 1 ? 'auto' : 'none';
+                    sectionsState.featured.hasEntered = true;
+                }
+            }
+
+            // 4. Case Studies Section Fade & Translate (inward & outward)
+            if (casesSec) {
+                if (scrollY < casesFadeInStart) {
+                    sectionsState.cases.targetOpacity = 0;
+                    sectionsState.cases.targetY = windowHeight;
+                    sectionsState.cases.targetScale = 1;
+                    sectionsState.cases.pointerEvents = 'none';
+                    sectionsState.cases.hasEntered = scrollDirection === 'up';
+                } else if (scrollY >= casesFadeInStart && scrollY <= casesFadeInEnd) {
+                    // Entrance Phase
+                    const progress = (scrollY - casesFadeInStart) / (casesFadeInEnd - casesFadeInStart);
+                    sectionsState.cases.targetOpacity = progress;
+                    sectionsState.cases.targetY = 0.45 * windowHeight * (1 - progress);
+                    sectionsState.cases.targetScale = 1;
+                    sectionsState.cases.pointerEvents = 'auto';
+                    sectionsState.cases.hasEntered = true;
+                } else if (scrollY > casesFadeInEnd && scrollY < casesFadeOutStart) {
+                    // Active Phase
+                    sectionsState.cases.targetOpacity = 1;
+                    sectionsState.cases.targetY = 0;
+                    sectionsState.cases.targetScale = 1;
+                    sectionsState.cases.pointerEvents = 'auto';
+                    sectionsState.cases.hasEntered = true;
+                } else {
+                    // Exiting Cases Section (scrollY >= casesFadeOutStart) - scroll up naturally
+                    const progress = Math.max(0, Math.min(1, (scrollY - casesFadeOutStart) / (portfolioFadeInEnd - casesFadeOutStart)));
+                    sectionsState.cases.targetOpacity = 1;
+                    sectionsState.cases.targetY = -progress * windowHeight;
+                    sectionsState.cases.targetScale = 1;
+                    sectionsState.cases.pointerEvents = progress < 1 ? 'auto' : 'none';
+                    sectionsState.cases.hasEntered = true;
+                }
+            }
+
+            // 4b. Portfolio Section Fade & Translate (inward & outward)
+            const portfolioSec = sectionsState.portfolio.el;
+            if (portfolioSec) {
+                if (scrollY < portfolioFadeInStart) {
+                    sectionsState.portfolio.targetOpacity = 0;
+                    sectionsState.portfolio.targetY = windowHeight;
+                    sectionsState.portfolio.targetScale = 1;
+                    sectionsState.portfolio.pointerEvents = 'none';
+                } else if (scrollY >= portfolioFadeInStart && scrollY <= portfolioFadeInEnd) {
+                    // Entrance Phase
+                    const progress = (scrollY - portfolioFadeInStart) / (portfolioFadeInEnd - portfolioFadeInStart);
+                    sectionsState.portfolio.targetOpacity = progress;
+                    sectionsState.portfolio.targetY = 0.45 * windowHeight * (1 - progress);
+                    sectionsState.portfolio.targetScale = 1;
+                    sectionsState.portfolio.pointerEvents = 'auto';
+                } else if (scrollY > portfolioFadeInEnd && scrollY < portfolioFadeOutStart) {
+                    // Active Phase
+                    sectionsState.portfolio.targetOpacity = 1;
+                    sectionsState.portfolio.targetY = 0;
+                    sectionsState.portfolio.targetScale = 1;
+                    sectionsState.portfolio.pointerEvents = 'auto';
+                } else {
+                    // Exiting Portfolio Section (scrollY >= portfolioFadeOutStart) - scroll up naturally
+                    const progress = Math.max(0, Math.min(1, (scrollY - portfolioFadeOutStart) / (pricingFadeInEnd - portfolioFadeOutStart)));
+                    sectionsState.portfolio.targetOpacity = 1;
+                    sectionsState.portfolio.targetY = -progress * windowHeight;
+                    sectionsState.portfolio.targetScale = 1;
+                    sectionsState.portfolio.pointerEvents = progress < 1 ? 'auto' : 'none';
+                }
+            }
+
+            // 5. Pricing Section Fade & Translate (inward & outward)
+            const pricingSec = sectionsState.pricing.el;
+            if (pricingSec) {
+                if (scrollY < pricingFadeInStart) {
+                    sectionsState.pricing.targetOpacity = 0;
+                    sectionsState.pricing.targetY = windowHeight;
+                    sectionsState.pricing.targetScale = 1;
+                    sectionsState.pricing.pointerEvents = 'none';
+                    
+                    // Reset zoom state to background when section is hidden
+                    pricingState.title.targetZ = -600;
+                    pricingState.title.targetScale = 0.3;
+                    pricingState.title.targetOpacity = 0;
+                    pricingState.cards.forEach(c => {
+                        c.targetZ = -600;
+                        c.targetScale = 0.3;
+                        c.targetOpacity = 0;
+                        c.targetRotateX = 15;
+                        c.targetY = 50;
+                    });
+                    
+                    pricingState.hasAnimatedCounter = false;
+                    if (pricingState.counterTimeout) {
+                        clearTimeout(pricingState.counterTimeout);
+                        pricingState.counterTimeout = null;
+                    }
+                } else if (scrollY >= pricingFadeInStart && scrollY <= pricingFadeInEnd) {
+                    // Entrance Phase - Start zoom animation automatically immediately on reach
+                    const progress = (scrollY - pricingFadeInStart) / (pricingFadeInEnd - pricingFadeInStart);
+                    sectionsState.pricing.targetOpacity = progress;
+                    sectionsState.pricing.targetY = 0.45 * windowHeight * (1 - progress);
+                    sectionsState.pricing.targetScale = 1;
+                    sectionsState.pricing.pointerEvents = 'auto';
+                    
+                    pricingState.title.targetZ = 0;
+                    pricingState.title.targetScale = 1.0;
+                    pricingState.title.targetOpacity = 1.0;
+                    pricingState.cards.forEach(c => {
+                        c.targetZ = 0;
+                        c.targetScale = 1.0;
+                        c.targetOpacity = 1.0;
+                        c.targetRotateX = 0;
+                        c.targetY = 0;
+                    });
+                    if (pricingState.counterTimeout) {
+                        clearTimeout(pricingState.counterTimeout);
+                        pricingState.counterTimeout = null;
+                    }
+                } else if (scrollY > pricingFadeInEnd && scrollY < pricingFadeOutStart) {
+                    // Active Phase - Keep cards and title zoomed forward
+                    sectionsState.pricing.targetOpacity = 1;
+                    sectionsState.pricing.targetY = 0;
+                    sectionsState.pricing.targetScale = 1;
+                    sectionsState.pricing.pointerEvents = 'auto';
+
+                    pricingState.title.targetZ = 0;
+                    pricingState.title.targetScale = 1.0;
+                    pricingState.title.targetOpacity = 1.0;
+
+                    pricingState.cards.forEach(c => {
+                        c.targetZ = 0;
+                        c.targetScale = 1.0;
+                        c.targetOpacity = 1.0;
+                        c.targetRotateX = 0;
+                        c.targetY = 0;
+                    });
+
+                    // Trigger dynamic count-down when cards zoom entrance is complete (visible properly)
+                    if (!pricingState.hasAnimatedCounter && !pricingState.counterTimeout) {
+                        pricingState.counterTimeout = setTimeout(() => {
+                            animatePriceCounter();
+                            pricingState.hasAnimatedCounter = true;
+                            pricingState.counterTimeout = null;
+                        }, 500);
+                    }
+                } else {
+                    // Exiting Pricing Section (scrollY >= pricingFadeOutStart) - scroll up naturally
+                    const progress = Math.max(0, Math.min(1, (scrollY - pricingFadeOutStart) / (testimonialsFadeInEnd - pricingFadeOutStart)));
+                    sectionsState.pricing.targetOpacity = 1;
+                    sectionsState.pricing.targetY = -progress * windowHeight;
+                    sectionsState.pricing.targetScale = 1;
+                    sectionsState.pricing.pointerEvents = progress < 1 ? 'auto' : 'none';
+
+                    // Title & Cards remain zoomed forward
+                    pricingState.title.targetZ = 0;
+                    pricingState.title.targetScale = 1;
+                    pricingState.title.targetOpacity = 1;
+                    pricingState.cards.forEach(c => {
+                        c.targetZ = 0;
+                        c.targetScale = 1;
+                        c.targetOpacity = 1;
+                        c.targetRotateX = 0;
+                        c.targetY = 0;
+                    });
+                    if (pricingState.counterTimeout) {
+                        clearTimeout(pricingState.counterTimeout);
+                        pricingState.counterTimeout = null;
+                    }
+                }
+            }
+
+            // 6. Testimonials Section Fade & Translate (inward & outward)
+            const testimonialsSec = sectionsState.testimonials.el;
+            if (testimonialsSec) {
+                if (scrollY < testimonialsFadeInStart) {
+                    sectionsState.testimonials.targetOpacity = 0;
+                    sectionsState.testimonials.targetY = windowHeight;
+                    sectionsState.testimonials.targetScale = 1;
+                    sectionsState.testimonials.pointerEvents = 'none';
+                } else if (scrollY >= testimonialsFadeInStart && scrollY <= testimonialsFadeInEnd) {
+                    // Entrance Phase
+                    const progress = (scrollY - testimonialsFadeInStart) / (testimonialsFadeInEnd - testimonialsFadeInStart);
+                    sectionsState.testimonials.targetOpacity = progress;
+                    sectionsState.testimonials.targetY = 0.45 * windowHeight * (1 - progress);
+                    sectionsState.testimonials.targetScale = 1;
+                    sectionsState.testimonials.pointerEvents = 'auto';
+                } else if (scrollY > testimonialsFadeInEnd && scrollY < testimonialsFadeOutStart) {
+                    // Active Phase
+                    sectionsState.testimonials.targetOpacity = 1;
+                    sectionsState.testimonials.targetY = 0;
+                    sectionsState.testimonials.targetScale = 1;
+                    sectionsState.testimonials.pointerEvents = 'auto';
+                } else {
+                    // Exiting Testimonials Section (scrollY >= testimonialsFadeOutStart) - scroll up naturally
+                    const offsets = getOffsets();
+                    const endOffset = offsets[offsets.length - 1];
+                    const progress = Math.max(0, Math.min(1, (scrollY - testimonialsFadeOutStart) / (endOffset - testimonialsFadeOutStart)));
+                    sectionsState.testimonials.targetOpacity = 1 - progress;
+                    sectionsState.testimonials.targetY = -progress * windowHeight;
+                    sectionsState.testimonials.targetScale = 1 - progress * 0.05;
+                    sectionsState.testimonials.pointerEvents = progress < 1 ? 'auto' : 'none';
+                }
+            }
+        };
+
+        let isLooping = false;
+        let isScrollStackVisible = false;
+        let isPhilosophyVisible = false;
+
+        function startLoop() {
+            if (!isLooping && isScrollStackVisible) {
+                isLooping = true;
+                requestAnimationFrame(animateSpiral);
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            handleScrollTransitions();
+            startLoop();
+        }, { passive: true });
+
+        window.addEventListener('resize', () => {
+            handleScrollTransitions();
+            startLoop();
+        }, { passive: true });
+
+        handleScrollTransitions(); // Run initially
+        
+        // Continuous Animation Loop
+        function animateSpiral() {
+            if (!isScrollStackVisible) {
+                isLooping = false;
+                return;
+            }
+
+            if (carousel) {
+                carousel.style.transform = '';
+                carousel.currentX = 0;
+            }
+
+            // Only rotate/update helix if philosophy section is visible
+            if (isPhilosophyVisible) {
+                idleOffsetAngle += 0.05; 
+            }
+            
+            // Smooth linear interpolation (lerp) for scroll-driven rotation
+            currentScrollOffsetAngle += (targetScrollOffsetAngle - currentScrollOffsetAngle) * 0.08;
+            
+            const baseAngle = idleOffsetAngle + currentScrollOffsetAngle;
+            const radius = getSpiralRadius();
+            const ySpacingFactor = getSpiralYSpacingFactor();
+            
+            // A. Smoothly update and apply section transitions (buttery smooth scroll transitions)
+            const isMobileView = window.innerWidth <= 768;
+            const sectionLerp = 0.16;
+            
+            let needsMoreFrames = false;
+
+            if (Math.abs(targetScrollOffsetAngle - currentScrollOffsetAngle) > 0.01) {
+                needsMoreFrames = true;
+            }
+
+            for (const key in sectionsState) {
+                const s = sectionsState[key];
+                if (s.el) {
+                    if (isMobileView) {
+                        s.el.style.opacity = '';
+                        s.el.style.transform = '';
+                        s.el.style.pointerEvents = '';
+                        s.el.style.display = '';
+                        s.el.style.filter = '';
+                        continue;
+                    }
+                    
+                    s.currOpacity += (s.targetOpacity - s.currOpacity) * sectionLerp;
+                    s.currY += (s.targetY - s.currY) * sectionLerp;
+                    s.currScale += (s.targetScale - s.currScale) * sectionLerp;
+                    
+                    if (Math.abs(s.targetOpacity - s.currOpacity) > 0.002 ||
+                        Math.abs(s.targetY - s.currY) > 0.02 ||
+                        Math.abs(s.targetScale - s.currScale) > 0.002) {
+                        needsMoreFrames = true;
+                    }
+
+                    // Apply standard fade to the previous (exiting) section as it scrolls out of view
+                    const isPreviousSection = (scrollDirection === 'down' && s.targetY < 0) || 
+                                              (scrollDirection === 'up' && s.targetY > 0);
+                    
+                    let fadeMultiplier = 1.0;
+                    if (isPreviousSection) {
+                        const exitProgress = Math.min(Math.max(Math.abs(s.currY) / cachedWindowHeight, 0), 1);
+                        // Make exiting sections fade out fully
+                        fadeMultiplier = 1.0 - exitProgress; 
+                    }
+                    
+                    s.el.style.opacity = (s.currOpacity * fadeMultiplier).toFixed(3);
+                    s.el.style.transform = `translateY(${s.currY.toFixed(2)}px) scale(${s.currScale.toFixed(3)})`;
+                    s.el.style.pointerEvents = s.pointerEvents;
+                    s.el.style.filter = ''; // Reset any previous filter blur
+                    
+                    // Hide completely when inactive to prevent blocking clicks
+                    if (s.currOpacity < 0.01 && s.targetOpacity === 0) {
+                        s.el.style.display = 'none';
+                    } else {
+                        s.el.style.display = '';
+                    }
+                    
+                    // Toggle the entered class for trigger animations in case studies / featured
+                    if (key === 'featured' || key === 'cases') {
+                        if (s.hasEntered) {
+                            s.el.classList.add('entered');
+                        } else {
+                            s.el.classList.remove('entered');
+                        }
+                    }
+                }
+            }
+            
+            // B. Position each card along the helix track coordinates with smooth flying/fading/blur transitions
+            if (isPhilosophyVisible) {
+                spiralCards.forEach((card, idx) => {
+                    const angle = baseAngle + idx * spacing;
+                    
+                    // Wrap the angle to stay within the repeating track range [-270, 270)
+                    let wrapped = (angle - startAngle) % totalRange;
+                    if (wrapped < 0) wrapped += totalRange;
+                    const trackAngle = startAngle + wrapped;
+                    
+                    const rotY = trackAngle;
+                    const y = -trackAngle * ySpacingFactor; // Negative to make increasing angle translate card upward
+                    
+                    // 1. Fade out cards near boundaries to make wrapping jumps invisible
+                    let boundaryOpacity = 1.0;
+                    const fadeWidth = 80; // degrees
+                    if (trackAngle < startAngle + fadeWidth) {
+                        boundaryOpacity = (trackAngle - startAngle) / fadeWidth;
+                    } else if (trackAngle > (startAngle + totalRange - fadeWidth)) {
+                        boundaryOpacity = (startAngle + totalRange - trackAngle) / fadeWidth;
+                    }
+                    boundaryOpacity = Math.max(0, Math.min(1, boundaryOpacity));
+                    
+                    // 2. Continuous flying & faded/blurred rotation based on angle from front (0 degrees)
+                    let normAngle = rotY % 360;
+                    if (normAngle < 0) normAngle += 360;
+                    
+                    let angleDiff = Math.abs(normAngle);
+                    if (angleDiff > 180) angleDiff = 360 - angleDiff; // [0, 180], where 0 is front, 180 is back
+                    
+                    let frontProgress = (180 - angleDiff) / 180; // 0 in back, 1 in front
+                    let t = (1 - Math.cos(frontProgress * Math.PI)) / 2; // Smooth cosine curve
+                    
+                    // Lerp scale, radius (depth), depth opacity, and blur amount
+                    let currentScale = 0.62 + 0.43 * t; // scales from 0.62 (back) to 1.05 (front)
+                    let currentRadius = radius * (0.55 + 0.53 * t); // tight core (0.55*R) to expanded front (1.08*R)
+                    
+                    // Steeper opacity curve: front card is fully opaque, neighbors and back cards are highly translucent
+                    let opacityExponent = window.innerWidth <= 768 ? 6.0 : 3.5;
+                    let depthOpacity = 0.03 + 0.97 * Math.pow(t, opacityExponent);
+                    let finalOpacity = boundaryOpacity * depthOpacity;
+                    let blurAmount = (1 - t) * 7.5; // up to 7.5px blur in back, 0px in front
+                    
+                    // 3. Smooth hover pop factor interpolation
+                    const targetHoverScale = card.isHovered ? 1.06 : 1.0;
+                    card.currentHoverScale += (targetHoverScale - card.currentHoverScale) * 0.15;
+                    currentScale *= card.currentHoverScale;
+                    
+                    if (Math.abs(targetHoverScale - card.currentHoverScale) > 0.002) {
+                        needsMoreFrames = true;
+                    }
+
+                    // Apply computed styles
+                    card.style.transform = `rotateY(${rotY.toFixed(1)}deg) translateZ(${currentRadius.toFixed(1)}px) scale(${currentScale.toFixed(3)}) translateY(${y.toFixed(1)}px)`;
+                    card.style.opacity = finalOpacity.toFixed(3);
+                    card.style.filter = blurAmount > 0.15 ? `blur(${blurAmount.toFixed(2)}px)` : 'none';
+                    
+                    // Disable clicks and visibility of back-facing/out-of-bounds cards
+                    const isBackside = (normAngle > 85 && normAngle < 275);
+                    if (boundaryOpacity < 0.08 || finalOpacity < 0.05) {
+                        card.style.visibility = 'hidden';
+                        card.style.pointerEvents = 'none';
+                    } else {
+                        card.style.visibility = 'visible';
+                        card.style.pointerEvents = isBackside ? 'none' : 'auto';
+                    }
+                });
+
+                // Philosophy is visible, so keep running for the idle rotation
+                needsMoreFrames = true;
+            }
+            
+            // C. Smoothly update and apply Pricing Section elements
+            if (pricingSecEl) {
+                if (isMobileView) {
+                    if (pricingState.title.el) {
+                        pricingState.title.el.style.transform = '';
+                        pricingState.title.el.style.opacity = '';
+                    }
+                    pricingState.cards.forEach(c => {
+                        if (c.el) {
+                            c.el.style.transform = '';
+                            c.el.style.opacity = '';
+                        }
+                    });
+                } else {
+                    const pricingLerp = 0.08;
+                    
+                    // Interpolate Title
+                    pricingState.title.currZ += (pricingState.title.targetZ - pricingState.title.currZ) * pricingLerp;
+                    pricingState.title.currScale += (pricingState.title.targetScale - pricingState.title.currScale) * pricingLerp;
+                    pricingState.title.currOpacity += (pricingState.title.targetOpacity - pricingState.title.currOpacity) * pricingLerp;
+                    
+                    if (Math.abs(pricingState.title.targetZ - pricingState.title.currZ) > 0.05 ||
+                        Math.abs(pricingState.title.targetScale - pricingState.title.currScale) > 0.002 ||
+                        Math.abs(pricingState.title.targetOpacity - pricingState.title.currOpacity) > 0.002) {
+                        needsMoreFrames = true;
+                    }
+
+                    if (pricingState.title.el) {
+                        pricingState.title.el.style.transform = `translate3d(0, 0, ${pricingState.title.currZ.toFixed(1)}px) scale(${pricingState.title.currScale.toFixed(3)})`;
+                        pricingState.title.el.style.opacity = pricingState.title.currOpacity.toFixed(3);
+                    }
+                    
+                    // Interpolate Cards
+                    pricingState.cards.forEach(c => {
+                        c.currZ += (c.targetZ - c.currZ) * pricingLerp;
+                        c.currScale += (c.targetScale - c.currScale) * pricingLerp;
+                        c.currOpacity += (c.targetOpacity - c.currOpacity) * pricingLerp;
+                        c.currRotateX += (c.targetRotateX - c.currRotateX) * pricingLerp;
+                        c.currY += (c.targetY - c.currY) * pricingLerp;
+                        
+                        if (Math.abs(c.targetZ - c.currZ) > 0.05 ||
+                            Math.abs(c.targetScale - c.currScale) > 0.002 ||
+                            Math.abs(c.targetOpacity - c.currOpacity) > 0.002 ||
+                            Math.abs(c.targetRotateX - c.currRotateX) > 0.05 ||
+                            Math.abs(c.targetY - c.currY) > 0.05) {
+                            needsMoreFrames = true;
+                        }
+
+                        if (c.el) {
+                            c.el.style.transform = `translate3d(0, ${c.currY.toFixed(1)}px, ${c.currZ.toFixed(1)}px) scale(${c.currScale.toFixed(3)}) rotateX(${c.currRotateX.toFixed(1)}deg)`;
+                            c.el.style.opacity = c.currOpacity.toFixed(3);
+                        }
+                    });
+                }
+            }
+            
+            if (needsMoreFrames) {
+                requestAnimationFrame(animateSpiral);
+            } else {
+                isLooping = false;
+            }
+        }
+        
+        // Setup observers for visibility checking
+        const scrollStackEl = document.querySelector('.scroll-stack');
+        if (scrollStackEl && typeof IntersectionObserver !== 'undefined') {
+            const stackObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    isScrollStackVisible = entry.isIntersecting;
+                    if (isScrollStackVisible) {
+                        startLoop();
+                    } else {
+                        isLooping = false;
+                    }
+                });
+            }, { threshold: 0.01 });
+            stackObserver.observe(scrollStackEl);
+        } else {
+            isScrollStackVisible = true;
+        }
+
+        const philSectionEl = document.getElementById('philosophy');
+        if (philSectionEl && typeof IntersectionObserver !== 'undefined') {
+            const philObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    isPhilosophyVisible = entry.isIntersecting;
+                    if (isPhilosophyVisible) {
+                        startLoop();
+                    }
+                });
+            }, { threshold: 0.01 });
+            philObserver.observe(philSectionEl);
+        } else {
+            isPhilosophyVisible = true;
+        }
+
+        startLoop();
+        
+        // Bind click events on cards to trigger modals natively
+        const modals = document.querySelectorAll('.modal[id^="services_item"]');
+        modals.forEach(modal => {
+            const closeBtn = modal.querySelector('.close');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    modal.classList.remove('active');
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                    }, 400);
+                });
+            }
+            
+            // Close on background overlay click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                    }, 400);
+                }
+            });
+        });
+        
+        const spiralLinks = document.querySelectorAll('.spiral-card a');
+        spiralLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const modalId = link.getAttribute('href');
+                if (modalId && modalId.startsWith('#')) {
+                    e.preventDefault();
+                    const targetModal = document.querySelector(modalId);
+                    if (targetModal) {
+                        targetModal.style.display = 'flex';
+                        void targetModal.offsetWidth; // Force layout repaint
+                        targetModal.classList.add('active');
+                    }
+                }
+            });
+        });
+    }
+}
+
+// ==========================================================================
+// DYNAMIC FEATURED IN (PRESS & RECOGNITION) SECTION
+// ==========================================================================
+function initFeaturedSection() {
+    const section = document.getElementById('featured');
+    const displayQuote = document.querySelector('.featured-quote');
+    const displaySource = document.querySelector('.featured-source');
+    const cardsRow = document.querySelector('.featured-cards-row');
+    const paginationDot = document.querySelector('.featured-pagination-dot');
+    
+    if (!section || !cardsRow) return;
+    
+    // 1. Clone cards for infinite loop marquee scroll
+    const originalCardsList = Array.from(cardsRow.children);
+    const totalOriginalCards = originalCardsList.length;
+    originalCardsList.forEach(card => {
+        const clone = card.cloneNode(true);
+        clone.classList.remove('active');
+        cardsRow.appendChild(clone);
+    });
+    
+    // Query ALL cards including the newly cloned ones
+    const cards = document.querySelectorAll('.featured-logo-card');
+    if (cards.length === 0) return;
+    
+    let currentIndex = 0;
+    let isPaused = false;
+    let scrollSpeed = 0.7; // Speed of auto scroll in pixels per frame
+    let halfScrollWidth = 0;
+    let animationFrameId = null;
+    
+    // Calculate the wrap-around scroll width once layout is ready
+    function initScrollMetrics() {
+        if (cards.length > totalOriginalCards) {
+            // offset of start of cloned set minus 1st card
+            halfScrollWidth = cards[totalOriginalCards].offsetLeft - cards[0].offsetLeft;
+        }
+    }
+    
+    // Recalculate metrics once window is fully loaded to ensure styles/fonts are ready
+    if (document.readyState === 'complete') {
+        setTimeout(initScrollMetrics, 100);
+    } else {
+        window.addEventListener('load', initScrollMetrics);
+    }
+    
+    // Recalculate when any image finishes loading (to handle layout shifts/cache)
+    cardsRow.querySelectorAll('img').forEach(img => {
+        img.addEventListener('load', initScrollMetrics);
+    });
+    
+    // Run metrics recalculation on window resize
+    window.addEventListener('resize', initScrollMetrics);
+    
+    // 3. Swapping function to update display quote with animations
+    function updateDisplay(index, shouldScroll = true) {
+        if (index < 0 || index >= cards.length) return;
+        
+        const card = cards[index];
+        const quote = card.getAttribute('data-quote');
+        const source = card.getAttribute('data-source');
+        const dataIndex = parseInt(card.getAttribute('data-index'), 10);
+        
+        // Remove active class from all logo cards
+        cards.forEach(c => c.classList.remove('active'));
+        
+        // Highlight all cards carrying this exact index (both original and clones)
+        cards.forEach(c => {
+            if (parseInt(c.getAttribute('data-index'), 10) === dataIndex) {
+                c.classList.add('active');
+            }
+        });
+        
+        // Only trigger swap animation if content actually changes
+        const currentDataIndex = parseInt(cards[currentIndex]?.getAttribute('data-index') || '-1', 10);
+        if (dataIndex !== currentDataIndex) {
+            displayQuote.classList.add('swapping');
+            displaySource.classList.add('swapping');
+            
+            setTimeout(() => {
+                displayQuote.innerHTML = quote;
+                displaySource.innerHTML = source;
+                
+                displayQuote.classList.remove('swapping');
+                displaySource.classList.remove('swapping');
+            }, 220);
+        }
+        
+        // Position pagination indicator dot
+        updatePaginationDot(dataIndex);
+        
+        if (shouldScroll) {
+            centerActiveCard(card);
+        }
+        
+        currentIndex = index;
+    }
+    
+    // 4. Position dynamic pagination indicator dot
+    function updatePaginationDot(dataIndex) {
+        if (!paginationDot) return;
+        const trackWidth = 120; // matches CSS pagination track width (120px)
+        const dotWidth = 15;   // matches CSS dot width (15px)
+        
+        const step = (trackWidth - dotWidth) / (totalOriginalCards - 1);
+        const leftPos = dataIndex * step;
+        paginationDot.style.left = `${leftPos}px`;
+    }
+    
+    // 5. Center active card in overflow scroll area (used on hover/click interaction)
+    function centerActiveCard(card) {
+        if (!cardsRow) return;
+        const rowWidth = cardsRow.clientWidth;
+        const cardLeft = card.offsetLeft;
+        const cardWidth = card.clientWidth;
+        
+        const scrollTarget = cardLeft - (rowWidth / 2) + (cardWidth / 2);
+        cardsRow.scrollTo({
+            left: scrollTarget,
+            behavior: 'smooth'
+        });
+    }
+    
+    // 6. Find which card is closest to the middle of the scroll viewport
+    function updateActiveCardFromScroll() {
+        const rowCenter = cardsRow.scrollLeft + (cardsRow.clientWidth / 2);
+        let closestIndex = 0;
+        let minDistance = Infinity;
+        
+        cards.forEach((card, idx) => {
+            const cardCenter = card.offsetLeft + (card.clientWidth / 2);
+            const distance = Math.abs(rowCenter - cardCenter);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestIndex = idx;
+            }
+        });
+        
+        // Update selection quietly without centering scroll
+        const currentDataIndex = parseInt(cards[currentIndex]?.getAttribute('data-index') || '-1', 10);
+        const closestDataIndex = parseInt(cards[closestIndex]?.getAttribute('data-index'), 10);
+        if (closestDataIndex !== currentDataIndex) {
+            updateDisplay(closestIndex, false);
+        }
+    }
+    
+    // 7. Auto Scroll Loop (marquee animation)
+    function tickScroll() {
+        if (halfScrollWidth === 0) {
+            initScrollMetrics();
+        }
+        if (!isPaused && halfScrollWidth > 0) {
+            cardsRow.scrollLeft += scrollSpeed;
+            
+            // Loop around seamlessly
+            if (cardsRow.scrollLeft >= halfScrollWidth) {
+                cardsRow.scrollLeft -= halfScrollWidth;
+            }
+            
+            // Auto update active card as it scrolls through the middle
+            updateActiveCardFromScroll();
+        }
+        animationFrameId = requestAnimationFrame(tickScroll);
+    }
+    
+    // 8. Event Listeners for Cards
+    cards.forEach((card, idx) => {
+        // Hover to preview and pause scroll
+        card.addEventListener('mouseenter', () => {
+            isPaused = true;
+            updateDisplay(idx, false);
+        });
+        
+        // Click to open outbound link
+        card.addEventListener('click', () => {
+            const url = card.getAttribute('data-link');
+            const newTab = card.getAttribute('data-new-tab') !== 'false';
+            if (url) {
+                if (newTab) {
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                } else {
+                    window.location.href = url;
+                }
+            }
+        });
+    });
+    
+    // Pause auto scroll when hovering anywhere inside the cards row
+    cardsRow.addEventListener('mouseenter', () => {
+        isPaused = true;
+    });
+    
+    // Resume scroll on mouse leave
+    cardsRow.addEventListener('mouseleave', () => {
+        isPaused = false;
+    });
+    
+    // Support touchscreen touch drag pausing
+    cardsRow.addEventListener('touchstart', () => {
+        isPaused = true;
+    });
+    cardsRow.addEventListener('touchend', () => {
+        setTimeout(() => {
+            isPaused = false;
+        }, 1500); // Resume scroll shortly after swipe ends
+    });
+    
+    // 9. Initialize & Run
+    initScrollMetrics();
+    updateDisplay(0, false);
+    
+    // Start animation loop
+    animationFrameId = requestAnimationFrame(tickScroll);
+}
+
+// ==========================================================================
+// CASE STUDIES MODALS & INTERACTIVE HANDLERS
+// ==========================================================================
+function initCaseStudies() {
+    const wrappers = document.querySelectorAll('.company-card-wrapper');
+    const container = document.querySelector('.cases-buttons-container');
+
+    if (wrappers.length === 0) return;
+
+    wrappers.forEach(wrapper => {
+        const trigger = wrapper.querySelector('.btn-company-trigger');
+        
+        if (trigger) {
+            trigger.addEventListener('click', (e) => {
+                const isAlreadyExpanded = wrapper.classList.contains('expanded');
+                const row = wrapper.closest('.cases-row-container') || container;
+
+                // 1. Collapse all other wrappers and remove has-expanded from all rows first
+                wrappers.forEach(w => w.classList.remove('expanded'));
+                document.querySelectorAll('.cases-row-container').forEach(r => r.classList.remove('has-expanded'));
+
+                // 2. Toggle this wrapper if it wasn't already expanded
+                if (!isAlreadyExpanded) {
+                    wrapper.classList.add('expanded');
+                    if (row) {
+                        row.classList.add('has-expanded');
+                    }
+                }
+            });
+        }
+
+        // 3. Close button handler inside reports dropdown
+        const closeBtn = wrapper.querySelector('.btn-close-reports');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                wrapper.classList.remove('expanded');
+                const row = wrapper.closest('.cases-row-container') || container;
+                if (row) {
+                    row.classList.remove('has-expanded');
+                }
+            });
+        }
+
+        // 4. Close if clicking on the dropdown container background (overlay backdrop)
+        const dropdown = wrapper.querySelector('.company-reports-dropdown');
+        if (dropdown) {
+            dropdown.addEventListener('click', (e) => {
+                if (e.target === dropdown) {
+                    wrapper.classList.remove('expanded');
+                    const row = wrapper.closest('.cases-row-container') || container;
+                    if (row) {
+                        row.classList.remove('has-expanded');
+                    }
+                }
+            });
+        }
+
+        // 5. Prevent click propagation inside report links
+        const reportLinks = wrapper.querySelectorAll('.btn-report-item');
+        reportLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        });
+    });
+}
+
+// ==========================================================================
+// HERO STATS COUNTER ANIMATION
+// ==========================================================================
+function initStatsCounters() {
+    const counters = document.querySelectorAll('.count-up');
+    if (counters.length === 0) return;
+
+    // Options for Intersection Observer
+    const options = {
+        threshold: 0.1, // Trigger when 10% of the element is visible
+        rootMargin: "0px"
+    };
+
+    const countUp = (counter) => {
+        const target = parseInt(counter.getAttribute('data-target'), 10);
+        const duration = 3500; // Animation duration in ms (3.5 seconds)
+        const startTime = performance.now();
+
+        const animate = (currentTime) => {
+            const elapsedTime = currentTime - startTime;
+            const progress = Math.min(elapsedTime / duration, 1);
+
+            // Easing function: easeOutQuad
+            const easeProgress = progress * (2 - progress);
+            const currentValue = Math.floor(easeProgress * target);
+
+            counter.textContent = currentValue;
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                counter.textContent = target; // Ensure exact final value
+            }
+        };
+
+        requestAnimationFrame(animate);
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                countUp(entry.target);
+                observer.unobserve(entry.target); // Run only once
+            }
+        });
+    }, options);
+
+    counters.forEach(counter => {
+        observer.observe(counter);
+    });
+}
+
+// PRICING COMPARISON MODAL CONTROLLER
+// ==========================================================================
+function initComparisonModal() {
+    const comparisonModal = document.getElementById('comparisonModal');
+    const openComparisonBtns = document.querySelectorAll('.open-comparison-btn');
+    
+    if (comparisonModal) {
+        const closeBtn = comparisonModal.querySelector('.comparison-close');
+        
+        openComparisonBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                comparisonModal.style.display = 'flex';
+                void comparisonModal.offsetWidth; // Force layout repaint
+                comparisonModal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Lock background scroll
+            });
+        });
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                comparisonModal.classList.remove('active');
+                document.body.style.overflow = ''; // Restore background scroll
+                setTimeout(() => {
+                    comparisonModal.style.display = 'none';
+                }, 400);
+            });
+        }
+        
+        comparisonModal.addEventListener('click', (e) => {
+            if (e.target === comparisonModal) {
+                comparisonModal.classList.remove('active');
+                document.body.style.overflow = ''; // Restore background scroll
+                setTimeout(() => {
+                    comparisonModal.style.display = 'none';
+                }, 400);
+            }
+        });
+    }
+}
+
+// ==========================================================================
+// PRICE COUNTDOWN COUNTER ANIMATION
+// ==========================================================================
+function animatePriceCounter() {
+    // Price animation disabled - static prices displayed instead
+    return;
+}
+
+// ==========================================================================
+// STACKED TESTIMONIALS 3D CAROUSEL ANIMATION (Auto-play + Manual Arrow Controls)
+// ==========================================================================
+function initTestimonials() {
+    const stackedSection = document.querySelector('.stacked-testimonials-section');
+    const stackedCards = document.querySelectorAll('.testimonial-card');
+    
+    if (stackedSection && stackedCards.length > 0) {
+        const totalCards = stackedCards.length;
+        let isDragging = false;
+        let startX = 0;
+        let dragOffsetStart = 0;
+        let dragResumeTimeout = null;
+        
+        let autoScrollOffset = 0; // Target offset
+        let renderOffset = 0;     // Smoothly eased offset used for rendering
+        
+        let lastX = 0;
+        let lastMoveTime = 0;
+        let dragVelocity = 0;
+        let isMomentum = false;
+        let momentumVelocity = 0;
+        
+        let lastInteractionTime = Date.now();
+        let lastSlideTime = Date.now();
+        let autoPlayTargetIndex = 0;
+        let flowAnimationId = null;
+        
+        // Get card spacing based on viewport width (Card width + Gap)
+        const getCardSpacing = () => {
+            const windowWidth = window.innerWidth;
+            if (windowWidth <= 480) return 230; // 190px width + 40px gap (centered card with peek layout)
+            if (windowWidth <= 768) return 380; // 300px width + 80px gap
+            return 480; // 360px width + 120px gap
+        };
+
+        // Drag-to-scroll interactions (mouse and touch)
+        const container = document.querySelector('.testimonials-carousel-container');
+        if (container) {
+            const handleDragStart = (e) => {
+                if (!stackedSection.classList.contains('flow-layout')) return;
+                isDragging = true;
+                isMomentum = false;
+                momentumVelocity = 0;
+                dragVelocity = 0;
+                
+                const x = e.pageX || (e.touches && e.touches[0].pageX);
+                startX = x;
+                lastX = x;
+                lastMoveTime = Date.now();
+                dragOffsetStart = autoScrollOffset;
+                
+                lastInteractionTime = Date.now();
+                
+                if (dragResumeTimeout) {
+                    clearTimeout(dragResumeTimeout);
+                }
+            };
+            
+            const handleDragMove = (e) => {
+                if (!isDragging) return;
+                const x = e.pageX || (e.touches && e.touches[0].pageX);
+                if (!x) return;
+                const deltaX = x - startX;
+                
+                const S = getCardSpacing();
+                const L = totalCards * S;
+                
+                // Drag left (negative deltaX) moves cards to left (increases autoScrollOffset)
+                autoScrollOffset = (dragOffsetStart - deltaX) % L;
+                if (autoScrollOffset < 0) autoScrollOffset += L;
+                
+                // Track velocity
+                const now = Date.now();
+                const dt = now - lastMoveTime;
+                if (dt > 0) {
+                    const dx = x - lastX;
+                    dragVelocity = -dx / dt; // positive speed when moving left
+                }
+                lastX = x;
+                lastMoveTime = now;
+                lastInteractionTime = now;
+            };
+            
+            const handleDragEnd = () => {
+                if (!isDragging) return;
+                isDragging = false;
+                
+                const now = Date.now();
+                const S = getCardSpacing();
+                const L = totalCards * S;
+                
+                // If the user released recently after moving, apply momentum
+                if (now - lastMoveTime < 100 && Math.abs(dragVelocity) > 0.1) {
+                    isMomentum = true;
+                    const maxVel = 15;
+                    momentumVelocity = Math.max(-maxVel, Math.min(maxVel, dragVelocity * 16)); // scale velocity to frame rate (~16ms)
+                } else {
+                    isMomentum = false;
+                    autoPlayTargetIndex = Math.round(autoScrollOffset / S) % totalCards;
+                    if (autoPlayTargetIndex < 0) autoPlayTargetIndex += totalCards;
+                    autoScrollOffset = autoPlayTargetIndex * S;
+                }
+                
+                lastInteractionTime = now;
+            };
+            
+            container.addEventListener('mousedown', (e) => {
+                if (stackedSection.classList.contains('flow-layout')) {
+                    e.preventDefault();
+                    handleDragStart(e);
+                }
+            });
+            window.addEventListener('mousemove', handleDragMove);
+            window.addEventListener('mouseup', handleDragEnd);
+            
+            container.addEventListener('touchstart', handleDragStart, { passive: true });
+            window.addEventListener('touchmove', handleDragMove, { passive: true });
+            window.addEventListener('touchend', handleDragEnd);
+
+            // Mouse wheel / Trackpad scrolling support
+            container.addEventListener('wheel', (e) => {
+                if (!stackedSection.classList.contains('flow-layout')) return;
+                
+                // Only intercept horizontal wheel scrolling on trackpad / horizontal scroll wheel.
+                // Do NOT prevent default or handle vertical scrolling (e.deltaY) so the page scrolls naturally.
+                if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 0) {
+                    e.preventDefault();
+                    isMomentum = false; // Stop momentum on manual scroll
+                    
+                    const S = getCardSpacing();
+                    const L = totalCards * S;
+                    
+                    // Update offset based on delta scroll
+                    autoScrollOffset = (autoScrollOffset + e.deltaX * 0.5) % L;
+                    if (autoScrollOffset < 0) autoScrollOffset += L;
+                    
+                    lastInteractionTime = Date.now();
+                    
+                    if (dragResumeTimeout) {
+                        clearTimeout(dragResumeTimeout);
+                    }
+                    dragResumeTimeout = setTimeout(() => {
+                        autoPlayTargetIndex = Math.round(autoScrollOffset / S) % totalCards;
+                        if (autoPlayTargetIndex < 0) autoPlayTargetIndex += totalCards;
+                        autoScrollOffset = autoPlayTargetIndex * S;
+                        lastInteractionTime = Date.now();
+                    }, 250);
+                }
+            }, { passive: false });
+        }
+        
+        const startFlowAnimation = () => {
+            if (flowAnimationId) return;
+            
+            const animateFlow = () => {
+                if (!stackedSection.classList.contains('flow-layout')) return;
+                
+                const S = getCardSpacing();
+                const L = totalCards * S;
+                const now = Date.now();
+                
+                // 1. Momentum physics
+                if (isMomentum) {
+                    autoScrollOffset = (autoScrollOffset + momentumVelocity) % L;
+                    if (autoScrollOffset < 0) autoScrollOffset += L;
+                    
+                    momentumVelocity *= 0.95;
+                    
+                    if (Math.abs(momentumVelocity) < 0.2) {
+                        isMomentum = false;
+                        momentumVelocity = 0;
+                        autoPlayTargetIndex = Math.round(autoScrollOffset / S) % totalCards;
+                        if (autoPlayTargetIndex < 0) autoPlayTargetIndex += totalCards;
+                        autoScrollOffset = autoPlayTargetIndex * S;
+                        lastInteractionTime = now;
+                        lastSlideTime = now;
+                    }
+                }
+                
+                // 2. Auto-play logic
+                const isIdle = !isDragging && !isMomentum && (now - lastInteractionTime > 2500);
+                if (isIdle) {
+                    if (now - lastSlideTime > 2500) {
+                        autoPlayTargetIndex = (autoPlayTargetIndex + 1) % totalCards;
+                        autoScrollOffset = autoPlayTargetIndex * S;
+                        lastSlideTime = now;
+                    }
+                } else if (!isDragging && !isMomentum) {
+                    lastSlideTime = now;
+                }
+                
+                // 3. Easing renderOffset to autoScrollOffset (shortest-path circular wrap)
+                let diff = autoScrollOffset - renderOffset;
+                if (diff > L / 2) diff -= L;
+                if (diff < -L / 2) diff += L;
+                
+                let easingFactor = 0.08; // default smooth slide ease
+                if (isDragging) {
+                    easingFactor = 0.25; // responsive drag follow
+                } else if (isMomentum) {
+                    easingFactor = 0.2;  // responsive momentum follow
+                }
+                
+                renderOffset = (renderOffset + diff * easingFactor) % L;
+                if (renderOffset < 0) renderOffset += L;
+                
+                // 4. Show/hide viewfinder corners dynamically
+                const distToTarget = Math.abs(diff);
+                if (distToTarget < 3 && !isDragging && !isMomentum) {
+                    stackedSection.classList.add('show-corners');
+                } else {
+                    stackedSection.classList.remove('show-corners');
+                }
+                
+                // 5. Position and transform all cards
+                stackedCards.forEach((card, idx) => {
+                    const val = (idx * S) - renderOffset;
+                    let wrappedPosition = ((val + L/2) % L + L) % L - L/2;
+                    
+                    const d = Math.abs(wrappedPosition);
+                    const midPoint = S / 2;
+                    let scale = 1.0;
+                    let glow = 0;
+                    if (d < midPoint) {
+                        const progress = 1 - d / midPoint;
+                        const easeProgress = 1 - Math.pow(1 - progress, 3);
+                        scale = 1.0 + 0.16 * easeProgress;
+                        glow = easeProgress;
+                    }
+                    
+                    card.style.transform = `translate3d(${wrappedPosition.toFixed(1)}px, 0, 0) scale(${scale.toFixed(3)})`;
+                    card.style.opacity = '1';
+                    card.style.visibility = 'visible';
+                    card.style.zIndex = d < midPoint ? '10' : '5';
+                    
+                    card.style.boxShadow = glow > 0.01 
+                        ? `0 25px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(255, 140, 0, ${(0.5 * glow).toFixed(2)})` 
+                        : '';
+                    card.style.borderColor = glow > 0.01 
+                        ? `rgba(255, 140, 0, ${(0.08 + 0.55 * glow).toFixed(2)})` 
+                        : '';
+                });
+                
+                flowAnimationId = requestAnimationFrame(animateFlow);
+            };
+            
+            flowAnimationId = requestAnimationFrame(animateFlow);
+        };
+
+        // Initialize state on page load directly in flow layout
+        stackedSection.classList.add('flow-layout');
+        stackedSection.classList.add('show-corners');
+        
+        autoScrollOffset = 0;
+        renderOffset = 0;
+        lastInteractionTime = Date.now() - 1500; // Trigger first slide in 1.0 second
+        lastSlideTime = Date.now() - 1500;
+        autoPlayTargetIndex = 0;
+        isMomentum = false;
+        momentumVelocity = 0;
+        isDragging = false;
+        
+        startFlowAnimation();
+    }
+}
+
+// ==========================================================================
+// FAQ ACCORDION & SCROLL REVEAL EFFECT
+// ==========================================================================
+function initFAQs() {
+    const faqItems = document.querySelectorAll('.faq-item');
+    const faqSection = document.getElementById('faq');
+    
+    if (faqItems.length > 0) {
+        faqItems.forEach(item => {
+            const header = item.querySelector('.faq-question-header');
+            const answer = item.querySelector('.faq-answer');
+            
+            if (header && answer) {
+                header.addEventListener('click', () => {
+                    const isOpen = item.classList.contains('active');
+                    
+                    // Close all other FAQ items first for an accordion effect
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('active');
+                            const otherAnswer = otherItem.querySelector('.faq-answer');
+                            if (otherAnswer) {
+                                otherAnswer.style.maxHeight = '0px';
+                                otherAnswer.style.opacity = '0';
+                            }
+                        }
+                    });
+                    
+                    // Toggle this FAQ item
+                    if (isOpen) {
+                        item.classList.remove('active');
+                        answer.style.maxHeight = '0px';
+                        answer.style.opacity = '0';
+                    } else {
+                        item.classList.add('active');
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                        answer.style.opacity = '1';
+                    }
+                });
+            }
+        });
+    }
+    
+    // Scroll reveal observer (fading and sliding effect)
+    if (faqSection) {
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: "0px"
+        };
+        
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        revealObserver.observe(faqSection);
+    }
+}
+
+// ==========================================================================
+// REGULATORY DISCLOSURES ACCORDION CONTROLLER
+// ==========================================================================
+function initDisclosures() {
+    const disclosureItems = document.querySelectorAll('.disclosure-item');
+    const disclosuresSection = document.getElementById('disclosures');
+    
+    if (disclosureItems.length > 0) {
+        disclosureItems.forEach(item => {
+            const header = item.querySelector('.disclosure-header');
+            const panel = item.querySelector('.disclosure-panel');
+            
+            if (header && panel) {
+                header.addEventListener('click', () => {
+                    const isOpen = item.classList.contains('active');
+                    
+                    // Close all other main disclosure items first for accordion effect
+                    disclosureItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('active');
+                            const otherPanel = otherItem.querySelector('.disclosure-panel');
+                            if (otherPanel) {
+                                otherPanel.style.maxHeight = '0px';
+                                otherPanel.style.opacity = '0';
+                            }
+                        }
+                    });
+                    
+                    // Toggle this item
+                    if (isOpen) {
+                        // Collapse
+                        item.classList.remove('active');
+                        panel.style.maxHeight = panel.scrollHeight + 'px';
+                        requestAnimationFrame(() => {
+                            panel.style.maxHeight = '0px';
+                            panel.style.opacity = '0';
+                        });
+                    } else {
+                        // Expand
+                        item.classList.add('active');
+                        panel.style.maxHeight = panel.scrollHeight + 'px';
+                        panel.style.opacity = '1';
+                        
+                        const handleTransitionEnd = (e) => {
+                            if (e.propertyName === 'max-height' && item.classList.contains('active')) {
+                                panel.style.maxHeight = 'none';
+                            }
+                            panel.removeEventListener('transitionend', handleTransitionEnd);
+                        };
+                        panel.addEventListener('transitionend', handleTransitionEnd);
+                    }
+                });
+            }
+            
+            // Nested sub-disclosure toggles
+            const subItems = item.querySelectorAll('.sub-disclosure-item');
+            if (subItems && subItems.length > 0) {
+                subItems.forEach(subItem => {
+                    const subHeader = subItem.querySelector('.sub-disclosure-header');
+                    const subPanel = subItem.querySelector('.sub-disclosure-panel');
+                    
+                    if (subHeader && subPanel) {
+                        // Set initial state for items with active class on load
+                        if (subItem.classList.contains('active')) {
+                            subPanel.style.maxHeight = subPanel.scrollHeight + 'px';
+                            subPanel.style.opacity = '1';
+                        }
+                        
+                        subHeader.addEventListener('click', (e) => {
+                            e.stopPropagation(); // Prevent parent accordion click events
+                            
+                            const isSubOpen = subItem.classList.contains('active');
+                            const parentPanel = item.querySelector('.disclosure-panel');
+                            
+                            if (isSubOpen) {
+                                // Collapse sub item
+                                subItem.classList.remove('active');
+                                
+                                if (parentPanel && parentPanel.style.maxHeight === 'none') {
+                                    parentPanel.style.maxHeight = parentPanel.scrollHeight + 'px';
+                                    requestAnimationFrame(() => {
+                                        subPanel.style.maxHeight = '0px';
+                                        subPanel.style.opacity = '0';
+                                    });
+                                } else {
+                                    subPanel.style.maxHeight = '0px';
+                                    subPanel.style.opacity = '0';
+                                }
+                                
+                                if (parentPanel) {
+                                    const newParentHeight = parentPanel.scrollHeight - subPanel.scrollHeight;
+                                    parentPanel.style.maxHeight = Math.max(0, newParentHeight) + 'px';
+                                    
+                                    const restoreParentNone = (evt) => {
+                                        if (evt.propertyName === 'max-height' && item.classList.contains('active')) {
+                                            parentPanel.style.maxHeight = 'none';
+                                        }
+                                        parentPanel.removeEventListener('transitionend', restoreParentNone);
+                                    };
+                                    parentPanel.addEventListener('transitionend', restoreParentNone);
+                                }
+                            } else {
+                                // Expand sub item
+                                subItem.classList.add('active');
+                                
+                                if (parentPanel && parentPanel.style.maxHeight === 'none') {
+                                    parentPanel.style.maxHeight = parentPanel.scrollHeight + 'px';
+                                    requestAnimationFrame(() => {
+                                        subPanel.style.maxHeight = subPanel.scrollHeight + 'px';
+                                        subPanel.style.opacity = '1';
+                                    });
+                                } else {
+                                    subPanel.style.maxHeight = subPanel.scrollHeight + 'px';
+                                    subPanel.style.opacity = '1';
+                                }
+                                
+                                if (parentPanel) {
+                                    const newParentHeight = parentPanel.scrollHeight + subPanel.scrollHeight;
+                                    parentPanel.style.maxHeight = newParentHeight + 'px';
+                                    
+                                    const restoreParentNone = (evt) => {
+                                        if (evt.propertyName === 'max-height' && item.classList.contains('active')) {
+                                            parentPanel.style.maxHeight = 'none';
+                                        }
+                                        parentPanel.removeEventListener('transitionend', restoreParentNone);
+                                    };
+                                    parentPanel.addEventListener('transitionend', restoreParentNone);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+    
+    // Scroll reveal observer
+    if (disclosuresSection) {
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: "0px"
+        };
+        
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        revealObserver.observe(disclosuresSection);
+    }
+}
+
+function initTeamMarquee() {
+    const cardsRow = document.querySelector('.team-cards-row');
+    if (!cardsRow) return;
+    
+    // 1. Clone cards for infinite loop marquee scroll
+    const originalCardsList = Array.from(cardsRow.children);
+    const totalOriginalCards = originalCardsList.length;
+    originalCardsList.forEach(card => {
+        const clone = card.cloneNode(true);
+        cardsRow.appendChild(clone);
+    });
+    
+    // Query ALL cards including the newly cloned ones
+    const cards = cardsRow.querySelectorAll('.team-card');
+    if (cards.length === 0) return;
+    
+    let isPaused = false;
+    let scrollSpeed = 1.5; // Speed of auto scroll in pixels per frame
+    let halfScrollWidth = 0;
+    let animationFrameId = null;
+    
+    // Calculate the wrap-around scroll width once layout is ready
+    function initScrollMetrics() {
+        if (cards.length > totalOriginalCards) {
+            // offset of start of cloned set minus 1st card
+            halfScrollWidth = cards[totalOriginalCards].offsetLeft - cards[0].offsetLeft;
+        }
+    }
+    
+    // Recalculate metrics once window is fully loaded to ensure styles/fonts are ready
+    if (document.readyState === 'complete') {
+        setTimeout(initScrollMetrics, 100);
+    } else {
+        window.addEventListener('load', initScrollMetrics);
+    }
+    
+    // Recalculate when any image finishes loading (to handle layout shifts/cache)
+    cardsRow.querySelectorAll('img').forEach(img => {
+        img.addEventListener('load', initScrollMetrics);
+    });
+    
+    // Run metrics recalculation on window resize
+    window.addEventListener('resize', initScrollMetrics);
+    
+    // Auto Scroll Loop (marquee animation)
+    function tickScroll() {
+        if (halfScrollWidth === 0) {
+            initScrollMetrics();
+        }
+        if (!isPaused && halfScrollWidth > 0) {
+            cardsRow.scrollLeft += scrollSpeed;
+            
+            // Loop around seamlessly
+            if (cardsRow.scrollLeft >= halfScrollWidth) {
+                cardsRow.scrollLeft -= halfScrollWidth;
+            }
+        }
+        animationFrameId = requestAnimationFrame(tickScroll);
+    }
+    
+    // Pause auto scroll when hovering anywhere inside the cards row
+    cardsRow.addEventListener('mouseenter', () => {
+        isPaused = true;
+    });
+    
+    // Resume scroll on mouse leave
+    cardsRow.addEventListener('mouseleave', () => {
+        isPaused = false;
+    });
+    
+    // Support touchscreen touch drag pausing
+    cardsRow.addEventListener('touchstart', () => {
+        isPaused = true;
+    });
+    cardsRow.addEventListener('touchend', () => {
+        setTimeout(() => {
+            isPaused = false;
+        }, 1500); // Resume scroll shortly after swipe ends
+    });
+    
+    // Initialize & Run
+    initScrollMetrics();
+    
+    // Start animation loop
+    animationFrameId = requestAnimationFrame(tickScroll);
+}
+
+// ==========================================================================
+// PORTFOLIO 3D CAROUSEL (KamayaKya Style Slider)
+// ==========================================================================
+function initPortfolioCarousel() {
+    const container = document.querySelector('.portfolio-carousel-container');
+    if (!container) return;
+    
+    const cards = container.querySelectorAll('.portfolio-card');
+    const prevBtn = container.querySelector('.portfolio-arrow.prev');
+    const nextBtn = container.querySelector('.portfolio-arrow.next');
+    const progressBar = container.querySelector('#portfolioProgressBar');
+    
+    if (cards.length === 0) return;
+    
+    let currentIndex = 0;
+    const totalCards = cards.length;
+    let autoplayTimer = null;
+    let isHovered = false;
+    
+    function updateCarousel() {
+        cards.forEach((card, index) => {
+            card.classList.remove('active', 'prev', 'next', 'hidden');
+            
+            if (index === currentIndex) {
+                card.classList.add('active');
+            } else if (index === (currentIndex - 1 + totalCards) % totalCards) {
+                card.classList.add('prev');
+            } else if (index === (currentIndex + 1) % totalCards) {
+                card.classList.add('next');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+        
+        if (progressBar) {
+            progressBar.style.animation = 'none';
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    progressBar.style.animation = 'portfolioProgressAnim 7s linear forwards';
+                    if (isHovered) {
+                        progressBar.style.animationPlayState = 'paused';
+                    } else {
+                        progressBar.style.animationPlayState = 'running';
+                    }
+                });
+            });
+        }
+    }
+    
+    function startAutoplay() {
+        stopAutoplay();
+        if (isHovered) return;
+        autoplayTimer = setInterval(() => {
+            nextSlide();
+        }, 7000);
+    }
+    
+    function stopAutoplay() {
+        if (autoplayTimer) {
+            clearInterval(autoplayTimer);
+            autoplayTimer = null;
+        }
+    }
+    
+    function resetAutoplay() {
+        if (!isHovered) {
+            startAutoplay();
+        }
+    }
+    
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % totalCards;
+        updateCarousel();
+        resetAutoplay();
+    }
+    
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + totalCards) % totalCards;
+        updateCarousel();
+        resetAutoplay();
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            nextSlide();
+        });
+    }
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            prevSlide();
+        });
+    }
+    
+    // Click on side cards to slide them to center
+    cards.forEach((card, index) => {
+        card.addEventListener('click', (e) => {
+            if (card.classList.contains('prev')) {
+                e.preventDefault();
+                prevSlide();
+            } else if (card.classList.contains('next')) {
+                e.preventDefault();
+                nextSlide();
+            }
+        });
+    });
+    
+    // Swipe gestures support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
+    
+    container.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+    
+    container.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+        handleSwipe();
+    }, { passive: true });
+    
+    function handleSwipe() {
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+        
+        // Only trigger horizontal swipe if deltaX is larger than deltaY (horizontal intent)
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+            if (deltaX < 0) {
+                prevSlide(); // Swipe left (opposite direction)
+            } else {
+                nextSlide(); // Swipe right (opposite direction)
+            }
+        }
+    }
+    
+    // Horizontal wheel/trackpad scrolling support
+    let lastWheelTime = 0;
+    container.addEventListener('wheel', (e) => {
+        // Primary horizontal scroll check
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 10) {
+            e.preventDefault(); // Lock vertical page scrolling and default actions
+            const now = Date.now();
+            if (now - lastWheelTime > 800) { // Cooldown between transitions
+                if (e.deltaX > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+                lastWheelTime = now;
+            }
+        }
+    }, { passive: false });
+    
+    function handleMouseEnter() {
+        isHovered = true;
+        stopAutoplay();
+        if (progressBar) {
+            progressBar.style.animationPlayState = 'paused';
+        }
+    }
+
+    function handleMouseLeave() {
+        isHovered = false;
+        startAutoplay();
+        if (progressBar) {
+            progressBar.style.animation = 'none';
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    progressBar.style.animation = 'portfolioProgressAnim 7s linear forwards';
+                    progressBar.style.animationPlayState = 'running';
+                });
+            });
+        }
+    }
+
+    // Hover pause behavior for autoplay
+    container.addEventListener('mouseenter', handleMouseEnter);
+    container.addEventListener('mouseleave', handleMouseLeave);
+    
+    // Initialize the view and autoplay
+    updateCarousel();
+    startAutoplay();
+}
+
+// MOBILE PRICING SEGMENTED TABS CONTROLLER
+// ==========================================================================
+function initMobilePricingTabs() {
+    const tables = document.querySelectorAll('.comparison-table');
+    tables.forEach(table => {
+        // By default, set HNI Premium (plan 1) active
+        table.classList.add('show-plan-1');
+        
+        const headers = table.querySelectorAll('thead th');
+        if (headers.length < 4) return;
+        
+        const tabHni = headers[1];
+        const tabInner = headers[2];
+        const tabBiz = headers[3];
+        
+        // Add active class by default
+        tabHni.classList.add('active-plan-tab');
+        
+        let activePlans = [1]; // Keep track of active plan numbers
+        
+        const togglePlan = (planNum) => {
+            const index = activePlans.indexOf(planNum);
+            
+            if (index !== -1) {
+                // Plan is already active, deactivate it if we have at least one other plan active
+                if (activePlans.length > 1) {
+                    activePlans.splice(index, 1);
+                }
+            } else {
+                // Plan is not active, activate it. If we already have 2, shift the oldest active one.
+                if (activePlans.length >= 2) {
+                    activePlans.shift();
+                }
+                activePlans.push(planNum);
+            }
+            
+            // Clear current active classes
+            table.classList.remove('show-plan-1', 'show-plan-2', 'show-plan-3');
+            tabHni.classList.remove('active-plan-tab');
+            tabInner.classList.remove('active-plan-tab');
+            tabBiz.classList.remove('active-plan-tab');
+            
+            // Apply classes for all active plans
+            activePlans.forEach(num => {
+                table.classList.add(`show-plan-${num}`);
+                if (num === 1) tabHni.classList.add('active-plan-tab');
+                if (num === 2) tabInner.classList.add('active-plan-tab');
+                if (num === 3) tabBiz.classList.add('active-plan-tab');
+            });
+        };
+        
+        tabHni.addEventListener('click', () => togglePlan(1));
+        tabInner.addEventListener('click', () => togglePlan(2));
+        tabBiz.addEventListener('click', () => togglePlan(3));
+    });
+}
+
+
