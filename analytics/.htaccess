@@ -15,6 +15,7 @@ DirectoryIndex index.html frontend/pages/dashboard.html
 # Route clean URLs to their corresponding HTML files in frontend/pages/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^earnings-trends$ frontend/pages/earnings-trends.html [L]
 RewriteRule ^dashboard$ frontend/pages/dashboard.html [L]
 RewriteRule ^ranking-tool$ frontend/pages/ranking-tool.html [L]
 RewriteRule ^monthly-market-analysis$ frontend/pages/monthly-market-analysis.html [L]
