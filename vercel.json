@@ -135,7 +135,7 @@
     },
     {
       "source": "/analytics/earnings-trends",
-      "destination": "/analytics/frontend/pages/earnings-trends"
+      "destination": "/analytics/frontend/pages/earnings-trends.html"
     },
     {
       "source": "/analytics/dashboard",
