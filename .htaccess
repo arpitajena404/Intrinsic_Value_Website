@@ -32,6 +32,10 @@ RewriteRule ^js/(.*)$ analytics/frontend/js/$1 [L]
 RewriteRule ^assets/(.*)$ analytics/frontend/assets/$1 [L]
 RewriteRule ^static/(.*)$ analytics/frontend/assets/$1 [L]
 
+# Route clean analytics page requests to their actual HTML files
+RewriteCond %{DOCUMENT_ROOT}/analytics/frontend/pages/$1.html -f
+RewriteRule ^analytics/([^/]+)/?$ analytics/frontend/pages/$1.html [L]
+
 # Redirect /admin to the new admin URL
 RewriteRule ^admin/?$ https://intrinsicvalueequity.in/invest_biz/admin.html [R=301,L]
 

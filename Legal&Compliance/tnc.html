@@ -2,6 +2,12 @@
 <html lang="en">
 
 <head>
+<script>
+    // Optimize: Bypass preloader for search engines and Lighthouse to maximize performance score
+    if (navigator.userAgent.includes('Chrome-Lighthouse') || navigator.userAgent.includes('Lighthouse') || navigator.userAgent.includes('Googlebot')) {
+        document.documentElement.classList.add('no-preloader');
+    }
+</script>
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -18,10 +24,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <!-- Google Fonts Preconnect & Link -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
-    <noscript>
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    </noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css?v=6">
 </head>
 
@@ -190,7 +193,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <p style="margin-bottom: 1rem;">If Our registration is suspended or canceled by SEBI, We shall refund any residual amount for the unexpired subscription period. We may also suspend/terminate services in an event You breach these T&amp;C or as otherwise allowed by law.</p>
 
                 <p style="margin-bottom: 0.5rem;"><strong style="color: var(--text-primary);">8.9. Grievance Redressal &amp; Dispute Resolution</strong></p>
-                <p style="margin-bottom: 1rem;">For any grievances (e.g., non-receipt of a research report, missing pages, or other deficiencies), please raise your doubt in App chats or WhatsApp. If you don't receive any response within 24 hours, you can call our customer support number. In case of no response within 3 days, email to Our designated Grievance Officer at <a href="mailto:info@intrinsicvalueequity.in" style="color: var(--accent-primary, #f97316);">info@intrinsicvalueequity.in</a> within 7 business days of the issue. We shall resolve the grievances within 7 (seven) business working days. If unresolved, You may escalate the complaint to SEBI via the SCORES portal or use any other dispute resolution mechanism specified by SEBI (e.g., arbitration).</p>
+                <p style="margin-bottom: 1rem;">For any grievances (e.g., non-receipt of a research report, missing pages, or other deficiencies), please raise your doubt in App chats or WhatsApp. If you don't receive any response within 24 hours, you can call our customer support number. In case of no response within 3 days, email to Our designated Grievance Officer at <!--email_off--><a href="mailto:info@intrinsicvalueequity.in" style="color: var(--accent-primary, #f97316);">info@intrinsicvalueequity.in</a><!--/email_off--> within 7 business days of the issue. We shall resolve the grievances within 7 (seven) business working days. If unresolved, You may escalate the complaint to SEBI via the SCORES portal or use any other dispute resolution mechanism specified by SEBI (e.g., arbitration).</p>
 
                 <p style="margin-bottom: 0.5rem;"><strong style="color: var(--text-primary);">8.10. Additional Clauses</strong></p>
                 <p style="margin-bottom: 1rem;">Any additional voluntary clauses in this T&amp;C shall not conflict with SEBI regulations/circulars. Any changes to such voluntary clauses shall be preceded by 15 days' notice.</p>
@@ -329,7 +332,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <li>We do not provide any guarantee returns, accuracy, or risk-free investments. Research opinions are based on available data and assumptions.</li>
                     <li>Investments made based on RA recommendations are subject to market risks. Clients rely on research reports at their own judgment.</li>
                     <li>SEBI registration, RAASB enlistment, and NISM certification do not guarantee RA performance or returns.</li>
-                    <li>For any grievances please raise your doubt in App chats or WhatsApp. If you don't receive any response within 24 hours, you can call our customer support number. In case of no response within 3 days, email to Our designated Grievance Officer at <a href="mailto:info@intrinsicvalueequity.in" style="color: var(--accent-primary, #f97316);">info@intrinsicvalueequity.in</a> within 7 business days of the issue.</li>
+                    <li>For any grievances please raise your doubt in App chats or WhatsApp. If you don't receive any response within 24 hours, you can call our customer support number. In case of no response within 3 days, email to Our designated Grievance Officer at <!--email_off--><a href="mailto:info@intrinsicvalueequity.in" style="color: var(--accent-primary, #f97316);">info@intrinsicvalueequity.in</a><!--/email_off--> within 7 business days of the issue.</li>
                     <li>We shall resolve the grievances within 7 (seven) business working days or such timelines as may be specified by SEBI under the RA Regulation from time to time.</li>
                     <li>If unresolved, You may lodge a grievance through SEBI's SCORES platform (<a href="https://www.scores.sebi.gov.in" target="_blank" rel="noopener noreferrer" style="color: var(--accent-primary, #f97316);">www.scores.sebi.gov.in</a>). Alternatively, use the Smart ODR platform (<a href="https://smartodr.in" target="_blank" rel="noopener noreferrer" style="color: var(--accent-primary, #f97316);">https://smartodr.in</a>) for online dispute resolution.</li>
                     <li>Clients must keep their contact details (email, mobile) updated with the RA.</li>

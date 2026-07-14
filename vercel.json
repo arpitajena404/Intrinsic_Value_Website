@@ -134,6 +134,10 @@
       "destination": "/analytics/frontend/:path*"
     },
     {
+      "source": "/analytics/earnings-trends",
+      "destination": "/analytics/frontend/pages/earnings-trends"
+    },
+    {
       "source": "/analytics/dashboard",
       "destination": "/analytics/frontend/pages/dashboard"
     },
