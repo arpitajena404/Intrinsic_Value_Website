@@ -10,15 +10,15 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
 
     def do_GET(self):
-        # Clean URL rewrites for blog posts (root-level)
-        # Exclude directories, typical file extensions, and known static paths
         path_part = self.path.split('?')[0].lstrip('/')
         if path_part and not path_part.startswith(('analytics', 'workshop', 'invest_biz', 'vsl', 'css', 'js', 'assets', 'static', 'images', 'api')):
             # Check if it has a file extension (e.g. .html, .png, .json)
             if '.' not in path_part:
                 # Check if it's a known page
                 known_pages = ('about', 'blogs', 'pricing', 'nikhil-gangil-indian-value-investor', 'iv_admin')
-                if path_part not in known_pages:
+                if path_part in known_pages:
+                    self.path = f'/{path_part}.html'
+                else:
                     self.path = '/blog-detail.html'
 
         # Clean URL rewrites for analytics sub-portal
