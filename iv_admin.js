@@ -4476,8 +4476,8 @@
                 var containerRect = sidebar.parentElement.getBoundingClientRect();
                 var newWidth = e.clientX - containerRect.left;
                 
-                // Keep width within bounds (min 350px, max 80% of screen width)
-                if (newWidth < 350) newWidth = 350;
+                // Keep width within bounds (min 20px, max 80% of screen width)
+                if (newWidth < 20) newWidth = 20;
                 var maxWidth = containerRect.width * 0.8;
                 if (newWidth > maxWidth) newWidth = maxWidth;
                 
