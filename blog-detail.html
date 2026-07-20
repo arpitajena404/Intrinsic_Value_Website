@@ -906,7 +906,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         if (block.type === 'heading' || block.type === 'paragraph') {
                             contentNode.addEventListener('paste', function(e) {
                                 e.preventDefault();
-                                const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                                let text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                                // Strip HTML tags and clean up entities to prevent literal tags showing up
+                                text = text.replace(/<[^>]*>/g, '')
+                                           .replace(/&nbsp;/g, ' ')
+                                           .replace(/&lt;/g, '<')
+                                           .replace(/&gt;/g, '>')
+                                           .replace(/&amp;/g, '&')
+                                           .replace(/&quot;/g, '"')
+                                           .replace(/&#039;/g, "'");
                                 document.execCommand('insertText', false, text);
                             });
                         }
@@ -1116,7 +1124,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     if (el) {
                         el.addEventListener('paste', function(e) {
                             e.preventDefault();
-                            const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                            let text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                            // Strip HTML tags and clean up entities to prevent literal tags showing up
+                            text = text.replace(/<[^>]*>/g, '')
+                                       .replace(/&nbsp;/g, ' ')
+                                       .replace(/&lt;/g, '<')
+                                       .replace(/&gt;/g, '>')
+                                       .replace(/&amp;/g, '&')
+                                       .replace(/&quot;/g, '"')
+                                       .replace(/&#039;/g, "'");
                             document.execCommand('insertText', false, text);
                         });
                     }
@@ -1145,6 +1161,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 const btnBold = document.getElementById('btn-bold');
                 const btnItalic = document.getElementById('btn-italic');
                 const btnUnderline = document.getElementById('btn-underline');
+                const btnList = document.getElementById('btn-list');
                 const btnColor = document.getElementById('btn-color');
 
                 // Saved selection helper to prevent losing focus when typing hex codes
@@ -1196,7 +1213,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }
 
                 // Prevent losing selection on click of toolbar items, EXCEPT inside text inputs
-                [btnBold, btnItalic, btnUnderline, btnColor, colorPalette].forEach(el => {
+                [btnBold, btnItalic, btnUnderline, btnList, btnColor, colorPalette].forEach(el => {
                     if (el) {
                         el.addEventListener('mousedown', function(e) {
                             if (e.target.tagName !== 'INPUT') {
@@ -1221,6 +1238,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 if (btnUnderline) {
                     btnUnderline.addEventListener('click', () => {
                         document.execCommand('underline', false, null);
+                        triggerInputOnActiveElement();
+                    });
+                }
+                if (btnList) {
+                    btnList.addEventListener('click', () => {
+                        document.execCommand('insertUnorderedList', false, null);
                         triggerInputOnActiveElement();
                     });
                 }
@@ -1511,6 +1534,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button type="button" id="btn-bold" title="Bold" style="background: transparent; color: #fff; border: none; font-weight: bold; cursor: pointer; padding: 6px 10px; font-size: 13px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;"><i class="fa-solid fa-bold"></i></button>
         <button type="button" id="btn-italic" title="Italic" style="background: transparent; color: #fff; border: none; font-style: italic; cursor: pointer; padding: 6px 10px; font-size: 13px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;"><i class="fa-solid fa-italic"></i></button>
         <button type="button" id="btn-underline" title="Underline" style="background: transparent; color: #fff; border: none; text-decoration: underline; cursor: pointer; padding: 6px 10px; font-size: 13px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;"><i class="fa-solid fa-underline"></i></button>
+        <button type="button" id="btn-list" title="Bullet List" style="background: transparent; color: #fff; border: none; cursor: pointer; padding: 6px 10px; font-size: 13px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;"><i class="fa-solid fa-list-ul"></i></button>
         <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2); margin: 0 4px;"></div>
         <div style="position: relative; display: flex; align-items: center;">
             <button type="button" id="btn-color" title="Text Color" style="background: transparent; color: var(--accent); border: none; cursor: pointer; padding: 6px 10px; font-size: 13px; border-radius: 4px; display: flex; align-items: center; justify-content: center; gap: 4px; transition: background 0.2s;">

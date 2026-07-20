@@ -26,21 +26,8 @@ async function minifyFile(relativeFilePath, type) {
             minifiedContent = cleanCssResult.styles;
         } else if (type === 'js') {
             const terserResult = await minify(originalContent, {
-                compress: {
-                    dead_code: true,
-                    drop_debugger: true,
-                    conditionals: true,
-                    evaluate: true,
-                    booleans: true,
-                    loops: true,
-                    unused: true,
-                    hoist_funs: true,
-                    keep_fargs: false,
-                    join_vars: true
-                },
-                mangle: {
-                    toplevel: false // safe for global-scoped functions in script.js loaded by other scripts/HTML inline
-                }
+                compress: false,
+                mangle: false
             });
             minifiedContent = terserResult.code;
         }
