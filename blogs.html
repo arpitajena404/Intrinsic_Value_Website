@@ -35,22 +35,22 @@ window.addEventListener('load', function() {
     <meta charset="UTF-8">
     <link rel="icon" href="onlylogo.PNG" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blogs | Intrinsic Value Equity Advisors</title>
-    <meta name="description" content="Read our latest insights, newsletters, and equity research articles on value investing and market cycles.">
+    <title>Value Investing &amp; Stock Market Research Blogs | Intrinsic Value</title>
+    <meta name="description" content="Read our latest insights, newsletters, and stock market research on value investing, growth investing, and multibagger stock identification in India.">
     <link rel="canonical" href="https://intrinsicvalueequity.in/blogs" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://intrinsicvalueequity.in/blogs" />
-    <meta property="og:title" content="Blogs | Intrinsic Value Equity Advisors" />
-    <meta property="og:description" content="Read our latest insights, newsletters, and equity research articles on value investing and market cycles." />
+    <meta property="og:title" content="Value Investing &amp; Stock Market Research Blogs | Intrinsic Value" />
+    <meta property="og:description" content="Read our latest insights, newsletters, and stock market research on value investing, growth investing, and multibagger stock identification in India." />
     <meta property="og:image" content="https://intrinsicvalueequity.in/logo.png" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://intrinsicvalueequity.in/blogs" />
-    <meta name="twitter:title" content="Blogs | Intrinsic Value Equity Advisors" />
-    <meta name="twitter:description" content="Read our latest insights, newsletters, and equity research articles on value investing and market cycles." />
+    <meta name="twitter:title" content="Value Investing &amp; Stock Market Research Blogs | Intrinsic Value" />
+    <meta name="twitter:description" content="Read our latest insights, newsletters, and stock market research on value investing, growth investing, and multibagger stock identification in India." />
     <meta name="twitter:image" content="https://intrinsicvalueequity.in/logo.png" />
     <!-- Link Stylesheet -->
         <!-- Google Fonts Preconnect & Link -->
@@ -92,7 +92,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <li><a href="pricing.html" class="nav-link">Service</a></li>
                     <li><a href="about.html" class="nav-link">About Us</a></li>
                     <li><a href="blogs.html" class="nav-link">Blogs</a></li>
-                    <li><a href="analytics/tools" class="nav-link">Tools</a></li>
                     <li><a href="analytics/dashboard" class="nav-link">Analytics</a></li>
                     <li><a href="https://premium.intrinsicvalueequity.in/eud/courses" class="nav-link cms-editable-highlight" data-field="header_buttons.client_login.text" data-label="Client Login Text" target="_blank" rel="noopener noreferrer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Client Login</a></li>
                     <li class="nav-actions-mobile">
@@ -293,6 +292,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- Link Logic Script -->
     <script src="script.js?v=6" defer></script>
+    <script src="blogs.js"></script>
 
     <!-- Dynamic Content Renderer Script -->
     <script>
@@ -316,6 +316,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
 
         function fetchBlogsJson() {
+            if (window.location.protocol === 'file:') {
+                if (typeof BLOGS_DATA !== 'undefined') {
+                    allBlogs = BLOGS_DATA;
+                    initBlogsFiltersAndRender();
+                    return;
+                }
+            }
             fetch('blogs.json?t=' + Date.now())
                 .then(response => response.json())
                 .then(data => {
@@ -324,7 +331,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 })
                 .catch(err => {
                     console.error('Error loading blogs:', err);
-                    blogGrid.innerHTML = '<p class="error-msg" style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 4rem 0;">Error loading blogs. Please try again later.</p>';
+                    if (typeof BLOGS_DATA !== 'undefined') {
+                        console.log('Falling back to local BLOGS_DATA');
+                        allBlogs = BLOGS_DATA;
+                        initBlogsFiltersAndRender();
+                    } else {
+                        blogGrid.innerHTML = '<p class="error-msg" style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 4rem 0;">Error loading blogs. Please try again later.</p>';
+                    }
                 });
         }
 

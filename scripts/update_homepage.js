@@ -1002,4 +1002,22 @@ function generateSitemap() {
     console.log("Successfully compiled sitemap.xml!");
 }
 
+// Generate blogs.js fallback for local file:// protocol browsing
+function generateBlogsJsFallback() {
+    console.log("Generating blogs.js fallback...");
+    const blogsJsonPath = path.join(__dirname, '../blogs.json');
+    const blogsJsPath = path.join(__dirname, '../blogs.js');
+    if (fs.existsSync(blogsJsonPath)) {
+        try {
+            const blogsContent = fs.readFileSync(blogsJsonPath, 'utf8');
+            const jsContent = `// Automatically generated fallback data for local file:// browsing\nvar BLOGS_DATA = ${blogsContent.trim()};\n`;
+            fs.writeFileSync(blogsJsPath, jsContent, 'utf8');
+            console.log("Successfully compiled blogs.js fallback!");
+        } catch (e) {
+            console.error("Error generating blogs.js fallback:", e);
+        }
+    }
+}
+
 generateSitemap();
+generateBlogsJsFallback();
