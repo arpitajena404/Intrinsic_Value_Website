@@ -903,6 +903,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             }
                         }
                         
+                        if (block.type === 'heading' || block.type === 'paragraph') {
+                            contentNode.addEventListener('paste', function(e) {
+                                e.preventDefault();
+                                const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                                document.execCommand('insertText', false, text);
+                            });
+                        }
+                        
                         blockWrapper.appendChild(contentNode);
                         contentEl.appendChild(blockWrapper);
                         
@@ -1103,6 +1111,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 dateEl.contentEditable = 'true';
                 timeEl.contentEditable = 'true';
                 badgeEl.contentEditable = 'true';
+                
+                [titleEl, dateEl, timeEl, badgeEl].forEach(el => {
+                    if (el) {
+                        el.addEventListener('paste', function(e) {
+                            e.preventDefault();
+                            const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                            document.execCommand('insertText', false, text);
+                        });
+                    }
+                });
                 
                 titleEl.addEventListener('input', function() {
                     currentPost.title = titleEl.innerHTML.trim();
