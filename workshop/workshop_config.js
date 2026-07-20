@@ -1,7 +1,7 @@
 var WORKSHOP_CONFIG = {
-    "workshopDateText": "5th July, Sunday  | 11:00 AM",
-    "countdownTarget": "2026-07-05T11:00:00",
-    "checkoutUrl": "https://premium.intrinsicvalueequity.in/checkout/9cddc53d-59a3-4e39-a346-18b59fa7d7b6",
+    "workshopDateText": "26th July, Sunday  | 11:00 AM",
+    "countdownTarget": "2026-07-26T11:00:00",
+    "checkoutUrl": "https://premium.intrinsicvalueequity.in/checkout/c773025d-2f85-402e-a010-9713e8a837f8",
     "youtubeVideo1": "https://www.youtube.com/watch?v=lXyYY8I9e44",
     "youtubeVideo2": "https://www.youtube.com/watch?v=knvVbwdm0TE",
     "youtubeVideo3": "https://www.youtube.com/watch?v=yu7KYacrV80",
