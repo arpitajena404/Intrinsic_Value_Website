@@ -394,6 +394,15 @@ window.addEventListener('load', function() {
         .settings-btn-save:hover {
             filter: brightness(1.1);
         }
+
+        /* Floating text formatting toolbar styles */
+        .format-toolbar button:hover {
+            background: rgba(255, 140, 0, 0.2) !important;
+            color: var(--accent) !important;
+        }
+        .color-palette-item:hover {
+            background: rgba(255, 140, 0, 0.15) !important;
+        }
     </style>
 </head>
 
@@ -824,32 +833,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             contentNode = document.createElement('h2');
                             contentNode.className = 'blog-highlighted-heading';
                             contentNode.contentEditable = 'true';
-                            contentNode.innerText = block.text || '';
+                            contentNode.innerHTML = block.text || '';
                             contentNode.addEventListener('blur', function () {
-                                block.text = contentNode.innerText.trim();
+                                block.text = contentNode.innerHTML;
                                 syncStateToParent();
                             });
                             contentNode.addEventListener('input', function() {
-                                block.text = contentNode.innerText.trim();
+                                block.text = contentNode.innerHTML;
                                 syncStateToParent();
                             });
                         } else if (block.type === 'paragraph') {
                             contentNode = document.createElement('p');
                             contentNode.contentEditable = 'true';
                             
-                            // Initialize with compiled HTML for viewing
-                            contentNode.innerHTML = parseLinks(escapeHtml(block.text || '').replace(/\n/g, '<br />'));
+                            // Initialize with HTML if present, otherwise convert markdown-style links
+                            if (block.text && /<[a-z][\s\S]*>/i.test(block.text)) {
+                                contentNode.innerHTML = block.text;
+                            } else {
+                                contentNode.innerHTML = parseLinks(escapeHtml(block.text || '').replace(/\n/g, '<br />'));
+                            }
                             
-                            contentNode.addEventListener('focus', function () {
-                                contentNode.innerText = block.text || ''; // raw markdown
-                            });
                             contentNode.addEventListener('blur', function () {
-                                block.text = contentNode.innerText.trim();
-                                contentNode.innerHTML = parseLinks(escapeHtml(block.text).replace(/\n/g, '<br />'));
+                                block.text = contentNode.innerHTML;
                                 syncStateToParent();
                             });
                             contentNode.addEventListener('input', function() {
-                                block.text = contentNode.innerText.trim();
+                                block.text = contentNode.innerHTML;
                                 syncStateToParent();
                             });
                         } else if (block.type === 'photo') {
@@ -995,14 +1004,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     if (!blocks) return html;
                     blocks.forEach(function (block) {
                         if (block.type === 'heading') {
-                            html += '<h2 class="blog-highlighted-heading">' + escapeHtml(block.text) + '</h2>\n';
+                            if (block.text && /<[a-z][\s\S]*>/i.test(block.text)) {
+                                html += '<h2 class="blog-highlighted-heading">' + block.text + '</h2>\n';
+                            } else {
+                                html += '<h2 class="blog-highlighted-heading">' + escapeHtml(block.text || '') + '</h2>\n';
+                            }
                         } else if (block.type === 'paragraph') {
-                            var paragraphs = block.text.split('\n\n').filter(function (p) { return p.trim() !== ''; });
-                            paragraphs.forEach(function (p) {
-                                var formattedText = escapeHtml(p).replace(/\n/g, '<br />');
-                                formattedText = parseLinks(formattedText);
-                                html += '<p>' + formattedText + '</p>\n';
-                            });
+                            if (block.text && /<[a-z][\s\S]*>/i.test(block.text)) {
+                                html += '<p>' + block.text + '</p>\n';
+                            } else {
+                                var paragraphs = (block.text || '').split('\n\n').filter(function (p) { return p.trim() !== ''; });
+                                paragraphs.forEach(function (p) {
+                                    var formattedText = escapeHtml(p).replace(/\n/g, '<br />');
+                                    formattedText = parseLinks(formattedText);
+                                    html += '<p>' + formattedText + '</p>\n';
+                                });
+                            }
                         } else if (block.type === 'photo') {
                             html += '<p><img loading="lazy" decoding="async" class="aligncenter" src="' + escapeHtml(block.url) + '" alt="" /></p>\n';
                         } else if (block.type === 'video') {
@@ -1102,7 +1119,129 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     currentPost.category = badgeEl.innerText.trim();
                     syncStateToParent();
                 });
-                
+
+                // Formatting Toolbar setup
+                const formatToolbar = document.getElementById('formatToolbar');
+                const colorPalette = document.getElementById('colorPalette');
+                const btnBold = document.getElementById('btn-bold');
+                const btnItalic = document.getElementById('btn-italic');
+                const btnUnderline = document.getElementById('btn-underline');
+                const btnColor = document.getElementById('btn-color');
+
+                // Color Palette options
+                const colors = [
+                    { name: 'White', hex: '#FFFFFF' },
+                    { name: 'Orange', hex: '#FF8C00' },
+                    { name: 'Light Grey', hex: '#E2E2E6' },
+                    { name: 'Muted Grey', hex: '#888888' },
+                    { name: 'Red', hex: '#E74C3C' },
+                    { name: 'Green', hex: '#2ECC71' },
+                    { name: 'Blue', hex: '#3498DB' },
+                    { name: 'Yellow', hex: '#F1C40F' }
+                ];
+
+                if (colorPalette) {
+                    colorPalette.innerHTML = colors.map(c => `
+                        <div class="color-palette-item" style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; cursor: pointer; border-radius: 4px; transition: background 0.2s;" data-color="${c.hex}">
+                            <span style="width: 12px; height: 12px; border-radius: 50%; background: ${c.hex}; border: 1px solid rgba(255,255,255,0.2);"></span>
+                            <span style="font-size: 11px; color: #fff; font-family: sans-serif; font-weight: 500;">${c.name} (${c.hex})</span>
+                        </div>
+                    `).join('');
+                }
+
+                // Prevent losing selection on click of toolbar items
+                [btnBold, btnItalic, btnUnderline, btnColor, colorPalette].forEach(el => {
+                    if (el) {
+                        el.addEventListener('mousedown', function(e) {
+                            e.preventDefault();
+                        });
+                    }
+                });
+
+                if (btnBold) {
+                    btnBold.addEventListener('click', () => {
+                        document.execCommand('bold', false, null);
+                        triggerInputOnActiveElement();
+                    });
+                }
+                if (btnItalic) {
+                    btnItalic.addEventListener('click', () => {
+                        document.execCommand('italic', false, null);
+                        triggerInputOnActiveElement();
+                    });
+                }
+                if (btnUnderline) {
+                    btnUnderline.addEventListener('click', () => {
+                        document.execCommand('underline', false, null);
+                        triggerInputOnActiveElement();
+                    });
+                }
+                if (btnColor) {
+                    btnColor.addEventListener('click', () => {
+                        colorPalette.style.display = colorPalette.style.display === 'flex' ? 'none' : 'flex';
+                    });
+                }
+
+                if (colorPalette) {
+                    colorPalette.querySelectorAll('.color-palette-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            const color = item.getAttribute('data-color');
+                            document.execCommand('foreColor', false, color);
+                            colorPalette.style.display = 'none';
+                            triggerInputOnActiveElement();
+                        });
+                    });
+                }
+
+                function triggerInputOnActiveElement() {
+                    const el = document.activeElement;
+                    if (el && el.closest('[contenteditable="true"]')) {
+                        const event = new Event('input', { bubbles: true });
+                        el.dispatchEvent(event);
+                    }
+                }
+
+                // Handle text selection
+                function handleSelection() {
+                    const selection = window.getSelection();
+                    if (selection.rangeCount > 0 && !selection.isCollapsed) {
+                        const range = selection.getRangeAt(0);
+                        let node = range.commonAncestorContainer;
+                        if (node.nodeType === 3) node = node.parentNode;
+
+                        const editable = node.closest('[contenteditable="true"]');
+                        // Make sure it is inside the post content body (headings or paragraphs)
+                        if (editable && (editable.tagName === 'P' || editable.tagName === 'H2' || editable.classList.contains('blog-highlighted-heading'))) {
+                            const rects = range.getClientRects();
+                            if (rects.length > 0) {
+                                const rect = rects[0];
+                                formatToolbar.style.display = 'flex';
+                                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                                const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+                                // Position above selection
+                                formatToolbar.style.top = (rect.top + scrollTop - formatToolbar.offsetHeight - 8) + 'px';
+                                formatToolbar.style.left = Math.max(10, rect.left + scrollLeft + (rect.width - formatToolbar.offsetWidth) / 2) + 'px';
+                                return;
+                            }
+                        }
+                    }
+                    if (formatToolbar) formatToolbar.style.display = 'none';
+                    if (colorPalette) colorPalette.style.display = 'none';
+                }
+
+                document.addEventListener('selectionchange', handleSelection);
+
+                // Hide toolbar when clicking outside
+                document.addEventListener('mousedown', function(e) {
+                    if (formatToolbar && formatToolbar.style.display !== 'none') {
+                        if (!formatToolbar.contains(e.target) && !e.target.closest('[contenteditable="true"]')) {
+                            formatToolbar.style.display = 'none';
+                            colorPalette.style.display = 'none';
+                        }
+                    }
+                });
+
                 // Document click listener to close popovers
                 document.addEventListener('click', function(e) {
                     if (!e.target.closest('.inline-block-adder')) {
@@ -1257,6 +1396,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <span class="whatsapp-tooltip">Chat with us</span>
     </a>
+
+    <!-- Floating formatting toolbar for visual text editing -->
+    <div id="formatToolbar" class="format-toolbar" style="display: none; position: absolute; background: #1c1c1c; border: 1px solid var(--accent); border-radius: 8px; padding: 4px; gap: 4px; z-index: 10000; box-shadow: 0 8px 24px rgba(0,0,0,0.6); align-items: center;">
+        <button type="button" id="btn-bold" title="Bold" style="background: transparent; color: #fff; border: none; font-weight: bold; cursor: pointer; padding: 6px 10px; font-size: 13px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;"><i class="fa-solid fa-bold"></i></button>
+        <button type="button" id="btn-italic" title="Italic" style="background: transparent; color: #fff; border: none; font-style: italic; cursor: pointer; padding: 6px 10px; font-size: 13px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;"><i class="fa-solid fa-italic"></i></button>
+        <button type="button" id="btn-underline" title="Underline" style="background: transparent; color: #fff; border: none; text-decoration: underline; cursor: pointer; padding: 6px 10px; font-size: 13px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;"><i class="fa-solid fa-underline"></i></button>
+        <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2); margin: 0 4px;"></div>
+        <div style="position: relative; display: flex; align-items: center;">
+            <button type="button" id="btn-color" title="Text Color" style="background: transparent; color: var(--accent); border: none; cursor: pointer; padding: 6px 10px; font-size: 13px; border-radius: 4px; display: flex; align-items: center; justify-content: center; gap: 4px; transition: background 0.2s;">
+                <i class="fa-solid fa-palette"></i> Color
+            </button>
+            <div id="colorPalette" class="color-palette" style="display: none; position: absolute; top: calc(100% + 5px); left: 50%; transform: translateX(-50%); background: #1c1c1c; border: 1px solid rgba(255, 140, 0, 0.4); border-radius: 8px; padding: 6px; flex-direction: column; width: 190px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); z-index: 10001;">
+                <!-- Colors will be dynamically populated -->
+            </div>
+        </div>
+    </div>
 
     <!-- Tabnav Web Accessibility Widget -->
     <script src="https://widget.tabnav.com/limited-widget.min.js.gz?req=VE6638XI6WDptOlpafdEm9SBnAt4hExw9g"

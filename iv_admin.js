@@ -4292,14 +4292,22 @@
         if (!blocks) return html;
         blocks.forEach(function (block) {
             if (block.type === 'heading') {
-                html += '<h2 class="blog-highlighted-heading">' + escapeHtml(block.text) + '</h2>\n';
+                if (block.text && /<[a-z][\s\S]*>/i.test(block.text)) {
+                    html += '<h2 class="blog-highlighted-heading">' + block.text + '</h2>\n';
+                } else {
+                    html += '<h2 class="blog-highlighted-heading">' + escapeHtml(block.text || '') + '</h2>\n';
+                }
             } else if (block.type === 'paragraph') {
-                var paragraphs = block.text.split('\n\n').filter(function (p) { return p.trim() !== ''; });
-                paragraphs.forEach(function (p) {
-                    var formattedText = escapeHtml(p).replace(/\n/g, '<br />');
-                    formattedText = formattedText.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-                    html += '<p>' + formattedText + '</p>\n';
-                });
+                if (block.text && /<[a-z][\s\S]*>/i.test(block.text)) {
+                    html += '<p>' + block.text + '</p>\n';
+                } else {
+                    var paragraphs = (block.text || '').split('\n\n').filter(function (p) { return p.trim() !== ''; });
+                    paragraphs.forEach(function (p) {
+                        var formattedText = escapeHtml(p).replace(/\n/g, '<br />');
+                        formattedText = formattedText.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+                        html += '<p>' + formattedText + '</p>\n';
+                    });
+                }
             } else if (block.type === 'photo') {
                 html += '<p><img loading="lazy" decoding="async" class="aligncenter" src="' + escapeHtml(block.url) + '" alt="" /></p>\n';
             } else if (block.type === 'video') {
