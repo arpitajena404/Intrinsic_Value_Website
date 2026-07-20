@@ -1227,6 +1227,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             cursor: pointer;
             padding: 0;
         }
+        
+        /* Premium Horizontal Scrollbar for Responsive Admin Tables */
+        .table-responsive-wrapper {
+            overflow-x: auto;
+            width: 100%;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) rgba(0, 0, 0, 0.2);
+            -webkit-overflow-scrolling: touch;
+        }
+        .table-responsive-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+        .table-responsive-wrapper::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+        .table-responsive-wrapper::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
     </style>
 </head>
 
@@ -2290,7 +2310,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             
                             <div class="iv-cms-repeater-container">
                                 <div class="table-responsive-wrapper" style="margin-top: 0; border: none; background: transparent;">
-                                    <table class="disclosure-table" id="blogs-list-table">
+                                    <table class="disclosure-table" id="blogs-list-table" style="min-width: 680px; width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th style="width: 8%;">ID</th>
