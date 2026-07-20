@@ -767,7 +767,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             
                             // Update top fields if not actively typing
                             if (fullRender || document.activeElement !== titleEl) {
-                                titleEl.textContent = currentPost.title || 'Untitled Post';
+                                titleEl.innerHTML = currentPost.title || 'Untitled Post';
                             }
                             if (fullRender || document.activeElement !== dateEl) {
                                 dateEl.textContent = currentPost.date || '--';
@@ -1104,7 +1104,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 badgeEl.contentEditable = 'true';
                 
                 titleEl.addEventListener('input', function() {
-                    currentPost.title = titleEl.innerText.trim();
+                    currentPost.title = titleEl.innerHTML.trim();
                     syncStateToParent();
                 });
                 dateEl.addEventListener('input', function() {
@@ -1210,18 +1210,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         if (node.nodeType === 3) node = node.parentNode;
 
                         const editable = node.closest('[contenteditable="true"]');
-                        // Make sure it is inside the post content body (headings or paragraphs)
-                        if (editable && (editable.tagName === 'P' || editable.tagName === 'H2' || editable.classList.contains('blog-highlighted-heading'))) {
+                        // Make sure it is inside the post content body (headings or paragraphs) or title
+                        if (editable && (editable.tagName === 'P' || editable.tagName === 'H2' || editable.tagName === 'H1' || editable.classList.contains('blog-highlighted-heading') || editable.classList.contains('post-title'))) {
                             const rects = range.getClientRects();
                             if (rects.length > 0) {
                                 const rect = rects[0];
-                                formatToolbar.style.display = 'flex';
+                                formatToolbar.style.display = 'flex'; // Set display first to get height
                                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                                 const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+                                const toolbarHeight = formatToolbar.offsetHeight || 38;
+                                const toolbarWidth = formatToolbar.offsetWidth || 190;
 
                                 // Position above selection
-                                formatToolbar.style.top = (rect.top + scrollTop - formatToolbar.offsetHeight - 8) + 'px';
-                                formatToolbar.style.left = Math.max(10, rect.left + scrollLeft + (rect.width - formatToolbar.offsetWidth) / 2) + 'px';
+                                formatToolbar.style.top = (rect.top + scrollTop - toolbarHeight - 8) + 'px';
+                                formatToolbar.style.left = Math.max(10, rect.left + scrollLeft + (rect.width - toolbarWidth) / 2) + 'px';
                                 return;
                             }
                         }
@@ -1343,7 +1345,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         }
 
                         // Populate DOM
-                        titleEl.textContent = post.title;
+                        titleEl.innerHTML = post.title;
                         dateEl.textContent = post.date;
                         timeEl.textContent = post.readingTime;
                         badgeEl.textContent = post.category;
