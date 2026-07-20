@@ -4454,6 +4454,53 @@
         });
     }
 
+    function initSplitResizers() {
+        function setupResizer(sidebarId, splitterId, iframeId) {
+            var sidebar = document.getElementById(sidebarId);
+            var splitter = document.getElementById(splitterId);
+            if (!sidebar || !splitter) return;
+            
+            var isDragging = false;
+            
+            splitter.addEventListener('mousedown', function (e) {
+                isDragging = true;
+                document.body.style.cursor = 'col-resize';
+                splitter.style.background = 'var(--accent)';
+                var iframe = document.getElementById(iframeId);
+                if (iframe) iframe.style.pointerEvents = 'none';
+                e.preventDefault();
+            });
+            
+            document.addEventListener('mousemove', function (e) {
+                if (!isDragging) return;
+                var containerRect = sidebar.parentElement.getBoundingClientRect();
+                var newWidth = e.clientX - containerRect.left;
+                
+                // Keep width within bounds (min 350px, max 80% of screen width)
+                if (newWidth < 350) newWidth = 350;
+                var maxWidth = containerRect.width * 0.8;
+                if (newWidth > maxWidth) newWidth = maxWidth;
+                
+                sidebar.style.flex = '0 0 ' + newWidth + 'px';
+                sidebar.style.width = newWidth + 'px';
+                sidebar.style.minWidth = newWidth + 'px';
+            });
+            
+            document.addEventListener('mouseup', function () {
+                if (isDragging) {
+                    isDragging = false;
+                    document.body.style.cursor = 'default';
+                    splitter.style.background = '';
+                    var iframe = document.getElementById(iframeId);
+                    if (iframe) iframe.style.pointerEvents = 'auto';
+                }
+            });
+        }
+        
+        setupResizer('homepageEditorSidebar', 'homepageCmsSplitter', 'previewIframe');
+        setupResizer('blogsEditorSidebar', 'blogsCmsSplitter', 'blogsPreviewIframe');
+    }
+
     // Initialize on DOM load
     document.addEventListener('DOMContentLoaded', function () {
         initGoogleSignIn();
@@ -4465,6 +4512,7 @@
         initTabs();
         bindCmsWorkspaceEvents();
         bindBlogsCmsWorkspaceEvents();
+        initSplitResizers();
 
         // Monitor activity to reset inactivity timer
         var activityEvents = ['mousedown', 'keydown', 'scroll', 'touchstart'];

@@ -1247,6 +1247,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             background: var(--accent);
             border-radius: 3px;
         }
+        
+        
+        /* Resizable Splitter Drag Handle */
+        .iv-cms-splitter {
+            width: 6px;
+            cursor: col-resize;
+            background: #1a1a1a;
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 100;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .iv-cms-splitter:hover {
+            background: var(--accent) !important;
+        }
     </style>
 </head>
 
@@ -1500,7 +1520,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="iv-cms-workspace-split">
                 
                 <!-- Left Pane: Editor Forms -->
-                <div class="iv-cms-editor-pane">
+                <div class="iv-cms-editor-pane" id="homepageEditorSidebar" style="min-width: 350px;">
                     <!-- Tabs Navigation -->
                     <div class="iv-cms-tabs-nav">
                         <button class="iv-cms-tab-link active" data-tab="tab-hero-nav">Hero & Navigation</button>
@@ -2232,6 +2252,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div> <!-- Ends .iv-cms-body -->
         </div> <!-- Ends .iv-cms-editor-pane -->
 
+        <!-- Resizer Drag Handle -->
+        <div id="homepageCmsSplitter" class="iv-cms-splitter">
+            <div style="width: 2px; height: 30px; background: rgba(255,255,255,0.15); border-radius: 1px;"></div>
+        </div>
+
         <!-- Middle Pane: Preview Iframe -->
         <div class="iv-cms-preview-pane device-laptop">
             <div class="iv-cms-preview-toolbar">
@@ -2288,7 +2313,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="iv-cms-workspace-split">
                 
                 <!-- Left Pane: Editor Forms -->
-                <div class="iv-cms-editor-pane" id="blogsEditorSidebar" style="display: flex; flex: 0 0 500px; width: 500px; min-width: 500px; flex-direction: column; height: 100%; overflow: hidden; background: #252525; border-right: 1px solid rgba(255, 255, 255, 0.1);">
+                <div class="iv-cms-editor-pane" id="blogsEditorSidebar" style="display: flex; flex: 0 0 500px; width: 500px; min-width: 350px; flex-direction: column; height: 100%; overflow: hidden; background: #252525; border-right: 1px solid rgba(255, 255, 255, 0.1);">
                     <!-- Tabs Navigation -->
                     <div class="iv-cms-tabs-nav">
                         <button class="iv-cms-tab-link active" id="tab-btn-blogs-list" data-tab="tab-blogs-list">Manage Blogs</button>
@@ -2448,6 +2473,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </div>
 
                     </div>
+                </div>
+
+                <!-- Resizer Drag Handle -->
+                <div id="blogsCmsSplitter" class="iv-cms-splitter">
+                    <div style="width: 2px; height: 30px; background: rgba(255,255,255,0.15); border-radius: 1px;"></div>
                 </div>
 
                 <!-- Right Pane: Preview Iframe -->
