@@ -7,7 +7,6 @@
     var ALLOWED_ADMINS = [
         "harshitsaraan@gmail.com",
         "arpitajena762@gmail.com",
-        "arpitajena8080@gmail.com",
         "nikhilgangil333@gmail.com",
         "intrinsicvalueequity@gmail.com",
         "gvaibhav870@gmail.com",
