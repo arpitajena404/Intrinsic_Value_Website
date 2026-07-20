@@ -400,8 +400,9 @@ window.addEventListener('load', function() {
             background: rgba(255, 140, 0, 0.2) !important;
             color: var(--accent) !important;
         }
-        .color-palette-item:hover {
+        .color-palette-item:hover, .color-palette-preset-item:hover {
             background: rgba(255, 140, 0, 0.15) !important;
+            transform: scale(1.1);
         }
     </style>
 </head>
@@ -1128,32 +1129,61 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 const btnUnderline = document.getElementById('btn-underline');
                 const btnColor = document.getElementById('btn-color');
 
-                // Color Palette options
-                const colors = [
-                    { name: 'White', hex: '#FFFFFF' },
-                    { name: 'Orange', hex: '#FF8C00' },
-                    { name: 'Light Grey', hex: '#E2E2E6' },
-                    { name: 'Muted Grey', hex: '#888888' },
-                    { name: 'Red', hex: '#E74C3C' },
-                    { name: 'Green', hex: '#2ECC71' },
-                    { name: 'Blue', hex: '#3498DB' },
-                    { name: 'Yellow', hex: '#F1C40F' }
+                // Saved selection helper to prevent losing focus when typing hex codes
+                let savedRange = null;
+                function saveSelection() {
+                    const selection = window.getSelection();
+                    if (selection.rangeCount > 0) {
+                        savedRange = selection.getRangeAt(0);
+                    }
+                }
+                function restoreSelection() {
+                    if (savedRange) {
+                        const selection = window.getSelection();
+                        selection.removeAllRanges();
+                        selection.addRange(savedRange);
+                    }
+                }
+
+                // Preset color choices
+                const presets = [
+                    '#FFFFFF', '#FF8C00', '#E2E2E6', '#888888', '#FF3B30', '#4CD964',
+                    '#34AADC', '#5856D6', '#FFCC00', '#5AC8FA', '#FF9500', '#FF2D55',
+                    '#121212', '#2ECC71', '#3498DB', '#9B59B6', '#F1C40F', '#E74C3C'
                 ];
 
                 if (colorPalette) {
-                    colorPalette.innerHTML = colors.map(c => `
-                        <div class="color-palette-item" style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; cursor: pointer; border-radius: 4px; transition: background 0.2s;" data-color="${c.hex}">
-                            <span style="width: 12px; height: 12px; border-radius: 50%; background: ${c.hex}; border: 1px solid rgba(255,255,255,0.2);"></span>
-                            <span style="font-size: 11px; color: #fff; font-family: sans-serif; font-weight: 500;">${c.name} (${c.hex})</span>
-                        </div>
+                    const gridHtml = presets.map(color => `
+                        <div class="color-palette-preset-item" style="width: 20px; height: 20px; border-radius: 4px; background: ${color}; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; transition: transform 0.1s;" data-color="${color}" title="${color}"></div>
                     `).join('');
+                    
+                    colorPalette.innerHTML = `
+                        <!-- Presets Header -->
+                        <span style="font-size: 10px; color: #888; font-family: sans-serif; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: block; margin-bottom: 6px;">Preset Colors</span>
+                        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-bottom: 6px;">
+                            ${gridHtml}
+                        </div>
+                        <div style="width: 100%; height: 1px; background: rgba(255,255,255,0.1); margin: 6px 0;"></div>
+                        <!-- Custom Input -->
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <span style="font-size: 10px; color: #888; font-family: sans-serif; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: block;">Custom Color</span>
+                            <div style="display: flex; gap: 6px; align-items: center; justify-content: space-between; width: 100%;">
+                                <input type="color" id="customColorInput" style="display: none;">
+                                <button type="button" id="customColorSwatch" title="Open Color Wheel" style="width: 26px; height: 26px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.25); cursor: pointer; padding: 0; background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); flex-shrink: 0; display: flex; align-items: center; justify-content: center;"></button>
+                                <input type="text" id="customColorText" value="#FF8C00" placeholder="#HEXCODE" style="width: 85px; background: #111; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 4px 6px; border-radius: 4px; font-size: 11px; font-family: monospace; outline: none; box-sizing: border-box; height: 26px;">
+                                <button type="button" id="btnApplyCustomColor" style="background: var(--accent); color: #000; border: none; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; cursor: pointer; height: 26px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">Apply</button>
+                            </div>
+                        </div>
+                    `;
                 }
 
-                // Prevent losing selection on click of toolbar items
+                // Prevent losing selection on click of toolbar items, EXCEPT inside text inputs
                 [btnBold, btnItalic, btnUnderline, btnColor, colorPalette].forEach(el => {
                     if (el) {
                         el.addEventListener('mousedown', function(e) {
-                            e.preventDefault();
+                            if (e.target.tagName !== 'INPUT') {
+                                e.preventDefault();
+                            }
                         });
                     }
                 });
@@ -1178,18 +1208,77 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }
                 if (btnColor) {
                     btnColor.addEventListener('click', () => {
-                        colorPalette.style.display = colorPalette.style.display === 'flex' ? 'none' : 'flex';
+                        const isHidden = colorPalette.style.display === 'none' || !colorPalette.style.display;
+                        if (isHidden) {
+                            saveSelection();
+                            colorPalette.style.display = 'flex';
+                        } else {
+                            colorPalette.style.display = 'none';
+                        }
                     });
                 }
 
+                // Preset selection handlers
                 if (colorPalette) {
-                    colorPalette.querySelectorAll('.color-palette-item').forEach(item => {
+                    colorPalette.querySelectorAll('.color-palette-preset-item').forEach(item => {
                         item.addEventListener('click', () => {
                             const color = item.getAttribute('data-color');
+                            restoreSelection();
                             document.execCommand('foreColor', false, color);
                             colorPalette.style.display = 'none';
                             triggerInputOnActiveElement();
                         });
+                    });
+                }
+
+                // Custom color inputs handlers
+                const customSwatch = document.getElementById('customColorSwatch');
+                const nativeColorInput = document.getElementById('customColorInput');
+                const customColorText = document.getElementById('customColorText');
+                const btnApplyCustomColor = document.getElementById('btnApplyCustomColor');
+
+                if (customSwatch && nativeColorInput) {
+                    customSwatch.addEventListener('click', () => {
+                        saveSelection();
+                        nativeColorInput.click();
+                    });
+
+                    nativeColorInput.addEventListener('input', (e) => {
+                        const color = e.target.value;
+                        if (customColorText) customColorText.value = color.toUpperCase();
+                        restoreSelection();
+                        document.execCommand('foreColor', false, color);
+                        triggerInputOnActiveElement();
+                    });
+                }
+
+                if (btnApplyCustomColor && customColorText) {
+                    // Save selection when user starts typing
+                    customColorText.addEventListener('focus', () => {
+                        saveSelection();
+                    });
+
+                    btnApplyCustomColor.addEventListener('click', () => {
+                        let color = customColorText.value.trim();
+                        if (!color.startsWith('#')) {
+                            color = '#' + color;
+                        }
+                        if (/^#[0-9A-F]{6}$/i.test(color) || /^#[0-9A-F]{3}$/i.test(color)) {
+                            restoreSelection();
+                            document.execCommand('foreColor', false, color);
+                            colorPalette.style.display = 'none';
+                            triggerInputOnActiveElement();
+                        } else {
+                            alert("Please enter a valid hex color code (e.g. #FF8C00)");
+                        }
+                    });
+
+                    // Support Enter key inside input
+                    customColorText.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            btnApplyCustomColor.click();
+                        }
                     });
                 }
 
