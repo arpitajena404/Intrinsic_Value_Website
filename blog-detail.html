@@ -678,10 +678,76 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             const urlParams = new URLSearchParams(window.location.search);
             const postKey = urlParams.get('post');
             const isPreview = urlParams.get('preview') === 'true';
-            if (postKey && !isPreview) {
+            if (postKey && !isPreview && window.location.pathname.includes('blog-detail')) {
                 window.location.replace('/' + encodeURIComponent(postKey));
             }
         })();
+
+        function compileBlocksToHtml(blocks) {
+            var html = '';
+            if (!blocks) return html;
+            blocks.forEach(function (block) {
+                var rawText = block.text || '';
+                var decodedText = rawText
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&quot;/g, '"')
+                    .replace(/&#039;/g, "'");
+
+                if (block.type === 'heading') {
+                    if (/<[a-z][\s\S]*>/i.test(decodedText)) {
+                        html += '<h2 class="blog-highlighted-heading">' + decodedText + '</h2>\n';
+                    } else {
+                        html += '<h2 class="blog-highlighted-heading">' + escapeHtml(decodedText) + '</h2>\n';
+                    }
+                } else if (block.type === 'paragraph') {
+                    if (/<[a-z][\s\S]*>/i.test(decodedText)) {
+                        html += '<p>' + decodedText + '</p>\n';
+                    } else {
+                        var paragraphs = decodedText.split('\n\n').filter(function (p) { return p.trim() !== ''; });
+                        paragraphs.forEach(function (p) {
+                            var formattedText = escapeHtml(p).replace(/\n/g, '<br />');
+                            formattedText = parseLinks(formattedText);
+                            html += '<p>' + formattedText + '</p>\n';
+                        });
+                    }
+                } else if (block.type === 'photo') {
+                    html += '<p><img loading="lazy" decoding="async" class="aligncenter" src="' + escapeHtml(block.url) + '" alt="" /></p>\n';
+                } else if (block.type === 'video') {
+                    var videoUrl = block.url || '';
+                    if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                        var embedUrl = getYouTubeEmbedUrl(videoUrl);
+                        html += `<p><iframe loading="lazy" width="100%" height="450" src="${escapeHtml(embedUrl)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>\n`;
+                    } else if (videoUrl) {
+                        html += `<p><video controls style="width: 100%; max-height: 500px;"><source src="${escapeHtml(videoUrl)}" type="video/mp4">Your browser does not support the video tag.</video></p>\n`;
+                    }
+                }
+            });
+            return html;
+        }
+
+        function parseLinks(text) {
+            return text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+        }
+
+        function getYouTubeEmbedUrl(url) {
+            var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            var match = url.match(regExp);
+            if (match && match[2].length == 11) {
+                return "https://www.youtube.com/embed/" + match[2];
+            }
+            return url;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
 
         document.addEventListener("DOMContentLoaded", function () {
             // Get URL Query Parameter (?post=post-id) or Path Slug (/<slug>)
@@ -1016,65 +1082,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     window.parent.postMessage({ type: 'trigger_file_upload', targetId: 'blog-edit-image' }, '*');
                 };
 
-                function compileBlocksToHtml(blocks) {
-                    var html = '';
-                    if (!blocks) return html;
-                    blocks.forEach(function (block) {
-                        if (block.type === 'heading') {
-                            if (block.text && /<[a-z][\s\S]*>/i.test(block.text)) {
-                                html += '<h2 class="blog-highlighted-heading">' + block.text + '</h2>\n';
-                            } else {
-                                html += '<h2 class="blog-highlighted-heading">' + escapeHtml(block.text || '') + '</h2>\n';
-                            }
-                        } else if (block.type === 'paragraph') {
-                            if (block.text && /<[a-z][\s\S]*>/i.test(block.text)) {
-                                html += '<p>' + block.text + '</p>\n';
-                            } else {
-                                var paragraphs = (block.text || '').split('\n\n').filter(function (p) { return p.trim() !== ''; });
-                                paragraphs.forEach(function (p) {
-                                    var formattedText = escapeHtml(p).replace(/\n/g, '<br />');
-                                    formattedText = parseLinks(formattedText);
-                                    html += '<p>' + formattedText + '</p>\n';
-                                });
-                            }
-                        } else if (block.type === 'photo') {
-                            html += '<p><img loading="lazy" decoding="async" class="aligncenter" src="' + escapeHtml(block.url) + '" alt="" /></p>\n';
-                        } else if (block.type === 'video') {
-                            var videoUrl = block.url || '';
-                            if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
-                                var embedUrl = getYouTubeEmbedUrl(videoUrl);
-                                html += `<p><iframe loading="lazy" width="100%" height="450" src="${escapeHtml(embedUrl)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>\n`;
-                            } else if (videoUrl) {
-                                html += `<p><video controls style="width: 100%; max-height: 500px;"><source src="${escapeHtml(videoUrl)}" type="video/mp4">Your browser does not support the video tag.</video></p>\n`;
-                            }
-                        }
-                    });
-                    return html;
-                }
-
-                function parseLinks(text) {
-                    return text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-                }
-
-                function getYouTubeEmbedUrl(url) {
-                    var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-                    var match = url.match(regExp);
-                    if (match && match[2].length == 11) {
-                        return "https://www.youtube.com/embed/" + match[2];
-                    }
-                    return url;
-                }
-
-                function escapeHtml(text) {
-                    if (!text) return '';
-                    return text.toString()
-                        .replace(/&/g, "&amp;")
-                        .replace(/</g, "&lt;")
-                        .replace(/>/g, "&gt;")
-                        .replace(/"/g, "&quot;")
-                        .replace(/'/g, "&#039;");
-                }
-                
                 function syncStateToParent() {
                     currentPost.content = compileBlocksToHtml(currentPost.blocks);
                     localStorage.setItem('preview_blog_data', JSON.stringify(currentPost));
@@ -1139,7 +1146,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 });
                 
                 titleEl.addEventListener('input', function() {
-                    currentPost.title = titleEl.innerHTML.trim();
+                    currentPost.title = (titleEl.innerText || titleEl.textContent || '').trim();
                     syncStateToParent();
                 });
                 dateEl.addEventListener('input', function() {
@@ -1409,11 +1416,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 return;
             }
 
-            // Fetch blogs.json
-            fetch('blogs.json')
-                .then(response => response.json())
+            // Fetch /blogs.json from root path
+            fetch('/blogs.json')
+                .then(response => {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .catch(() => {
+                    if (typeof BLOGS_DATA !== 'undefined' && Array.isArray(BLOGS_DATA)) {
+                        return BLOGS_DATA;
+                    }
+                    throw new Error('Unable to load blogs');
+                })
                 .then(blogs => {
-                    // Helper to fully decode URI components recursively (handles double/triple URL encoding robustly)
+                    // Helper to fully decode URI components recursively
                     function fullyDecode(str) {
                         let last = '';
                         let current = str || '';
@@ -1428,8 +1444,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         return current;
                     }
 
-                    const targetKeyDecoded = fullyDecode(postKey);
-                    const post = blogs.find(b => fullyDecode(b.slug) === targetKeyDecoded);
+                    const targetKeyDecoded = fullyDecode(postKey).trim().toLowerCase();
+                    const post = blogs.find(b => b && b.slug && fullyDecode(b.slug).trim().toLowerCase() === targetKeyDecoded);
 
                     if (post) {
                         // Set document title
@@ -1490,8 +1506,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         }
 
                         // Set rendered HTML content
-                        // Render video embeds or markdown links if stored in raw content
-                        contentEl.innerHTML = post.content;
+                        if (post.blocks && post.blocks.length > 0) {
+                            contentEl.innerHTML = compileBlocksToHtml(post.blocks);
+                        } else if (post.content) {
+                            var cleanContent = post.content
+                                .replace(/&lt;/g, '<')
+                                .replace(/&gt;/g, '>')
+                                .replace(/&quot;/g, '"')
+                                .replace(/&#039;/g, "'");
+                            contentEl.innerHTML = cleanContent;
+                        }
                     } else {
                         showNotFound();
                     }

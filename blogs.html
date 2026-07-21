@@ -387,8 +387,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             const previewQuery = isPreview ? '&preview=true' : '';
 
             blogGrid.innerHTML = filtered.map(blog => {
+                const cleanTitle = (blog.title || '').replace(/<[^>]*>/g, '');
                 const thumbHtml = blog.image 
-                    ? `<img src="${blog.image}" alt="${blog.title}" class="blog-thumb" loading="lazy">`
+                    ? `<img src="${blog.image}" alt="${cleanTitle}" class="blog-thumb" loading="lazy">`
                     : `<div style="width: 100%; height: 100%; background: ${blog.gradient}; opacity: 0.85;" class="blog-thumb"></div>`;
 
                 const postUrl = isPreview 
@@ -406,7 +407,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <time datetime="${blog.rawDate || ''}">${blog.date}</time>
                             </div>
                             <h2 class="blog-card-title">
-                                <a href="${postUrl}">${blog.title}</a>
+                                <a href="${postUrl}">${cleanTitle}</a>
                             </h2>
                             <p class="blog-card-excerpt">
                                 ${blog.excerpt}

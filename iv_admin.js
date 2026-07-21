@@ -4290,17 +4290,24 @@
         var html = '';
         if (!blocks) return html;
         blocks.forEach(function (block) {
+            var rawText = block.text || '';
+            var decodedText = rawText
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&#039;/g, "'");
+
             if (block.type === 'heading') {
-                if (block.text && /<[a-z][\s\S]*>/i.test(block.text)) {
-                    html += '<h2 class="blog-highlighted-heading">' + block.text + '</h2>\n';
+                if (/<[a-z][\s\S]*>/i.test(decodedText)) {
+                    html += '<h2 class="blog-highlighted-heading">' + decodedText + '</h2>\n';
                 } else {
-                    html += '<h2 class="blog-highlighted-heading">' + escapeHtml(block.text || '') + '</h2>\n';
+                    html += '<h2 class="blog-highlighted-heading">' + escapeHtml(decodedText) + '</h2>\n';
                 }
             } else if (block.type === 'paragraph') {
-                if (block.text && /<[a-z][\s\S]*>/i.test(block.text)) {
-                    html += '<p>' + block.text + '</p>\n';
+                if (/<[a-z][\s\S]*>/i.test(decodedText)) {
+                    html += '<p>' + decodedText + '</p>\n';
                 } else {
-                    var paragraphs = (block.text || '').split('\n\n').filter(function (p) { return p.trim() !== ''; });
+                    var paragraphs = decodedText.split('\n\n').filter(function (p) { return p.trim() !== ''; });
                     paragraphs.forEach(function (p) {
                         var formattedText = escapeHtml(p).replace(/\n/g, '<br />');
                         formattedText = formattedText.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
