@@ -165,7 +165,7 @@
     else if (path.indexOf("monthly-market-analysis") >= 0) activeView = "monthly-analysis";
     else if (path.indexOf("earnings-trends") >= 0) activeView = "earnings-trends";
     else if (path.indexOf("market-valuation-index") >= 0) activeView = "valuation";
-    else if (path.indexOf("headwind-tailwind-indicator") >= 0) activeView = "headwind";
+    else if (path.indexOf("upcycle-downcycle") >= 0 || path.indexOf("headwind-tailwind-indicator") >= 0) activeView = "headwind";
     else if (path.indexOf("portfolio-review-tool") >= 0) activeView = "portfolio";
     else if (path.indexOf("ranking-tool") >= 0) activeView = "ranking";
     else if (path.indexOf("turnaround") >= 0) activeView = "turnaround";
@@ -234,7 +234,7 @@
           { view: "monthly-analysis", label: "Market Pulse", icon: "◌", path: "/monthly-market-analysis" },
           { view: "earnings-trends", label: "Earnings Trends", icon: "\u22bf", path: "/earnings-trends" },
           { view: "valuation", label: "Market Valuation Tracker", icon: "∑", path: "/market-valuation-index" },
-          { view: "headwind", label: "Upcycle / Downcycle Indicator", icon: "⇄", path: "/headwind-tailwind-indicator" }
+          { view: "headwind", label: "Upcycle / Downcycle Indicator", icon: "⇄", path: "/upcycle-downcycle" }
         ]
       },
       {

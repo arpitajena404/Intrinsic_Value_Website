@@ -154,6 +154,10 @@
       "destination": "/analytics/frontend/pages/market-valuation-index"
     },
     {
+      "source": "/analytics/upcycle-downcycle",
+      "destination": "/analytics/frontend/pages/headwind-tailwind-indicator"
+    },
+    {
       "source": "/analytics/headwind-tailwind-indicator",
       "destination": "/analytics/frontend/pages/headwind-tailwind-indicator"
     },

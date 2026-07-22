@@ -17,6 +17,8 @@
           filename = "ranking-tool.html";
         } else if (view === "monthly-analysis") {
           filename = "monthly-market-analysis.html";
+        } else if (view === "upcycle-downcycle" || view === "headwind-tailwind-indicator") {
+          filename = "/analytics/upcycle-downcycle";
         }
 
         window.location.href = filename;

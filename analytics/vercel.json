@@ -44,6 +44,10 @@
       "dest": "frontend/pages/market-valuation-index"
     },
     {
+      "src": "/upcycle-downcycle",
+      "dest": "frontend/pages/headwind-tailwind-indicator"
+    },
+    {
       "src": "/headwind-tailwind-indicator",
       "dest": "frontend/pages/headwind-tailwind-indicator"
     },
