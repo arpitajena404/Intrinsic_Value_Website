@@ -59,15 +59,15 @@
     },
     {
       "source": "/vsl/",
-      "destination": "/vsl/lp.intrinsicvalueequity.in/vsl/index.html"
+      "destination": "/vsl/index.html"
     },
     {
       "source": "/vsl/admin",
-      "destination": "/vsl/lp.intrinsicvalueequity.in/vsl/admin.html"
+      "destination": "/vsl/admin.html"
     },
     {
       "source": "/vsl/vsl_config.js",
-      "destination": "/vsl/lp.intrinsicvalueequity.in/vsl/vsl_config.js"
+      "destination": "/vsl/vsl_config.js"
     },
     {
       "source": "/connect.facebook.net/:path*",

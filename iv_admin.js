@@ -1410,8 +1410,12 @@
 
     function populateLiveForms() {
         if (!liveCmsState) return;
+        if (document.getElementById('cmsLiveIndexTitle')) document.getElementById('cmsLiveIndexTitle').value = liveCmsState.indexHeroTitle || '';
+        if (document.getElementById('cmsLiveIndexSubtitle')) document.getElementById('cmsLiveIndexSubtitle').value = liveCmsState.indexHeroSubtitle || '';
         document.getElementById('cmsLiveIndexRedirect').value = liveCmsState.indexRedirectUrl || '';
+        if (document.getElementById('cmsLiveVslHeading')) document.getElementById('cmsLiveVslHeading').value = liveCmsState.vslHeading || '';
         document.getElementById('cmsLiveVslCheckout').value = liveCmsState.vslCheckoutUrl || '';
+        if (document.getElementById('cmsLiveTyHeading')) document.getElementById('cmsLiveTyHeading').value = liveCmsState.tyHeading || '';
         document.getElementById('cmsLiveTyWhatsApp').value = liveCmsState.tyWhatsAppUrl || '';
     }
 
@@ -1582,8 +1586,12 @@
     }
 
     function compileLiveCmsState() {
+        if (document.getElementById('cmsLiveIndexTitle')) liveCmsState.indexHeroTitle = document.getElementById('cmsLiveIndexTitle').value.trim();
+        if (document.getElementById('cmsLiveIndexSubtitle')) liveCmsState.indexHeroSubtitle = document.getElementById('cmsLiveIndexSubtitle').value.trim();
         liveCmsState.indexRedirectUrl = document.getElementById('cmsLiveIndexRedirect').value.trim();
+        if (document.getElementById('cmsLiveVslHeading')) liveCmsState.vslHeading = document.getElementById('cmsLiveVslHeading').value.trim();
         liveCmsState.vslCheckoutUrl = document.getElementById('cmsLiveVslCheckout').value.trim();
+        if (document.getElementById('cmsLiveTyHeading')) liveCmsState.tyHeading = document.getElementById('cmsLiveTyHeading').value.trim();
         liveCmsState.tyWhatsAppUrl = document.getElementById('cmsLiveTyWhatsApp').value.trim();
 
         var jsonText = JSON.stringify(liveCmsState, null, 4);
@@ -3557,7 +3565,7 @@
             var pendingVsl = localStorage.getItem('pending_vsl_config');
             if (pendingVsl) {
                 var vslContentStr = "var VSL_CONFIG = " + JSON.stringify(JSON.parse(pendingVsl), null, 4) + ";\n";
-                filesToCommit.push({ path: 'vsl/lp.intrinsicvalueequity.in/vsl/vsl_config.js', content: vslContentStr, encoding: 'utf-8' });
+                filesToCommit.push({ path: 'vsl/vsl_config.js', content: vslContentStr, encoding: 'utf-8' });
             }
             var pendingWorkshop = localStorage.getItem('pending_workshop_config');
             if (pendingWorkshop) {

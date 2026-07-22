@@ -821,6 +821,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             
             <!-- Left Side Input Configuration Form -->
             <aside class="config-editor-panel">
+                <h4 class="panel-section-title">Hero & Main Headlines</h4>
+                
+                <div class="input-group">
+                    <label for="inputHeroTitle">Main Hero Title</label>
+                    <div class="input-control-wrapper">
+                        <input type="text" id="inputHeroTitle" placeholder="Webinar Title">
+                        <button class="edit-btn" onclick="openEditModal('heroTitle', 'Main Hero Title', liveCmsState.heroTitle)"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="inputHeroSubtitle">Hero Subtitle</label>
+                    <div class="input-control-wrapper">
+                        <input type="text" id="inputHeroSubtitle" placeholder="Webinar Subtitle">
+                        <button class="edit-btn" onclick="openEditModal('heroSubtitle', 'Hero Subtitle', liveCmsState.heroSubtitle)"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="inputCtaBtnText">CTA Button Text</label>
+                    <div class="input-control-wrapper">
+                        <input type="text" id="inputCtaBtnText" placeholder="Button Text">
+                        <button class="edit-btn" onclick="openEditModal('ctaBtnText', 'CTA Button Text', liveCmsState.ctaBtnText)"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="inputSpeakerName">Speaker Name</label>
+                    <div class="input-control-wrapper">
+                        <input type="text" id="inputSpeakerName" placeholder="Speaker Name">
+                        <button class="edit-btn" onclick="openEditModal('speakerName', 'Speaker Name', liveCmsState.speakerName)"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </div>
+                </div>
+
                 <h4 class="panel-section-title">Date & Countdown</h4>
                 
                 <!-- Countdown Target Picker -->
@@ -1220,6 +1254,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
 
         function syncInputsFromState() {
+            if (document.getElementById('inputHeroTitle')) document.getElementById('inputHeroTitle').value = liveCmsState.heroTitle || '';
+            if (document.getElementById('inputHeroSubtitle')) document.getElementById('inputHeroSubtitle').value = liveCmsState.heroSubtitle || '';
+            if (document.getElementById('inputCtaBtnText')) document.getElementById('inputCtaBtnText').value = liveCmsState.ctaBtnText || '';
+            if (document.getElementById('inputSpeakerName')) document.getElementById('inputSpeakerName').value = liveCmsState.speakerName || '';
+
             document.getElementById('inputDateText').value = liveCmsState.workshopDateText || '';
             document.getElementById('inputExperience').value = liveCmsState.experienceText || '';
             document.getElementById('inputCapacity').value = liveCmsState.workshopCapacity || '';

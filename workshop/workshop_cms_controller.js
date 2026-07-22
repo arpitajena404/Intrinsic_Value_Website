@@ -1,5 +1,4 @@
 (function() {
-    // 1. Normalize URLs
     function normalizeUrl(url) {
         if (!url) return '';
         url = url.trim();
@@ -9,56 +8,111 @@
         return 'https://' + url;
     }
 
-    // 2. Load configuration variables
-    var config = (typeof WORKSHOP_CONFIG !== 'undefined') ? WORKSHOP_CONFIG : {
-        workshopDateText: "5th April, Sunday | 11:00 AM",
-        countdownTarget: "2026-04-05T11:00:00",
-        checkoutUrl: "https://premium.intrinsicvalueequity.in/checkout/bc918fe9-de4a-4bc3-8fe4-cb7261a52903/",
-        youtubeVideo1: "https://www.youtube.com/watch?v=lXyYY8I9e44",
-        youtubeVideo2: "https://www.youtube.com/watch?v=knvVbwdm0TE",
-        youtubeVideo3: "https://www.youtube.com/watch?v=yu7KYacrV80",
-        workshopCapacity: "Workshop capacity 50",
-        seatsLeft: "Only 23 seats left.",
-        box1Text: "3 Hour total",
-        box2Text: "On Zoom",
-        box3Text: "Actionable Workshop",
-        box4Text: "100% Practical Strategy",
-        box5Text: "Language: English",
-        experienceText: "11+ years of experience"
-    };
+    // Ensure testimonial carousel & video embeds are always visible
+    function fixTestimonialsLayout() {
+        var styleId = 'cms-testimonials-layout-fix';
+        if (!document.getElementById(styleId)) {
+            var style = document.createElement('style');
+            style.id = styleId;
+            style.innerHTML = `
+                .e-n-carousel .swiper-wrapper {
+                    display: flex !important;
+                    flex-wrap: wrap !important;
+                    gap: 24px !important;
+                    justify-content: center !important;
+                    opacity: 1 !important;
+                    visibility: visible !important;
+                    height: auto !important;
+                    transform: none !important;
+                }
+                .e-n-carousel .swiper-slide {
+                    flex: 1 1 320px !important;
+                    max-width: 380px !important;
+                    width: 100% !important;
+                    opacity: 1 !important;
+                    visibility: visible !important;
+                    margin-right: 0 !important;
+                    display: block !important;
+                }
+                .elementor-widget-video .elementor-wrapper {
+                    position: relative !important;
+                    width: 100% !important;
+                    padding-bottom: 56.25% !important;
+                    height: 0 !important;
+                    border-radius: 12px !important;
+                    overflow: hidden !important;
+                    box-shadow: 0 8px 24px rgba(0,0,0,0.3) !important;
+                    background: #000 !important;
+                }
+                .elementor-widget-video iframe {
+                    position: absolute !important;
+                    top: 0 !important;
+                    left: 0 !important;
+                    width: 100% !important;
+                    height: 100% !important;
+                    border: none !important;
+                    border-radius: 12px !important;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+
+    fixTestimonialsLayout();
+
+    var config = (typeof WORKSHOP_CONFIG !== 'undefined') ? WORKSHOP_CONFIG : {};
 
     var isEditMode = false;
     var countdownInterval = null;
 
-    // Disable Elementor's default video widget initialization to prevent "Error 153"
     document.querySelectorAll('.elementor-widget-video').forEach(function(el) {
         el.setAttribute('data-widget_type', 'video.custom');
     });
 
-    // Helper to get YouTube ID
     function getYouTubeId(url) {
         if (!url) return '';
-        var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-        var match = url.match(regExp);
-        return (match && match[2].length == 11) ? match[2] : url;
+        var m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+        if (m && m[1]) return m[1];
+        if (url.length === 11) return url;
+        return '';
     }
 
-    // Dynamic Video Loader
     function loadVideo(selector, url) {
         var container = document.querySelector(selector);
         if (!container) return;
         var videoId = getYouTubeId(url);
-        if (!videoId) {
-            container.innerHTML = '<div style="color:white;text-align:center;padding:20px;background:#000;">No video URL configured</div>';
-            return;
+        if (!videoId) return;
+
+        var wrapper = container.closest('.elementor-wrapper') || container.parentElement;
+        if (wrapper) {
+            wrapper.style.position = 'relative';
+            wrapper.style.paddingBottom = '56.25%';
+            wrapper.style.height = '0';
+            wrapper.style.overflow = 'hidden';
+            wrapper.style.borderRadius = '14px';
+            wrapper.style.minHeight = '200px';
+            wrapper.style.boxShadow = '0 10px 30px rgba(0,0,0,0.4)';
+            wrapper.style.background = '#0d1e3d';
         }
-        container.style.position = 'relative';
+
+        container.style.position = 'absolute';
+        container.style.top = '0';
+        container.style.left = '0';
+        container.style.width = '100%';
+        container.style.height = '100%';
+
+        var thumbnailUrl = 'https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg';
+
         container.innerHTML = `
-            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>
+            <div class="yt-play-card" style="position:absolute;top:0;left:0;width:100%;height:100%;background:url('${thumbnailUrl}') center/cover no-repeat;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:14px;overflow:hidden;">
+                <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);transition:background 0.3s ease;"></div>
+                <div class="yt-play-btn" style="width:68px;height:48px;background:#ff0000;border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;box-shadow:0 6px 20px rgba(255,0,0,0.4);transition:transform 0.2s ease;">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="#ffffff"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+            </div>
             ${isEditMode ? '<div class="cms-video-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:999;background:transparent;cursor:pointer;"></div>' : ''}
         `;
 
-        // If in edit mode, bind click on overlay
         if (isEditMode) {
             var overlay = container.querySelector('.cms-video-overlay');
             if (overlay) {
@@ -72,23 +126,24 @@
                     };
                     var widget = container.closest('.elementor-widget-video');
                     var key = widget ? keyMap[widget.dataset.id] : 'youtubeVideo1';
-                    var labels = {
-                        'youtubeVideo1': 'YouTube Testimonial Video 1 Link',
-                        'youtubeVideo2': 'YouTube Testimonial Video 2 Link',
-                        'youtubeVideo3': 'YouTube Testimonial Video 3 Link'
-                    };
                     window.parent.postMessage({
                         type: 'request_edit',
                         key: key,
-                        label: labels[key] || 'YouTube Video link',
+                        label: 'YouTube Testimonial Video Link',
                         currentVal: config[key]
                     }, '*');
+                };
+            }
+        } else {
+            var playCard = container.querySelector('.yt-play-card');
+            if (playCard) {
+                playCard.onclick = function() {
+                    container.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:14px;"></iframe>`;
                 };
             }
         }
     }
 
-    // High accuracy countdown timer
     function startCountdown(targetStr) {
         if (countdownInterval) clearInterval(countdownInterval);
         var daysEl = document.querySelector('[data-id="4a936b93"] .elementor-countdown-days');
@@ -100,9 +155,7 @@
             var target = new Date(targetStr).getTime();
             var now = new Date().getTime();
             var diff = target - now;
-            if (isNaN(diff) || diff < 0) {
-                diff = 0;
-            }
+            if (isNaN(diff) || diff < 0) diff = 0;
 
             var days = Math.floor(diff / (1000 * 60 * 60 * 24));
             var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -119,48 +172,62 @@
         countdownInterval = setInterval(update, 1000);
     }
 
-    // Apply values to elements
+    var selectorKeyMap = [
+        { selector: '[data-id="574bc8de"] .elementor-heading-title', key: 'heroTitle', label: 'Main Hero Title' },
+        { selector: '[data-id="64d09b09"] .elementor-heading-title', key: 'heroSubtitle', label: 'Hero Subtitle' },
+        { selector: '[data-id="582ba74c"] .elementor-heading-title', key: 'ctaBtnText', label: 'CTA Button Text' },
+        { selector: '[data-id="66a3865f"] .elementor-heading-title', key: 'workshopDateText', label: 'Workshop Date/Time' },
+        { selector: '[data-id="35052769"] .elementor-heading-title', key: 'workshopCapacity', label: 'Capacity Text' },
+        { selector: '[data-id="e17480d"] .elementor-heading-title', key: 'seatsLeft', label: 'Seats Left Text' },
+        { selector: '[data-id="484c3d5d"] .elementor-heading-title', key: 'box1Text', label: 'Info Box 1' },
+        { selector: '[data-id="a934439"] .elementor-heading-title', key: 'box2Text', label: 'Info Box 2' },
+        { selector: '[data-id="78ed9475"] .elementor-heading-title', key: 'box3Text', label: 'Info Box 3' },
+        { selector: '[data-id="21b75917"] .elementor-heading-title', key: 'box4Text', label: 'Info Box 4' },
+        { selector: '[data-id="76775251"] .elementor-heading-title', key: 'box5Text', label: 'Info Box 5' },
+        { selector: '[data-id="6edc5d01"] .elementor-heading-title', key: 'speakerName', label: 'Speaker Name' },
+        { selector: '[data-id="64559210"] .elementor-heading-title', key: 'mediaHeading', label: 'Featured Media Heading' },
+        
+        { selector: '[data-id="5a23408b"] .elementor-heading-title', key: 'nodSectionTitle', label: 'Nod Section Title' },
+        { selector: '[data-id="7f2b21dc"] .elementor-heading-title', key: 'nodItem1', label: 'Nod Point 1' },
+        { selector: '[data-id="7cd0c17e"] .elementor-heading-title', key: 'nodItem2', label: 'Nod Point 2' },
+        { selector: '[data-id="a8e3eb0"] .elementor-heading-title', key: 'nodItem3', label: 'Nod Point 3' },
+        { selector: '[data-id="68c8a5aa"] .elementor-heading-title', key: 'nodItem4', label: 'Nod Point 4' },
+        { selector: '[data-id="5162048c"] .elementor-heading-title', key: 'nodItem5', label: 'Nod Point 5' },
+        { selector: '[data-id="a7eff93"] .elementor-heading-title', key: 'nodItem6', label: 'Nod Point 6' },
+        { selector: '[data-id="552d6c31"] .elementor-heading-title', key: 'nodItem7', label: 'Nod Point 7' },
+        { selector: '[data-id="3e66c17"] .elementor-heading-title', key: 'nodItem8', label: 'Nod Point 8' },
+        { selector: '[data-id="5a372a11"] .elementor-heading-title', key: 'nodItem9', label: 'Nod Point 9' },
+        { selector: '[data-id="63674a90"] .elementor-heading-title', key: 'nodItem10', label: 'Nod Point 10' },
+        { selector: '[data-id="73d2a7c0"] .elementor-heading-title', key: 'nodTagline', label: 'Nod Section Tagline' },
+        { selector: '[data-id="3386c69f"] .elementor-heading-title', key: 'nodCtaTitle', label: 'Register CTA Title' },
+
+        { selector: '[data-id="62b2d9ec"] .elementor-heading-title', key: 'wantSectionTitle', label: 'Want Section Title' },
+        { selector: '[data-id="54c79bb2"] .elementor-heading-title', key: 'wantItem1', label: 'Want Point 1' },
+        { selector: '[data-id="a8320b5"] .elementor-heading-title', key: 'wantItem2', label: 'Want Point 2' },
+        { selector: '[data-id="7dde02e2"] .elementor-heading-title', key: 'wantItem3', label: 'Want Point 3' }
+    ];
+
     function applyConfig() {
-        // Apply texts
-        var dateEl = document.querySelector('[data-id="66a3865f"] .elementor-heading-title');
-        if (dateEl) dateEl.innerText = config.workshopDateText;
+        selectorKeyMap.forEach(function(item) {
+            var val = config[item.key];
+            if (val !== undefined && val !== null && val !== '') {
+                var el = document.querySelector(item.selector);
+                if (el) el.innerHTML = val;
+            }
+        });
 
-        var capEl = document.querySelector('[data-id="35052769"] .elementor-heading-title');
-        if (capEl) capEl.innerText = config.workshopCapacity;
-
-        var seatsEl = document.querySelector('[data-id="e17480d"] .elementor-heading-title');
-        if (seatsEl) seatsEl.innerText = config.seatsLeft;
-
-        // Apply box texts
-        var box1 = document.querySelector('[data-id="484c3d5d"] .elementor-heading-title');
-        if (box1) box1.innerText = config.box1Text;
-
-        var box2 = document.querySelector('[data-id="a934439"] .elementor-heading-title');
-        if (box2) box2.innerText = config.box2Text;
-
-        var box3 = document.querySelector('[data-id="78ed9475"] .elementor-heading-title');
-        if (box3) box3.innerText = config.box3Text;
-
-        var box4 = document.querySelector('[data-id="21b75917"] .elementor-heading-title');
-        if (box4) box4.innerText = config.box4Text;
-
-        var box5 = document.querySelector('[data-id="76775251"] .elementor-heading-title');
-        if (box5) box5.innerText = config.box5Text;
-
-        // Apply experience texts
+        // Experience texts
         var expEl1 = document.querySelector('[data-id="f7132d0"] .elementor-icon-list-item:nth-child(2) .elementor-icon-list-text');
-        if (expEl1) expEl1.innerText = config.experienceText || "11+ years of experience";
+        if (expEl1) expEl1.innerText = config.experienceText || "13+ years of experience";
 
         var expEl2 = document.querySelector('[data-id="6c71720d"] .elementor-icon-list-text');
-        if (expEl2) expEl2.innerText = config.experienceText || "11+ years of experience";
+        if (expEl2) expEl2.innerText = config.experienceText || "13+ years of experience";
 
-        // Load YouTube videos
         loadVideo('[data-id="84a0e89"] .elementor-video', config.youtubeVideo1);
         loadVideo('[data-id="20f4b2e"] .elementor-video', config.youtubeVideo2);
         loadVideo('[data-id="5e58f49"] .elementor-video', config.youtubeVideo3);
     }
 
-    // 3. Intercept clicks during capture phase to bypass popup
     window.addEventListener('click', function(e) {
         var target = e.target;
         var isButton = false;
@@ -188,11 +255,9 @@
         }
     }, true);
 
-    // Initial setup
     applyConfig();
     startCountdown(config.countdownTarget);
 
-    // 4. CMS Visual Editor Integration
     window.addEventListener('message', function(event) {
         var msg = event.data;
         if (!msg) return;
@@ -217,12 +282,10 @@
         }
     });
 
-    // Notify parent admin frame that index.html is ready
     if (window.self !== window.top) {
         window.parent.postMessage({ type: 'iframe_ready', page: 'index.html' }, '*');
     }
 
-    // Manage highlights
     function updateVisuals() {
         var existingStyle = document.getElementById('cms-injected-styles');
         if (isEditMode) {
@@ -235,7 +298,6 @@
                         outline-offset: 4px !important;
                         box-shadow: 0 0 20px rgba(230, 181, 61, 0.7) !important;
                         cursor: pointer !important;
-                        position: relative !important;
                         transition: all 0.2s ease !important;
                     }
                     .cms-editable-highlight:hover {
@@ -246,231 +308,53 @@
                 document.head.appendChild(style);
             }
 
-            // Bind click & highlight for Date & Time Text
-            var dateWidget = document.querySelector('[data-id="66a3865f"]');
-            if (dateWidget) {
-                dateWidget.classList.add('cms-editable-highlight');
-                dateWidget.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.parent.postMessage({
-                        type: 'request_edit',
-                        key: 'workshopDateText',
-                        label: 'Date & Time Text',
-                        currentVal: config.workshopDateText
-                    }, '*');
-                };
-            }
-
-            // Bind click & highlight for Workshop Capacity Text
-            var capWidget = document.querySelector('[data-id="35052769"]');
-            if (capWidget) {
-                capWidget.classList.add('cms-editable-highlight');
-                capWidget.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.parent.postMessage({
-                        type: 'request_edit',
-                        key: 'workshopCapacity',
-                        label: 'Workshop Capacity Text',
-                        currentVal: config.workshopCapacity
-                    }, '*');
-                };
-            }
-
-            // Bind click & highlight for Seats Left Text
-            var seatsWidget = document.querySelector('[data-id="e17480d"]');
-            if (seatsWidget) {
-                seatsWidget.classList.add('cms-editable-highlight');
-                seatsWidget.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.parent.postMessage({
-                        type: 'request_edit',
-                        key: 'seatsLeft',
-                        label: 'Seats Left Text',
-                        currentVal: config.seatsLeft
-                    }, '*');
-                };
-            }
-
-            // Bind click & highlight for Countdown
-            var countdownWidget = document.querySelector('[data-id="4a936b93"]');
-            if (countdownWidget) {
-                countdownWidget.classList.add('cms-editable-highlight');
-                countdownWidget.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.parent.postMessage({
-                        type: 'request_edit',
-                        key: 'countdownTarget',
-                        label: 'Countdown Target Date/Time',
-                        currentVal: config.countdownTarget
-                    }, '*');
-                };
-            }
-
-            // Bind click & highlight for Box 1
-            var box1Widget = document.querySelector('[data-id="484c3d5d"]');
-            if (box1Widget) {
-                box1Widget.classList.add('cms-editable-highlight');
-                box1Widget.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.parent.postMessage({
-                        type: 'request_edit',
-                        key: 'box1Text',
-                        label: 'Workshop Info Box 1 Text',
-                        currentVal: config.box1Text
-                    }, '*');
-                };
-            }
-
-            // Bind click & highlight for Box 2
-            var box2Widget = document.querySelector('[data-id="a934439"]');
-            if (box2Widget) {
-                box2Widget.classList.add('cms-editable-highlight');
-                box2Widget.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.parent.postMessage({
-                        type: 'request_edit',
-                        key: 'box2Text',
-                        label: 'Workshop Info Box 2 Text',
-                        currentVal: config.box2Text
-                    }, '*');
-                };
-            }
-
-            // Bind click & highlight for Box 3
-            var box3Widget = document.querySelector('[data-id="78ed9475"]');
-            if (box3Widget) {
-                box3Widget.classList.add('cms-editable-highlight');
-                box3Widget.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.parent.postMessage({
-                        type: 'request_edit',
-                        key: 'box3Text',
-                        label: 'Workshop Info Box 3 Text',
-                        currentVal: config.box3Text
-                    }, '*');
-                };
-            }
-
-            // Bind click & highlight for Box 4
-            var box4Widget = document.querySelector('[data-id="21b75917"]');
-            if (box4Widget) {
-                box4Widget.classList.add('cms-editable-highlight');
-                box4Widget.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.parent.postMessage({
-                        type: 'request_edit',
-                        key: 'box4Text',
-                        label: 'Workshop Info Box 4 Text',
-                        currentVal: config.box4Text
-                    }, '*');
-                };
-            }
-
-            // Bind click & highlight for Box 5
-            var box5Widget = document.querySelector('[data-id="76775251"]');
-            if (box5Widget) {
-                box5Widget.classList.add('cms-editable-highlight');
-                box5Widget.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.parent.postMessage({
-                        type: 'request_edit',
-                        key: 'box5Text',
-                        label: 'Workshop Info Box 5 Text',
-                        currentVal: config.box5Text
-                    }, '*');
-                };
-            }
-
-            // Bind click & highlight for Experience Text
-            var expEl1 = document.querySelector('[data-id="f7132d0"] .elementor-icon-list-item:nth-child(2)');
-            if (expEl1) {
-                expEl1.classList.add('cms-editable-highlight');
-                expEl1.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.parent.postMessage({
-                        type: 'request_edit',
-                        key: 'experienceText',
-                        label: 'Years of Experience Text',
-                        currentVal: config.experienceText || "11+ years of experience"
-                    }, '*');
-                };
-            }
-
-            var expEl2 = document.querySelector('[data-id="6c71720d"]');
-            if (expEl2) {
-                expEl2.classList.add('cms-editable-highlight');
-                expEl2.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.parent.postMessage({
-                        type: 'request_edit',
-                        key: 'experienceText',
-                        label: 'Years of Experience Text',
-                        currentVal: config.experienceText || "11+ years of experience"
-                    }, '*');
-                };
-            }
-
-            // Highlight Youtube Videos
-            var vid1 = document.querySelector('[data-id="84a0e89"]');
-            if (vid1) vid1.classList.add('cms-editable-highlight');
-            var vid2 = document.querySelector('[data-id="20f4b2e"]');
-            if (vid2) vid2.classList.add('cms-editable-highlight');
-            var vid3 = document.querySelector('[data-id="5e58f49"]');
-            if (vid3) vid3.classList.add('cms-editable-highlight');
-
-            // Highlight Registration buttons
-            var buttons = document.querySelectorAll('a.btn, a[href*="popup%3Aopen"]');
-            buttons.forEach(function(btn) {
-                btn.classList.add('cms-editable-highlight');
-            });
-
-            // Re-apply video embeds with overlays
-            applyConfig();
-
-         } else {
-            if (existingStyle) existingStyle.remove();
-            
-            var targets = [
-                '[data-id="66a3865f"]',
-                '[data-id="35052769"]',
-                '[data-id="e17480d"]',
-                '[data-id="4a936b93"]',
-                '[data-id="484c3d5d"]',
-                '[data-id="a934439"]',
-                '[data-id="78ed9475"]',
-                '[data-id="21b75917"]',
-                '[data-id="76775251"]',
-                '[data-id="84a0e89"]',
-                '[data-id="20f4b2e"]',
-                '[data-id="5e58f49"]',
-                '[data-id="f7132d0"] .elementor-icon-list-item:nth-child(2)',
-                '[data-id="6c71720d"]'
-            ];
-            targets.forEach(function(sel) {
-                var el = document.querySelector(sel);
+            // Bind mapped elements
+            selectorKeyMap.forEach(function(item) {
+                var el = document.querySelector(item.selector);
                 if (el) {
-                    el.classList.remove('cms-editable-highlight');
-                    el.onclick = null;
+                    el.classList.add('cms-editable-highlight');
+                    el.onclick = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.parent.postMessage({
+                            type: 'request_edit',
+                            key: item.key,
+                            label: item.label,
+                            currentVal: config[item.key] || el.innerHTML.trim()
+                        }, '*');
+                    };
                 }
             });
 
-            var buttons = document.querySelectorAll('a.btn, a[href*="popup%3Aopen"]');
-            buttons.forEach(function(btn) {
-                btn.classList.remove('cms-editable-highlight');
+            // Universal fallback highlighter for all unmapped headings, list items, and text blocks!
+            var unmappedCandidates = document.querySelectorAll('.elementor-heading-title, .elementor-icon-list-text, h1, h2, h3, p');
+            unmappedCandidates.forEach(function(el, idx) {
+                if (!el.classList.contains('cms-editable-highlight') && el.innerText.trim().length > 2) {
+                    el.classList.add('cms-editable-highlight');
+                    var autoKey = 'autoWorkshopText_' + idx;
+                    el.onclick = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.parent.postMessage({
+                            type: 'request_edit',
+                            key: autoKey,
+                            label: 'Text Node #' + (idx + 1),
+                            currentVal: config[autoKey] || el.innerHTML.trim()
+                        }, '*');
+                    };
+                }
             });
 
-            // Re-apply standard video embeds without overlays
+            loadVideo('[data-id="84a0e89"] .elementor-video', config.youtubeVideo1);
+            loadVideo('[data-id="20f4b2e"] .elementor-video', config.youtubeVideo2);
+            loadVideo('[data-id="5e58f49"] .elementor-video', config.youtubeVideo3);
+
+        } else {
+            if (existingStyle) existingStyle.remove();
+            document.querySelectorAll('.cms-editable-highlight').forEach(function(el) {
+                el.classList.remove('cms-editable-highlight');
+                el.onclick = null;
+            });
             applyConfig();
         }
     }

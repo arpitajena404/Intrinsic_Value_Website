@@ -783,11 +783,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             "valuemev.jayate@gmail.com"
         ];
 
-        var liveCmsState = {
-            indexRedirectUrl: "https://premium.intrinsicvalueequity.in/checkout/28180dfc-84a9-488e-854e-9f7958a1b8d7",
+        var liveCmsState = Object.assign({
+            indexTopBarText: "LIMITED SPOTS AVAILABLE FOR 1-ON-1 FRAMEWORK SESSIONS",
+            indexHeroTitle: "Transform Your Equity Portfolio With Institutional Value Investing",
+            indexHeroSubtitle: "Schedule your 15-minute framework session with SEBI Registered Advisory Experts",
+            indexSubmitBtnText: "Submit & Continue to Video",
+            indexRedirectUrl: "https://intrinsicvalueequity.in/invest_biz/vsl.html",
+            vslHeading: "Watch How Our Advisory Framework Helps You Pick Multibaggers",
+            vslCtaText: "Apply For Strategy Call",
             vslCheckoutUrl: "https://premium.intrinsicvalueequity.in/checkout/28180dfc-84a9-488e-854e-9f7958a1b8d7",
+            tyHeading: "Congratulations! Your Session Request Is Received",
+            tySubheading: "Join our exclusive WhatsApp community for immediate updates and live session links",
+            tyBtnText: "Join WhatsApp Group",
             tyWhatsAppUrl: "https://chat.whatsapp.com/EZzUNyMTkklAxMMQNZw6so"
-        };
+        }, (typeof LIVE_CONFIG !== 'undefined') ? LIVE_CONFIG : {});
 
         var currentEditingKey = ''; // 'indexRedirectUrl', 'vslCheckoutUrl', or 'tyWhatsAppUrl'
 

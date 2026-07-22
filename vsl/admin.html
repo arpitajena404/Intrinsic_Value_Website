@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="../onlylogo.PNG" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VSL CMS | Intrinsic Value Equity Advisors</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="vsl_config.js"></script>
+    
+    <style>
+        :root {
+            --ink: #091221;
+            --ink-2: #0D1E3D;
+            --ink-3: #13284f;
+            --surface: #ffffff;
+            --accent: #2E6BE6;
+            --accent-d: #1A4FBE;
+            --gold-bright: #E6B53D;
+            --text-primary: #ffffff;
+            --text-muted: #8794AB;
+            --border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at top right, #15294d 0%, var(--ink-2) 40%, var(--ink) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Header */
+        .admin-header {
+            height: 60px;
+            background: rgba(9, 18, 33, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .admin-header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+
+        .admin-header-brand img { height: 28px; }
+
+        .admin-actions { display: flex; align-items: center; gap: 12px; }
+
+        .btn-save {
+            background: linear-gradient(135deg, #2E6BE6, #1A4FBE);
+            color: #fff; border: none; border-radius: 8px;
+            padding: 8px 18px; font-weight: 600; font-size: 13px;
+            cursor: pointer; display: flex; align-items: center; gap: 8px;
+            transition: all 0.2s ease;
+        }
+        .btn-save:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.08); color: #fff;
+            border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 8px 16px; font-size: 13px; cursor: pointer; text-decoration: none;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .btn-back:hover { background: rgba(255, 255, 255, 0.15); }
+
+        /* Workspace Grid */
+        .admin-workspace {
+            display: flex;
+            height: calc(100vh - 60px);
+            width: 100%;
+        }
+
+        /* Sidebar Controls */
+        .admin-sidebar {
+            width: 440px;
+            background: rgba(13, 30, 61, 0.85);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .sidebar-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gold-bright);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+        .form-group:last-child { margin-bottom: 0; }
+
+        label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        input[type="text"], textarea {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 13px;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+        input[type="text"]:focus, textarea:focus {
+            border-color: var(--accent);
+        }
+
+        textarea { min-height: 80px; resize: vertical; line-height: 1.4; }
+
+        /* Preview Frame */
+        .preview-container {
+            flex: 1;
+            background: #000;
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed; bottom: 24px; right: 24px;
+            background: #10B981; color: #fff; padding: 12px 24px;
+            border-radius: 10px; font-weight: 600; font-size: 13px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            transform: translateY(100px); opacity: 0;
+            transition: all 0.3s ease; z-index: 1000;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <header class="admin-header">
+        <div class="admin-header-brand">
+            <img src="../onlylogo.PNG" alt="Logo">
+            <span>VSL Page CMS</span>
+        </div>
+        <div class="admin-actions">
+            <a href="../iv_admin.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Central Admin</a>
+            <button id="saveBtn" class="btn-save" onclick="saveConfiguration()"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+        </div>
+    </header>
+
+    <div class="admin-workspace">
+        <!-- Sidebar controls -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-section-title"><i class="fa-solid fa-bullhorn"></i> Header & Badge</div>
+                <div class="form-group">
+                    <label>Target Audience Badge Text</label>
+                    <input type="text" id="badgeText" oninput="updatePreview('badgeText', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Main Headline Text</label>
+                    <textarea id="headingTitle" oninput="updatePreview('headingTitle', this.value)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Subheading Title</label>
+                    <input type="text" id="subheadingTitle" oninput="updatePreview('subheadingTitle', this.value)">
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title"><i class="fa-solid fa-list-check"></i> Key Features List</div>
+                <div class="form-group">
+                    <label>Feature Item 1</label>
+                    <input type="text" id="featureItem1" oninput="updatePreview('featureItem1', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Feature Item 2</label>
+                    <input type="text" id="featureItem2" oninput="updatePreview('featureItem2', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Feature Item 3</label>
+                    <input type="text" id="featureItem3" oninput="updatePreview('featureItem3', this.value)">
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title"><i class="fa-solid fa-link"></i> CTA Button & Video</div>
+                <div class="form-group">
+                    <label>Wistia Video Media ID</label>
+                    <input type="text" id="wistiaMediaId" oninput="updatePreview('wistiaMediaId', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Button Label Text</label>
+                    <input type="text" id="buttonText" oninput="updatePreview('buttonText', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Strategy Call Checkout Link (URL)</label>
+                    <input type="text" id="checkoutUrl" oninput="updatePreview('checkoutUrl', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Warning Note Text</label>
+                    <textarea id="noteText" oninput="updatePreview('noteText', this.value)"></textarea>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title"><i class="fa-solid fa-scale-balanced"></i> Footer & Disclosures</div>
+                <div class="form-group">
+                    <label>SEBI Disclaimer & Terms</label>
+                    <textarea id="disclaimerText" oninput="updatePreview('disclaimerText', this.value)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Contact Info HTML</label>
+                    <textarea id="contactInfoText" oninput="updatePreview('contactInfoText', this.value)"></textarea>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Preview -->
+        <main class="preview-container">
+            <iframe id="vslFrame" src="index.html"></iframe>
+        </main>
+    </div>
+
+    <div id="toast" class="toast"><i class="fa-solid fa-check-circle"></i> VSL Configuration Saved Successfully!</div>
+
+    <script>
+        var currentConfig = Object.assign({}, VSL_CONFIG);
+        var frame = document.getElementById('vslFrame');
+
+        function loadFields() {
+            for (var key in currentConfig) {
+                var input = document.getElementById(key);
+                if (input) {
+                    input.value = currentConfig[key] || '';
+                }
+            }
+        }
+
+        function updatePreview(key, val) {
+            currentConfig[key] = val;
+            if (frame && frame.contentWindow) {
+                frame.contentWindow.postMessage({
+                    type: 'update_value',
+                    key: key,
+                    value: val
+                }, '*');
+            }
+        }
+
+        window.addEventListener('message', function(e) {
+            if (e.data && e.data.type === 'iframe_ready') {
+                if (frame && frame.contentWindow) {
+                    frame.contentWindow.postMessage({
+                        type: 'init_cms_state',
+                        enabled: true,
+                        config: currentConfig
+                    }, '*');
+                }
+            } else if (e.data && e.data.type === 'request_edit') {
+                var key = e.data.key;
+                var input = document.getElementById(key);
+                if (input) {
+                    input.focus();
+                    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+
+        function saveConfiguration() {
+            localStorage.setItem('pending_vsl_config', JSON.stringify(currentConfig));
+            showToast();
+        }
+
+        function showToast() {
+            var t = document.getElementById('toast');
+            t.classList.add('show');
+            setTimeout(function() { t.classList.remove('show'); }, 3000);
+        }
+
+        loadFields();
+    </script>
+</body>
+</html>

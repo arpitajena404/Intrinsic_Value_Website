@@ -1439,7 +1439,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <h4>VSL CMS</h4>
                         <p>Configure video player media IDs and consultation checkout button links for the VSL landing page.</p>
                     </div>
-                    <button class="iv-admin-action-btn" onclick="window.location.href='vsl/lp.intrinsicvalueequity.in/vsl/admin.html'">
+                    <button class="iv-admin-action-btn" onclick="window.location.href='vsl/admin.html'">
                         <i class="fa-solid fa-screwdriver-wrench"></i> Launch VSL CMS
                     </button>
                 </div>
@@ -2155,10 +2155,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <!-- TAB 7: LIVE FUNNEL CMS -->
                 <div id="tab-live-funnel" class="iv-cms-tab-content">
                     
-                    <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Live Funnel Redirect Links</h4>
+                    <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Live Funnel Redirect & Text Content</h4>
                     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
-                        Configure the redirection links for the three buttons across the live funnel pages (Registration, VSL, and Thank You).
+                        Configure redirection links and headline texts across the live funnel pages (Registration, VSL, and Thank You).
                     </p>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label" for="cmsLiveIndexTitle">Registration Page Hero Title</label>
+                        <input type="text" id="cmsLiveIndexTitle" class="iv-cms-input" placeholder="Transform Your Equity Portfolio..." />
+                    </div>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label" for="cmsLiveIndexSubtitle">Registration Page Hero Subtitle</label>
+                        <input type="text" id="cmsLiveIndexSubtitle" class="iv-cms-input" placeholder="Schedule your 15-minute framework session..." />
+                    </div>
 
                     <div class="iv-cms-group">
                         <label class="iv-cms-label" for="cmsLiveIndexRedirect">1. Registration Form Submit Redirect Link (index.html)</label>
@@ -2167,9 +2177,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>
 
                     <div class="iv-cms-group">
+                        <label class="iv-cms-label" for="cmsLiveVslHeading">VSL Page Title</label>
+                        <input type="text" id="cmsLiveVslHeading" class="iv-cms-input" placeholder="Watch How Our Advisory Framework..." />
+                    </div>
+
+                    <div class="iv-cms-group">
                         <label class="iv-cms-label" for="cmsLiveVslCheckout">2. VSL "Apply for a Strategy Call" Link (vsl.html)</label>
                         <input type="text" id="cmsLiveVslCheckout" class="iv-cms-input" placeholder="e.g. https://premium.intrinsicvalueequity.in/checkout/..." />
                         <p class="iv-cms-help-text" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">The target URL of the main CTA button on the Video Sales Letter (VSL) page.</p>
+                    </div>
+
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label" for="cmsLiveTyHeading">Thank You Page Heading</label>
+                        <input type="text" id="cmsLiveTyHeading" class="iv-cms-input" placeholder="Congratulations! Your Session Request Is Received" />
                     </div>
 
                     <div class="iv-cms-group">
