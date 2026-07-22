@@ -32,6 +32,9 @@ RewriteRule ^js/(.*)$ analytics/frontend/js/$1 [L]
 RewriteRule ^assets/(.*)$ analytics/frontend/assets/$1 [L]
 RewriteRule ^static/(.*)$ analytics/frontend/assets/$1 [L]
 
+# Redirect old analytics indicator URL to new upcycle-downcycle URL
+RewriteRule ^analytics/headwind-tailwind-indicator/?$ /analytics/upcycle-downcycle [R=301,L]
+
 # Route clean analytics page requests to their actual HTML files
 RewriteCond %{DOCUMENT_ROOT}/analytics/frontend/pages/$1.html -f
 RewriteRule ^analytics/([^/]+)/?$ analytics/frontend/pages/$1.html [L]

@@ -26,6 +26,11 @@
       "source": "/nikhil-gangil-indian-value-investor",
       "destination": "/nikhil-gangil-indian-value-investor/",
       "permanent": true
+    },
+    {
+      "source": "/analytics/headwind-tailwind-indicator",
+      "destination": "/analytics/upcycle-downcycle",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -155,11 +160,7 @@
     },
     {
       "source": "/analytics/upcycle-downcycle",
-      "destination": "/analytics/frontend/pages/headwind-tailwind-indicator"
-    },
-    {
-      "source": "/analytics/headwind-tailwind-indicator",
-      "destination": "/analytics/frontend/pages/headwind-tailwind-indicator"
+      "destination": "/analytics/frontend/pages/upcycle-downcycle"
     },
     {
       "source": "/analytics/portfolio-review-tool",

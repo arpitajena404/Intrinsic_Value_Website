@@ -45,11 +45,11 @@
     },
     {
       "src": "/upcycle-downcycle",
-      "dest": "frontend/pages/headwind-tailwind-indicator"
+      "dest": "frontend/pages/upcycle-downcycle"
     },
     {
       "src": "/headwind-tailwind-indicator",
-      "dest": "frontend/pages/headwind-tailwind-indicator"
+      "dest": "frontend/pages/upcycle-downcycle"
     },
     {
       "src": "/portfolio-review-tool",
