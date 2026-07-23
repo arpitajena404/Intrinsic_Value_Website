@@ -386,11 +386,45 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
             const previewQuery = isPreview ? '&preview=true' : '';
 
-            blogGrid.innerHTML = filtered.map(blog => {
-                const cleanTitle = (blog.title || '').replace(/<[^>]*>/g, '');
-                const thumbHtml = blog.image 
-                    ? `<img src="${blog.image}" alt="${cleanTitle}" class="blog-thumb" loading="lazy">`
-                    : `<div style="width: 100%; height: 100%; background: ${blog.gradient}; opacity: 0.85;" class="blog-thumb"></div>`;
+            function fixImageUrl(url) {
+            if (!url) return '';
+            var trimmed = String(url).trim();
+            if (!trimmed) return '';
+            if (trimmed.startsWith('data:') || trimmed.startsWith('blob:') || trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+                return trimmed;
+            }
+            try {
+                var pendingMap = JSON.parse(localStorage.getItem('pending_images_map')) || {};
+                if (pendingMap[trimmed]) return pendingMap[trimmed];
+                if (pendingMap['/' + trimmed]) return pendingMap['/' + trimmed];
+                var withoutSlash = trimmed.startsWith('/') ? trimmed.substring(1) : trimmed;
+                if (pendingMap[withoutSlash]) return pendingMap[withoutSlash];
+            } catch(e) {}
+            try {
+                var uploads = JSON.parse(localStorage.getItem('pending_file_uploads')) || [];
+                var cleanPath = trimmed.startsWith('/') ? trimmed.substring(1) : trimmed;
+                var found = uploads.find(function(u) { return u.path === cleanPath || u.path === trimmed; });
+                if (found && found.content) {
+                    var ext = cleanPath.split('.').pop().toLowerCase();
+                    var mime = 'image/jpeg';
+                    if (ext === 'png') mime = 'image/png';
+                    else if (ext === 'svg') mime = 'image/svg+xml';
+                    else if (ext === 'webp') mime = 'image/webp';
+                    else if (ext === 'gif') mime = 'image/gif';
+                    return 'data:' + mime + ';base64,' + found.content;
+                }
+            } catch(e) {}
+            if (!trimmed.startsWith('/')) {
+                return '/' + trimmed;
+            }
+            return trimmed;
+        }
+
+        blogGrid.innerHTML = filtered.map(blog => {
+            const cleanTitle = (blog.title || '').replace(/<[^>]*>/g, '');
+            const thumbHtml = blog.image 
+                ? `<img src="${fixImageUrl(blog.image)}" alt="${cleanTitle}" class="blog-thumb" loading="lazy">`
+                : `<div style="width: 100%; height: 100%; background: ${blog.gradient}; opacity: 0.85;" class="blog-thumb"></div>`;
 
                 const postUrl = isPreview 
                     ? `blog-detail.html?post=${encodeURIComponent(blog.slug)}&preview=true` 

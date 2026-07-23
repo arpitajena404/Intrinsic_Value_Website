@@ -34,6 +34,7 @@ window.addEventListener('load', function() {
 <!-- End Google Tag Manager -->
 
     <meta charset="UTF-8">
+    <base href="/" />
     <link rel="icon" href="onlylogo.PNG" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog Post | Intrinsic Value Equity Advisors</title>
@@ -311,6 +312,77 @@ window.addEventListener('load', function() {
             padding: 20px;
         }
         .settings-modal-content {
+            background: #181818;
+        }
+
+        /* Image Lightbox Styles */
+        .blog-lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .blog-lightbox-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .blog-lightbox-img {
+            max-width: 92vw;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(255, 140, 0, 0.25);
+            transform: scale(0.92);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .blog-lightbox-overlay.active .blog-lightbox-img {
+            transform: scale(1);
+        }
+        .blog-lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 300;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.2s ease;
+            z-index: 1000000;
+        }
+        .blog-lightbox-close:hover {
+            background: #FF8C00;
+            color: #ffffff;
+            border-color: #FF8C00;
+            transform: scale(1.1);
+        }
+        .post-body img, .post-hero-image {
+            cursor: zoom-in;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+        .post-body img:hover, .post-hero-image:hover {
+            filter: brightness(1.05);
+        }
             background: #1c1c1c;
             border: 1px solid rgba(255, 140, 0, 0.2);
             padding: 30px;
@@ -683,6 +755,43 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             }
         })();
 
+        function fixImageUrl(url) {
+            if (!url) return '';
+            var trimmed = String(url).trim();
+            if (!trimmed) return '';
+            if (trimmed.startsWith('data:') || trimmed.startsWith('blob:') || trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+                return trimmed;
+            }
+            
+            try {
+                var pendingMap = JSON.parse(localStorage.getItem('pending_images_map')) || {};
+                if (pendingMap[trimmed]) return pendingMap[trimmed];
+                if (pendingMap['/' + trimmed]) return pendingMap['/' + trimmed];
+                var withoutSlash = trimmed.startsWith('/') ? trimmed.substring(1) : trimmed;
+                if (pendingMap[withoutSlash]) return pendingMap[withoutSlash];
+            } catch(e) {}
+            
+            try {
+                var uploads = JSON.parse(localStorage.getItem('pending_file_uploads')) || [];
+                var cleanPath = trimmed.startsWith('/') ? trimmed.substring(1) : trimmed;
+                var found = uploads.find(function(u) { return u.path === cleanPath || u.path === trimmed; });
+                if (found && found.content) {
+                    var ext = cleanPath.split('.').pop().toLowerCase();
+                    var mime = 'image/jpeg';
+                    if (ext === 'png') mime = 'image/png';
+                    else if (ext === 'svg') mime = 'image/svg+xml';
+                    else if (ext === 'webp') mime = 'image/webp';
+                    else if (ext === 'gif') mime = 'image/gif';
+                    return 'data:' + mime + ';base64,' + found.content;
+                }
+            } catch(e) {}
+            
+            if (!trimmed.startsWith('/')) {
+                return '/' + trimmed;
+            }
+            return trimmed;
+        }
+
         function compileBlocksToHtml(blocks) {
             var html = '';
             if (!blocks) return html;
@@ -712,7 +821,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         });
                     }
                 } else if (block.type === 'photo') {
-                    html += '<p><img loading="lazy" decoding="async" class="aligncenter" src="' + escapeHtml(block.url) + '" alt="" /></p>\n';
+                    var align = block.alignment || 'center';
+                    var alignStyle = 'text-align:' + align + ';';
+                    var widthVal = block.width || '100%';
+                    var widthStyle = 'width:' + widthVal + '; max-width:100%; height:auto;';
+                    var imgSrc = fixImageUrl(block.url);
+                    html += '<p style="' + alignStyle + '"><img loading="lazy" decoding="async" class="aligncenter blog-zoomable-img" src="' + escapeHtml(imgSrc) + '" style="' + widthStyle + '; cursor:zoom-in;" alt="" /></p>\n';
                 } else if (block.type === 'video') {
                     var videoUrl = block.url || '';
                     if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
@@ -850,7 +964,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             if (fullRender || !imgEl.querySelector('img')) {
                                 if (currentPost.image) {
                                     imgEl.innerHTML = `
-                                        <img src="${currentPost.image}" class="post-hero-image" alt="${currentPost.title}">
+                                        <img src="${fixImageUrl(currentPost.image)}" class="post-hero-image" alt="${currentPost.title}">
                                         <div class="hero-image-edit-overlay" onclick="changeHeroImage()"><i class="fa-solid fa-camera"></i> Change Featured Image</div>
                                     `;
                                     imgEl.style.background = 'none';
@@ -930,10 +1044,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             });
                         } else if (block.type === 'photo') {
                             contentNode = document.createElement('div');
-                            contentNode.style.textAlign = 'center';
+                            contentNode.style.textAlign = block.alignment || 'center';
                             contentNode.style.position = 'relative';
+                            var imgW = block.width || '100%';
+                            var photoSrc = fixImageUrl(block.url || 'images/quality.jpg');
                             contentNode.innerHTML = `
-                                <img class="aligncenter" src="${escapeHtml(block.url || 'images/quality.jpg')}" alt="" style="max-width:100%; border-radius:4px;" loading="lazy" />
+                                <img class="aligncenter blog-zoomable-img" src="${escapeHtml(photoSrc)}" alt="" style="width:${escapeHtml(imgW)}; max-width:100%; height:auto; border-radius:4px; cursor:zoom-in;" loading="lazy" />
                                 <div style="margin-top:8px;">
                                     <button class="topbar-btn" style="margin:0 auto;" onclick="replacePhoto(${index})"><i class="fa-solid fa-camera"></i> Change Block Image</button>
                                 </div>
@@ -1498,7 +1614,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
                         // Display featured image if present, otherwise fallback to gradient
                         if (post.image) {
-                            imgEl.innerHTML = `<img src="${post.image}" class="post-hero-image" alt="${post.title}" loading="lazy">`;
+                            imgEl.innerHTML = `<img src="${fixImageUrl(post.image)}" class="post-hero-image" alt="${post.title}" loading="lazy">`;
                             imgEl.style.background = 'none';
                         } else {
                             imgEl.innerHTML = '';
@@ -1576,6 +1692,51 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         defer></script>
     <noscript> JavaScript is required for <a href="https://tabnav.com/accessibility-widget">tabnav web accessibility
             widget</a> to work properly. </noscript>
+    <!-- Image Lightbox Modal -->
+    <div id="blogLightboxModal" class="blog-lightbox-overlay" onclick="closeBlogLightbox(event)">
+        <span class="blog-lightbox-close" onclick="closeBlogLightbox(event)">&times;</span>
+        <img id="blogLightboxImg" class="blog-lightbox-img" src="" alt="Enlarged View" onclick="event.stopPropagation()" />
+    </div>
+
+    <script>
+    function openBlogLightbox(src) {
+        var modal = document.getElementById('blogLightboxModal');
+        var img = document.getElementById('blogLightboxImg');
+        if (modal && img) {
+            img.src = src;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeBlogLightbox(e) {
+        if (e) e.stopPropagation();
+        var modal = document.getElementById('blogLightboxModal');
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeBlogLightbox();
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        var target = e.target;
+        if (target && target.tagName === 'IMG') {
+            if (target.classList.contains('post-hero-image') || target.classList.contains('blog-zoomable-img') || target.closest('#post-content') || target.closest('.post-body') || target.classList.contains('aligncenter')) {
+                if (!target.closest('.hero-image-edit-overlay') && !target.closest('.block-actions-toolbar') && !target.closest('.blog-image-resize-handle')) {
+                    if (target.src) {
+                        openBlogLightbox(target.src);
+                    }
+                }
+            }
+        }
+    });
+    </script>
 </body>
 
 </html>

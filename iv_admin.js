@@ -1082,6 +1082,43 @@
         }
     };
 
+    window.fixImageUrl = function(url) {
+        if (!url) return '';
+        var trimmed = String(url).trim();
+        if (!trimmed) return '';
+        if (trimmed.startsWith('data:') || trimmed.startsWith('blob:') || trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+            return trimmed;
+        }
+        
+        try {
+            var pendingMap = JSON.parse(localStorage.getItem('pending_images_map')) || {};
+            if (pendingMap[trimmed]) return pendingMap[trimmed];
+            if (pendingMap['/' + trimmed]) return pendingMap['/' + trimmed];
+            var withoutSlash = trimmed.startsWith('/') ? trimmed.substring(1) : trimmed;
+            if (pendingMap[withoutSlash]) return pendingMap[withoutSlash];
+        } catch(e) {}
+        
+        try {
+            var uploads = JSON.parse(localStorage.getItem('pending_file_uploads')) || [];
+            var cleanPath = trimmed.startsWith('/') ? trimmed.substring(1) : trimmed;
+            var found = uploads.find(function(u) { return u.path === cleanPath || u.path === trimmed; });
+            if (found && found.content) {
+                var ext = cleanPath.split('.').pop().toLowerCase();
+                var mime = 'image/jpeg';
+                if (ext === 'png') mime = 'image/png';
+                else if (ext === 'svg') mime = 'image/svg+xml';
+                else if (ext === 'webp') mime = 'image/webp';
+                else if (ext === 'gif') mime = 'image/gif';
+                return 'data:' + mime + ';base64,' + found.content;
+            }
+        } catch(e) {}
+        
+        if (!trimmed.startsWith('/')) {
+            return '/' + trimmed;
+        }
+        return trimmed;
+    };
+
     window.handleSimulatedFileChange = function(input) {
         if (input.files && input.files[0]) {
             var file = input.files[0];
@@ -1094,8 +1131,18 @@
 
             var reader = new FileReader();
             reader.onload = function(e) {
-                var base64Data = e.target.result.split(',')[1];
+                var fullDataUrl = e.target.result;
+                var base64Data = fullDataUrl.split(',')[1];
                 
+                try {
+                    var pendingMap = JSON.parse(localStorage.getItem('pending_images_map')) || {};
+                    pendingMap[path] = fullDataUrl;
+                    pendingMap['/' + path] = fullDataUrl;
+                    localStorage.setItem('pending_images_map', JSON.stringify(pendingMap));
+                } catch(err) {
+                    console.warn("Could not save pending_images_map", err);
+                }
+
                 // Add to pending uploads, overwriting duplicates
                 pendingUploads = pendingUploads.filter(function(up) { return up.path !== path; });
                 pendingUploads.push({
@@ -3860,6 +3907,19 @@
         currentEditingBlog.readingTime = document.getElementById('blog-edit-time').value.trim() || "3 min read";
         currentEditingBlog.gradient = document.getElementById('blog-edit-gradient').value.trim() || "linear-gradient(135deg, #FF8C00, #121212)";
         currentEditingBlog.excerpt = document.getElementById('blog-edit-excerpt').value.trim();
+
+        // Update featured main image preview
+        var featImgContainer = document.getElementById('blog-edit-image-preview-container');
+        var featImgEl = document.getElementById('blog-edit-image-preview-img');
+        if (featImgContainer && featImgEl) {
+            if (currentEditingBlog.image) {
+                var resolvedSrc = window.fixImageUrl(currentEditingBlog.image);
+                featImgEl.src = resolvedSrc;
+                featImgContainer.style.display = 'block';
+            } else {
+                featImgContainer.style.display = 'none';
+            }
+        }
         
         localStorage.setItem('preview_blog_data', JSON.stringify(currentEditingBlog));
         
@@ -4173,12 +4233,39 @@
                     </div>
                 `;
             } else if (block.type === 'photo') {
+                var blockWidth = block.width || '100%';
+                var blockAlign = block.alignment || 'center';
+                var imgUrlResolved = block.url ? window.fixImageUrl(block.url) : '';
+                
                 blockHtml += `
                     <div class="iv-cms-group" style="margin-bottom: 0;">
                         <div style="display: flex; gap: 8px;">
                             <input type="text" class="iv-cms-input" style="flex: 1;" value="${escapeHtml(block.url || '')}" oninput="updateBlogElement(${index}, this.value); updateLivePreview();" placeholder="Enter image URL/path (e.g. images/my-image.jpg)">
                             <button type="button" class="iv-cms-btn-add" style="width: auto; padding: 0 16px;" onclick="simulateFileUploadForBlock(${index})">Upload</button>
                         </div>
+                        ${block.url ? `
+                            <div style="margin-top: 10px; text-align: ${blockAlign};">
+                                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;">
+                                    <span><i class="fa-solid fa-arrows-up-down-left-right"></i> Drag bottom-right corner handle to resize image</span>
+                                    <span id="blog-block-size-text-${index}" style="color: var(--accent); font-weight: 700;">Size: ${escapeHtml(blockWidth)}</span>
+                                </div>
+                                <div class="blog-image-resizable-container" id="blog-image-container-${index}" style="width: ${escapeHtml(blockWidth)}; text-align: center;">
+                                    <img src="${escapeHtml(imgUrlResolved)}" id="blog-image-img-${index}" alt="Blog Image Preview" style="width: 100%; height: auto;" />
+                                    <div class="blog-image-resize-handle handle-se" title="Drag corner to resize image" onmousedown="initImageDragResize(event, ${index})" ontouchstart="initImageDragResize(event, ${index})"></div>
+                                </div>
+                                <div class="blog-image-resize-controls">
+                                    <span style="font-size: 11px; color: var(--text-muted);">Quick Presets:</span>
+                                    <button type="button" class="blog-image-resize-btn ${blockWidth === '25%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '25%')">25%</button>
+                                    <button type="button" class="blog-image-resize-btn ${blockWidth === '50%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '50%')">50%</button>
+                                    <button type="button" class="blog-image-resize-btn ${blockWidth === '75%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '75%')">75%</button>
+                                    <button type="button" class="blog-image-resize-btn ${blockWidth === '100%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '100%')">100% (Full)</button>
+                                    <span style="font-size: 11px; color: var(--text-muted); margin-left: 8px;">Align:</span>
+                                    <button type="button" class="blog-image-resize-btn ${blockAlign === 'left' ? 'active' : ''}" onclick="setBlockImageAlign(${index}, 'left')">Left</button>
+                                    <button type="button" class="blog-image-resize-btn ${blockAlign === 'center' ? 'active' : ''}" onclick="setBlockImageAlign(${index}, 'center')">Center</button>
+                                    <button type="button" class="blog-image-resize-btn ${blockAlign === 'right' ? 'active' : ''}" onclick="setBlockImageAlign(${index}, 'right')">Right</button>
+                                </div>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
             } else if (block.type === 'video') {
@@ -4196,6 +4283,66 @@
             container.appendChild(div);
         });
     }
+
+    window.initImageDragResize = function(e, index) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var container = document.getElementById('blog-image-container-' + index);
+        if (!container) return;
+        
+        var parentElem = container.parentElement;
+        var maxParentWidth = parentElem ? parentElem.clientWidth : 600;
+        var startX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+        var startWidth = container.offsetWidth;
+        
+        function onMove(evt) {
+            var currentX = evt.type.startsWith('touch') ? evt.touches[0].clientX : evt.clientX;
+            var diffX = currentX - startX;
+            var newWidthPx = Math.max(80, Math.min(maxParentWidth, startWidth + diffX));
+            
+            container.style.width = newWidthPx + 'px';
+            
+            var sizeText = document.getElementById('blog-block-size-text-' + index);
+            if (sizeText) {
+                sizeText.innerText = 'Size: ' + newWidthPx + 'px';
+            }
+        }
+        
+        function onEnd() {
+            window.removeEventListener('mousemove', onMove);
+            window.removeEventListener('mouseup', onEnd);
+            window.removeEventListener('touchmove', onMove);
+            window.removeEventListener('touchend', onEnd);
+            
+            var finalWidth = container.style.width;
+            if (currentEditingBlog && currentEditingBlog.blocks && currentEditingBlog.blocks[index]) {
+                currentEditingBlog.blocks[index].width = finalWidth;
+                updateLivePreview();
+            }
+        }
+        
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onEnd);
+        window.addEventListener('touchmove', onMove, { passive: false });
+        window.addEventListener('touchend', onEnd);
+    };
+
+    window.setBlockImageSize = function(index, sizeStr) {
+        if (currentEditingBlog && currentEditingBlog.blocks && currentEditingBlog.blocks[index]) {
+            currentEditingBlog.blocks[index].width = sizeStr;
+            renderBlogElements();
+            updateLivePreview();
+        }
+    };
+
+    window.setBlockImageAlign = function(index, alignStr) {
+        if (currentEditingBlog && currentEditingBlog.blocks && currentEditingBlog.blocks[index]) {
+            currentEditingBlog.blocks[index].alignment = alignStr;
+            renderBlogElements();
+            updateLivePreview();
+        }
+    };
 
     window.addBlogElement = function (type) {
         currentEditingBlog.blocks = currentEditingBlog.blocks || [];
@@ -4323,7 +4470,12 @@
                     });
                 }
             } else if (block.type === 'photo') {
-                html += '<p><img loading="lazy" decoding="async" class="aligncenter" src="' + escapeHtml(block.url) + '" alt="" /></p>\n';
+                var align = block.alignment || 'center';
+                var alignStyle = 'text-align:' + align + ';';
+                var widthVal = block.width || '100%';
+                var widthStyle = 'width:' + widthVal + '; max-width:100%; height:auto;';
+                var imgSrc = fixImageUrl(block.url);
+                html += '<p style="' + alignStyle + '"><img loading="lazy" decoding="async" class="aligncenter blog-zoomable-img" src="' + escapeHtml(imgSrc) + '" style="' + widthStyle + '; cursor:zoom-in;" alt="" /></p>\n';
             } else if (block.type === 'video') {
                 var videoUrl = block.url || '';
                 if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {

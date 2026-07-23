@@ -128,6 +128,77 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         .iv-mock-divider {
             display: flex;
+        }
+
+        /* Image Resizer & Block Preview Styles */
+        .blog-image-resizable-container {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            margin: 10px 0;
+            border: 1px dashed rgba(255, 140, 0, 0.4);
+            border-radius: 6px;
+            padding: 4px;
+            background: #0e0e0e;
+            user-select: none;
+            box-sizing: border-box;
+        }
+        .blog-image-resizable-container img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+        .blog-image-resize-handle {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: #FF8C00;
+            border: 2px solid #ffffff;
+            border-radius: 3px;
+            z-index: 10;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+        }
+        .blog-image-resize-handle.handle-se {
+            right: -7px;
+            bottom: -7px;
+            cursor: nwse-resize;
+        }
+        .blog-image-resize-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .blog-image-resize-btn {
+            background: rgba(255, 140, 0, 0.15);
+            color: var(--accent, #FF8C00);
+            border: 1px solid rgba(255, 140, 0, 0.3);
+            border-radius: 4px;
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .blog-image-resize-btn:hover {
+            background: var(--accent, #FF8C00);
+            color: #fff;
+        }
+        .blog-image-resize-btn.active {
+            background: var(--accent, #FF8C00);
+            color: #fff;
+        }
+
+        .iv-mock-divider {
+            display: flex;
             align-items: center;
             text-align: center;
             color: var(--text-muted);
@@ -2406,6 +2477,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                     <div style="display: flex; gap: 8px;">
                                         <input type="text" id="blog-edit-image" class="iv-cms-input" style="flex: 1;" placeholder="e.g. images/quality.jpg" oninput="updateLivePreview();">
                                         <button type="button" class="iv-cms-btn-add" style="width: auto; padding: 0 16px;" onclick="simulateFileUpload('blog-edit-image', 'images')">Upload</button>
+                                    </div>
+                                    <div id="blog-edit-image-preview-container" style="margin-top: 8px; display: none;">
+                                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">Featured Image Preview:</div>
+                                        <div style="position: relative; max-width: 250px; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255, 140, 0, 0.3); background: #121212;">
+                                            <img id="blog-edit-image-preview-img" src="" alt="Featured Image Preview" style="width: 100%; height: 140px; object-fit: cover; display: block;" />
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="iv-cms-group">
