@@ -4236,6 +4236,7 @@
                 var blockWidth = block.width || '100%';
                 var blockAlign = block.alignment || 'center';
                 var imgUrlResolved = block.url ? window.fixImageUrl(block.url) : '';
+                var isVisible = block.url ? 'block' : 'none';
                 
                 blockHtml += `
                     <div class="iv-cms-group" style="margin-bottom: 0;">
@@ -4243,29 +4244,27 @@
                             <input type="text" class="iv-cms-input" style="flex: 1;" value="${escapeHtml(block.url || '')}" oninput="updateBlogElement(${index}, this.value); updateLivePreview();" placeholder="Enter image URL/path (e.g. images/my-image.jpg)">
                             <button type="button" class="iv-cms-btn-add" style="width: auto; padding: 0 16px;" onclick="simulateFileUploadForBlock(${index})">Upload</button>
                         </div>
-                        ${block.url ? `
-                            <div style="margin-top: 10px; text-align: ${blockAlign};">
-                                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;">
-                                    <span><i class="fa-solid fa-arrows-up-down-left-right"></i> Drag bottom-right corner handle to resize image</span>
-                                    <span id="blog-block-size-text-${index}" style="color: var(--accent); font-weight: 700;">Size: ${escapeHtml(blockWidth)}</span>
-                                </div>
-                                <div class="blog-image-resizable-container" id="blog-image-container-${index}" style="width: ${escapeHtml(blockWidth)}; text-align: center;">
-                                    <img src="${escapeHtml(imgUrlResolved)}" id="blog-image-img-${index}" alt="Blog Image Preview" style="width: 100%; height: auto;" />
-                                    <div class="blog-image-resize-handle handle-se" title="Drag corner to resize image" onmousedown="initImageDragResize(event, ${index})" ontouchstart="initImageDragResize(event, ${index})"></div>
-                                </div>
-                                <div class="blog-image-resize-controls">
-                                    <span style="font-size: 11px; color: var(--text-muted);">Quick Presets:</span>
-                                    <button type="button" class="blog-image-resize-btn ${blockWidth === '25%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '25%')">25%</button>
-                                    <button type="button" class="blog-image-resize-btn ${blockWidth === '50%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '50%')">50%</button>
-                                    <button type="button" class="blog-image-resize-btn ${blockWidth === '75%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '75%')">75%</button>
-                                    <button type="button" class="blog-image-resize-btn ${blockWidth === '100%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '100%')">100% (Full)</button>
-                                    <span style="font-size: 11px; color: var(--text-muted); margin-left: 8px;">Align:</span>
-                                    <button type="button" class="blog-image-resize-btn ${blockAlign === 'left' ? 'active' : ''}" onclick="setBlockImageAlign(${index}, 'left')">Left</button>
-                                    <button type="button" class="blog-image-resize-btn ${blockAlign === 'center' ? 'active' : ''}" onclick="setBlockImageAlign(${index}, 'center')">Center</button>
-                                    <button type="button" class="blog-image-resize-btn ${blockAlign === 'right' ? 'active' : ''}" onclick="setBlockImageAlign(${index}, 'right')">Right</button>
-                                </div>
+                        <div id="blog-image-preview-wrapper-${index}" style="margin-top: 10px; text-align: ${blockAlign}; display: ${isVisible};">
+                            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;">
+                                <span><i class="fa-solid fa-arrows-up-down-left-right"></i> Drag bottom-right corner handle to resize image</span>
+                                <span id="blog-block-size-text-${index}" style="color: var(--accent); font-weight: 700;">Size: ${escapeHtml(blockWidth)}</span>
                             </div>
-                        ` : ''}
+                            <div class="blog-image-resizable-container" id="blog-image-container-${index}" style="width: ${escapeHtml(blockWidth)}; text-align: center;">
+                                <img src="${escapeHtml(imgUrlResolved)}" id="blog-image-img-${index}" alt="Blog Image Preview" style="width: 100%; height: auto;" />
+                                <div class="blog-image-resize-handle handle-se" title="Drag corner to resize image" onmousedown="initImageDragResize(event, ${index})" ontouchstart="initImageDragResize(event, ${index})"></div>
+                            </div>
+                            <div class="blog-image-resize-controls">
+                                <span style="font-size: 11px; color: var(--text-muted);">Quick Presets:</span>
+                                <button type="button" class="blog-image-resize-btn ${blockWidth === '25%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '25%')">25%</button>
+                                <button type="button" class="blog-image-resize-btn ${blockWidth === '50%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '50%')">50%</button>
+                                <button type="button" class="blog-image-resize-btn ${blockWidth === '75%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '75%')">75%</button>
+                                <button type="button" class="blog-image-resize-btn ${blockWidth === '100%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '100%')">100% (Full)</button>
+                                <span style="font-size: 11px; color: var(--text-muted); margin-left: 8px;">Align:</span>
+                                <button type="button" class="blog-image-resize-btn ${blockAlign === 'left' ? 'active' : ''}" onclick="setBlockImageAlign(${index}, 'left')">Left</button>
+                                <button type="button" class="blog-image-resize-btn ${blockAlign === 'center' ? 'active' : ''}" onclick="setBlockImageAlign(${index}, 'center')">Center</button>
+                                <button type="button" class="blog-image-resize-btn ${blockAlign === 'right' ? 'active' : ''}" onclick="setBlockImageAlign(${index}, 'right')">Right</button>
+                            </div>
+                        </div>
                     </div>
                 `;
             } else if (block.type === 'video') {
@@ -4377,6 +4376,16 @@
         var block = currentEditingBlog.blocks[index];
         if (block.type === 'photo' || block.type === 'video') {
             block.url = value;
+            if (block.type === 'photo') {
+                var imgElem = document.getElementById('blog-image-img-' + index);
+                var wrapperElem = document.getElementById('blog-image-preview-wrapper-' + index);
+                if (imgElem && value) {
+                    imgElem.src = window.fixImageUrl(value);
+                }
+                if (wrapperElem) {
+                    wrapperElem.style.display = value ? 'block' : 'none';
+                }
+            }
         } else {
             block.text = value;
         }

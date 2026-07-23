@@ -1725,6 +1725,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
 
     document.addEventListener('click', function(e) {
+        var isPreviewMode = window.location.search.includes('preview=true') || (window.self !== window.top);
+        if (isPreviewMode) return;
+
         var target = e.target;
         if (target && target.tagName === 'IMG') {
             if (target.classList.contains('post-hero-image') || target.classList.contains('blog-zoomable-img') || target.closest('#post-content') || target.closest('.post-body') || target.classList.contains('aligncenter')) {
