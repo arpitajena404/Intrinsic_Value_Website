@@ -889,9 +889,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     }
                 } else if (block.type === 'photo') {
                     var align = block.alignment || 'center';
-                    var alignStyle = 'text-align:' + align + ';';
+                    var alignStyle = 'text-align:' + align + '; overflow: visible;';
                     var widthVal = block.width || '100%';
-                    var widthStyle = 'width:' + widthVal + '; max-width:none; height:auto;';
+                    var centerStyle = '';
+                    if (align === 'center') {
+                        centerStyle = 'position: relative; left: 50%; transform: translateX(-50%);';
+                    } else if (align === 'right') {
+                        centerStyle = 'position: relative; left: 100%; transform: translateX(-100%);';
+                    }
+                    var widthStyle = 'width:' + widthVal + '; max-width:none; height:auto; ' + centerStyle;
                     var imgSrc = fixImageUrl(block.url);
                     html += '<p style="' + alignStyle + '"><img loading="lazy" decoding="async" class="aligncenter blog-zoomable-img" src="' + escapeHtml(imgSrc) + '" style="' + widthStyle + '; cursor:zoom-in;" alt="" /></p>\n';
                 } else if (block.type === 'video') {
@@ -1126,16 +1132,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             contentNode.style.textAlign = block.alignment || 'center';
                             contentNode.style.position = 'relative';
                             contentNode.style.margin = '16px 0';
+                            contentNode.style.overflow = 'visible';
                             var imgW = block.width || '100%';
                             var blockAlign = block.alignment || 'center';
                             var photoSrc = fixImageUrl(block.url || 'images/quality.jpg');
                             
+                            var containerTransformStyle = '';
+                            if (blockAlign === 'center') {
+                                containerTransformStyle = 'position: relative; left: 50%; transform: translateX(-50%);';
+                            } else if (blockAlign === 'right') {
+                                containerTransformStyle = 'position: relative; left: 100%; transform: translateX(-100%);';
+                            }
+                            
                             contentNode.innerHTML = `
-                                <div style="font-size: 11px; color: #aaa; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; max-width: ${escapeHtml(imgW)}; margin-left: auto; margin-right: auto;">
+                                <div style="font-size: 11px; color: #aaa; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; width: ${escapeHtml(imgW)}; max-width: 100%; margin-left: auto; margin-right: auto; ${containerTransformStyle}">
                                     <span><i class="fa-solid fa-arrows-up-down-left-right"></i> Drag corner handle to resize image</span>
                                     <span id="preview-img-size-text-${index}" style="color: var(--accent); font-weight: 700;">Size: ${escapeHtml(imgW)}</span>
                                 </div>
-                                <div class="blog-image-resizable-container" id="preview-img-container-${index}" style="width:${escapeHtml(imgW)}; text-align: center; display: inline-block; position: relative;">
+                                <div class="blog-image-resizable-container" id="preview-img-container-${index}" style="width:${escapeHtml(imgW)}; text-align: center; display: inline-block; ${containerTransformStyle}">
                                     <img class="aligncenter" src="${escapeHtml(photoSrc)}" alt="" style="width:100%; height:auto; border-radius:4px; pointer-events: none;" loading="lazy" />
                                     <div class="blog-image-resize-handle handle-se" title="Drag corner to resize image" onmousedown="initPreviewImageDragResize(event, ${index})" ontouchstart="initPreviewImageDragResize(event, ${index})"></div>
                                 </div>

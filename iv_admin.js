@@ -4235,8 +4235,15 @@
             } else if (block.type === 'photo') {
                 var blockWidth = block.width || '100%';
                 var blockAlign = block.alignment || 'center';
-                var imgUrlResolved = block.url ? window.fixImageUrl(block.url) : '';
+                var imgUrlResolved = fixImageUrl(block.url || '');
                 var isVisible = block.url ? 'block' : 'none';
+                
+                var containerTransformStyle = '';
+                if (blockAlign === 'center') {
+                    containerTransformStyle = 'position: relative; left: 50%; transform: translateX(-50%);';
+                } else if (blockAlign === 'right') {
+                    containerTransformStyle = 'position: relative; left: 100%; transform: translateX(-100%);';
+                }
                 
                 blockHtml += `
                     <div class="iv-cms-group" style="margin-bottom: 0;">
@@ -4244,12 +4251,12 @@
                             <input type="text" class="iv-cms-input" style="flex: 1;" value="${escapeHtml(block.url || '')}" oninput="updateBlogElement(${index}, this.value); updateLivePreview();" placeholder="Enter image URL/path (e.g. images/my-image.jpg)">
                             <button type="button" class="iv-cms-btn-add" style="width: auto; padding: 0 16px;" onclick="simulateFileUploadForBlock(${index})">Upload</button>
                         </div>
-                        <div id="blog-image-preview-wrapper-${index}" style="margin-top: 10px; text-align: ${blockAlign}; display: ${isVisible};">
-                            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;">
+                        <div id="blog-image-preview-wrapper-${index}" style="margin-top: 10px; text-align: ${blockAlign}; display: ${isVisible}; overflow: visible;">
+                            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; width: ${escapeHtml(blockWidth)}; max-width: 100%; margin-left: auto; margin-right: auto; ${containerTransformStyle}">
                                 <span><i class="fa-solid fa-arrows-up-down-left-right"></i> Drag bottom-right corner handle to resize image</span>
                                 <span id="blog-block-size-text-${index}" style="color: var(--accent); font-weight: 700;">Size: ${escapeHtml(blockWidth)}</span>
                             </div>
-                            <div class="blog-image-resizable-container" id="blog-image-container-${index}" style="width: ${escapeHtml(blockWidth)}; text-align: center;">
+                            <div class="blog-image-resizable-container" id="blog-image-container-${index}" style="width: ${escapeHtml(blockWidth)}; text-align: center; display: inline-block; ${containerTransformStyle}">
                                 <img src="${escapeHtml(imgUrlResolved)}" id="blog-image-img-${index}" alt="Blog Image Preview" style="width: 100%; height: auto;" />
                                 <div class="blog-image-resize-handle handle-se" title="Drag corner to resize image" onmousedown="initImageDragResize(event, ${index})" ontouchstart="initImageDragResize(event, ${index})"></div>
                             </div>
@@ -4484,9 +4491,15 @@
                 }
             } else if (block.type === 'photo') {
                 var align = block.alignment || 'center';
-                var alignStyle = 'text-align:' + align + ';';
+                var alignStyle = 'text-align:' + align + '; overflow: visible;';
                 var widthVal = block.width || '100%';
-                var widthStyle = 'width:' + widthVal + '; max-width:none; height:auto;';
+                var centerStyle = '';
+                if (align === 'center') {
+                    centerStyle = 'position: relative; left: 50%; transform: translateX(-50%);';
+                } else if (align === 'right') {
+                    centerStyle = 'position: relative; left: 100%; transform: translateX(-100%);';
+                }
+                var widthStyle = 'width:' + widthVal + '; max-width:none; height:auto; ' + centerStyle;
                 var imgSrc = fixImageUrl(block.url);
                 html += '<p style="' + alignStyle + '"><img loading="lazy" decoding="async" class="aligncenter blog-zoomable-img" src="' + escapeHtml(imgSrc) + '" style="' + widthStyle + '; cursor:zoom-in;" alt="" /></p>\n';
             } else if (block.type === 'video') {
