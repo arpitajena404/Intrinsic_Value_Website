@@ -1,4 +1,7 @@
 var LIVE_CONFIG = {
+    "indexRedirectUrl": "https://intrinsicvalueequity.in/invest_biz/vsl.html",
+    "vslCheckoutUrl": "https://premium.intrinsicvalueequity.in/checkout/28180dfc-84a9-488e-854e-9f7958a1b8d7",
+    "tyWhatsAppUrl": "https://chat.whatsapp.com/EZzUNyMTkklAxMMQNZw6so",
     "indexTopBarText": "For Indian Business Owners and Promoters with Corporate Surplus of Rs. 5 Crore or More",
     "indexEyebrow": "Free 15-Minute Framework Session",
     "indexHeroTitle": "Here's How Institutions Think About Idle Business <span class=\"hl\">Surplus</span> & Why Most Business Owners Never Have",
@@ -32,14 +35,9 @@ var LIVE_CONFIG = {
     "indexSpeakerRole": "SEBI-Registered Research Analyst (Registration No. INH000009047)",
     "indexModalTitle": "Watch the 15-Minute Framework Session",
     "indexModalSub": "Enter your details below to access the session immediately",
-    "indexRedirectUrl": "https://intrinsicvalueequity.in/invest_biz/vsl.html",
-    
     "vslHeading": "Watch How Our Advisory Framework Helps You Pick Multibaggers",
     "vslCtaText": "Apply For Strategy Call",
-    "vslCheckoutUrl": "https://premium.intrinsicvalueequity.in/checkout/28180dfc-84a9-488e-854e-9f7958a1b8d7",
-    
     "tyHeading": "Congratulations! Your Session Request Is Received",
     "tySubheading": "Join our exclusive WhatsApp community for immediate updates and live session links",
-    "tyBtnText": "Join WhatsApp Group",
-    "tyWhatsAppUrl": "https://chat.whatsapp.com/EZzUNyMTkklAxMMQNZw6so"
+    "tyBtnText": "Join WhatsApp Group"
 };

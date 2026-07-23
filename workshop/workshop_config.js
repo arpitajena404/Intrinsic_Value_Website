@@ -1,7 +1,4 @@
 var WORKSHOP_CONFIG = {
-    "heroTitle": "The Only Webinar Designed to Give You Both <span class=\"wp-heading1\">High Quality Investing</span> Knowledge and <span class=\"wp-heading1\">Clear Execution </span> Steps in One Place",
-    "heroSubtitle": "Master a time-tested value investing system that works in any market cycle",
-    "ctaBtnText": "Grab Your Spot at <s>499</s> FREE",
     "workshopDateText": "26th July, Sunday  | 11:00 AM",
     "countdownTarget": "2026-07-26T11:00:00",
     "checkoutUrl": "https://premium.intrinsicvalueequity.in/checkout/c773025d-2f85-402e-a010-9713e8a837f8",
@@ -15,26 +12,5 @@ var WORKSHOP_CONFIG = {
     "box3Text": "Actionable Workshop",
     "box4Text": "100% Practical Strategy",
     "box5Text": "Language: Hinglish",
-    "experienceText": "13+ years of experience",
-    "speakerName": "Nikhil Gangil",
-    "mediaHeading": "Featured on Media",
-    
-    "nodSectionTitle": "Nod for a YES if…",
-    "nodItem1": "You want to invest in stocks but don't understand Value Investing principles",
-    "nodItem2": "Your money is stuck in low-yield investments, barely beating inflation",
-    "nodItem3": "You panic sell stocks that later become multi-baggers",
-    "nodItem4": "You can't identify the right Entry & Exit points for long-term investments",
-    "nodItem5": "You're tired of losing money in short-term trading and F&O",
-    "nodItem6": "Instead of proper research, you rely on tips and market noise",
-    "nodItem7": "You find fundamental analysis too complex and time-consuming",
-    "nodItem8": "You struggle to understand market cycles and sector rotation",
-    "nodItem9": "You follow multiple \"experts\" but get confused with conflicting advice",
-    "nodItem10": "You depend too much on news channels and social media for stock picks",
-    "nodTagline": "India's Most Practical Value Investing Workshop That Helps You Identify Right Strategy Like an Expert",
-    "nodCtaTitle": "Register NOW to Transform Your Portfolio!",
-
-    "wantSectionTitle": "Do You Want To…",
-    "wantItem1": "Generate HIGH CAGR returns over 5-10 years through Value Investing",
-    "wantItem2": "Build a robust portfolio that outperforms in any market condition",
-    "wantItem3": "Achieve financial growth through systematic long-term investing"
+    "experienceText": "13+ years of experience"
 };
