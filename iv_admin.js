@@ -4258,7 +4258,10 @@
                                 <button type="button" class="blog-image-resize-btn ${blockWidth === '25%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '25%')">25%</button>
                                 <button type="button" class="blog-image-resize-btn ${blockWidth === '50%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '50%')">50%</button>
                                 <button type="button" class="blog-image-resize-btn ${blockWidth === '75%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '75%')">75%</button>
-                                <button type="button" class="blog-image-resize-btn ${blockWidth === '100%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '100%')">100% (Full)</button>
+                                <button type="button" class="blog-image-resize-btn ${blockWidth === '100%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '100%')">100%</button>
+                                <button type="button" class="blog-image-resize-btn ${blockWidth === '125%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '125%')">125%</button>
+                                <button type="button" class="blog-image-resize-btn ${blockWidth === '150%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '150%')">150%</button>
+                                <button type="button" class="blog-image-resize-btn ${blockWidth === '200%' ? 'active' : ''}" onclick="setBlockImageSize(${index}, '200%')">200%</button>
                                 <span style="font-size: 11px; color: var(--text-muted); margin-left: 8px;">Align:</span>
                                 <button type="button" class="blog-image-resize-btn ${blockAlign === 'left' ? 'active' : ''}" onclick="setBlockImageAlign(${index}, 'left')">Left</button>
                                 <button type="button" class="blog-image-resize-btn ${blockAlign === 'center' ? 'active' : ''}" onclick="setBlockImageAlign(${index}, 'center')">Center</button>
@@ -4291,14 +4294,15 @@
         if (!container) return;
         
         var parentElem = container.parentElement;
-        var maxParentWidth = parentElem ? parentElem.clientWidth : 600;
+        var baseWidth = parentElem ? parentElem.clientWidth : 600;
+        var maxAllowedWidth = Math.max(2000, baseWidth * 2.5);
         var startX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
         var startWidth = container.offsetWidth;
         
         function onMove(evt) {
             var currentX = evt.type.startsWith('touch') ? evt.touches[0].clientX : evt.clientX;
             var diffX = currentX - startX;
-            var newWidthPx = Math.max(80, Math.min(maxParentWidth, startWidth + diffX));
+            var newWidthPx = Math.max(80, Math.min(maxAllowedWidth, startWidth + diffX));
             
             container.style.width = newWidthPx + 'px';
             
@@ -4482,7 +4486,7 @@
                 var align = block.alignment || 'center';
                 var alignStyle = 'text-align:' + align + ';';
                 var widthVal = block.width || '100%';
-                var widthStyle = 'width:' + widthVal + '; max-width:100%; height:auto;';
+                var widthStyle = 'width:' + widthVal + '; max-width:none; height:auto;';
                 var imgSrc = fixImageUrl(block.url);
                 html += '<p style="' + alignStyle + '"><img loading="lazy" decoding="async" class="aligncenter blog-zoomable-img" src="' + escapeHtml(imgSrc) + '" style="' + widthStyle + '; cursor:zoom-in;" alt="" /></p>\n';
             } else if (block.type === 'video') {

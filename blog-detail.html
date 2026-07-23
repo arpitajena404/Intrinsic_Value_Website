@@ -388,7 +388,7 @@ window.addEventListener('load', function() {
         .blog-image-resizable-container {
             position: relative;
             display: inline-block;
-            max-width: 100%;
+            max-width: 250%;
             margin: 10px 0;
             border: 1px dashed rgba(255, 140, 0, 0.6);
             border-radius: 6px;
@@ -891,7 +891,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     var align = block.alignment || 'center';
                     var alignStyle = 'text-align:' + align + ';';
                     var widthVal = block.width || '100%';
-                    var widthStyle = 'width:' + widthVal + '; max-width:100%; height:auto;';
+                    var widthStyle = 'width:' + widthVal + '; max-width:none; height:auto;';
                     var imgSrc = fixImageUrl(block.url);
                     html += '<p style="' + alignStyle + '"><img loading="lazy" decoding="async" class="aligncenter blog-zoomable-img" src="' + escapeHtml(imgSrc) + '" style="' + widthStyle + '; cursor:zoom-in;" alt="" /></p>\n';
                 } else if (block.type === 'video') {
@@ -1144,7 +1144,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                     <button type="button" class="blog-image-resize-btn ${imgW === '25%' ? 'active' : ''}" onclick="setPreviewBlockImageSize(${index}, '25%')">25%</button>
                                     <button type="button" class="blog-image-resize-btn ${imgW === '50%' ? 'active' : ''}" onclick="setPreviewBlockImageSize(${index}, '50%')">50%</button>
                                     <button type="button" class="blog-image-resize-btn ${imgW === '75%' ? 'active' : ''}" onclick="setPreviewBlockImageSize(${index}, '75%')">75%</button>
-                                    <button type="button" class="blog-image-resize-btn ${imgW === '100%' ? 'active' : ''}" onclick="setPreviewBlockImageSize(${index}, '100%')">100% (Full)</button>
+                                    <button type="button" class="blog-image-resize-btn ${imgW === '100%' ? 'active' : ''}" onclick="setPreviewBlockImageSize(${index}, '100%')">100%</button>
+                                    <button type="button" class="blog-image-resize-btn ${imgW === '125%' ? 'active' : ''}" onclick="setPreviewBlockImageSize(${index}, '125%')">125%</button>
+                                    <button type="button" class="blog-image-resize-btn ${imgW === '150%' ? 'active' : ''}" onclick="setPreviewBlockImageSize(${index}, '150%')">150%</button>
+                                    <button type="button" class="blog-image-resize-btn ${imgW === '200%' ? 'active' : ''}" onclick="setPreviewBlockImageSize(${index}, '200%')">200%</button>
                                     <span style="font-size: 11px; color: #888; margin-left: 8px;">Align:</span>
                                     <button type="button" class="blog-image-resize-btn ${blockAlign === 'left' ? 'active' : ''}" onclick="setPreviewBlockImageAlign(${index}, 'left')">Left</button>
                                     <button type="button" class="blog-image-resize-btn ${blockAlign === 'center' ? 'active' : ''}" onclick="setPreviewBlockImageAlign(${index}, 'center')">Center</button>
@@ -1353,14 +1356,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     if (!container) return;
                     
                     var parentElem = container.parentElement;
-                    var maxParentWidth = parentElem ? parentElem.clientWidth : 800;
+                    var baseWidth = parentElem ? parentElem.clientWidth : 800;
+                    var maxAllowedWidth = Math.max(2000, baseWidth * 2.5);
                     var startX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
                     var startWidth = container.offsetWidth;
                     
                     function onMove(evt) {
                         var currentX = evt.type.startsWith('touch') ? evt.touches[0].clientX : evt.clientX;
                         var diffX = currentX - startX;
-                        var newWidthPx = Math.max(100, Math.min(maxParentWidth, startWidth + diffX));
+                        var newWidthPx = Math.max(80, Math.min(maxAllowedWidth, startWidth + diffX));
                         
                         container.style.width = newWidthPx + 'px';
                         
