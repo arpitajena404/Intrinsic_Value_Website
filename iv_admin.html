@@ -1544,12 +1544,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <button id="gitPushBtn" class="iv-admin-action-btn" style="background: #24292e; border: 1px solid #444d56; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
                             <i class="fa-brands fa-github"></i> Push to GitHub
                         </button>
-                        <button id="gitRollbackBtn" class="iv-admin-action-btn" style="background: rgba(255, 140, 0, 0.1); border: 1px solid rgba(255, 140, 0, 0.3); color: #FF8C00; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 6px; font-size: 13px;">
-                            <i class="fa-solid fa-rotate-left"></i> Revert Latest Commit
-                        </button>
                         <button id="clearCacheBtn" class="iv-admin-action-btn" style="background: rgba(220, 53, 69, 0.12); border: 1px solid rgba(220, 53, 69, 0.25); color: #FF4D4D; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 6px; font-size: 13px;">
                             <i class="fa-solid fa-trash-can"></i> Discard Cache & Sync Server
                         </button>
+                        
+                        <div style="margin-top: 16px; padding-top: 12px; border-top: 1px dashed rgba(255, 140, 0, 0.25);">
+                            <span style="font-size: 11px; color: #aaa; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px;">
+                                <i class="fa-solid fa-triangle-exclamation" style="color: #FF8C00;"></i> Emergency Actions
+                            </span>
+                            <button id="gitRollbackBtn" class="iv-admin-action-btn" style="background: rgba(255, 140, 0, 0.08); border: 1px solid rgba(255, 140, 0, 0.25); color: #FF8C00; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; font-size: 12px; padding: 8px 12px;">
+                                <i class="fa-solid fa-rotate-left"></i> Revert Latest Commit
+                            </button>
+                        </div>
                         <div id="gitStatusMessage" style="margin-top: 10px; font-size: 11px; color: #888; font-family: monospace; display: none; background: #151515; padding: 8px; border-radius: 4px; border: 1px solid #222; max-height: 120px; overflow-y: auto; white-space: pre-wrap; text-align: left;"></div>
                     </div>
                 </div>
