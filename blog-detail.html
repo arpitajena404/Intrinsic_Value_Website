@@ -383,6 +383,73 @@ window.addEventListener('load', function() {
         .post-body img:hover, .post-hero-image:hover {
             filter: brightness(1.05);
         }
+
+        /* Visual Editor Image Resizer Styles */
+        .blog-image-resizable-container {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            margin: 10px 0;
+            border: 1px dashed rgba(255, 140, 0, 0.6);
+            border-radius: 6px;
+            padding: 4px;
+            background: #0e0e0e;
+            user-select: none;
+            box-sizing: border-box;
+        }
+        .blog-image-resizable-container img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+        .blog-image-resize-handle {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #FF8C00;
+            border: 2px solid #ffffff;
+            border-radius: 4px;
+            z-index: 100;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+        }
+        .blog-image-resize-handle.handle-se {
+            right: -8px;
+            bottom: -8px;
+            cursor: nwse-resize;
+        }
+        .blog-image-resize-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 140, 0, 0.25);
+        }
+        .blog-image-resize-btn {
+            background: rgba(255, 140, 0, 0.15);
+            color: var(--accent, #FF8C00);
+            border: 1px solid rgba(255, 140, 0, 0.35);
+            border-radius: 5px;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .blog-image-resize-btn:hover {
+            background: var(--accent, #FF8C00);
+            color: #fff;
+        }
+        .blog-image-resize-btn.active {
+            background: var(--accent, #FF8C00);
+            color: #fff;
+        }
             background: #1c1c1c;
             border: 1px solid rgba(255, 140, 0, 0.2);
             padding: 30px;
@@ -923,6 +990,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             <input type="text" id="settings-slug" class="settings-input" placeholder="e.g. 20-stocks-destroyed-investors">
                         </div>
                         <div class="settings-group">
+                            <label class="settings-label">Category</label>
+                            <input type="text" id="settings-category" class="settings-input" placeholder="e.g. Intrinsic Analytics">
+                        </div>
+                        <div class="settings-group">
+                            <label class="settings-label">Publish Date</label>
+                            <input type="text" id="settings-date" class="settings-input" placeholder="e.g. January 19, 2026">
+                        </div>
+                        <div class="settings-group">
+                            <label class="settings-label">Reading Time</label>
+                            <input type="text" id="settings-time" class="settings-input" placeholder="e.g. 3 min read">
+                        </div>
+                        <div class="settings-group">
                             <label class="settings-label">Short Excerpt (Grid Description)</label>
                             <textarea id="settings-excerpt" class="settings-textarea" placeholder="Summarize the post..."></textarea>
                         </div>
@@ -1046,12 +1125,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             contentNode = document.createElement('div');
                             contentNode.style.textAlign = block.alignment || 'center';
                             contentNode.style.position = 'relative';
+                            contentNode.style.margin = '16px 0';
                             var imgW = block.width || '100%';
+                            var blockAlign = block.alignment || 'center';
                             var photoSrc = fixImageUrl(block.url || 'images/quality.jpg');
+                            
                             contentNode.innerHTML = `
-                                <img class="aligncenter blog-zoomable-img" src="${escapeHtml(photoSrc)}" alt="" style="width:${escapeHtml(imgW)}; max-width:100%; height:auto; border-radius:4px; cursor:zoom-in;" loading="lazy" />
-                                <div style="margin-top:8px;">
-                                    <button class="topbar-btn" style="margin:0 auto;" onclick="replacePhoto(${index})"><i class="fa-solid fa-camera"></i> Change Block Image</button>
+                                <div style="font-size: 11px; color: #aaa; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; max-width: ${escapeHtml(imgW)}; margin-left: auto; margin-right: auto;">
+                                    <span><i class="fa-solid fa-arrows-up-down-left-right"></i> Drag corner handle to resize image</span>
+                                    <span id="preview-img-size-text-${index}" style="color: var(--accent); font-weight: 700;">Size: ${escapeHtml(imgW)}</span>
+                                </div>
+                                <div class="blog-image-resizable-container" id="preview-img-container-${index}" style="width:${escapeHtml(imgW)}; text-align: center; display: inline-block; position: relative;">
+                                    <img class="aligncenter" src="${escapeHtml(photoSrc)}" alt="" style="width:100%; height:auto; border-radius:4px; pointer-events: none;" loading="lazy" />
+                                    <div class="blog-image-resize-handle handle-se" title="Drag corner to resize image" onmousedown="initPreviewImageDragResize(event, ${index})" ontouchstart="initPreviewImageDragResize(event, ${index})"></div>
+                                </div>
+                                <div class="blog-image-resize-controls" style="margin-top: 8px;">
+                                    <span style="font-size: 11px; color: #888;">Quick Presets:</span>
+                                    <button type="button" class="blog-image-resize-btn ${imgW === '25%' ? 'active' : ''}" onclick="setPreviewBlockImageSize(${index}, '25%')">25%</button>
+                                    <button type="button" class="blog-image-resize-btn ${imgW === '50%' ? 'active' : ''}" onclick="setPreviewBlockImageSize(${index}, '50%')">50%</button>
+                                    <button type="button" class="blog-image-resize-btn ${imgW === '75%' ? 'active' : ''}" onclick="setPreviewBlockImageSize(${index}, '75%')">75%</button>
+                                    <button type="button" class="blog-image-resize-btn ${imgW === '100%' ? 'active' : ''}" onclick="setPreviewBlockImageSize(${index}, '100%')">100% (Full)</button>
+                                    <span style="font-size: 11px; color: #888; margin-left: 8px;">Align:</span>
+                                    <button type="button" class="blog-image-resize-btn ${blockAlign === 'left' ? 'active' : ''}" onclick="setPreviewBlockImageAlign(${index}, 'left')">Left</button>
+                                    <button type="button" class="blog-image-resize-btn ${blockAlign === 'center' ? 'active' : ''}" onclick="setPreviewBlockImageAlign(${index}, 'center')">Center</button>
+                                    <button type="button" class="blog-image-resize-btn ${blockAlign === 'right' ? 'active' : ''}" onclick="setPreviewBlockImageAlign(${index}, 'right')">Right</button>
+                                    <button type="button" class="topbar-btn" style="margin-left: 12px; padding: 3px 8px; font-size: 11px;" onclick="replacePhoto(${index})"><i class="fa-solid fa-camera"></i> Change Image</button>
                                 </div>
                             `;
                         } else if (block.type === 'video') {
@@ -1214,11 +1312,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 const btnSaveSettings = document.getElementById('btn-save-settings');
                 
                 const inputSlug = document.getElementById('settings-slug');
+                const inputCategory = document.getElementById('settings-category');
+                const inputDate = document.getElementById('settings-date');
+                const inputTime = document.getElementById('settings-time');
                 const textareaExcerpt = document.getElementById('settings-excerpt');
                 const inputGradient = document.getElementById('settings-gradient');
                 
                 btnOpenSettings.addEventListener('click', function() {
                     inputSlug.value = currentPost.slug || '';
+                    if (inputCategory) inputCategory.value = currentPost.category || '';
+                    if (inputDate) inputDate.value = currentPost.date || '';
+                    if (inputTime) inputTime.value = currentPost.readingTime || '';
                     textareaExcerpt.value = currentPost.excerpt || '';
                     inputGradient.value = currentPost.gradient || '';
                     settingsModal.style.display = 'flex';
@@ -1230,12 +1334,76 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
                 btnSaveSettings.addEventListener('click', function() {
                     currentPost.slug = inputSlug.value.trim();
+                    if (inputCategory) currentPost.category = inputCategory.value.trim();
+                    if (inputDate) currentPost.date = inputDate.value.trim();
+                    if (inputTime) currentPost.readingTime = inputTime.value.trim();
                     currentPost.excerpt = textareaExcerpt.value.trim();
                     currentPost.gradient = inputGradient.value.trim();
                     settingsModal.style.display = 'none';
                     syncStateToParent();
                     updateFromPreviewData(true);
                 });
+
+                // Image resizer drag logic for visual editor
+                window.initPreviewImageDragResize = function(e, index) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    var container = document.getElementById('preview-img-container-' + index);
+                    if (!container) return;
+                    
+                    var parentElem = container.parentElement;
+                    var maxParentWidth = parentElem ? parentElem.clientWidth : 800;
+                    var startX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+                    var startWidth = container.offsetWidth;
+                    
+                    function onMove(evt) {
+                        var currentX = evt.type.startsWith('touch') ? evt.touches[0].clientX : evt.clientX;
+                        var diffX = currentX - startX;
+                        var newWidthPx = Math.max(100, Math.min(maxParentWidth, startWidth + diffX));
+                        
+                        container.style.width = newWidthPx + 'px';
+                        
+                        var sizeText = document.getElementById('preview-img-size-text-' + index);
+                        if (sizeText) {
+                            sizeText.innerText = 'Size: ' + newWidthPx + 'px';
+                        }
+                    }
+                    
+                    function onEnd() {
+                        window.removeEventListener('mousemove', onMove);
+                        window.removeEventListener('mouseup', onEnd);
+                        window.removeEventListener('touchmove', onMove);
+                        window.removeEventListener('touchend', onEnd);
+                        
+                        var finalWidth = container.style.width;
+                        if (currentPost && currentPost.blocks && currentPost.blocks[index]) {
+                            currentPost.blocks[index].width = finalWidth;
+                            syncStateToParent();
+                        }
+                    }
+                    
+                    window.addEventListener('mousemove', onMove);
+                    window.addEventListener('mouseup', onEnd);
+                    window.addEventListener('touchmove', onMove, { passive: false });
+                    window.addEventListener('touchend', onEnd);
+                };
+
+                window.setPreviewBlockImageSize = function(index, sizeStr) {
+                    if (currentPost && currentPost.blocks && currentPost.blocks[index]) {
+                        currentPost.blocks[index].width = sizeStr;
+                        syncStateToParent();
+                        renderAllBlocks();
+                    }
+                };
+
+                window.setPreviewBlockImageAlign = function(index, alignStr) {
+                    if (currentPost && currentPost.blocks && currentPost.blocks[index]) {
+                        currentPost.blocks[index].alignment = alignStr;
+                        syncStateToParent();
+                        renderAllBlocks();
+                    }
+                };
 
                 // Bind contenteditable metadata inputs
                 titleEl.contentEditable = 'true';
