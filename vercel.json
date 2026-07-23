@@ -207,6 +207,10 @@
       "destination": "/analytics/frontend/pages/dashboard"
     },
     {
+      "source": "/exly_homepage",
+      "destination": "/exly_homepage.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/blog-detail"
     }
