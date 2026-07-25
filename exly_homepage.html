@@ -1516,10 +1516,10 @@ html {
      PHILOSOPHY SECTION: Fixed height 3D helix carousel
      =========================================================================== */
   .spiral-philosophy-sticky {
-    height: 560px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    overflow: hidden !important;
+    height: auto !important;
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+    overflow: visible !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -1539,9 +1539,24 @@ html {
   }
 
   .spiral-scene {
-    flex: 1 !important;
     width: 100% !important;
-    overflow: hidden !important;
+    overflow: visible !important;
+    margin-top: 20px !important;
+    height: auto !important;
+  }
+
+  .spiral-carousel {
+    height: auto !important;
+    width: 100% !important;
+    transform: none !important;
+  }
+
+  .spiral-card {
+    width: calc(50% - 12px) !important;
+    min-width: 140px !important;
+    height: auto !important;
+    min-height: 170px !important;
+    padding: 16px !important;
   }
 
   /* ===========================================================================
@@ -1694,7 +1709,11 @@ html {
   }
 
   .spiral-philosophy-sticky {
-    height: 520px !important;
+    height: auto !important;
+  }
+  .spiral-card {
+    width: 100% !important;
+    min-width: 100% !important;
   }
 }
 
@@ -1967,7 +1986,7 @@ html {
 /* Section Title */
 .spiral-philosophy-title {
     position: absolute;
-    top: 40px;
+    top: 6vh;
     z-index: 10;
     text-align: center;
     width: 100%;
@@ -1990,47 +2009,52 @@ html {
 /* 3D Scene Viewport */
 .spiral-scene {
     position: relative;
-    perspective: 1400px;
-    perspective-origin: 50% 35%;
     width: 100%;
-    height: 100%;
+    max-width: 1350px;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1;
+    margin-top: -14vh !important;
 }
 
 /* Spiral Carousel base track */
 .spiral-carousel {
     position: relative;
-    width: 320px;
-    height: 200px;
-    transform-style: preserve-3d;
-    will-change: transform;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+    padding: 0 24px;
+    box-sizing: border-box;
 }
 
 /* Glassmorphism Spiral cards */
 .spiral-card {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 320px;
-    height: 200px;
-    margin-left: -160px;
-    margin-top: -100px;
+    position: relative !important;
+    width: calc(20% - 13px) !important;
+    min-width: 170px !important;
+    height: 210px !important;
+    margin: 0 !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    pointer-events: auto !important;
     background: rgba(18, 18, 18, 0.55) !important;
     border: 1.5px solid rgba(255, 140, 0, 0.18) !important;
-    border-radius: 16px;
-    padding: 24px;
-    box-sizing: border-box;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
-    transform-style: preserve-3d;
-    backface-visibility: visible;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    border-radius: 16px !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
 }
 
 .spiral-card:hover {
@@ -2178,11 +2202,17 @@ html {
    ========================================== */
 @media screen and (max-width: 992px) {
     .spiral-card {
-        width: 280px;
-        height: 180px;
-        margin-left: -140px;
-        margin-top: -90px;
-        padding: 20px;
+        width: calc(25% - 12px) !important;
+        height: 180px !important;
+        margin: 0 !important;
+        left: auto !important;
+        top: auto !important;
+        position: relative !important;
+        padding: 20px !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        filter: none !important;
+        pointer-events: auto !important;
     }
     .spiral-card h5 {
         font-size: 15px;
@@ -2194,11 +2224,18 @@ html {
 
 @media screen and (max-width: 768px) {
     .spiral-card {
-        width: 250px;
-        height: 170px;
-        margin-left: -125px;
-        margin-top: -85px;
-        padding: 16px;
+        width: calc(50% - 12px) !important;
+        height: auto !important;
+        min-height: 170px !important;
+        margin: 0 !important;
+        left: auto !important;
+        top: auto !important;
+        position: relative !important;
+        padding: 16px !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        filter: none !important;
+        pointer-events: auto !important;
     }
     .spiral-card h5 {
         font-size: 14px;
@@ -2223,11 +2260,19 @@ html {
 
 @media screen and (max-width: 480px) {
     .spiral-card {
-        width: 220px;
-        height: 155px;
-        margin-left: -110px;
-        margin-top: -77.5px;
-        padding: 14px;
+        width: 100% !important;
+        min-width: 100% !important;
+        height: auto !important;
+        min-height: 155px !important;
+        margin: 0 !important;
+        left: auto !important;
+        top: auto !important;
+        position: relative !important;
+        padding: 14px !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        filter: none !important;
+        pointer-events: auto !important;
     }
     .spiral-card h5 {
         font-size: 13.5px;
@@ -9565,8 +9610,7 @@ body.preloader-active {
         });
     </script>
 
-    <!-- Link Logic Script -->
-    <script src="https://intrinsicvalueequity.in/script.js?v=3"></script>
+    <!-- Link Logic Script (Duplicate external script.js load removed to prevent event conflicts) -->
     <script async src="https://www.smallcase.com/embed/assets/embed.js"></script>
 </body>
 
@@ -9894,45 +9938,7 @@ function init3DSpiral() {
         let targetScrollOffsetAngle = 0;
         let currentScrollOffsetAngle = 0;
         
-        // touch / drag rotation for mobile view (x-axis drag rotates the 3D helix)
-        let isDragging = false;
-        let dragStartX = 0;
-        let dragStartY = 0;
-        let dragStartAngle = 0;
-        
-        const sceneEl = document.querySelector('.spiral-scene');
-        if (sceneEl) {
-            sceneEl.addEventListener('touchstart', (e) => {
-                if (window.innerWidth <= 768) {
-                    isDragging = true;
-                    dragStartX = e.touches[0].clientX;
-                    dragStartY = e.touches[0].clientY;
-                    dragStartAngle = targetScrollOffsetAngle;
-                }
-            }, { passive: false });
-            
-            sceneEl.addEventListener('touchmove', (e) => {
-                if (isDragging && window.innerWidth <= 768) {
-                    const clientX = e.touches[0].clientX;
-                    const clientY = e.touches[0].clientY;
-                    const deltaX = clientX - dragStartX;
-                    const deltaY = clientY - dragStartY;
-                    
-                    // If drag is primarily horizontal, prevent page scrolling so helix rotates smoothly
-                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                        if (e.cancelable) e.preventDefault();
-                    }
-                    
-                    // Drag left (negative deltaX) should rotate forward (less sensitive drag)
-                    const newAngle = dragStartAngle - deltaX * 0.35;
-                    targetScrollOffsetAngle = Math.max(0, Math.min(360, newAngle));
-                }
-            }, { passive: false });
-            
-            sceneEl.addEventListener('touchend', () => {
-                isDragging = false;
-            });
-        }
+        // (Touch/drag listeners removed since carousel rotation is disabled)
         
         const heroSec = document.querySelector('.iv-hero');
         const philosophySticky = document.querySelector('.spiral-philosophy-sticky');
@@ -10155,12 +10161,10 @@ function init3DSpiral() {
 
             const philFadeInStart = 0.5 * windowHeight;
             const philFadeInEnd = 1.0 * windowHeight;
-            const philSpinStart = 1.0 * windowHeight;
-            const philSpinEnd = 1.8 * windowHeight;
-            const philFadeOutStart = 1.8 * windowHeight;
+            const philFadeOutStart = 1.0 * windowHeight;
 
-            const featuredFadeInStart = 1.8 * windowHeight;
-            const featuredFadeInEnd = 2.0 * windowHeight;
+            const featuredFadeInStart = 1.0 * windowHeight;
+            const featuredFadeInEnd = 1.8 * windowHeight;
             const featuredFadeOutStart = 2.1 * windowHeight;
 
             const casesFadeInStart = 2.1 * windowHeight;
@@ -10189,7 +10193,7 @@ function init3DSpiral() {
                 sectionsState.hero.pointerEvents = scrollY < heroFadeEnd ? 'auto' : 'none';
             }
 
-            // 2. Philosophy Section (Entrance, Card Spin, and Exit)
+            // 2. Philosophy Section (Entrance and Exit)
             if (philosophySticky) {
                 if (scrollY < philFadeInStart) {
                     sectionsState.philosophy.targetOpacity = 0;
@@ -10205,20 +10209,10 @@ function init3DSpiral() {
                     sectionsState.philosophy.targetScale = 1;
                     sectionsState.philosophy.pointerEvents = 'auto';
                     targetScrollOffsetAngle = scrollDirection === 'up' ? 360 : 0;
-                } else if (scrollY > philFadeInEnd && scrollY < philFadeOutStart) {
-                    // Active Spin Phase
-                    sectionsState.philosophy.targetOpacity = 1;
-                    sectionsState.philosophy.targetY = 0;
-                    sectionsState.philosophy.targetScale = 1;
-                    sectionsState.philosophy.pointerEvents = 'auto';
-
-                    const spinProgress = (scrollY - philSpinStart) / (philSpinEnd - philSpinStart);
-                    const clampedProgress = Math.max(0, Math.min(1, spinProgress));
-                    targetScrollOffsetAngle = scrollDirection === 'up' ? 360 : (clampedProgress * 360);
                 } else {
-                    // Exiting Philosophy Section (scrollY >= philFadeOutStart) - scroll up naturally
+                    // Exiting Philosophy Section (scrollY > philFadeInEnd) - scroll up naturally immediately
                     const progress = Math.max(0, Math.min(1, (scrollY - philFadeOutStart) / (featuredFadeInEnd - philFadeOutStart)));
-                    sectionsState.philosophy.targetOpacity = 1;
+                    sectionsState.philosophy.targetOpacity = 1 - progress; // Fade out as it exits
                     sectionsState.philosophy.targetY = -progress * windowHeight;
                     sectionsState.philosophy.targetScale = 1;
                     sectionsState.philosophy.pointerEvents = progress < 1 ? 'auto' : 'none';
@@ -10533,67 +10527,13 @@ function init3DSpiral() {
                 }
             }
             
-            // B. Position each card along the helix track coordinates with smooth flying/fading/blur transitions
-            spiralCards.forEach((card, idx) => {
-                const angle = baseAngle + idx * spacing;
-                
-                // Wrap the angle to stay within the repeating track range [-270, 270)
-                let wrapped = (angle - startAngle) % totalRange;
-                if (wrapped < 0) wrapped += totalRange;
-                const trackAngle = startAngle + wrapped;
-                
-                const rotY = trackAngle;
-                const y = -trackAngle * ySpacingFactor; // Negative to make increasing angle translate card upward
-                
-                // 1. Fade out cards near boundaries to make wrapping jumps invisible
-                let boundaryOpacity = 1.0;
-                const fadeWidth = 80; // degrees
-                if (trackAngle < startAngle + fadeWidth) {
-                    boundaryOpacity = (trackAngle - startAngle) / fadeWidth;
-                } else if (trackAngle > (startAngle + totalRange - fadeWidth)) {
-                    boundaryOpacity = (startAngle + totalRange - trackAngle) / fadeWidth;
-                }
-                boundaryOpacity = Math.max(0, Math.min(1, boundaryOpacity));
-                
-                // 2. Continuous flying & faded/blurred rotation based on angle from front (0 degrees)
-                let normAngle = rotY % 360;
-                if (normAngle < 0) normAngle += 360;
-                
-                let angleDiff = Math.abs(normAngle);
-                if (angleDiff > 180) angleDiff = 360 - angleDiff; // [0, 180], where 0 is front, 180 is back
-                
-                let frontProgress = (180 - angleDiff) / 180; // 0 in back, 1 in front
-                let t = (1 - Math.cos(frontProgress * Math.PI)) / 2; // Smooth cosine curve
-                
-                // Lerp scale, radius (depth), depth opacity, and blur amount
-                let currentScale = 0.62 + 0.43 * t; // scales from 0.62 (back) to 1.05 (front)
-                let currentRadius = radius * (0.55 + 0.53 * t); // tight core (0.55*R) to expanded front (1.08*R)
-                
-                // Steeper opacity curve: front card is fully opaque, neighbors and back cards are highly translucent
-                let opacityExponent = window.innerWidth <= 768 ? 6.0 : 3.5;
-                let depthOpacity = 0.03 + 0.97 * Math.pow(t, opacityExponent);
-                let finalOpacity = boundaryOpacity * depthOpacity;
-                let blurAmount = (1 - t) * 7.5; // up to 7.5px blur in back, 0px in front
-                
-                // 3. Smooth hover pop factor interpolation
-                const targetHoverScale = card.isHovered ? 1.06 : 1.0;
-                card.currentHoverScale += (targetHoverScale - card.currentHoverScale) * 0.15;
-                currentScale *= card.currentHoverScale;
-                
-                // Apply computed styles
-                card.style.transform = `rotateY(${rotY.toFixed(1)}deg) translateZ(${currentRadius.toFixed(1)}px) scale(${currentScale.toFixed(3)}) translateY(${y.toFixed(1)}px)`;
-                card.style.opacity = finalOpacity.toFixed(3);
-                card.style.filter = blurAmount > 0.15 ? `blur(${blurAmount.toFixed(2)}px)` : 'none';
-                
-                // Disable clicks and visibility of back-facing/out-of-bounds cards
-                const isBackside = (normAngle > 85 && normAngle < 275);
-                if (boundaryOpacity < 0.08 || finalOpacity < 0.05) {
-                    card.style.visibility = 'hidden';
-                    card.style.pointerEvents = 'none';
-                } else {
-                    card.style.visibility = 'visible';
-                    card.style.pointerEvents = isBackside ? 'none' : 'auto';
-                }
+            // B. Keep cards stable and visible without any transforms/animations
+            spiralCards.forEach((card) => {
+                card.style.transform = '';
+                card.style.opacity = '1';
+                card.style.filter = 'none';
+                card.style.visibility = 'visible';
+                card.style.pointerEvents = 'auto';
             });
             
             // C. Smoothly update and apply Pricing Section elements
