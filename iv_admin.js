@@ -4450,12 +4450,17 @@
             pushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub';
         }
         
+        currentEditingBlog = null;
+        currentEditingBlogIndex = -1;
+        
         var listTabLink = document.getElementById('tab-btn-blogs-list');
         if (listTabLink) listTabLink.click();
     };
 
     window.cancelBlogEdit = function () {
         if (confirm("Discard all unsaved edits to this blog post?")) {
+            currentEditingBlog = null;
+            currentEditingBlogIndex = -1;
             var listTabLink = document.getElementById('tab-btn-blogs-list');
             if (listTabLink) listTabLink.click();
         }
@@ -4625,6 +4630,18 @@
             } else if (event.data.type === 'update_blog_state') {
                 currentEditingBlog = event.data.blog;
                 
+                // Sync currentEditingBlogIndex by matching ID
+                var idx = -1;
+                if (currentEditingBlog) {
+                    for (var i = 0; i < blogsState.length; i++) {
+                        if (blogsState[i] && blogsState[i].id === currentEditingBlog.id) {
+                            idx = i;
+                            break;
+                        }
+                    }
+                }
+                currentEditingBlogIndex = idx;
+                
                 // Sync current state to hidden inputs to keep DOM values matching
                 var tInput = document.getElementById('blog-edit-title');
                 var sInput = document.getElementById('blog-edit-slug');
@@ -4643,6 +4660,15 @@
                 if (rInput) rInput.value = currentEditingBlog.readingTime || "";
                 if (gInput) gInput.value = currentEditingBlog.gradient || "";
                 if (eInput) eInput.value = currentEditingBlog.excerpt || "";
+
+                // Render left editor inputs/sequence blocks
+                renderBlogEditor();
+
+                // Switch to edit tab if we are not already there
+                var editTabLink = document.getElementById('tab-btn-blogs-edit');
+                if (editTabLink && !editTabLink.classList.contains('active')) {
+                    editTabLink.click();
+                }
             }
         });
     }

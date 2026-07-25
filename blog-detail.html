@@ -1692,7 +1692,187 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     }
                 });
 
-                updateFromPreviewData(true);
+                // Define parseHtmlToBlocks inside preview mode scope
+                function parseHtmlToBlocks(html) {
+                    var parser = new DOMParser();
+                    var doc = parser.parseFromString(html, 'text/html');
+                    var blocks = [];
+                    var children = Array.prototype.slice.call(doc.body.childNodes);
+                    
+                    children.forEach(function (node) {
+                        if (node.nodeType === 1) { // ELEMENT_NODE
+                            var tagName = node.tagName.toLowerCase();
+                            if (tagName === 'h2' || tagName === 'h3' || tagName === 'h4' || tagName === 'h1' || tagName === 'h5' || tagName === 'h6') {
+                                blocks.push({
+                                    type: 'heading',
+                                    text: node.innerText.trim()
+                                });
+                            } else if (tagName === 'p') {
+                                var img = node.querySelector('img');
+                                var iframe = node.querySelector('iframe');
+                                var video = node.querySelector('video');
+                                if (img) {
+                                    blocks.push({
+                                        type: 'photo',
+                                        url: img.getAttribute('src') || ''
+                                    });
+                                } else if (iframe) {
+                                    blocks.push({
+                                        type: 'video',
+                                        url: iframe.getAttribute('src') || ''
+                                    });
+                                } else if (video) {
+                                    var source = video.querySelector('source');
+                                    blocks.push({
+                                        type: 'video',
+                                        url: source ? source.getAttribute('src') : (video.getAttribute('src') || '')
+                                    });
+                                } else {
+                                    var inner = node.innerHTML.trim();
+                                    if (inner) {
+                                        var tempDiv = document.createElement('div');
+                                        tempDiv.innerHTML = inner;
+                                        var links = tempDiv.querySelectorAll('a');
+                                        links.forEach(function (a) {
+                                            var md = '[' + a.innerText + '](' + a.getAttribute('href') + ')';
+                                            a.outerHTML = md;
+                                        });
+                                        
+                                        var cleanedText = tempDiv.innerHTML
+                                            .replace(/<br\s*\/?>/gi, '\n')
+                                            .replace(/&amp;/g, '&')
+                                            .replace(/&lt;/g, '<')
+                                            .replace(/&gt;/g, '>')
+                                            .replace(/&quot;/g, '"')
+                                            .replace(/&#039;/g, "'");
+
+                                        blocks.push({
+                                            type: 'paragraph',
+                                            text: cleanedText
+                                        });
+                                    }
+                                }
+                            } else if (tagName === 'img') {
+                                blocks.push({
+                                    type: 'photo',
+                                    url: node.getAttribute('src') || ''
+                                });
+                            } else if (tagName === 'iframe') {
+                                blocks.push({
+                                    type: 'video',
+                                    url: node.getAttribute('src') || ''
+                                });
+                            } else if (tagName === 'video') {
+                                var source = node.querySelector('source');
+                                blocks.push({
+                                    type: 'video',
+                                    url: source ? source.getAttribute('src') : (node.getAttribute('src') || '')
+                                });
+                            } else {
+                                var innerHtml = node.outerHTML.trim();
+                                if (innerHtml) {
+                                    blocks.push({
+                                        type: 'paragraph',
+                                        text: innerHtml
+                                    });
+                                }
+                            }
+                        } else if (node.nodeType === 3) { // TEXT_NODE
+                            var text = node.nodeValue.trim();
+                            if (text) {
+                                blocks.push({
+                                    type: 'paragraph',
+                                    text: text
+                                });
+                            }
+                        }
+                    });
+                    
+                    if (blocks.length === 0 && html.trim() !== '') {
+                        blocks.push({
+                            type: 'paragraph',
+                            text: html.trim()
+                        });
+                    }
+                    return blocks;
+                }
+
+                function initLoadedPost(postObj) {
+                    currentPost = JSON.parse(JSON.stringify(postObj));
+                    if (!currentPost.blocks || currentPost.blocks.length === 0) {
+                        currentPost.blocks = parseHtmlToBlocks(currentPost.content || "");
+                    }
+                    localStorage.setItem('preview_blog_data', JSON.stringify(currentPost));
+                    syncStateToParent();
+                    updateFromPreviewData(true);
+                }
+
+                function safeDecode(str) {
+                    try {
+                        return decodeURIComponent(str || '');
+                    } catch (e) {
+                        return str || '';
+                    }
+                }
+
+                // If postKey is specified, load that post in visual editor preview mode
+                if (postKey) {
+                    var loadedPost = null;
+                    var pendingBlogs = localStorage.getItem('pending_blogs_config');
+                    if (pendingBlogs) {
+                        try {
+                            var blogsList = JSON.parse(pendingBlogs);
+                            loadedPost = blogsList.find(function(b) {
+                                return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === safeDecode(postKey).trim().toLowerCase();
+                            });
+                        } catch (e) {
+                            console.error("Error parsing pending_blogs_config", e);
+                        }
+                    }
+                    
+                    if (loadedPost) {
+                        initLoadedPost(loadedPost);
+                    } else {
+                        fetch('blogs.json?t=' + Date.now())
+                            .then(function(res) { return res.json(); })
+                            .then(function(blogsList) {
+                                loadedPost = blogsList.find(function(b) {
+                                    return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === safeDecode(postKey).trim().toLowerCase();
+                                });
+                                if (loadedPost) {
+                                    initLoadedPost(loadedPost);
+                                } else if (typeof BLOGS_DATA !== 'undefined' && Array.isArray(BLOGS_DATA)) {
+                                    loadedPost = BLOGS_DATA.find(function(b) {
+                                        return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === safeDecode(postKey).trim().toLowerCase();
+                                    });
+                                    if (loadedPost) {
+                                        initLoadedPost(loadedPost);
+                                    } else {
+                                        updateFromPreviewData(true);
+                                    }
+                                } else {
+                                    updateFromPreviewData(true);
+                                }
+                            })
+                            .catch(function(err) {
+                                console.error("Error fetching blogs.json in preview mode", err);
+                                if (typeof BLOGS_DATA !== 'undefined' && Array.isArray(BLOGS_DATA)) {
+                                    loadedPost = BLOGS_DATA.find(function(b) {
+                                        return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === safeDecode(postKey).trim().toLowerCase();
+                                    });
+                                    if (loadedPost) {
+                                        initLoadedPost(loadedPost);
+                                    } else {
+                                        updateFromPreviewData(true);
+                                    }
+                                } else {
+                                    updateFromPreviewData(true);
+                                }
+                            });
+                    }
+                } else {
+                    updateFromPreviewData(true);
+                }
                 
                 window.addEventListener('message', function(event) {
                     if (event.data === 'update_blog_preview') {
