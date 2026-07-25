@@ -5230,6 +5230,11 @@ html {
     transition: opacity 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
 }
 
+.stacked-testimonials-section.flow-layout .testimonial-card.active {
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(255, 140, 0, 0.4) !important;
+    border-color: rgba(255, 140, 0, 0.5) !important;
+}
+
 .stacked-testimonials-section.flow-layout .testimonial-avatar {
     width: 40px !important;
     height: 40px !important;
@@ -10011,16 +10016,12 @@ function init3DSpiral() {
             counterTimeout: null,
             title: {
                 el: pricingTitle,
-                currZ: -600, targetZ: -600,
-                currScale: 0.3, targetScale: 0.3,
+                currY: 50, targetY: 50,
                 currOpacity: 0, targetOpacity: 0
             },
             cards: Array.from(pricingCards).map(card => ({
                 el: card,
-                currZ: -600, targetZ: -600,
-                currScale: 0.3, targetScale: 0.3,
                 currOpacity: 0, targetOpacity: 0,
-                currRotateX: 15, targetRotateX: 15,
                 currY: 50, targetY: 50
             }))
         };
@@ -10328,16 +10329,12 @@ function init3DSpiral() {
                     sectionsState.pricing.targetScale = 1;
                     sectionsState.pricing.pointerEvents = 'none';
                     
-                    // Reset zoom state to background when section is hidden
-                    pricingState.title.targetZ = -600;
-                    pricingState.title.targetScale = 0.3;
+                    // Reset state when section is hidden
+                    pricingState.title.targetY = 50;
                     pricingState.title.targetOpacity = 0;
                     pricingState.cards.forEach(c => {
-                        c.targetZ = -600;
-                        c.targetScale = 0.3;
-                        c.targetOpacity = 0;
-                        c.targetRotateX = 15;
                         c.targetY = 50;
+                        c.targetOpacity = 0;
                     });
                     
                     pricingState.hasAnimatedCounter = false;
@@ -10346,47 +10343,39 @@ function init3DSpiral() {
                         pricingState.counterTimeout = null;
                     }
                 } else if (scrollY >= pricingFadeInStart && scrollY <= pricingFadeInEnd) {
-                    // Entrance Phase - Start zoom animation automatically immediately on reach
+                    // Entrance Phase
                     const progress = (scrollY - pricingFadeInStart) / (pricingFadeInEnd - pricingFadeInStart);
                     sectionsState.pricing.targetOpacity = progress;
                     sectionsState.pricing.targetY = 0.45 * windowHeight * (1 - progress);
                     sectionsState.pricing.targetScale = 1;
                     sectionsState.pricing.pointerEvents = 'auto';
                     
-                    pricingState.title.targetZ = 0;
-                    pricingState.title.targetScale = 1.0;
+                    pricingState.title.targetY = 0;
                     pricingState.title.targetOpacity = 1.0;
                     pricingState.cards.forEach(c => {
-                        c.targetZ = 0;
-                        c.targetScale = 1.0;
-                        c.targetOpacity = 1.0;
-                        c.targetRotateX = 0;
                         c.targetY = 0;
+                        c.targetOpacity = 1.0;
                     });
                     if (pricingState.counterTimeout) {
                         clearTimeout(pricingState.counterTimeout);
                         pricingState.counterTimeout = null;
                     }
                 } else if (scrollY > pricingFadeInEnd && scrollY < pricingFadeOutStart) {
-                    // Active Phase - Keep cards and title zoomed forward
+                    // Active Phase
                     sectionsState.pricing.targetOpacity = 1;
                     sectionsState.pricing.targetY = 0;
                     sectionsState.pricing.targetScale = 1;
                     sectionsState.pricing.pointerEvents = 'auto';
 
-                    pricingState.title.targetZ = 0;
-                    pricingState.title.targetScale = 1.0;
+                    pricingState.title.targetY = 0;
                     pricingState.title.targetOpacity = 1.0;
 
                     pricingState.cards.forEach(c => {
-                        c.targetZ = 0;
-                        c.targetScale = 1.0;
-                        c.targetOpacity = 1.0;
-                        c.targetRotateX = 0;
                         c.targetY = 0;
+                        c.targetOpacity = 1.0;
                     });
 
-                    // Trigger dynamic count-down when cards zoom entrance is complete (visible properly)
+                    // Trigger dynamic count-down when cards entrance is complete
                     if (!pricingState.hasAnimatedCounter && !pricingState.counterTimeout) {
                         pricingState.counterTimeout = setTimeout(() => {
                             animatePriceCounter();
@@ -10402,16 +10391,11 @@ function init3DSpiral() {
                     sectionsState.pricing.targetScale = 1;
                     sectionsState.pricing.pointerEvents = progress < 1 ? 'auto' : 'none';
 
-                    // Title & Cards remain zoomed forward
-                    pricingState.title.targetZ = 0;
-                    pricingState.title.targetScale = 1;
+                    pricingState.title.targetY = 0;
                     pricingState.title.targetOpacity = 1;
                     pricingState.cards.forEach(c => {
-                        c.targetZ = 0;
-                        c.targetScale = 1;
-                        c.targetOpacity = 1;
-                        c.targetRotateX = 0;
                         c.targetY = 0;
+                        c.targetOpacity = 1;
                     });
                     if (pricingState.counterTimeout) {
                         clearTimeout(pricingState.counterTimeout);
@@ -10553,25 +10537,29 @@ function init3DSpiral() {
                     const pricingLerp = 0.08;
                     
                     // Interpolate Title
-                    pricingState.title.currZ += (pricingState.title.targetZ - pricingState.title.currZ) * pricingLerp;
-                    pricingState.title.currScale += (pricingState.title.targetScale - pricingState.title.currScale) * pricingLerp;
+                    pricingState.title.currY += (pricingState.title.targetY - pricingState.title.currY) * pricingLerp;
                     pricingState.title.currOpacity += (pricingState.title.targetOpacity - pricingState.title.currOpacity) * pricingLerp;
                     
+                    if (Math.abs(pricingState.title.targetY - pricingState.title.currY) > 0.05 || Math.abs(pricingState.title.currOpacity - pricingState.title.targetOpacity) > 0.002) {
+                        needsMoreFrames = true;
+                    }
+                    
                     if (pricingState.title.el) {
-                        pricingState.title.el.style.transform = `translate3d(0, 0, ${pricingState.title.currZ.toFixed(1)}px) scale(${pricingState.title.currScale.toFixed(3)})`;
+                        pricingState.title.el.style.transform = `translateY(${pricingState.title.currY.toFixed(1)}px)`;
                         pricingState.title.el.style.opacity = pricingState.title.currOpacity.toFixed(3);
                     }
                     
                     // Interpolate Cards
                     pricingState.cards.forEach(c => {
-                        c.currZ += (c.targetZ - c.currZ) * pricingLerp;
-                        c.currScale += (c.targetScale - c.currScale) * pricingLerp;
-                        c.currOpacity += (c.targetOpacity - c.currOpacity) * pricingLerp;
-                        c.currRotateX += (c.targetRotateX - c.currRotateX) * pricingLerp;
                         c.currY += (c.targetY - c.currY) * pricingLerp;
+                        c.currOpacity += (c.targetOpacity - c.currOpacity) * pricingLerp;
+                        
+                        if (Math.abs(c.targetY - c.currY) > 0.05 || Math.abs(c.currOpacity - c.targetOpacity) > 0.002) {
+                            needsMoreFrames = true;
+                        }
                         
                         if (c.el) {
-                            c.el.style.transform = `translate3d(0, ${c.currY.toFixed(1)}px, ${c.currZ.toFixed(1)}px) scale(${c.currScale.toFixed(3)}) rotateX(${c.currRotateX.toFixed(1)}deg)`;
+                            c.el.style.transform = `translateY(${c.currY.toFixed(1)}px)`;
                             c.el.style.opacity = c.currOpacity.toFixed(3);
                         }
                     });
@@ -11250,12 +11238,11 @@ function initTestimonials() {
                     card.style.visibility = 'visible';
                     card.style.zIndex = d < midPoint ? '10' : '5';
                     
-                    card.style.boxShadow = glow > 0.01 
-                        ? `0 25px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(255, 140, 0, ${(0.5 * glow).toFixed(2)})` 
-                        : '';
-                    card.style.borderColor = glow > 0.01 
-                        ? `rgba(255, 140, 0, ${(0.08 + 0.55 * glow).toFixed(2)})` 
-                        : '';
+                    if (d < midPoint && (1 - d / midPoint) > 0.4) {
+                        card.classList.add('active');
+                    } else {
+                        card.classList.remove('active');
+                    }
                 });
                 
                 flowAnimationId = requestAnimationFrame(animateFlow);
