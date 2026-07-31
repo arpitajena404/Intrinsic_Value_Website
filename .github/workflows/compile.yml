@@ -1,0 +1,50 @@
+name: Auto Compile Static Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'homepage_config.json'
+      - 'pricing.json'
+      - 'blogs.json'
+      - 'live_config.js'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Recompile Static Pages
+        run: |
+          node scripts/update_homepage.js
+          node scripts/update_pricing.js
+
+      - name: Commit & Push Compiled Files
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html pricing.html
+          
+          if git diff --staged --quiet; then
+            echo "No compiled changes to push."
+          else
+            git commit -m "Auto-compiled static pages from CMS changes [skip ci]"
+            git push origin main
+          fi
