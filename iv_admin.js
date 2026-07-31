@@ -382,7 +382,8 @@
                     "Fee/Year": "Custom"
                 }
             }
-        ]
+        ],
+        "analytics_unlock_url": "https://shrtn.in/qE6X3H"
     };
     var DEFAULT_FALLBACK_CONFIG = {
             "navigation": [
@@ -1446,6 +1447,9 @@
         if (!pricingCmsState) return;
         document.getElementById('cms-pricing-title').value = pricingCmsState.pricing_title || '';
         document.getElementById('cms-pricing-subtitle').value = pricingCmsState.pricing_subtitle || '';
+        if (document.getElementById('cms-analytics-unlock-url')) {
+            document.getElementById('cms-analytics-unlock-url').value = pricingCmsState.analytics_unlock_url || 'https://shrtn.in/qE6X3H';
+        }
         document.getElementById('cms-comparison-title').value = pricingCmsState.comparison_title || '';
         document.getElementById('cms-comparison-subtitle').value = pricingCmsState.comparison_subtitle || '';
         
@@ -1583,6 +1587,9 @@
     function compilePricingCmsState() {
         pricingCmsState.pricing_title = document.getElementById('cms-pricing-title').value;
         pricingCmsState.pricing_subtitle = document.getElementById('cms-pricing-subtitle').value;
+        if (document.getElementById('cms-analytics-unlock-url')) {
+            pricingCmsState.analytics_unlock_url = document.getElementById('cms-analytics-unlock-url').value;
+        }
         pricingCmsState.comparison_title = document.getElementById('cms-comparison-title').value;
         pricingCmsState.comparison_subtitle = document.getElementById('cms-comparison-subtitle').value;
         
@@ -3094,6 +3101,15 @@
                 var exportTabLink = document.querySelector('.iv-cms-tab-link[data-tab="tab-export"]');
                 if (exportTabLink) exportTabLink.click();
                 showToast("CMS configs compiled and saved locally in browser!");
+            });
+        }
+
+        var confirmUrlBtn = document.getElementById('cms-analytics-unlock-url-confirm-btn');
+        if (confirmUrlBtn) {
+            confirmUrlBtn.addEventListener('click', function () {
+                compilePricingCmsState();
+                saveConfigToServer('pricing.json', pricingCmsState);
+                showToast("Analytics unlock URL updated! Push to GitHub to apply.");
             });
         }
 

@@ -146,4 +146,32 @@ function compileFile(filePath) {
 
 compileFile(pricingHtmlPath);
 compileFile(indexHtmlPath);
+
+// Sync analytics lock redirects
+function updateAnalyticsJsFiles() {
+    const unlockUrl = config.analytics_unlock_url || "https://shrtn.in/qE6X3H";
+    console.log(`Syncing analytics lock redirects to URL: ${unlockUrl}`);
+
+    const navJsPath = path.join(__dirname, '../analytics/frontend/js/navigation.js');
+    const dashJsPath = path.join(__dirname, '../analytics/frontend/js/modules/dashboard.js');
+
+    if (fs.existsSync(navJsPath)) {
+        let navJsContent = fs.readFileSync(navJsPath, 'utf8');
+        navJsContent = navJsContent.replace(/overlay\.href\s*=\s*"https?:\/\/[^"]+"/g, `overlay.href = "${unlockUrl}"`);
+        navJsContent = navJsContent.replace(/window\.location\.href\s*=\s*"https?:\/\/[^"]+"/g, `window.location.href = "${unlockUrl}"`);
+        fs.writeFileSync(navJsPath, navJsContent, 'utf8');
+        console.log("Successfully updated analytics/frontend/js/navigation.js");
+    }
+
+    if (fs.existsSync(dashJsPath)) {
+        let dashJsContent = fs.readFileSync(dashJsPath, 'utf8');
+        dashJsContent = dashJsContent.replace(/window\.location\.href\s*=\s*"https?:\/\/[^"]+"/g, `window.location.href = "${unlockUrl}"`);
+        fs.writeFileSync(dashJsPath, dashJsContent, 'utf8');
+        console.log("Successfully updated analytics/frontend/js/modules/dashboard.js");
+    }
+}
+
+updateAnalyticsJsFiles();
+
 console.log("Pricing Static Compilation finished successfully.");
+
