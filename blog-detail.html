@@ -59,7 +59,7 @@ window.addEventListener('load', function() {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style id="blogsInlineEditorStyles">
@@ -810,7 +810,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
     <!-- Link Logic Script -->
-    <script src="script.js?v=6" defer></script>
+    <script src="script.js?v=8" defer></script>
     <!-- Dynamic Content Renderer Script -->
     <script>
         // Immediate redirect from old query-string URL to pretty root URL (except in CMS preview)
@@ -1900,7 +1900,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             }
 
             // Fetch /blogs.json from root path
-            fetch('/blogs.json')
+            fetch('/blogs.json?t=' + Date.now())
                 .then(response => {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
