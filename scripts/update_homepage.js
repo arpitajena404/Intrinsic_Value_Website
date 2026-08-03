@@ -1,6 +1,23 @@
 const fs = require('fs');
 const path = require('path');
 
+function safeWriteFileSync(filePath, content, encoding) {
+    let attempts = 5;
+    while (attempts > 0) {
+        try {
+            fs.writeFileSync(filePath, content, encoding);
+            return;
+        } catch (err) {
+            attempts--;
+            if (attempts === 0) {
+                throw err;
+            }
+            const start = Date.now();
+            while (Date.now() - start < 150) {}
+        }
+    }
+}
+
 const configPath = path.join(__dirname, '../homepage_config.json');
 const htmlPath = path.join(__dirname, '../index.html');
 
@@ -561,7 +578,7 @@ const defaultMonth = config.compliance?.default_month || "auto";
 const grievanceDefaultsHtml = `        const GRIEVANCE_DEFAULT_YEAR = "${defaultYear}";\n        const GRIEVANCE_DEFAULT_MONTH = "${defaultMonth}";`;
 replaceSection('GRIEVANCE_DEFAULTS', grievanceDefaultsHtml);
 
-fs.writeFileSync(htmlPath, html, 'utf8');
+safeWriteFileSync(htmlPath, html, 'utf8');
 console.log("Statically compiled index.html successfully!");
 
 // Compile navigation menu for all other HTML pages
@@ -684,7 +701,7 @@ function updateAllPagesNavigation() {
         }
         
         if (modified) {
-            fs.writeFileSync(filePath, content, 'utf8');
+            safeWriteFileSync(filePath, content, 'utf8');
         }
     }
 }
@@ -767,7 +784,7 @@ function updateAllPagesFooterBottom() {
         }
         
         if (modified) {
-            fs.writeFileSync(filePath, content, 'utf8');
+            safeWriteFileSync(filePath, content, 'utf8');
         }
     }
 }
@@ -820,7 +837,7 @@ function updateAllPagesTeam() {
     }
     
     if (modified) {
-        fs.writeFileSync(filePath, content, 'utf8');
+        safeWriteFileSync(filePath, content, 'utf8');
         console.log(`Updated Team section in: about.html`);
     }
 }
@@ -939,7 +956,7 @@ function updateAllPagesAboutBio() {
     }
     
     if (modified) {
-        fs.writeFileSync(filePath, content, 'utf8');
+        safeWriteFileSync(filePath, content, 'utf8');
         console.log(`Updated Bio Profile section in: about.html`);
     }
 }
@@ -998,7 +1015,7 @@ function generateSitemap() {
     
     xml += `</urlset>\n`;
     const sitemapPath = path.join(__dirname, '../sitemap.xml');
-    fs.writeFileSync(sitemapPath, xml, 'utf8');
+    safeWriteFileSync(sitemapPath, xml, 'utf8');
     console.log("Successfully compiled sitemap.xml!");
 }
 
@@ -1011,7 +1028,7 @@ function generateBlogsJsFallback() {
         try {
             const blogsContent = fs.readFileSync(blogsJsonPath, 'utf8');
             const jsContent = `// Automatically generated fallback data for local file:// browsing\nvar BLOGS_DATA = ${blogsContent.trim()};\n`;
-            fs.writeFileSync(blogsJsPath, jsContent, 'utf8');
+            safeWriteFileSync(blogsJsPath, jsContent, 'utf8');
             console.log("Successfully compiled blogs.js fallback!");
         } catch (e) {
             console.error("Error generating blogs.js fallback:", e);

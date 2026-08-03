@@ -1,6 +1,23 @@
 const fs = require('fs');
 const path = require('path');
 
+function safeWriteFileSync(filePath, content, encoding) {
+    let attempts = 5;
+    while (attempts > 0) {
+        try {
+            fs.writeFileSync(filePath, content, encoding);
+            return;
+        } catch (err) {
+            attempts--;
+            if (attempts === 0) {
+                throw err;
+            }
+            const start = Date.now();
+            while (Date.now() - start < 150) {}
+        }
+    }
+}
+
 const configPath = path.join(__dirname, '../pricing.json');
 const pricingHtmlPath = path.join(__dirname, '../pricing.html');
 const indexHtmlPath = path.join(__dirname, '../index.html');
@@ -140,7 +157,7 @@ function compileFile(filePath) {
                         
     replaceSection('COMPARISON_TABLE', tableHtml);
     
-    fs.writeFileSync(filePath, html, 'utf8');
+    safeWriteFileSync(filePath, html, 'utf8');
     console.log(`Successfully compiled pricing data to: ${path.basename(filePath)}`);
 }
 
@@ -149,7 +166,7 @@ compileFile(indexHtmlPath);
 
 // Sync analytics lock redirects
 function updateAnalyticsJsFiles() {
-    const unlockUrl = config.analytics_unlock_url || "https://shrtn.in/qE6X3H";
+    const unlockUrl = config.analytics_unlock_url || "https://premium.intrinsicvalueequity.in/checkout/98ce69d1-d43b-47b2-a06c-f816b3ee8c91?dynamic_link=4ab4ed75-6d6f-4b1a-8084-aee9854d4863";
     console.log(`Syncing analytics lock redirects to URL: ${unlockUrl}`);
 
     const navJsPath = path.join(__dirname, '../analytics/frontend/js/navigation.js');
@@ -159,14 +176,14 @@ function updateAnalyticsJsFiles() {
         let navJsContent = fs.readFileSync(navJsPath, 'utf8');
         navJsContent = navJsContent.replace(/overlay\.href\s*=\s*"https?:\/\/[^"]+"/g, `overlay.href = "${unlockUrl}"`);
         navJsContent = navJsContent.replace(/window\.location\.href\s*=\s*"https?:\/\/[^"]+"/g, `window.location.href = "${unlockUrl}"`);
-        fs.writeFileSync(navJsPath, navJsContent, 'utf8');
+        safeWriteFileSync(navJsPath, navJsContent, 'utf8');
         console.log("Successfully updated analytics/frontend/js/navigation.js");
     }
 
     if (fs.existsSync(dashJsPath)) {
         let dashJsContent = fs.readFileSync(dashJsPath, 'utf8');
         dashJsContent = dashJsContent.replace(/window\.location\.href\s*=\s*"https?:\/\/[^"]+"/g, `window.location.href = "${unlockUrl}"`);
-        fs.writeFileSync(dashJsPath, dashJsContent, 'utf8');
+        safeWriteFileSync(dashJsPath, dashJsContent, 'utf8');
         console.log("Successfully updated analytics/frontend/js/modules/dashboard.js");
     }
 }

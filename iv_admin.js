@@ -383,7 +383,7 @@
                 }
             }
         ],
-        "analytics_unlock_url": "https://shrtn.in/qE6X3H"
+        "analytics_unlock_url": "https://premium.intrinsicvalueequity.in/checkout/98ce69d1-d43b-47b2-a06c-f816b3ee8c91?dynamic_link=4ab4ed75-6d6f-4b1a-8084-aee9854d4863"
     };
     var DEFAULT_FALLBACK_CONFIG = {
             "navigation": [
@@ -1448,7 +1448,7 @@
         document.getElementById('cms-pricing-title').value = pricingCmsState.pricing_title || '';
         document.getElementById('cms-pricing-subtitle').value = pricingCmsState.pricing_subtitle || '';
         if (document.getElementById('cms-analytics-unlock-url')) {
-            document.getElementById('cms-analytics-unlock-url').value = pricingCmsState.analytics_unlock_url || 'https://shrtn.in/qE6X3H';
+            document.getElementById('cms-analytics-unlock-url').value = pricingCmsState.analytics_unlock_url || 'https://premium.intrinsicvalueequity.in/checkout/98ce69d1-d43b-47b2-a06c-f816b3ee8c91?dynamic_link=4ab4ed75-6d6f-4b1a-8084-aee9854d4863';
         }
         document.getElementById('cms-comparison-title').value = pricingCmsState.comparison_title || '';
         document.getElementById('cms-comparison-subtitle').value = pricingCmsState.comparison_subtitle || '';
