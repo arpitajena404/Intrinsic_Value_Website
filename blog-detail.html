@@ -865,11 +865,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             if (!blocks) return html;
             blocks.forEach(function (block) {
                 var rawText = block.text || '';
-                var decodedText = rawText
+                var decodedText = parseLinks(rawText
                     .replace(/&lt;/g, '<')
                     .replace(/&gt;/g, '>')
                     .replace(/&quot;/g, '"')
-                    .replace(/&#039;/g, "'");
+                    .replace(/&#039;/g, "'"));
 
                 if (block.type === 'heading') {
                     if (/<[a-z][\s\S]*>/i.test(decodedText)) {
@@ -884,7 +884,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         var paragraphs = decodedText.split('\n\n').filter(function (p) { return p.trim() !== ''; });
                         paragraphs.forEach(function (p) {
                             var formattedText = escapeHtml(p).replace(/\n/g, '<br />');
-                            formattedText = parseLinks(formattedText);
                             html += '<p>' + formattedText + '</p>\n';
                         });
                     }
@@ -915,7 +914,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
 
         function parseLinks(text) {
-            return text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+            if (!text) return '';
+            return text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function(match, text, url) {
+                var href = url.trim();
+                if (!/^https?:\/\//i.test(href) && !href.startsWith('/') && !href.startsWith('#') && !href.startsWith('mailto:')) {
+                    href = 'https://' + href;
+                }
+                return '<a href="' + href + '" target="_blank" rel="noopener noreferrer">' + text + '</a>';
+            });
         }
 
         function getYouTubeEmbedUrl(url) {
@@ -1472,6 +1478,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 const btnItalic = document.getElementById('btn-italic');
                 const btnUnderline = document.getElementById('btn-underline');
                 const btnList = document.getElementById('btn-list');
+                const btnLink = document.getElementById('btn-link');
                 const btnColor = document.getElementById('btn-color');
 
                 // Saved selection helper to prevent losing focus when typing hex codes
@@ -1523,7 +1530,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }
 
                 // Prevent losing selection on click of toolbar items, EXCEPT inside text inputs
-                [btnBold, btnItalic, btnUnderline, btnList, btnColor, colorPalette].forEach(el => {
+                [btnBold, btnItalic, btnUnderline, btnList, btnLink, btnColor, colorPalette].forEach(el => {
                     if (el) {
                         el.addEventListener('mousedown', function(e) {
                             if (e.target.tagName !== 'INPUT') {
@@ -1555,6 +1562,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     btnList.addEventListener('click', () => {
                         document.execCommand('insertUnorderedList', false, null);
                         triggerInputOnActiveElement();
+                    });
+                }
+                if (btnLink) {
+                    btnLink.addEventListener('click', () => {
+                        const url = prompt("Enter link URL (e.g. https://example.com):", "https://");
+                        if (url && url.trim() !== "" && url.trim() !== "https://") {
+                            let linkUrl = url.trim();
+                            if (!/^https?:\/\//i.test(linkUrl) && !linkUrl.startsWith('/') && !linkUrl.startsWith('#') && !linkUrl.startsWith('mailto:')) {
+                                linkUrl = 'https://' + linkUrl;
+                            }
+                            restoreSelection();
+                            document.execCommand('createLink', false, linkUrl);
+                            const sel = window.getSelection();
+                            if (sel && sel.anchorNode) {
+                                const parentEl = sel.anchorNode.nodeType === 3 ? sel.anchorNode.parentElement : sel.anchorNode;
+                                const linkEl = parentEl ? parentEl.closest('a') : null;
+                                if (linkEl) {
+                                    linkEl.setAttribute('target', '_blank');
+                                    linkEl.setAttribute('rel', 'noopener noreferrer');
+                                    linkEl.style.color = 'var(--accent, #FF8C00)';
+                                    linkEl.style.textDecoration = 'underline';
+                                }
+                            }
+                            triggerInputOnActiveElement();
+                        }
                     });
                 }
                 if (btnColor) {
@@ -2042,6 +2074,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button type="button" id="btn-italic" title="Italic" style="background: transparent; color: #fff; border: none; font-style: italic; cursor: pointer; padding: 6px 10px; font-size: 13px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;"><i class="fa-solid fa-italic"></i></button>
         <button type="button" id="btn-underline" title="Underline" style="background: transparent; color: #fff; border: none; text-decoration: underline; cursor: pointer; padding: 6px 10px; font-size: 13px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;"><i class="fa-solid fa-underline"></i></button>
         <button type="button" id="btn-list" title="Bullet List" style="background: transparent; color: #fff; border: none; cursor: pointer; padding: 6px 10px; font-size: 13px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;"><i class="fa-solid fa-list-ul"></i></button>
+        <button type="button" id="btn-link" title="Insert Link" style="background: transparent; color: #fff; border: none; cursor: pointer; padding: 6px 10px; font-size: 13px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;"><i class="fa-solid fa-link"></i></button>
         <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2); margin: 0 4px;"></div>
         <div style="position: relative; display: flex; align-items: center;">
             <button type="button" id="btn-color" title="Text Color" style="background: transparent; color: var(--accent); border: none; cursor: pointer; padding: 6px 10px; font-size: 13px; border-radius: 4px; display: flex; align-items: center; justify-content: center; gap: 4px; transition: background 0.2s;">

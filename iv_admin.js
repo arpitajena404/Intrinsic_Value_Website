@@ -1120,14 +1120,31 @@
         return trimmed;
     };
 
+    window.safeSetLocalStorage = function(key, value) {
+        try {
+            localStorage.setItem(key, value);
+            return true;
+        } catch (err) {
+            console.warn("[CMS Admin] Could not save key '" + key + "' to localStorage:", err);
+            if (err && (err.name === 'QuotaExceededError' || err.name === 'NS_ERROR_DOM_QUOTA_REACHED' || err.code === 22)) {
+                if (typeof showToast === 'function') {
+                    showToast("Notice: Browser storage limit reached. Please publish edits to GitHub or clear cache.", "warning");
+                }
+            }
+            return false;
+        }
+    };
+
     window.handleSimulatedFileChange = function(input) {
         if (input.files && input.files[0]) {
             var file = input.files[0];
+            var cleanFileName = file.name.replace(/[^a-zA-Z0-9_.-]/g, '_');
+            var uniqueFileName = Date.now() + '_' + cleanFileName;
             var path = '';
             if (simulatedUploadFolder) {
-                path = simulatedUploadFolder + '/' + file.name;
+                path = simulatedUploadFolder + '/' + uniqueFileName;
             } else {
-                path = file.name;
+                path = uniqueFileName;
             }
 
             var reader = new FileReader();
@@ -1139,7 +1156,7 @@
                     var pendingMap = JSON.parse(localStorage.getItem('pending_images_map')) || {};
                     pendingMap[path] = fullDataUrl;
                     pendingMap['/' + path] = fullDataUrl;
-                    localStorage.setItem('pending_images_map', JSON.stringify(pendingMap));
+                    safeSetLocalStorage('pending_images_map', JSON.stringify(pendingMap));
                 } catch(err) {
                     console.warn("Could not save pending_images_map", err);
                 }
@@ -1151,7 +1168,7 @@
                     content: base64Data,
                     encoding: 'base64'
                 });
-                localStorage.setItem('pending_file_uploads', JSON.stringify(pendingUploads));
+                safeSetLocalStorage('pending_file_uploads', JSON.stringify(pendingUploads));
 
                 // If this is local development, write to Python server if active
                 var isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
@@ -4452,11 +4469,12 @@
 
         if (currentEditingBlogIndex === -1) {
             blogsState.unshift(currentEditingBlog);
+            currentEditingBlogIndex = 0;
         } else {
             blogsState[currentEditingBlogIndex] = currentEditingBlog;
         }
 
-        localStorage.setItem('pending_blogs_config', JSON.stringify(blogsState));
+        safeSetLocalStorage('pending_blogs_config', JSON.stringify(blogsState));
         renderBlogsList();
         
         // Highlight the push button to indicate unsaved edits
@@ -4493,6 +4511,15 @@
                 .replace(/&quot;/g, '"')
                 .replace(/&#039;/g, "'");
 
+            // Convert Markdown links [Text](URL) into <a href="URL" target="_blank" rel="noopener noreferrer">Text</a>
+            decodedText = decodedText.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function(match, text, url) {
+                var href = url.trim();
+                if (!/^https?:\/\//i.test(href) && !href.startsWith('/') && !href.startsWith('#') && !href.startsWith('mailto:')) {
+                    href = 'https://' + href;
+                }
+                return '<a href="' + href + '" target="_blank" rel="noopener noreferrer">' + text + '</a>';
+            });
+
             if (block.type === 'heading') {
                 if (/<[a-z][\s\S]*>/i.test(decodedText)) {
                     html += '<h2 class="blog-highlighted-heading">' + decodedText + '</h2>\n';
@@ -4506,7 +4533,6 @@
                     var paragraphs = decodedText.split('\n\n').filter(function (p) { return p.trim() !== ''; });
                     paragraphs.forEach(function (p) {
                         var formattedText = escapeHtml(p).replace(/\n/g, '<br />');
-                        formattedText = formattedText.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
                         html += '<p>' + formattedText + '</p>\n';
                     });
                 }
