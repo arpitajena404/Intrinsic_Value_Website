@@ -1036,5 +1036,256 @@ function generateBlogsJsFallback() {
     }
 }
 
+// 15. Update Nikhil Gangil Bio / Profile Page (nikhil-gangil-indian-value-investor.html)
+function updateNikhilProfilePage() {
+    const nikhilJsonPath = path.join(__dirname, '../nikhil_profile_config.json');
+    const nikhilHtmlPath = path.join(__dirname, '../nikhil-gangil-indian-value-investor.html');
+
+    if (!fs.existsSync(nikhilJsonPath) || !fs.existsSync(nikhilHtmlPath)) {
+        return;
+    }
+
+    try {
+        const nikhilConfig = JSON.parse(fs.readFileSync(nikhilJsonPath, 'utf8'));
+        let content = fs.readFileSync(nikhilHtmlPath, 'utf8').replace(/\r\n/g, '\n');
+        let modified = false;
+
+        function replaceInFile(sectionName, newHtml) {
+            const startMarker = `<!-- CMS_${sectionName}_START -->`;
+            const endMarker = `<!-- CMS_${sectionName}_END -->`;
+            const startIndex = content.indexOf(startMarker);
+            const endIndex = content.indexOf(endMarker);
+
+            if (startIndex !== -1 && endIndex !== -1) {
+                const before = content.substring(0, startIndex + startMarker.length);
+                const after = content.substring(endIndex);
+                content = before + "\n" + newHtml + "\n" + after;
+                modified = true;
+            }
+        }
+
+        // Header
+        if (nikhilConfig.header) {
+            const headerHtml = `                        <div class="profile-title-area">
+                            <h1 class="profile-name">${nikhilConfig.header.name || "Nikhil Gangil"}</h1>
+                            <p class="profile-subtitle">${nikhilConfig.header.subtitle || ""}</p>
+                            <div class="profile-underline"></div>
+                        </div>`;
+            replaceInFile('NIKHIL_HEADER', headerHtml);
+        }
+
+        // Bio Paragraphs
+        if (nikhilConfig.bio_paragraphs && Array.isArray(nikhilConfig.bio_paragraphs)) {
+            const bioHtml = nikhilConfig.bio_paragraphs.map(p => `                            <p>${p}</p>`).join('\n');
+            replaceInFile('NIKHIL_BIO', bioHtml);
+        }
+
+        // Philosophy
+        if (nikhilConfig.philosophy) {
+            const philHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;">${nikhilConfig.philosophy.title || "Investment Philosophy"}</h3>\n` +
+                (nikhilConfig.philosophy.paragraphs || []).map(p => `                            <p>${p}</p>`).join('\n');
+            replaceInFile('NIKHIL_PHILOSOPHY', philHtml);
+        }
+
+        // Experience
+        if (nikhilConfig.experience) {
+            const expList = (nikhilConfig.experience.items || []).map(item => `                                <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
+                                    <span style="color: var(--accent); font-size: 1.1rem; line-height: 1.2;"><i class="${item.icon || 'fa-solid fa-briefcase'}"></i></span>
+                                    <div><strong>${item.title}</strong>${item.description ? " – " + item.description : ""}</div>
+                                </li>`).join('\n');
+            const expHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;">${nikhilConfig.experience.title || "Experience & Background"}</h3>
+                            <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem;">
+${expList}
+                            </ul>`;
+            replaceInFile('NIKHIL_EXPERIENCE', expHtml);
+        }
+
+        // Media Reach
+        if (nikhilConfig.media_reach) {
+            const reachList = (nikhilConfig.media_reach.stats || []).map(st => `                                <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
+                                    <span style="color: var(--accent); font-size: 1.1rem; line-height: 1.2;"><i class="${st.icon || 'fa-brands fa-youtube'}"></i></span>
+                                    <div>${st.bold ? "<strong>" + st.bold + "</strong> " : ""}${st.text || ""}</div>
+                                </li>`).join('\n');
+            const reachHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;">${nikhilConfig.media_reach.title || "Media Presence & Public Reach"}</h3>
+                            <p>${nikhilConfig.media_reach.intro || ""}</p>
+                            <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 1.5rem;">
+${reachList}
+                            </ul>`;
+            replaceInFile('NIKHIL_MEDIA_REACH', reachHtml);
+        }
+
+        // Predictions
+        if (nikhilConfig.predictions) {
+            const predItems = (nikhilConfig.predictions.items || []).map(pred => {
+                const linkHtml = pred.link_url ? ` <a href="${pred.link_url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">${pred.link_text || "View Link"} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i></a>` : "";
+                return `                                <div style="position: relative;">
+                                    <div style="position: absolute; left: -29px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent);"></div>
+                                    <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;">${pred.date_title}</strong>
+                                    <p style="font-size: 0.95rem; margin: 0 0 6px 0;">${pred.description}${linkHtml}</p>
+                                </div>`;
+            }).join('\n\n');
+            const predHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;">${nikhilConfig.predictions.title || "Market Cycle Predictions"}</h3>
+                            <p style="margin-bottom: 1.5rem;">${nikhilConfig.predictions.subtitle || ""}</p>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 1.5rem; border-left: 2px solid rgba(255, 255, 255, 0.05); padding-left: 1.5rem; margin-left: 0.5rem;">
+${predItems}
+                            </div>`;
+            replaceInFile('NIKHIL_PREDICTIONS', predHtml);
+        }
+
+        // Achievements
+        if (nikhilConfig.achievements) {
+            const achList = (nikhilConfig.achievements.items || []).map(ach => `                                <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
+                                    <span style="color: var(--accent); font-size: 1.1rem; line-height: 1.2;"><i class="${ach.icon || 'fa-solid fa-award'}"></i></span>
+                                    <div>${ach.html}</div>
+                                </li>`).join('\n');
+            const achHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;">${nikhilConfig.achievements.title || "Key Achievements & Contributions"}</h3>
+                            <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem;">
+${achList}
+                            </ul>`;
+            replaceInFile('NIKHIL_ACHIEVEMENTS', achHtml);
+        }
+
+        // Expertise
+        if (nikhilConfig.expertise) {
+            const expList = (nikhilConfig.expertise.items || []).map(it => `                                <li style="display: flex; align-items: flex-start; gap: 8px;">
+                                    <span>–</span>
+                                    <span>${it}</span>
+                                </li>`).join('\n');
+            const expHtml = `                            <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;">${nikhilConfig.expertise.title || "Areas of Expertise:"}</h3>
+                            <div style="width: 60px; height: 4px; background-color: var(--accent); margin: 0 0 1.5rem 0; border-radius: 2px;"></div>
+                            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.1rem; line-height: 1.6; color: var(--text-muted);">
+${expList}
+                            </ul>`;
+            replaceInFile('NIKHIL_EXPERTISE', expHtml);
+        }
+
+        // Featured Articles
+        if (nikhilConfig.featured_articles) {
+            const artItems = (nikhilConfig.featured_articles.items || []).map(art => `                                <a href="${art.url}" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); border-radius: 12px; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'; this.style.borderColor='var(--accent)';" onmouseout="this.style.background='rgba(255,255,255,0.01)'; this.style.borderColor='rgba(255,255,255,0.03)';">
+                                    <span style="color: var(--text-primary); font-size: 0.95rem;"><strong>${art.publication}:</strong> ${art.title}</span>
+                                    <span style="color: var(--accent); font-size: 0.9rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+                                </a>`).join('\n\n');
+            const artHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;">${nikhilConfig.featured_articles.title || "Key Featured Articles"}</h3>
+                            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+${artItems}
+                            </div>`;
+            replaceInFile('NIKHIL_ARTICLES', artHtml);
+        }
+
+        // YouTube Interviews
+        if (nikhilConfig.youtube_interviews) {
+            const ytList = (nikhilConfig.youtube_interviews.items || []).map(yt => `                                <li style="word-break: break-all;">
+                                    ${yt.title} – <a href="${yt.url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none;">${yt.url}</a>
+                                </li>`).join('\n');
+            const ytHtml = `                            <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;">${nikhilConfig.youtube_interviews.title || "Interviews on Prominent Youtube channels:"}</h3>
+                            <div style="width: 60px; height: 4px; background-color: var(--accent); margin: 0 0 1.5rem 0; border-radius: 2px;"></div>
+                            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.1rem; line-height: 1.6; color: var(--text-muted);">
+${ytList}
+                            </ul>`;
+            replaceInFile('NIKHIL_INTERVIEWS', ytHtml);
+        }
+
+        // Other News & Media Mentions
+        if (nikhilConfig.news_mentions) {
+            const newsItems = (nikhilConfig.news_mentions.items || []).map(nm => `                                <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px;">
+                                    <span style="font-size: 0.95rem; color: var(--text-muted);"><strong>${nm.source}:</strong> ${nm.headline}</span>
+                                    <a href="${nm.url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">Read Article <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i></a>
+                                </div>`).join('\n\n');
+            const newsHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;">${nikhilConfig.news_mentions.title || "Other News & Media Mentions"}</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem;">
+${newsItems}
+                            </div>`;
+            replaceInFile('NIKHIL_NEWS', newsHtml);
+        }
+
+        // Ensure main_cms_controller.js is loaded
+        if (!content.includes('main_cms_controller.js')) {
+            content = content.replace('</body>', '    <script src="main_cms_controller.js?v=9" defer></script>\n</body>');
+            modified = true;
+        }
+
+        if (modified) {
+            safeWriteFileSync(nikhilHtmlPath, content, 'utf8');
+            console.log("Successfully compiled nikhil-gangil-indian-value-investor.html!");
+        }
+    } catch (e) {
+        console.error("Error compiling nikhil profile page:", e);
+    }
+}
+
+// 16. Update Legal & Compliance Pages
+function updateLegalCompliancePages() {
+    const legalJsonPath = path.join(__dirname, '../legal_config.json');
+    const legalDir = path.join(__dirname, '../Legal&Compliance');
+
+    if (!fs.existsSync(legalJsonPath) || !fs.existsSync(legalDir)) {
+        return;
+    }
+
+    try {
+        const legalConfig = JSON.parse(fs.readFileSync(legalJsonPath, 'utf8'));
+        const docMap = {
+            'disclaimer.html': 'disclaimer',
+            'privacypolicy.html': 'privacypolicy',
+            'tnc.html': 'tnc',
+            'investorcharter.html': 'investorcharter'
+        };
+
+        for (const [filename, docKey] of Object.entries(docMap)) {
+            const filePath = path.join(legalDir, filename);
+            if (!fs.existsSync(filePath)) continue;
+
+            const docData = legalConfig[docKey];
+            if (!docData) continue;
+
+            let content = fs.readFileSync(filePath, 'utf8').replace(/\r\n/g, '\n');
+            let modified = false;
+
+            // Header
+            const startHeaderMarker = '<!-- CMS_LEGAL_HEADER_START -->';
+            const endHeaderMarker = '<!-- CMS_LEGAL_HEADER_END -->';
+            const startHIdx = content.indexOf(startHeaderMarker);
+            const endHIdx = content.indexOf(endHeaderMarker);
+
+            if (startHIdx !== -1 && endHIdx !== -1) {
+                const headerHtml = `                <h1 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 0.75rem;">${docData.title}</h1>
+                <p style="color: var(--text-secondary); font-size: 1rem;">${docData.subtitle || ""}</p>
+                <div style="width: 60px; height: 3px; background: var(--accent-primary, #f97316); border-radius: 2px; margin-top: 1rem;"></div>`;
+                content = content.substring(0, startHIdx + startHeaderMarker.length) + "\n" + headerHtml + "\n" + content.substring(endHIdx);
+                modified = true;
+            }
+
+            // Body Content
+            const startContentMarker = '<!-- CMS_LEGAL_CONTENT_START -->';
+            const endContentMarker = '<!-- CMS_LEGAL_CONTENT_END -->';
+            const startCIdx = content.indexOf(startContentMarker);
+            const endCIdx = content.indexOf(endContentMarker);
+
+            if (startCIdx !== -1 && endCIdx !== -1 && docData.html_content) {
+                content = content.substring(0, startCIdx + startContentMarker.length) + "\n\n" + docData.html_content.trim() + "\n\n" + content.substring(endCIdx);
+                modified = true;
+            }
+
+            // Ensure main_cms_controller.js is loaded
+            if (!content.includes('main_cms_controller.js')) {
+                content = content.replace('</body>', '    <script src="../main_cms_controller.js?v=9" defer></script>\n</body>');
+                modified = true;
+            }
+
+            if (modified) {
+                safeWriteFileSync(filePath, content, 'utf8');
+                console.log(`Successfully compiled Legal&Compliance/${filename}!`);
+            }
+        }
+    } catch (e) {
+        console.error("Error compiling legal pages:", e);
+    }
+}
+
+updateNikhilProfilePage();
+updateLegalCompliancePages();
+
 generateSitemap();
 generateBlogsJsFallback();
+

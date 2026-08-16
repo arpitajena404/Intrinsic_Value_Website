@@ -1,0 +1,306 @@
+{
+    "header": {
+        "name": "Nikhil Gangil",
+        "subtitle": "Indian Value Investor & Cyclical Investing Specialist",
+        "photo": "/profile.jpeg"
+    },
+    "bio_paragraphs": [
+        "Nikhil Gangil is an Indian value investor and the Founder of <strong>Intrinsic Value Equity Advisors</strong>, with over 13 years of experience in Indian equity markets. He is known for his focus on long-term value investing, cyclical opportunities, and disciplined capital protection.",
+        "His work combines business quality analysis, valuation discipline, and an understanding of economic and sectoral cycles, with the objective of achieving sustainable long-term compounding while avoiding permanent capital loss.",
+        "Nikhil Gangil is frequently cited by Indian financial media for his views on market cycles, valuation discipline, and long-term investing in Indian equities."
+    ],
+    "philosophy": {
+        "title": "Investment Philosophy",
+        "paragraphs": [
+            "Nikhil\u2019s investing philosophy is built on the belief that value and growth are not opposites, but complements. He emphasizes that long-term wealth creation comes from buying well-run businesses at reasonable valuations and allowing time, process, and discipline to work in the investor\u2019s favor.",
+            "His approach prioritizes downside risk management first, with returns viewed as a by-product of correct decision-making rather than speculation."
+        ]
+    },
+    "experience": {
+        "title": "Experience & Background",
+        "items": [
+            {
+                "icon": "fa-solid fa-briefcase",
+                "title": "Founder, Intrinsic Value Equity Advisors",
+                "description": "13+ years of experience in Indian equity markets"
+            },
+            {
+                "icon": "fa-solid fa-chart-line",
+                "title": "Practitioner of long-term value investing",
+                "description": "and cyclical investing strategies"
+            },
+            {
+                "icon": "fa-solid fa-industry",
+                "title": "Experience across key sectors",
+                "description": "infrastructure, construction, steel, oil & gas, and other cyclical sectors"
+            },
+            {
+                "icon": "fa-solid fa-shield-halved",
+                "title": "Capital Protection",
+                "description": "Strong focus on capital protection and risk-adjusted returns"
+            },
+            {
+                "icon": "fa-solid fa-graduation-cap",
+                "title": "Ex-IIT Madras, Ex-Larsen & Toubro",
+                "description": ""
+            }
+        ]
+    },
+    "media_reach": {
+        "title": "Media Presence & Public Reach",
+        "intro": "Nikhil Gangil actively shares his views on investing, markets, and business cycles across multiple platforms and has built a significant public following.",
+        "stats": [
+            {
+                "icon": "fa-brands fa-youtube",
+                "bold": "10 Lakhs (1 Million+)",
+                "text": "people have seen his journey on YouTube."
+            },
+            {
+                "icon": "fa-solid fa-users",
+                "bold": "13,000+ Investors",
+                "text": "mentored on Value and Multibagger investing through workshops."
+            }
+        ]
+    },
+    "predictions": {
+        "title": "Market Cycle Predictions",
+        "subtitle": "Nikhil has successfully predicted many market cycles",
+        "items": [
+            {
+                "date_title": "March 2026 – Predicted Indian Market Bottom",
+                "description": "Called the Indian stock market bottom on March 29, 2026, supported by a detailed market thesis and analysis. The market’s subsequent performance validated the prediction.",
+                "link_text": "Watch Video",
+                "link_url": "https://youtu.be/cMSGq2VGiK8?si=ogHxeERmnD7tnx2S"
+            },
+            {
+                "date_title": "April 2026 – Bull Market Bottom",
+                "description": "Predicted the start of the bull market and market bottom in a featured interview with Money 9 Managing Director, Sandeep Grover.",
+                "link_text": "Watch Interview",
+                "link_url": "https://youtu.be/rbc_PGQY-FU?si=kFBu4IvE9qjeokYX"
+            },
+            {
+                "date_title": "IT & Chemical Top / Shift to Infra & Real Estate",
+                "description": "Predicted the end of the bull cycle in IT and specialty chemicals and the beginning of the new cycle in Infrastructure, Real Estate, Engineering, and Tobacco.",
+                "link_text": "Read February Newsletter",
+                "link_url": "/intrinsic-value-feb-newsletter"
+            },
+            {
+                "date_title": "October 2024 \u2013 Calling the Market Top",
+                "description": "Publicly called the market top on October 16, 2024, and announced one of his largest portfolio exits.",
+                "link_text": "View Post on X",
+                "link_url": "https://x.com/Intrinsic_cycle/status/1846495829214773491?s=20"
+            },
+            {
+                "date_title": "Asian Paints Peak",
+                "description": "Predicted the end of the bull cycle for Asian Paints when the stock was trading at peak valuations.",
+                "link_text": "View Post on X",
+                "link_url": "https://x.com/Intrinsic_cycle/status/1493130465154269184?s=20"
+            },
+            {
+                "date_title": "Early Adopter of PSU & PSB Sectors",
+                "description": "One of the earliest adopters of Public Sector Undertakings (PSU) and Public Sector Banks (PSB) before their massive market rally.",
+                "link_text": "View Links",
+                "link_url": "https://x.com/Intrinsic_cycle/status/1293087292916002816?s=20"
+            },
+            {
+                "date_title": "Hindustan Unilever Top",
+                "description": "Predicted the end of the bull cycle for Hindustan Unilever at peak intrinsic value.",
+                "link_text": "View Post on X",
+                "link_url": "https://x.com/Intrinsic_cycle/status/1616709143624314882?s=20"
+            },
+            {
+                "date_title": "Challenging 2025 Market Outlook",
+                "description": "Successfully predicted in December 2024 that 2025 would be a challenging yet familiar year for equity markets.",
+                "link_text": "Read Business Today Article",
+                "link_url": "https://www.businesstoday.in/personal-finance/investment/story/2025-will-be-challenging-for-equity-markets-but-familiar-says-nikhil-gangil-of-intrinsic-value-455725-2024-11-30"
+            }
+        ]
+    },
+    "achievements": {
+        "title": "Key Achievements & Contributions",
+        "items": [
+            {
+                "icon": "fa-solid fa-file-invoice-dollar",
+                "html": "Author of 30+ investing articles and research pieces."
+            },
+            {
+                "icon": "fa-solid fa-square-poll-vertical",
+                "html": "<strong>Author of the GAWP Index</strong> (Age Parity Index of Wealth). <a href=\"https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5283330\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;\">View Research Paper <i class=\"fa-solid fa-arrow-up-right-from-square\" style=\"font-size: 10px;\"></i></a>"
+            },
+            {
+                "icon": "fa-solid fa-award",
+                "html": "Recognized as a Top Leader in <strong>\"15 Business Leaders to Look Out for in 2024\"</strong> by The Economic Times. <a href=\"https://economictimes.indiatimes.com/news/india/15-business-leaders-to-lookout-in-2024/articleshow/108236623.cms?from=mdr\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;\">Read ET Article <i class=\"fa-solid fa-arrow-up-right-from-square\" style=\"font-size: 10px;\"></i></a>"
+            },
+            {
+                "icon": "fa-solid fa-microphone-lines",
+                "html": "Featured guest speaker at IIT Madras OE Alumni talks. <a href=\"https://www.linkedin.com/posts/oeac-iitm_oealumnitalks-iitmadras-oceanengineering-activity-7434859155380789248-_Yj1\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: var(--accent); text-decoration: none;\">LinkedIn Post 1</a> | <a href=\"https://www.linkedin.com/posts/nikhil-gangil-intrinsic-value-equity_ten-years-ago-i-was-a-student-at-iit-madras-activity-7435966660852760576-PUnM\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: var(--accent); text-decoration: none;\">LinkedIn Post 2</a>"
+            },
+            {
+                "icon": "fa-solid fa-chalkboard-user",
+                "html": "<strong>Guest speaker at Josh Talks, ET Markets, Upsurge, Elearn Markets, Samco Securities, The Vishal Hour</strong>, and other prominent platforms. <a href=\"https://youtu.be/XbugDzU3nBA?si=w7jUMDpLgKVYfsOG\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;\">Watch Video <i class=\"fa-solid fa-arrow-up-right-from-square\" style=\"font-size: 10px;\"></i></a>"
+            },
+            {
+                "icon": "fa-brands fa-youtube",
+                "html": "Creator of YouTube channels with cumulative views exceeding 10 Lakhs."
+            },
+            {
+                "icon": "fa-solid fa-graduation-cap",
+                "html": "Conducts offline value investing workshop programs. <a href=\"https://workshop.intrinsicvalueequity.in/offline/\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;\">Join Workshop <i class=\"fa-solid fa-arrow-up-right-from-square\" style=\"font-size: 10px;\"></i></a>"
+            }
+        ]
+    },
+    "expertise": {
+        "title": "Areas of Expertise:",
+        "items": [
+            "Indian value investing",
+            "Cyclical investing in Indian equities",
+            "Business quality and governance analysis",
+            "Valuation-driven stock selection",
+            "Long-term portfolio construction",
+            "Capital protection and risk management"
+        ]
+    },
+    "featured_articles": {
+        "title": "Key Featured Articles",
+        "items": [
+            {
+                "publication": "Business Today",
+                "title": "6,700% Returns: How this IITian spotted 10 multibaggers",
+                "url": "https://www.businesstoday.in/markets/story/6700-returns-heres-how-this-29-year-old-iitian-spotted-10-multi-baggers-346796-2022-09-09"
+            },
+            {
+                "publication": "The Economic Times",
+                "title": "Expert Profile & Live Streams",
+                "url": "https://economictimes.indiatimes.com/markets/etmarkets-live/expert-bio/nikhil-gangil,expertid-60.cms"
+            },
+            {
+                "publication": "ET Markets Live",
+                "title": "Opportunities After Election Results",
+                "url": "https://economictimes.indiatimes.com/markets/etmarkets-live/opportunities-after-election-result/streamsrecorded/streamid-npnf7xjg6k,expertid-60.cms"
+            },
+            {
+                "publication": "ET Markets Live",
+                "title": "Sharing a Potential Outperformer (Part 1)",
+                "url": "https://economictimes.indiatimes.com/markets/etmarkets-live/sharing-a-potential-outperformer/streamsrecorded/streamid-npnf7p7g6k,expertid-60.cms"
+            },
+            {
+                "publication": "ET Markets Live",
+                "title": "Sharing a Potential Outperformer (Part 2)",
+                "url": "https://economictimes.indiatimes.com/markets/etmarkets-live/sharing-a-potential-outperformer/streamsrecorded/streamid-npnfxwtg6k,expertid-60.cms"
+            },
+            {
+                "publication": "ET Markets Live",
+                "title": "Sharing a Potential Outperformer (Part 3)",
+                "url": "https://economictimes.indiatimes.com/markets/etmarkets-live/sharing-a-potential-outperformer/streamsrecorded/streamid-npnfye5g6k,expertid-60.cms"
+            },
+            {
+                "publication": "ET Markets Live",
+                "title": "Brands You Cannot Ignore",
+                "url": "https://economictimes.indiatimes.com/markets/etmarkets-live/brand-you-can-not-ignore/streamsrecorded/streamid-npnfypdg6k,expertid-60.cms"
+            },
+            {
+                "publication": "ET Markets Live",
+                "title": "Can we invest in Infosys today?",
+                "url": "https://economictimes.indiatimes.com/markets/etmarkets-live/can-we-invest-in-infosys-today/streamsrecorded/streamid-npnfst7g6u,expertid-60.cms"
+            }
+        ]
+    },
+    "youtube_interviews": {
+        "title": "Interviews on Prominent Youtube channels:",
+        "items": [
+            {
+                "title": "Latest session with Upsurge on Value investing",
+                "url": "https://youtu.be/hqOajC30RV4?si=4f-QSEMki3T9oP7W"
+            },
+            {
+                "title": "Upsurge on investing strategy",
+                "url": "https://youtu.be/XKZ8qCc9Z0k?si=Hcf6tsvbHmKbG_nb"
+            },
+            {
+                "title": "The Vishal hours youtube",
+                "url": "https://www.youtube.com/watch?v=vKs1OAGWKLU&t=38s"
+            },
+            {
+                "title": "Upsurge",
+                "url": "https://youtu.be/K1Cvm67LhJw?si=RE7uK9rKV9GX3Ntb"
+            },
+            {
+                "title": "Elearn market",
+                "url": "https://youtu.be/dXEipa5_M3I?si=jhgShzMJh-z13nkx"
+            },
+            {
+                "title": "SAMCO securities",
+                "url": "https://youtu.be/ZBJJqq8fcql?si=5mn4oukOmGUUTcHG"
+            },
+            {
+                "title": "Smallcase",
+                "url": "https://www.youtube.com/live/oBxEBGXS2p0?si=uYicx-pX8ACAOYCo"
+            },
+            {
+                "title": "Stock Gro",
+                "url": "https://www.youtube.com/watch?v=equLqWn3H_E"
+            }
+        ]
+    },
+    "news_mentions": {
+        "title": "Other News & Media Mentions",
+        "items": [
+            {
+                "source": "Stocktwits",
+                "headline": "Net Worth Calculator Framework",
+                "url": "https://stocktwits.com/news-articles/business/others/gangil-net-worth-calculator/chlEB00Rby2"
+            },
+            {
+                "source": "MSN / Stocktwits",
+                "headline": "Cautious on Solar Margin Squeeze",
+                "url": "https://www.msn.com/en-us/money/economy/indian-solar-firms-may-face-margin-squeeze-if-tariff-shield-fades-sebi-ra-warns-of-sunshine-trap/ar-AA1Gv35r?ocid=BingNewsVerp"
+            },
+            {
+                "source": "MSN",
+                "headline": "Every 3 Months Expect a Dip - Corrections are Features",
+                "url": "https://www.msn.com/en-us/money/markets/every-3-months-expect-a-dip-sebi-ra-nikhil-gangil-on-why-market-corrections-are-not-a-bug-but-a-feature/ar-AA1GDIM4?ocid=finance-verthp-feeds&cvid=df469070490448c59406089cf7aaa8aa&ei=20"
+            },
+            {
+                "source": "MSN",
+                "headline": "Protean eGov Crash & Valuation Discipline",
+                "url": "https://www.msn.com/en-us/money/savingandinvesting/protean-egov-crashes-20-after-tender-loss-sebi-ra-nikhil-gangil-urges-valuation-discipline/ar-AA1F2kWv?ocid=finance-verthp-feeds&cvid=958eeb34db9f4fc5bc318f7d05d2c5da&ei=8"
+            },
+            {
+                "source": "Investing.com",
+                "headline": "Age-Adjusted Net Worth Framework",
+                "url": "https://in.investing.com/news/stock-market-news/sebiregistered-analyst-nikhil-gangil-formulates-ageadjusted-framework-to-calculate-net-worth-4868026"
+            },
+            {
+                "source": "MSN",
+                "headline": "HDFC Bank fraud FIR vs Strong Financials",
+                "url": "https://www.msn.com/en-us/money/markets/hdfc-bank-stock-steady-despite-fraud-fir-underpinned-by-strong-financials-sebi-ras/ar-AA1GlBzY?ocid=finance-verthp-feeds&cvid=19a48c54d0a64df1861a4da4cb8028ae&ei=19"
+            },
+            {
+                "source": "Inshorts",
+                "headline": "Analysis of the Paytm Fall",
+                "url": "https://shrts.in/7aDPi"
+            },
+            {
+                "source": "Investing.com",
+                "headline": "L&T Finance Valuation Checks",
+                "url": "https://in.investing.com/news/stock-market-news/lt-finance-checks-all-the-right-boxes-for-longterm-gains-sebi-ra-nikhil-gangil-4879153"
+            },
+            {
+                "source": "Investing.com",
+                "headline": "Vedanta Dividend Delusion & Red Flags",
+                "url": "https://in.investing.com/news/stock-market-news/vedantas-dividend-delusion-retail-investors-may-be-ignoring-the-red-flags-says-sebi-ra-nikhil-gangil-4882614"
+            },
+            {
+                "source": "Business Standard",
+                "headline": "2026 Asset Allocation Advice",
+                "url": "https://www.business-standard.com/finance/personal-finance/gold-up-65-small-caps-down-7-5-where-investors-should-invest-in-2026-125121700275_1.html"
+            }
+        ]
+    },
+    "social_links": {
+        "twitter": "https://x.com/Intrinsic_cycle",
+        "linkedin": "https://www.linkedin.com/in/nikhil-gangil-intrinsic-value-equity/",
+        "youtube": "https://www.youtube.com/@intrinsicvalueequity",
+        "ssrn": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5283330"
+    }
+}

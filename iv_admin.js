@@ -2887,6 +2887,56 @@
             });
         }
 
+        // Scoped for Legal CMS
+        var legalWorkspace = document.getElementById('legalCmsWorkspace');
+        if (legalWorkspace) {
+            var legalLinks = legalWorkspace.querySelectorAll('.iv-cms-tab-link');
+            legalLinks.forEach(function (link) {
+                link.addEventListener('click', function () {
+                    var tabId = link.getAttribute('data-tab');
+                    legalLinks.forEach(function (l) { l.classList.remove('active'); });
+                    link.classList.add('active');
+
+                    var legalContents = legalWorkspace.querySelectorAll('.iv-cms-tab-content');
+                    legalContents.forEach(function (c) { c.classList.remove('active'); });
+
+                    var targetContent = document.getElementById(tabId);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+
+                    if (tabId === 'tab-legal-export') {
+                        compileLegalCmsState();
+                    }
+                });
+            });
+        }
+
+        // Scoped for Nikhil Profile CMS
+        var nikhilWorkspace = document.getElementById('nikhilProfileCmsWorkspace');
+        if (nikhilWorkspace) {
+            var nikhilLinks = nikhilWorkspace.querySelectorAll('.iv-cms-tab-link');
+            nikhilLinks.forEach(function (link) {
+                link.addEventListener('click', function () {
+                    var tabId = link.getAttribute('data-tab');
+                    nikhilLinks.forEach(function (l) { l.classList.remove('active'); });
+                    link.classList.add('active');
+
+                    var nikhilContents = nikhilWorkspace.querySelectorAll('.iv-cms-tab-content');
+                    nikhilContents.forEach(function (c) { c.classList.remove('active'); });
+
+                    var targetContent = document.getElementById(tabId);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+
+                    if (tabId === 'tab-nikhil-export') {
+                        compileNikhilProfileCmsState();
+                    }
+                });
+            });
+        }
+
         // Scoped for Blogs CMS
         var blogsWorkspace = document.getElementById('blogsCmsWorkspace');
         if (blogsWorkspace) {
@@ -3303,18 +3353,39 @@
             });
         }
 
-        // Toggle Sidebar Layout (Left Pane)
-        var toggleLayoutBtn = document.getElementById('toggleLayoutBtn');
-        var editorPane = document.querySelector('.iv-cms-editor-pane');
-        if (toggleLayoutBtn && editorPane) {
-            toggleLayoutBtn.addEventListener('click', function() {
-                if (editorPane.style.display === 'none' || editorPane.style.display === '') {
-                    editorPane.style.display = 'flex';
+        // Universal Toggle Sidebar Layout (Left Pane) for all CMS workspaces
+        function bindSidebarToggle(btnId, sidebarId, splitterId) {
+            var btn = document.getElementById(btnId);
+            var sidebar = document.getElementById(sidebarId);
+            var splitter = splitterId ? document.getElementById(splitterId) : null;
+            if (!btn || !sidebar) return;
+
+            btn.addEventListener('click', function() {
+                var isHidden = sidebar.style.display === 'none';
+                if (isHidden) {
+                    sidebar.style.display = 'flex';
+                    if (splitter) splitter.style.display = 'flex';
+                    btn.classList.remove('active');
+                    btn.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    btn.style.background = 'rgba(255, 255, 255, 0.05)';
+                    var label = btn.querySelector('.sidebar-btn-text');
+                    if (label) label.innerText = 'Hide Sidebar';
                 } else {
-                    editorPane.style.display = 'none';
+                    sidebar.style.display = 'none';
+                    if (splitter) splitter.style.display = 'none';
+                    btn.classList.add('active');
+                    btn.style.borderColor = 'var(--accent)';
+                    btn.style.background = 'rgba(255, 140, 0, 0.15)';
+                    var label = btn.querySelector('.sidebar-btn-text');
+                    if (label) label.innerText = 'Show Sidebar';
                 }
             });
         }
+
+        bindSidebarToggle('toggleHomepageSidebarBtn', 'homepageEditorSidebar', 'homepageCmsSplitter');
+        bindSidebarToggle('toggleBlogsSidebarBtn', 'blogsEditorSidebar', 'blogsCmsSplitter');
+        bindSidebarToggle('toggleLegalSidebarBtn', 'legalEditorSidebar', 'legalCmsSplitter');
+        bindSidebarToggle('toggleNikhilProfileSidebarBtn', 'nikhilProfileEditorSidebar', 'nikhilProfileCmsSplitter');
 
         // Highlight Elements Checkbox
         var editModeToggle = document.getElementById('editModeToggle');
@@ -3651,6 +3722,14 @@
             if (pendingWorkshop) {
                 var workshopContentStr = "var WORKSHOP_CONFIG = " + JSON.stringify(JSON.parse(pendingWorkshop), null, 4) + ";\n";
                 filesToCommit.push({ path: 'workshop/workshop_config.js', content: workshopContentStr, encoding: 'utf-8' });
+            }
+            var pendingLegal = localStorage.getItem('pending_legal_config');
+            if (pendingLegal) {
+                filesToCommit.push({ path: 'legal_config.json', content: pendingLegal, encoding: 'utf-8' });
+            }
+            var pendingNikhil = localStorage.getItem('pending_nikhil_profile_config');
+            if (pendingNikhil) {
+                filesToCommit.push({ path: 'nikhil_profile_config.json', content: pendingNikhil, encoding: 'utf-8' });
             }
 
             pendingUploads.forEach(function(up) {
@@ -4715,6 +4794,1051 @@
         });
     }
 
+    // ==========================================
+    // 5. LEGAL & COMPLIANCE CMS CONTROLLER
+    // ==========================================
+    var legalConfigState = null;
+    var currentLegalDoc = 'disclaimer';
+    var legalDocFileMap = {
+        'disclaimer': 'Legal&Compliance/disclaimer.html',
+        'privacypolicy': 'Legal&Compliance/privacypolicy.html',
+        'tnc': 'Legal&Compliance/tnc.html',
+        'investorcharter': 'Legal&Compliance/investorcharter.html',
+        'grievance_redressal': 'Legal&Compliance/Grievance Redressal.html'
+    };
+
+    function loadLegalCmsData() {
+        var cached = localStorage.getItem('pending_legal_config');
+        if (cached) {
+            try {
+                legalConfigState = JSON.parse(cached);
+                populateLegalForm();
+                return;
+            } catch (e) {
+                console.error("Error parsing cached legal config:", e);
+            }
+        }
+
+        fetch('legal_config.json?t=' + Date.now())
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                legalConfigState = data;
+                populateLegalForm();
+            })
+            .catch(function(err) {
+                console.error("Error fetching legal_config.json:", err);
+            });
+    }
+
+    function populateLegalForm() {
+        if (!legalConfigState) return;
+
+        var docData = legalConfigState[currentLegalDoc] || {};
+        var tInput = document.getElementById('legal-edit-title');
+        var sInput = document.getElementById('legal-edit-subtitle');
+        var cInput = document.getElementById('legal-edit-content');
+        var heading = document.getElementById('legalCurrentDocHeading');
+
+        var docNames = {
+            'disclaimer': 'Disclaimer Details',
+            'privacypolicy': 'Privacy Policy Details',
+            'tnc': 'Terms & Conditions (MITC) Details',
+            'investorcharter': 'Investor Charter Details',
+            'grievance_redressal': 'Grievance Redressal Details'
+        };
+        if (heading) heading.innerText = docNames[currentLegalDoc] || 'Document Details';
+
+        if (tInput) tInput.value = docData.title || "";
+        if (sInput) sInput.value = docData.subtitle || "";
+        if (cInput) cInput.value = docData.html_content || "";
+
+        // Grievance extra fields
+        var extraFields = document.getElementById('legalGrievanceExtraFields');
+        if (currentLegalDoc === 'grievance_redressal') {
+            if (extraFields) extraFields.style.display = 'block';
+            var emailInput = document.getElementById('legal-edit-officer-email');
+            var introInput = document.getElementById('legal-edit-grievance-intro');
+            if (emailInput) emailInput.value = docData.officer_email || "";
+            if (introInput) introInput.value = docData.intro_text || "";
+        } else {
+            if (extraFields) extraFields.style.display = 'none';
+        }
+
+        // Compliance Meta tab
+        var meta = legalConfigState.shared_meta || {};
+        var entityIn = document.getElementById('legal-meta-entity');
+        var regIn = document.getElementById('legal-meta-reg');
+        var valIn = document.getElementById('legal-meta-validity');
+        var p1In = document.getElementById('legal-meta-phone1');
+        var p2In = document.getElementById('legal-meta-phone2');
+        var emIn = document.getElementById('legal-meta-email');
+        var addIn = document.getElementById('legal-meta-address');
+        var odrIn = document.getElementById('legal-meta-odr');
+
+        if (entityIn) entityIn.value = meta.entity_name || "";
+        if (regIn) regIn.value = meta.sebi_reg_no || "";
+        if (valIn) valIn.value = meta.validity || "";
+        if (p1In) p1In.value = (meta.phones && meta.phones[0]) || "";
+        if (p2In) p2In.value = (meta.phones && meta.phones[1]) || "";
+        if (emIn) emIn.value = meta.email || "";
+        if (addIn) addIn.value = meta.registered_address || "";
+        if (odrIn) odrIn.value = meta.smart_odr_url || "";
+
+        syncLegalToIframe();
+    }
+
+    function syncLegalCurrentDocFromForm() {
+        if (!legalConfigState) return;
+        if (!legalConfigState[currentLegalDoc]) legalConfigState[currentLegalDoc] = {};
+
+        var tInput = document.getElementById('legal-edit-title');
+        var sInput = document.getElementById('legal-edit-subtitle');
+        var cInput = document.getElementById('legal-edit-content');
+
+        if (tInput) legalConfigState[currentLegalDoc].title = tInput.value;
+        if (sInput) legalConfigState[currentLegalDoc].subtitle = sInput.value;
+        if (cInput) legalConfigState[currentLegalDoc].html_content = cInput.value;
+
+        if (currentLegalDoc === 'grievance_redressal') {
+            var emailInput = document.getElementById('legal-edit-officer-email');
+            var introInput = document.getElementById('legal-edit-grievance-intro');
+            if (emailInput) legalConfigState[currentLegalDoc].officer_email = emailInput.value;
+            if (introInput) legalConfigState[currentLegalDoc].intro_text = introInput.value;
+        }
+
+        // Collect Meta
+        if (!legalConfigState.shared_meta) legalConfigState.shared_meta = {};
+        var entityIn = document.getElementById('legal-meta-entity');
+        var regIn = document.getElementById('legal-meta-reg');
+        var valIn = document.getElementById('legal-meta-validity');
+        var p1In = document.getElementById('legal-meta-phone1');
+        var p2In = document.getElementById('legal-meta-phone2');
+        var emIn = document.getElementById('legal-meta-email');
+        var addIn = document.getElementById('legal-meta-address');
+        var odrIn = document.getElementById('legal-meta-odr');
+
+        if (entityIn) legalConfigState.shared_meta.entity_name = entityIn.value;
+        if (regIn) legalConfigState.shared_meta.sebi_reg_no = regIn.value;
+        if (valIn) legalConfigState.shared_meta.validity = valIn.value;
+        if (p1In || p2In) legalConfigState.shared_meta.phones = [p1In ? p1In.value : "", p2In ? p2In.value : ""].filter(Boolean);
+        if (emIn) legalConfigState.shared_meta.email = emIn.value;
+        if (addIn) legalConfigState.shared_meta.registered_address = addIn.value;
+        if (odrIn) legalConfigState.shared_meta.smart_odr_url = odrIn.value;
+    }
+
+    function switchLegalDoc(docId) {
+        syncLegalCurrentDocFromForm();
+        currentLegalDoc = docId;
+        var selector = document.getElementById('legalDocSelector');
+        if (selector) selector.value = docId;
+
+        var iframe = document.getElementById('legalPreviewIframe');
+        var titleSpan = document.getElementById('legalPreviewTitle');
+        var targetFile = legalDocFileMap[docId] || 'Legal&Compliance/disclaimer.html';
+        if (iframe) iframe.src = targetFile;
+        if (titleSpan) titleSpan.innerText = 'Live Preview: ' + targetFile.split('/').pop();
+
+        populateLegalForm();
+    }
+
+    function syncLegalToIframe() {
+        var iframe = document.getElementById('legalPreviewIframe');
+        if (iframe && iframe.contentWindow && legalConfigState) {
+            iframe.contentWindow.postMessage({
+                type: 'set_legal_config',
+                config: legalConfigState
+            }, '*');
+        }
+    }
+
+    window.updateLegalLivePreview = function() {
+        syncLegalCurrentDocFromForm();
+        syncLegalToIframe();
+    };
+
+    window.insertLegalTag = function(tag) {
+        var textarea = document.getElementById('legal-edit-content');
+        if (!textarea) return;
+        var start = textarea.selectionStart;
+        var end = textarea.selectionEnd;
+        var sel = textarea.value.substring(start, end);
+        var insert = "";
+
+        if (tag === 'h2') insert = '<h2>' + (sel || 'Section Title') + '</h2>';
+        else if (tag === 'p') insert = '<p>' + (sel || 'Enter paragraph text here...') + '</p>';
+        else if (tag === 'strong') insert = '<strong>' + (sel || 'bold text') + '</strong>';
+        else if (tag === 'ul') insert = '<ul>\n    <li>' + (sel || 'List item') + '</li>\n</ul>';
+
+        textarea.value = textarea.value.substring(0, start) + insert + textarea.value.substring(end);
+        textarea.selectionStart = textarea.selectionEnd = start + insert.length;
+        textarea.focus();
+        window.updateLegalLivePreview();
+    };
+
+    function compileLegalCmsState() {
+        syncLegalCurrentDocFromForm();
+        var jsonText = JSON.stringify(legalConfigState, null, 4);
+        localStorage.setItem('pending_legal_config', jsonText);
+        var displayBox = document.getElementById('legalJsonDisplay');
+        if (displayBox) displayBox.innerText = jsonText;
+        return jsonText;
+    }
+
+    function copyLegalJsonToClipboard() {
+        var jsonText = compileLegalCmsState();
+        navigator.clipboard.writeText(jsonText).then(function () {
+            showToast("legal_config.json copied!");
+        }).catch(function (err) {
+            console.error("Could not copy text: ", err);
+        });
+    }
+
+    function downloadLegalJsonFile() {
+        var jsonText = compileLegalCmsState();
+        var blob = new Blob([jsonText], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'legal_config.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast("Downloading legal_config.json");
+    }
+
+    function bindLegalCmsWorkspaceEvents() {
+        var workspace = document.getElementById('legalCmsWorkspace');
+        var openBtn = document.getElementById('openLegalCmsBtn');
+        var closeBtn = document.getElementById('closeLegalCmsBtn');
+        var saveBtn = document.getElementById('legalSaveBtn');
+        var copyBtn = document.getElementById('legalCopyJsonBtn');
+        var downloadBtn = document.getElementById('legalDownloadJsonBtn');
+        var docSelector = document.getElementById('legalDocSelector');
+
+        if (openBtn && workspace) {
+            openBtn.addEventListener('click', function () {
+                workspace.style.display = 'block';
+                loadLegalCmsData();
+                var firstTab = document.getElementById('tab-btn-legal-edit');
+                if (firstTab) firstTab.click();
+            });
+        }
+
+        if (closeBtn && workspace) {
+            closeBtn.addEventListener('click', function () {
+                compileLegalCmsState();
+                saveConfigToServer('legal_config.json', legalConfigState);
+                workspace.style.display = 'none';
+                showToast("Unsaved edits stored in browser! Push to GitHub to go live.");
+            });
+        }
+
+        if (saveBtn) {
+            saveBtn.addEventListener('click', function () {
+                compileLegalCmsState();
+                saveConfigToServer('legal_config.json', legalConfigState);
+                var exportTab = document.getElementById('tab-btn-legal-export');
+                if (exportTab) exportTab.click();
+                showToast("Legal disclosures saved locally & compiled!");
+            });
+        }
+
+        if (copyBtn) copyBtn.addEventListener('click', copyLegalJsonToClipboard);
+        if (downloadBtn) downloadBtn.addEventListener('click', downloadLegalJsonFile);
+
+        if (docSelector) {
+            docSelector.addEventListener('change', function () {
+                switchLegalDoc(docSelector.value);
+            });
+        }
+
+        // Device toggle listeners for Legal Preview
+        var deviceBtns = document.querySelectorAll('.btn-device-toggle-legal');
+        var previewPane = document.querySelector('#legalCmsWorkspace .iv-cms-preview-pane');
+        deviceBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                deviceBtns.forEach(function (b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                var dev = btn.getAttribute('data-device');
+                if (previewPane) {
+                    previewPane.classList.remove('device-laptop', 'device-phone');
+                    previewPane.classList.add('device-' + dev);
+                }
+            });
+        });
+    }
+
+
+    // ==========================================
+    // 6. NIKHIL GANGIL BIO & PROFILE CMS CONTROLLER
+    // ==========================================
+    var nikhilProfileState = null;
+
+    function loadNikhilProfileCmsData() {
+        var cached = localStorage.getItem('pending_nikhil_profile_config');
+        if (cached) {
+            try {
+                nikhilProfileState = JSON.parse(cached);
+                populateNikhilProfileForm();
+                return;
+            } catch (e) {
+                console.error("Error parsing cached Nikhil profile config:", e);
+            }
+        }
+
+        fetch('nikhil_profile_config.json?t=' + Date.now())
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                nikhilProfileState = data;
+                populateNikhilProfileForm();
+            })
+            .catch(function(err) {
+                console.error("Error fetching nikhil_profile_config.json:", err);
+            });
+    }
+
+    function populateNikhilProfileForm() {
+        if (!nikhilProfileState) return;
+
+        // Header
+        var nameIn = document.getElementById('nikhil-header-name');
+        var subIn = document.getElementById('nikhil-header-subtitle');
+        var photoIn = document.getElementById('nikhil-header-photo');
+        if (nikhilProfileState.header) {
+            if (nameIn) nameIn.value = nikhilProfileState.header.name || "";
+            if (subIn) subIn.value = nikhilProfileState.header.subtitle || "";
+            if (photoIn) photoIn.value = nikhilProfileState.header.photo || "";
+        }
+
+        // Philosophy Title
+        var philTitleIn = document.getElementById('nikhil-philosophy-title');
+        if (nikhilProfileState.philosophy && philTitleIn) {
+            philTitleIn.value = nikhilProfileState.philosophy.title || "";
+        }
+
+        // Experience Title
+        var expTitleIn = document.getElementById('nikhil-exp-title');
+        if (nikhilProfileState.experience && expTitleIn) {
+            expTitleIn.value = nikhilProfileState.experience.title || "";
+        }
+
+        // Media Reach
+        var reachTitleIn = document.getElementById('nikhil-reach-title');
+        var reachIntroIn = document.getElementById('nikhil-reach-intro');
+        if (nikhilProfileState.media_reach) {
+            if (reachTitleIn) reachTitleIn.value = nikhilProfileState.media_reach.title || "";
+            if (reachIntroIn) reachIntroIn.value = nikhilProfileState.media_reach.intro || "";
+        }
+
+        // Predictions
+        var predTitleIn = document.getElementById('nikhil-pred-title');
+        var predSubIn = document.getElementById('nikhil-pred-subtitle');
+        if (nikhilProfileState.predictions) {
+            if (predTitleIn) predTitleIn.value = nikhilProfileState.predictions.title || "";
+            if (predSubIn) predSubIn.value = nikhilProfileState.predictions.subtitle || "";
+        }
+
+        // Achievements & Expertise
+        var achTitleIn = document.getElementById('nikhil-ach-title');
+        var expListTitleIn = document.getElementById('nikhil-exp-list-title');
+        if (nikhilProfileState.achievements && achTitleIn) {
+            achTitleIn.value = nikhilProfileState.achievements.title || "";
+        }
+        if (nikhilProfileState.expertise && expListTitleIn) {
+            expListTitleIn.value = nikhilProfileState.expertise.title || "";
+        }
+
+        // Render dynamic repeaters
+        renderNikhilBioParagraphs();
+        renderNikhilPhilosophyParagraphs();
+        renderNikhilExperienceItems();
+        renderNikhilReachStats();
+        renderNikhilPredictions();
+        renderNikhilAchievements();
+        renderNikhilExpertise();
+        renderNikhilArticles();
+        renderNikhilInterviews();
+        renderNikhilNewsMentions();
+
+        syncNikhilToIframe();
+    }
+
+    function syncNikhilProfileFromForm() {
+        if (!nikhilProfileState) return;
+
+        // Header
+        if (!nikhilProfileState.header) nikhilProfileState.header = {};
+        var nameIn = document.getElementById('nikhil-header-name');
+        var subIn = document.getElementById('nikhil-header-subtitle');
+        var photoIn = document.getElementById('nikhil-header-photo');
+        if (nameIn) nikhilProfileState.header.name = nameIn.value;
+        if (subIn) nikhilProfileState.header.subtitle = subIn.value;
+        if (photoIn) nikhilProfileState.header.photo = photoIn.value;
+
+        // Bio Paragraphs
+        var bioInputs = document.querySelectorAll('.nikhil-bio-p-input');
+        var bioList = [];
+        bioInputs.forEach(function(inp) { bioList.push(inp.value); });
+        nikhilProfileState.bio_paragraphs = bioList;
+
+        // Philosophy
+        if (!nikhilProfileState.philosophy) nikhilProfileState.philosophy = {};
+        var philTitleIn = document.getElementById('nikhil-philosophy-title');
+        if (philTitleIn) nikhilProfileState.philosophy.title = philTitleIn.value;
+        var philInputs = document.querySelectorAll('.nikhil-phil-p-input');
+        var philList = [];
+        philInputs.forEach(function(inp) { philList.push(inp.value); });
+        nikhilProfileState.philosophy.paragraphs = philList;
+
+        // Experience
+        if (!nikhilProfileState.experience) nikhilProfileState.experience = {};
+        var expTitleIn = document.getElementById('nikhil-exp-title');
+        if (expTitleIn) nikhilProfileState.experience.title = expTitleIn.value;
+        var expItems = [];
+        var expNodes = document.querySelectorAll('.nikhil-exp-item-block');
+        expNodes.forEach(function(node) {
+            var icon = node.querySelector('.exp-icon-in').value;
+            var title = node.querySelector('.exp-title-in').value;
+            var desc = node.querySelector('.exp-desc-in').value;
+            expItems.push({ icon: icon, title: title, description: desc });
+        });
+        nikhilProfileState.experience.items = expItems;
+
+        // Reach
+        if (!nikhilProfileState.media_reach) nikhilProfileState.media_reach = {};
+        var reachTitleIn = document.getElementById('nikhil-reach-title');
+        var reachIntroIn = document.getElementById('nikhil-reach-intro');
+        if (reachTitleIn) nikhilProfileState.media_reach.title = reachTitleIn.value;
+        if (reachIntroIn) nikhilProfileState.media_reach.intro = reachIntroIn.value;
+        var reachStats = [];
+        var reachNodes = document.querySelectorAll('.nikhil-reach-stat-block');
+        reachNodes.forEach(function(node) {
+            var icon = node.querySelector('.reach-icon-in').value;
+            var bold = node.querySelector('.reach-bold-in').value;
+            var text = node.querySelector('.reach-text-in').value;
+            reachStats.push({ icon: icon, bold: bold, text: text });
+        });
+        nikhilProfileState.media_reach.stats = reachStats;
+
+        // Predictions
+        if (!nikhilProfileState.predictions) nikhilProfileState.predictions = {};
+        var predTitleIn = document.getElementById('nikhil-pred-title');
+        var predSubIn = document.getElementById('nikhil-pred-subtitle');
+        if (predTitleIn) nikhilProfileState.predictions.title = predTitleIn.value;
+        if (predSubIn) nikhilProfileState.predictions.subtitle = predSubIn.value;
+        var predItems = [];
+        var predNodes = document.querySelectorAll('.nikhil-pred-item-block');
+        predNodes.forEach(function(node) {
+            var dateTitle = node.querySelector('.pred-date-in').value;
+            var desc = node.querySelector('.pred-desc-in').value;
+            var linkText = node.querySelector('.pred-linktext-in').value;
+            var linkUrl = node.querySelector('.pred-linkurl-in').value;
+            predItems.push({ date_title: dateTitle, description: desc, link_text: linkText, link_url: linkUrl });
+        });
+        nikhilProfileState.predictions.items = predItems;
+
+        // Achievements
+        if (!nikhilProfileState.achievements) nikhilProfileState.achievements = {};
+        var achTitleIn = document.getElementById('nikhil-ach-title');
+        if (achTitleIn) nikhilProfileState.achievements.title = achTitleIn.value;
+        var achItems = [];
+        var achNodes = document.querySelectorAll('.nikhil-ach-item-block');
+        achNodes.forEach(function(node) {
+            var icon = node.querySelector('.ach-icon-in').value;
+            var html = node.querySelector('.ach-html-in').value;
+            achItems.push({ icon: icon, html: html });
+        });
+        nikhilProfileState.achievements.items = achItems;
+
+        // Expertise
+        if (!nikhilProfileState.expertise) nikhilProfileState.expertise = {};
+        var expListTitleIn = document.getElementById('nikhil-exp-list-title');
+        if (expListTitleIn) nikhilProfileState.expertise.title = expListTitleIn.value;
+        var expBullets = [];
+        var expBulletInputs = document.querySelectorAll('.nikhil-exp-bullet-in');
+        expBulletInputs.forEach(function(inp) { expBullets.push(inp.value); });
+        nikhilProfileState.expertise.items = expBullets;
+
+        // Featured Articles
+        if (!nikhilProfileState.featured_articles) nikhilProfileState.featured_articles = {};
+        var artItems = [];
+        var artNodes = document.querySelectorAll('.nikhil-art-item-block');
+        artNodes.forEach(function(node) {
+            var pub = node.querySelector('.art-pub-in').value;
+            var title = node.querySelector('.art-title-in').value;
+            var url = node.querySelector('.art-url-in').value;
+            artItems.push({ publication: pub, title: title, url: url });
+        });
+        nikhilProfileState.featured_articles.items = artItems;
+
+        // Interviews
+        if (!nikhilProfileState.youtube_interviews) nikhilProfileState.youtube_interviews = {};
+        var intItems = [];
+        var intNodes = document.querySelectorAll('.nikhil-int-item-block');
+        intNodes.forEach(function(node) {
+            var title = node.querySelector('.int-title-in').value;
+            var url = node.querySelector('.int-url-in').value;
+            intItems.push({ title: title, url: url });
+        });
+        nikhilProfileState.youtube_interviews.items = intItems;
+
+        // News Mentions
+        if (!nikhilProfileState.news_mentions) nikhilProfileState.news_mentions = {};
+        var newsItems = [];
+        var newsNodes = document.querySelectorAll('.nikhil-news-item-block');
+        newsNodes.forEach(function(node) {
+            var src = node.querySelector('.news-src-in').value;
+            var headline = node.querySelector('.news-headline-in').value;
+            var url = node.querySelector('.news-url-in').value;
+            newsItems.push({ source: src, headline: headline, url: url });
+        });
+        nikhilProfileState.news_mentions.items = newsItems;
+    }
+
+    function syncNikhilToIframe() {
+        var iframe = document.getElementById('nikhilPreviewIframe');
+        if (iframe && iframe.contentWindow && nikhilProfileState) {
+            iframe.contentWindow.postMessage({
+                type: 'set_nikhil_profile_config',
+                config: nikhilProfileState
+            }, '*');
+        }
+    }
+
+    window.updateNikhilLivePreview = function() {
+        syncNikhilProfileFromForm();
+        syncNikhilToIframe();
+    };
+
+    // Dynamic Repeaters Renderers
+    function renderNikhilBioParagraphs() {
+        var container = document.getElementById('nikhil-bio-paragraphs-list');
+        if (!container) return;
+        var list = (nikhilProfileState && nikhilProfileState.bio_paragraphs) || [];
+        var html = '';
+        list.forEach(function(p, idx) {
+            html += `
+                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                    <textarea class="iv-cms-textarea nikhil-bio-p-input" style="min-height: 65px; flex: 1;" oninput="updateNikhilLivePreview()">${p}</textarea>
+                    <button type="button" class="iv-cms-btn-danger" style="width: auto; height: fit-content; padding: 6px 10px;" onclick="removeNikhilBioParagraph(${idx})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    window.addNikhilBioParagraph = function() {
+        syncNikhilProfileFromForm();
+        if (!nikhilProfileState.bio_paragraphs) nikhilProfileState.bio_paragraphs = [];
+        nikhilProfileState.bio_paragraphs.push("New paragraph text...");
+        renderNikhilBioParagraphs();
+        window.updateNikhilLivePreview();
+    };
+
+    window.removeNikhilBioParagraph = function(idx) {
+        syncNikhilProfileFromForm();
+        nikhilProfileState.bio_paragraphs.splice(idx, 1);
+        renderNikhilBioParagraphs();
+        window.updateNikhilLivePreview();
+    };
+
+    function renderNikhilPhilosophyParagraphs() {
+        var container = document.getElementById('nikhil-philosophy-paragraphs-list');
+        if (!container) return;
+        var list = (nikhilProfileState && nikhilProfileState.philosophy && nikhilProfileState.philosophy.paragraphs) || [];
+        var html = '';
+        list.forEach(function(p, idx) {
+            html += `
+                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                    <textarea class="iv-cms-textarea nikhil-phil-p-input" style="min-height: 65px; flex: 1;" oninput="updateNikhilLivePreview()">${p}</textarea>
+                    <button type="button" class="iv-cms-btn-danger" style="width: auto; height: fit-content; padding: 6px 10px;" onclick="removeNikhilPhilosophyParagraph(${idx})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    window.addNikhilPhilosophyParagraph = function() {
+        syncNikhilProfileFromForm();
+        if (!nikhilProfileState.philosophy) nikhilProfileState.philosophy = {};
+        if (!nikhilProfileState.philosophy.paragraphs) nikhilProfileState.philosophy.paragraphs = [];
+        nikhilProfileState.philosophy.paragraphs.push("Philosophy statement...");
+        renderNikhilPhilosophyParagraphs();
+        window.updateNikhilLivePreview();
+    };
+
+    window.removeNikhilPhilosophyParagraph = function(idx) {
+        syncNikhilProfileFromForm();
+        nikhilProfileState.philosophy.paragraphs.splice(idx, 1);
+        renderNikhilPhilosophyParagraphs();
+        window.updateNikhilLivePreview();
+    };
+
+    function renderNikhilExperienceItems() {
+        var container = document.getElementById('nikhil-experience-items-list');
+        if (!container) return;
+        var list = (nikhilProfileState && nikhilProfileState.experience && nikhilProfileState.experience.items) || [];
+        var html = '';
+        list.forEach(function(item, idx) {
+            html += `
+                <div class="nikhil-exp-item-block" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-weight: 600; font-size: 12px; color: var(--accent);">Item #${idx + 1}</span>
+                        <button type="button" class="iv-cms-btn-danger" style="width: auto; padding: 4px 8px; font-size: 11px;" onclick="removeNikhilExperienceItem(${idx})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group" style="flex: 0 0 120px;">
+                            <label class="iv-cms-label">Icon Class</label>
+                            <input type="text" class="iv-cms-input exp-icon-in" value="${item.icon || 'fa-solid fa-briefcase'}" oninput="updateNikhilLivePreview()">
+                        </div>
+                        <div class="iv-cms-group" style="flex: 1;">
+                            <label class="iv-cms-label">Title / Role</label>
+                            <input type="text" class="iv-cms-input exp-title-in" value="${item.title || ''}" oninput="updateNikhilLivePreview()">
+                        </div>
+                    </div>
+                    <div class="iv-cms-group" style="margin-bottom: 0;">
+                        <label class="iv-cms-label">Description / Subtext</label>
+                        <input type="text" class="iv-cms-input exp-desc-in" value="${item.description || ''}" oninput="updateNikhilLivePreview()">
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    window.addNikhilExperienceItem = function() {
+        syncNikhilProfileFromForm();
+        if (!nikhilProfileState.experience) nikhilProfileState.experience = {};
+        if (!nikhilProfileState.experience.items) nikhilProfileState.experience.items = [];
+        nikhilProfileState.experience.items.push({ icon: 'fa-solid fa-check', title: 'New Role / Background', description: 'Description' });
+        renderNikhilExperienceItems();
+        window.updateNikhilLivePreview();
+    };
+
+    window.removeNikhilExperienceItem = function(idx) {
+        syncNikhilProfileFromForm();
+        nikhilProfileState.experience.items.splice(idx, 1);
+        renderNikhilExperienceItems();
+        window.updateNikhilLivePreview();
+    };
+
+    function renderNikhilReachStats() {
+        var container = document.getElementById('nikhil-reach-stats-list');
+        if (!container) return;
+        var list = (nikhilProfileState && nikhilProfileState.media_reach && nikhilProfileState.media_reach.stats) || [];
+        var html = '';
+        list.forEach(function(st, idx) {
+            html += `
+                <div class="nikhil-reach-stat-block" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-weight: 600; font-size: 12px; color: var(--accent);">Reach Stat #${idx + 1}</span>
+                        <button type="button" class="iv-cms-btn-danger" style="width: auto; padding: 4px 8px; font-size: 11px;" onclick="removeNikhilReachStat(${idx})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group" style="flex: 0 0 120px;">
+                            <label class="iv-cms-label">Icon Class</label>
+                            <input type="text" class="iv-cms-input reach-icon-in" value="${st.icon || 'fa-brands fa-youtube'}" oninput="updateNikhilLivePreview()">
+                        </div>
+                        <div class="iv-cms-group" style="flex: 1;">
+                            <label class="iv-cms-label">Bold Highlight</label>
+                            <input type="text" class="iv-cms-input reach-bold-in" value="${st.bold || ''}" oninput="updateNikhilLivePreview()">
+                        </div>
+                    </div>
+                    <div class="iv-cms-group" style="margin-bottom: 0;">
+                        <label class="iv-cms-label">Description Text</label>
+                        <input type="text" class="iv-cms-input reach-text-in" value="${st.text || ''}" oninput="updateNikhilLivePreview()">
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    window.addNikhilReachStat = function() {
+        syncNikhilProfileFromForm();
+        if (!nikhilProfileState.media_reach) nikhilProfileState.media_reach = {};
+        if (!nikhilProfileState.media_reach.stats) nikhilProfileState.media_reach.stats = [];
+        nikhilProfileState.media_reach.stats.push({ icon: 'fa-solid fa-users', bold: '10,000+', text: 'community members' });
+        renderNikhilReachStats();
+        window.updateNikhilLivePreview();
+    };
+
+    window.removeNikhilReachStat = function(idx) {
+        syncNikhilProfileFromForm();
+        nikhilProfileState.media_reach.stats.splice(idx, 1);
+        renderNikhilReachStats();
+        window.updateNikhilLivePreview();
+    };
+
+    function renderNikhilPredictions() {
+        var container = document.getElementById('nikhil-predictions-list');
+        if (!container) return;
+        var list = (nikhilProfileState && nikhilProfileState.predictions && nikhilProfileState.predictions.items) || [];
+        var html = '';
+        list.forEach(function(item, idx) {
+            html += `
+                <div class="nikhil-pred-item-block" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-weight: 600; font-size: 12px; color: var(--accent);">Event #${idx + 1}</span>
+                        <div style="display: flex; gap: 4px;">
+                            ${idx > 0 ? `<button type="button" class="iv-cms-btn-add" style="width: auto; padding: 4px 8px; font-size: 11px;" onclick="moveNikhilPrediction(${idx}, -1)">▲</button>` : ''}
+                            ${idx < list.length - 1 ? `<button type="button" class="iv-cms-btn-add" style="width: auto; padding: 4px 8px; font-size: 11px;" onclick="moveNikhilPrediction(${idx}, 1)">▼</button>` : ''}
+                            <button type="button" class="iv-cms-btn-danger" style="width: auto; padding: 4px 8px; font-size: 11px;" onclick="removeNikhilPredictionItem(${idx})"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Event Heading / Date</label>
+                        <input type="text" class="iv-cms-input pred-date-in" value="${item.date_title || ''}" oninput="updateNikhilLivePreview()">
+                    </div>
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Prediction Description</label>
+                        <textarea class="iv-cms-textarea pred-desc-in" style="min-height: 60px;" oninput="updateNikhilLivePreview()">${item.description || ''}</textarea>
+                    </div>
+                    <div class="iv-cms-row" style="margin-bottom: 0;">
+                        <div class="iv-cms-group" style="flex: 1;">
+                            <label class="iv-cms-label">Link Label (Optional)</label>
+                            <input type="text" class="iv-cms-input pred-linktext-in" value="${item.link_text || ''}" oninput="updateNikhilLivePreview()">
+                        </div>
+                        <div class="iv-cms-group" style="flex: 1.5;">
+                            <label class="iv-cms-label">Link URL (Optional)</label>
+                            <input type="text" class="iv-cms-input pred-linkurl-in" value="${item.link_url || ''}" oninput="updateNikhilLivePreview()">
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    window.addNikhilPredictionItem = function() {
+        syncNikhilProfileFromForm();
+        if (!nikhilProfileState.predictions) nikhilProfileState.predictions = {};
+        if (!nikhilProfileState.predictions.items) nikhilProfileState.predictions.items = [];
+        nikhilProfileState.predictions.items.push({ date_title: 'Month Year – Prediction Event', description: 'Event description...', link_text: 'View Link', link_url: '#' });
+        renderNikhilPredictions();
+        window.updateNikhilLivePreview();
+    };
+
+    window.removeNikhilPredictionItem = function(idx) {
+        syncNikhilProfileFromForm();
+        nikhilProfileState.predictions.items.splice(idx, 1);
+        renderNikhilPredictions();
+        window.updateNikhilLivePreview();
+    };
+
+    window.moveNikhilPrediction = function(idx, direction) {
+        syncNikhilProfileFromForm();
+        var target = idx + direction;
+        if (target < 0 || target >= nikhilProfileState.predictions.items.length) return;
+        var temp = nikhilProfileState.predictions.items[idx];
+        nikhilProfileState.predictions.items[idx] = nikhilProfileState.predictions.items[target];
+        nikhilProfileState.predictions.items[target] = temp;
+        renderNikhilPredictions();
+        window.updateNikhilLivePreview();
+    };
+
+    function renderNikhilAchievements() {
+        var container = document.getElementById('nikhil-achievements-list');
+        if (!container) return;
+        var list = (nikhilProfileState && nikhilProfileState.achievements && nikhilProfileState.achievements.items) || [];
+        var html = '';
+        list.forEach(function(ach, idx) {
+            html += `
+                <div class="nikhil-ach-item-block" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-weight: 600; font-size: 12px; color: var(--accent);">Achievement #${idx + 1}</span>
+                        <button type="button" class="iv-cms-btn-danger" style="width: auto; padding: 4px 8px; font-size: 11px;" onclick="removeNikhilAchievementItem(${idx})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group" style="flex: 0 0 120px;">
+                            <label class="iv-cms-label">Icon Class</label>
+                            <input type="text" class="iv-cms-input ach-icon-in" value="${ach.icon || 'fa-solid fa-award'}" oninput="updateNikhilLivePreview()">
+                        </div>
+                        <div class="iv-cms-group" style="flex: 1;">
+                            <label class="iv-cms-label">HTML Content / Link</label>
+                            <textarea class="iv-cms-textarea ach-html-in" style="min-height: 55px;" oninput="updateNikhilLivePreview()">${ach.html || ''}</textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    window.addNikhilAchievementItem = function() {
+        syncNikhilProfileFromForm();
+        if (!nikhilProfileState.achievements) nikhilProfileState.achievements = {};
+        if (!nikhilProfileState.achievements.items) nikhilProfileState.achievements.items = [];
+        nikhilProfileState.achievements.items.push({ icon: 'fa-solid fa-award', html: '<strong>Achievement title</strong> – details and link' });
+        renderNikhilAchievements();
+        window.updateNikhilLivePreview();
+    };
+
+    window.removeNikhilAchievementItem = function(idx) {
+        syncNikhilProfileFromForm();
+        nikhilProfileState.achievements.items.splice(idx, 1);
+        renderNikhilAchievements();
+        window.updateNikhilLivePreview();
+    };
+
+    function renderNikhilExpertise() {
+        var container = document.getElementById('nikhil-expertise-list');
+        if (!container) return;
+        var list = (nikhilProfileState && nikhilProfileState.expertise && nikhilProfileState.expertise.items) || [];
+        var html = '';
+        list.forEach(function(it, idx) {
+            html += `
+                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                    <input type="text" class="iv-cms-input nikhil-exp-bullet-in" value="${it}" oninput="updateNikhilLivePreview()">
+                    <button type="button" class="iv-cms-btn-danger" style="width: auto; height: fit-content; padding: 6px 10px;" onclick="removeNikhilExpertiseItem(${idx})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    window.addNikhilExpertiseItem = function() {
+        syncNikhilProfileFromForm();
+        if (!nikhilProfileState.expertise) nikhilProfileState.expertise = {};
+        if (!nikhilProfileState.expertise.items) nikhilProfileState.expertise.items = [];
+        nikhilProfileState.expertise.items.push("New Area of Expertise");
+        renderNikhilExpertise();
+        window.updateNikhilLivePreview();
+    };
+
+    window.removeNikhilExpertiseItem = function(idx) {
+        syncNikhilProfileFromForm();
+        nikhilProfileState.expertise.items.splice(idx, 1);
+        renderNikhilExpertise();
+        window.updateNikhilLivePreview();
+    };
+
+    function renderNikhilArticles() {
+        var container = document.getElementById('nikhil-featured-articles-list');
+        if (!container) return;
+        var list = (nikhilProfileState && nikhilProfileState.featured_articles && nikhilProfileState.featured_articles.items) || [];
+        var html = '';
+        list.forEach(function(art, idx) {
+            html += `
+                <div class="nikhil-art-item-block" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-weight: 600; font-size: 12px; color: var(--accent);">Article #${idx + 1}</span>
+                        <button type="button" class="iv-cms-btn-danger" style="width: auto; padding: 4px 8px; font-size: 11px;" onclick="removeNikhilArticleItem(${idx})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group" style="flex: 1;">
+                            <label class="iv-cms-label">Publication Name</label>
+                            <input type="text" class="iv-cms-input art-pub-in" value="${art.publication || ''}" oninput="updateNikhilLivePreview()">
+                        </div>
+                        <div class="iv-cms-group" style="flex: 2;">
+                            <label class="iv-cms-label">Article Headline</label>
+                            <input type="text" class="iv-cms-input art-title-in" value="${art.title || ''}" oninput="updateNikhilLivePreview()">
+                        </div>
+                    </div>
+                    <div class="iv-cms-group" style="margin-bottom: 0;">
+                        <label class="iv-cms-label">Article Link URL</label>
+                        <input type="text" class="iv-cms-input art-url-in" value="${art.url || ''}" oninput="updateNikhilLivePreview()">
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    window.addNikhilArticleItem = function() {
+        syncNikhilProfileFromForm();
+        if (!nikhilProfileState.featured_articles) nikhilProfileState.featured_articles = {};
+        if (!nikhilProfileState.featured_articles.items) nikhilProfileState.featured_articles.items = [];
+        nikhilProfileState.featured_articles.items.push({ publication: 'Publication', title: 'Headline', url: '#' });
+        renderNikhilArticles();
+        window.updateNikhilLivePreview();
+    };
+
+    window.removeNikhilArticleItem = function(idx) {
+        syncNikhilProfileFromForm();
+        nikhilProfileState.featured_articles.items.splice(idx, 1);
+        renderNikhilArticles();
+        window.updateNikhilLivePreview();
+    };
+
+    function renderNikhilInterviews() {
+        var container = document.getElementById('nikhil-youtube-interviews-list');
+        if (!container) return;
+        var list = (nikhilProfileState && nikhilProfileState.youtube_interviews && nikhilProfileState.youtube_interviews.items) || [];
+        var html = '';
+        list.forEach(function(yt, idx) {
+            html += `
+                <div class="nikhil-int-item-block" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-weight: 600; font-size: 12px; color: var(--accent);">Interview #${idx + 1}</span>
+                        <button type="button" class="iv-cms-btn-danger" style="width: auto; padding: 4px 8px; font-size: 11px;" onclick="removeNikhilInterviewItem(${idx})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <div class="iv-cms-group">
+                        <label class="iv-cms-label">Channel / Interview Name</label>
+                        <input type="text" class="iv-cms-input int-title-in" value="${yt.title || ''}" oninput="updateNikhilLivePreview()">
+                    </div>
+                    <div class="iv-cms-group" style="margin-bottom: 0;">
+                        <label class="iv-cms-label">YouTube Video URL</label>
+                        <input type="text" class="iv-cms-input int-url-in" value="${yt.url || ''}" oninput="updateNikhilLivePreview()">
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    window.addNikhilInterviewItem = function() {
+        syncNikhilProfileFromForm();
+        if (!nikhilProfileState.youtube_interviews) nikhilProfileState.youtube_interviews = {};
+        if (!nikhilProfileState.youtube_interviews.items) nikhilProfileState.youtube_interviews.items = [];
+        nikhilProfileState.youtube_interviews.items.push({ title: 'Channel Name', url: 'https://youtube.com/...' });
+        renderNikhilInterviews();
+        window.updateNikhilLivePreview();
+    };
+
+    window.removeNikhilInterviewItem = function(idx) {
+        syncNikhilProfileFromForm();
+        nikhilProfileState.youtube_interviews.items.splice(idx, 1);
+        renderNikhilInterviews();
+        window.updateNikhilLivePreview();
+    };
+
+    function renderNikhilNewsMentions() {
+        var container = document.getElementById('nikhil-news-mentions-list');
+        if (!container) return;
+        var list = (nikhilProfileState && nikhilProfileState.news_mentions && nikhilProfileState.news_mentions.items) || [];
+        var html = '';
+        list.forEach(function(nm, idx) {
+            html += `
+                <div class="nikhil-news-item-block" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-weight: 600; font-size: 12px; color: var(--accent);">Mention #${idx + 1}</span>
+                        <button type="button" class="iv-cms-btn-danger" style="width: auto; padding: 4px 8px; font-size: 11px;" onclick="removeNikhilNewsMentionItem(${idx})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <div class="iv-cms-row">
+                        <div class="iv-cms-group" style="flex: 1;">
+                            <label class="iv-cms-label">Source Name</label>
+                            <input type="text" class="iv-cms-input news-src-in" value="${nm.source || ''}" oninput="updateNikhilLivePreview()">
+                        </div>
+                        <div class="iv-cms-group" style="flex: 2;">
+                            <label class="iv-cms-label">Headline / Topic</label>
+                            <input type="text" class="iv-cms-input news-headline-in" value="${nm.headline || ''}" oninput="updateNikhilLivePreview()">
+                        </div>
+                    </div>
+                    <div class="iv-cms-group" style="margin-bottom: 0;">
+                        <label class="iv-cms-label">Article URL</label>
+                        <input type="text" class="iv-cms-input news-url-in" value="${nm.url || ''}" oninput="updateNikhilLivePreview()">
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    window.addNikhilNewsMentionItem = function() {
+        syncNikhilProfileFromForm();
+        if (!nikhilProfileState.news_mentions) nikhilProfileState.news_mentions = {};
+        if (!nikhilProfileState.news_mentions.items) nikhilProfileState.news_mentions.items = [];
+        nikhilProfileState.news_mentions.items.push({ source: 'Media Outlet', headline: 'Article Headline', url: '#' });
+        renderNikhilNewsMentions();
+        window.updateNikhilLivePreview();
+    };
+
+    window.removeNikhilNewsMentionItem = function(idx) {
+        syncNikhilProfileFromForm();
+        nikhilProfileState.news_mentions.items.splice(idx, 1);
+        renderNikhilNewsMentions();
+        window.updateNikhilLivePreview();
+    };
+
+    function compileNikhilProfileCmsState() {
+        syncNikhilProfileFromForm();
+        var jsonText = JSON.stringify(nikhilProfileState, null, 4);
+        localStorage.setItem('pending_nikhil_profile_config', jsonText);
+        var displayBox = document.getElementById('nikhilJsonDisplay');
+        if (displayBox) displayBox.innerText = jsonText;
+        return jsonText;
+    }
+
+    function copyNikhilProfileJsonToClipboard() {
+        var jsonText = compileNikhilProfileCmsState();
+        navigator.clipboard.writeText(jsonText).then(function () {
+            showToast("nikhil_profile_config.json copied!");
+        }).catch(function (err) {
+            console.error("Could not copy text: ", err);
+        });
+    }
+
+    function downloadNikhilProfileJsonFile() {
+        var jsonText = compileNikhilProfileCmsState();
+        var blob = new Blob([jsonText], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'nikhil_profile_config.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast("Downloading nikhil_profile_config.json");
+    }
+
+    function bindNikhilProfileCmsWorkspaceEvents() {
+        var workspace = document.getElementById('nikhilProfileCmsWorkspace');
+        var openBtn = document.getElementById('openNikhilProfileCmsBtn');
+        var closeBtn = document.getElementById('closeNikhilProfileCmsBtn');
+        var saveBtn = document.getElementById('nikhilProfileSaveBtn');
+        var copyBtn = document.getElementById('nikhilCopyJsonBtn');
+        var downloadBtn = document.getElementById('nikhilDownloadJsonBtn');
+
+        if (openBtn && workspace) {
+            openBtn.addEventListener('click', function () {
+                workspace.style.display = 'block';
+                loadNikhilProfileCmsData();
+                var firstTab = document.getElementById('tab-btn-nikhil-bio');
+                if (firstTab) firstTab.click();
+            });
+        }
+
+        if (closeBtn && workspace) {
+            closeBtn.addEventListener('click', function () {
+                compileNikhilProfileCmsState();
+                saveConfigToServer('nikhil_profile_config.json', nikhilProfileState);
+                workspace.style.display = 'none';
+                showToast("Unsaved edits stored in browser! Push to GitHub to go live.");
+            });
+        }
+
+        if (saveBtn) {
+            saveBtn.addEventListener('click', function () {
+                compileNikhilProfileCmsState();
+                saveConfigToServer('nikhil_profile_config.json', nikhilProfileState);
+                var exportTab = document.getElementById('tab-btn-nikhil-export');
+                if (exportTab) exportTab.click();
+                showToast("Nikhil profile saved locally & compiled!");
+            });
+        }
+
+        if (copyBtn) copyBtn.addEventListener('click', copyNikhilProfileJsonToClipboard);
+        if (downloadBtn) downloadBtn.addEventListener('click', downloadNikhilProfileJsonFile);
+
+        // Device toggle listeners for Nikhil Preview
+        var deviceBtns = document.querySelectorAll('.btn-device-toggle-nikhil');
+        var previewPane = document.querySelector('#nikhilProfileCmsWorkspace .iv-cms-preview-pane');
+        deviceBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                deviceBtns.forEach(function (b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                var dev = btn.getAttribute('data-device');
+                if (previewPane) {
+                    previewPane.classList.remove('device-laptop', 'device-phone');
+                    previewPane.classList.add('device-' + dev);
+                }
+            });
+        });
+    }
+
     function initSplitResizers() {
         function setupResizer(sidebarId, splitterId, iframeId) {
             var sidebar = document.getElementById(sidebarId);
@@ -4760,6 +5884,8 @@
         
         setupResizer('homepageEditorSidebar', 'homepageCmsSplitter', 'previewIframe');
         setupResizer('blogsEditorSidebar', 'blogsCmsSplitter', 'blogsPreviewIframe');
+        setupResizer('legalEditorSidebar', 'legalCmsSplitter', 'legalPreviewIframe');
+        setupResizer('nikhilProfileEditorSidebar', 'nikhilProfileCmsSplitter', 'nikhilPreviewIframe');
     }
 
     // Initialize on DOM load
@@ -4773,6 +5899,8 @@
         initTabs();
         bindCmsWorkspaceEvents();
         bindBlogsCmsWorkspaceEvents();
+        bindLegalCmsWorkspaceEvents();
+        bindNikhilProfileCmsWorkspaceEvents();
         initSplitResizers();
 
         // Monitor activity to reset inactivity timer

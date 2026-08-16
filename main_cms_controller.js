@@ -1,1 +1,973 @@
-(function(){if(window.self===window.top){return}console.log("[CMS Preview] Visual Inline Controller loaded inside iframe.");var homepageConfig=null;var pricingConfig=null;var highlightStyles=null;var activePopover=null;var isHighlightEnabled=true;function setNestedKey(obj,path,value){var parts=path.split(".");var current=obj;for(var i=0;i<parts.length-1;i++){if(!current[parts[i]]){current[parts[i]]={}}current=current[parts[i]]}current[parts[parts.length-1]]=value}function getNestedKey(obj,path){if(!obj)return undefined;var parts=path.split(".");var current=obj;for(var i=0;i<parts.length;i++){if(current===null||current===undefined)return undefined;current=current[parts[i]]}return current}function setHighlightMode(enabled){isHighlightEnabled=enabled;if(enabled){if(!highlightStyles){highlightStyles=document.createElement("style");highlightStyles.id="cms-injected-highlights";highlightStyles.innerHTML="\n"+"                    .cms-editable-highlight {\n"+"                        outline: 2px dashed #FF8C00 !important;\n"+"                        outline-offset: 4px !important;\n"+"                        box-shadow: 0 0 15px rgba(255, 140, 0, 0.4) !important;\n"+"                        cursor: pointer !important;\n"+"                        position: relative !important;\n"+"                        transition: all 0.2s ease !important;\n"+"                    }\n"+"                    .cms-editable-highlight:hover {\n"+"                        outline-color: #E6B53D !important;\n"+"                        box-shadow: 0 0 25px rgba(230, 181, 61, 0.7) !important;\n"+"                    }\n"+"                    .cms-editable-highlight::after {\n"+'                        content: "✏️ Edit";\n'+"                        position: absolute;\n"+"                        top: -24px;\n"+"                        right: 4px;\n"+"                        background: #FF8C00;\n"+"                        color: #000;\n"+"                        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;\n"+"                        font-size: 10px;\n"+"                        font-weight: 800;\n"+"                        padding: 2px 6px;\n"+"                        border-radius: 4px 4px 0 0;\n"+"                        z-index: 9999;\n"+"                        pointer-events: none;\n"+"                        opacity: 0;\n"+"                        transition: opacity 0.2s ease;\n"+"                    }\n"+"                    .cms-editable-highlight:hover::after {\n"+"                        opacity: 1;\n"+"                    }\n"+"                    /* Inline contenteditable focused glow */\n"+'                    [contenteditable="true"]:focus {\n'+"                        outline: none !important;\n"+"                        box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.5) !important;\n"+"                        background: rgba(255, 140, 0, 0.05) !important;\n"+"                        border-radius: 4px !important;\n"+"                    }\n"+"                    /* Inline popover styles */\n"+"                    .cms-inline-popover {\n"+"                        position: absolute;\n"+"                        width: 320px;\n"+"                        background: #111111;\n"+"                        border: 1px solid #FF8C00;\n"+"                        border-radius: 12px;\n"+"                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 140, 0, 0.2);\n"+"                        z-index: 100000;\n"+"                        font-family: system-ui, -apple-system, sans-serif;\n"+"                        color: #ffffff;\n"+"                        padding: 12px;\n"+"                        box-sizing: border-box;\n"+"                        animation: popoverFadeIn 0.2s ease-out forwards;\n"+"                    }\n"+"                    @keyframes popoverFadeIn {\n"+"                        from { opacity: 0; transform: translateY(5px) scale(0.98); }\n"+"                        to { opacity: 1; transform: translateY(0) scale(1); }\n"+"                    }\n"+"                    .cms-popover-header {\n"+"                        font-size: 10px;\n"+"                        text-transform: uppercase;\n"+"                        font-weight: 700;\n"+"                        color: #FF8C00;\n"+"                        margin-bottom: 8px;\n"+"                        letter-spacing: 0.05em;\n"+"                    }\n"+"                    .cms-popover-input {\n"+"                        width: 100%;\n"+"                        background: #1e1e1e;\n"+"                        border: 1px solid rgba(255, 255, 255, 0.1);\n"+"                        border-radius: 6px;\n"+"                        color: #ffffff;\n"+"                        padding: 8px;\n"+"                        font-size: 13px;\n"+"                        box-sizing: border-box;\n"+"                        outline: none;\n"+"                        transition: border-color 0.2s;\n"+"                    }\n"+"                    .cms-popover-input:focus {\n"+"                        border-color: #FF8C00;\n"+"                    }\n"+"                    .cms-popover-textarea {\n"+"                        width: 100%;\n"+"                        height: 80px;\n"+"                        background: #1e1e1e;\n"+"                        border: 1px solid rgba(255, 255, 255, 0.1);\n"+"                        border-radius: 6px;\n"+"                        color: #ffffff;\n"+"                        padding: 8px;\n"+"                        font-size: 13px;\n"+"                        box-sizing: border-box;\n"+"                        outline: none;\n"+"                        resize: vertical;\n"+"                    }\n"+"                    .cms-popover-textarea:focus {\n"+"                        border-color: #FF8C00;\n"+"                    }\n"+"                    .cms-popover-actions {\n"+"                        display: flex;\n"+"                        justify-content: flex-end;\n"+"                        gap: 8px;\n"+"                        margin-top: 10px;\n"+"                    }\n"+"                    .cms-popover-btn {\n"+"                        padding: 6px 12px;\n"+"                        border-radius: 6px;\n"+"                        font-size: 12px;\n"+"                        font-weight: 600;\n"+"                        cursor: pointer;\n"+"                        border: none;\n"+"                        transition: all 0.2s;\n"+"                    }\n"+"                    .cms-popover-save {\n"+"                        background: #FF8C00;\n"+"                        color: #000000;\n"+"                    }\n"+"                    .cms-popover-save:hover {\n"+"                        background: #E6B53D;\n"+"                    }\n"+"                    .cms-popover-cancel {\n"+"                        background: rgba(255, 255, 255, 0.08);\n"+"                        color: #ffffff;\n"+"                        border: 1px solid rgba(255, 255, 255, 0.1);\n"+"                    }\n"+"                    .cms-popover-cancel:hover {\n"+"                        background: rgba(255, 255, 255, 0.15);\n"+"                    }\n"+"                    /* Spacing Widget Arrow */\n"+"                    .cms-popover-arrow {\n"+"                        position: absolute;\n"+"                        width: 0;\n"+"                        height: 0;\n"+"                        border-style: solid;\n"+"                        z-index: 100000;\n"+"                    }\n"+"                    .cms-popover-arrow-bottom {\n"+"                        border-width: 8px 8px 0 8px;\n"+"                        border-color: #FF8C00 transparent transparent transparent;\n"+"                    }\n"+"                    .cms-popover-arrow-top {\n"+"                        border-width: 0 8px 8px 8px;\n"+"                        border-color: transparent transparent #FF8C00 transparent;\n"+"                    }\n";document.head.appendChild(highlightStyles)}setContentEditableOnFields()}else{if(highlightStyles){highlightStyles.parentNode.removeChild(highlightStyles);highlightStyles=null}closeActivePopover();setContentEditableOnFields()}}function setContentEditableOnFields(){var elements=document.querySelectorAll("[data-field]");elements.forEach(function(el){var field=el.getAttribute("data-field");if(field.indexOf("navigation")===0||field.endsWith(".num")||field.endsWith(".suffix")||el.tagName==="IMG"||field.indexOf("about_profile.linkedin")===0||field.indexOf("about_profile.twitter")===0||field.indexOf("about_profile.youtube")===0){el.removeAttribute("contenteditable");return}if(isHighlightEnabled){el.setAttribute("contenteditable","true");if(!el.dataset.cmsKeydownBound){el.dataset.cmsKeydownBound="true";el.addEventListener("keydown",function(event){var isSingleLine=el.tagName==="H1"||el.tagName==="H2"||el.tagName==="H3"||el.tagName==="H4"||el.tagName==="H5"||el.tagName==="H6"||el.tagName==="SPAN"||el.tagName==="A"||el.classList.contains("iv-hero-tag")||el.classList.contains("iv-sebi-badge")||el.classList.contains("team-role")||el.classList.contains("position")||el.classList.contains("pricing-duration")||el.classList.contains("pricing-plan-name")||el.classList.contains("pricing-meta-value")||el.classList.contains("pricing-price");if(isSingleLine&&event.key==="Enter"){event.preventDefault();el.blur()}})}if(!el.dataset.cmsInputBound){el.dataset.cmsInputBound="true";el.addEventListener("input",function(){var pageName=window.location.pathname.split("/").pop()||"index.html";var isPricingField=pageName==="pricing.html"||field.indexOf("pricing_")===0||field.indexOf("comparison_")===0||field.indexOf("cards")===0||field.indexOf("table_plans")===0;var configObj=isPricingField?pricingConfig:homepageConfig;if(!configObj)return;var newVal=el.innerHTML;var isHtml=/<[a-z][\s\S]*>/i.test(el.innerHTML)||field.indexOf("heading_html")!==-1||field.indexOf("desc")!==-1||field.indexOf("answer")!==-1||field.indexOf("title")!==-1||field.indexOf("quote")!==-1||field.indexOf("disclaimer")!==-1;if(!isHtml){newVal=el.innerText.trim()}setNestedKey(configObj,field,newVal);window.parent.postMessage({type:"update_cms_state_from_iframe",isPricing:isPricingField,key:field,value:newVal},"*")})}}else{el.removeAttribute("contenteditable")}})}function closeActivePopover(){if(activePopover){if(activePopover.parentNode){activePopover.parentNode.removeChild(activePopover)}activePopover=null}var activeArrow=document.getElementById("cms-popover-arrow-el");if(activeArrow&&activeArrow.parentNode){activeArrow.parentNode.removeChild(activeArrow)}}function replaceCmsSection(name,htmlString){var startNode=null;var endNode=null;var iterator=document.createNodeIterator(document.documentElement,NodeFilter.SHOW_COMMENT,null,false);var node;while(node=iterator.nextNode()){var val=node.nodeValue.trim();if(val==="CMS_"+name+"_START"){startNode=node}else if(val==="CMS_"+name+"_END"){endNode=node;break}}if(!startNode||!endNode){return}var isFocusedInside=false;var activeEl=document.activeElement;if(activeEl&&activeEl!==document.body){var current=startNode.nextSibling;while(current&&current!==endNode){if(current===activeEl||current.nodeType===1&&current.contains(activeEl)){isFocusedInside=true;break}current=current.nextSibling}}if(isFocusedInside){return}var parent=startNode.parentNode;var current=startNode.nextSibling;while(current&&current!==endNode){var next=current.nextSibling;parent.removeChild(current);current=next}var fragment=document.createRange().createContextualFragment(htmlString);parent.insertBefore(fragment,endNode)}function generateTeamCardsHtmlForAbout(members){if(!members)return"";return members.map(function(member,idx){return'                    <div class="team-card">\n'+'                        <div class="team-avatar-wrapper">\n'+'                            <img src="'+(member.photo||"profile.jpeg")+'" alt="'+member.name+'" class="team-avatar" loading="lazy">\n'+"                        </div>\n"+'                        <div class="team-info">\n'+'                            <h3 class="team-name cms-editable-highlight" data-field="team.members.'+idx+'.name">'+member.name+"</h3>\n"+'                            <p class="team-role cms-editable-highlight" data-field="team.members.'+idx+'.role">'+member.role+"</p>\n"+"                        </div>\n"+"                    </div>"}).join("\n")}function generateNavHtml(navigation,prefix){if(!navigation)return"";var htmlList=navigation.map(function(link,idx){var isAbsolute=/^(?:https?:)?\/\//i.test(link.url)||link.url.startsWith("/")||link.url.startsWith("#");var url=isAbsolute?link.url:prefix+link.url;var targetAttr=link.new_tab?' target="_blank" rel="noopener noreferrer"':"";return'                    <li><a href="'+url+'" class="nav-link nav-item-el cms-editable-highlight" data-field="navigation.'+idx+'.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Navigation Link Text"'+targetAttr+">"+link.text+"</a></li>"});if(homepageConfig&&homepageConfig.header_buttons){var loginLink=homepageConfig.header_buttons.client_login;var loginTarget=loginLink.new_tab?' target="_blank" rel="noopener noreferrer"':"";htmlList.push('                    <li><a href="'+loginLink.url+'" class="nav-link nav-item-el cms-editable-highlight" data-field="header_buttons.client_login.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Client Login Text"'+loginTarget+'><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>'+loginLink.text+"</a></li>");var contactLink=homepageConfig.header_buttons.contact_us;var contactTarget=contactLink.new_tab?' target="_blank" rel="noopener noreferrer"':"";htmlList.push('                    <li class="nav-actions-mobile">\n'+'                        <a href="'+contactLink.url+'" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"'+contactTarget+">"+contactLink.text+"</a>\n"+"                    </li>")}return htmlList.join("\n")}function generatePricingTitleHtml(title){return'<h1 class="cms-pricing-title cms-editable-highlight" data-field="pricing_title" data-tab="tab-pricing" data-id="cms-pricing-title" data-label="Pricing Title" data-cms-style-target="pricing-title" data-cms-label="Pricing Title">'+(title||"")+"</h1>"}function generatePricingSubtitleHtml(subtitle){return'<p class="cms-pricing-subtitle cms-editable-highlight" data-field="pricing_subtitle" data-tab="tab-pricing" data-id="cms-pricing-subtitle" data-label="Pricing Subtitle" data-cms-style-target="pricing-subtitle" data-cms-label="Pricing Subtitle">'+(subtitle||"")+"</p>"}function generatePricingCardsHtml(cards){if(!cards)return"";return cards.map(function(card,idx){var startAttr=card.discount_start?' data-start="'+card.discount_start+'"':"";var endAttr=card.discount_end?' data-end="'+card.discount_end+'"':"";return"                        \x3c!-- Plan "+(idx+1)+": "+card.name+" --\x3e\n"+'                        <div class="pricing-card-3d" data-index="'+idx+'"'+startAttr+endAttr+' data-cms-style-target="pricing-card-3d" data-cms-label="Pricing Card" style="opacity: 1; transform: none;">\n'+'                            <div class="pricing-card-glow"></div>\n'+'                            <div class="pricing-card-header">\n'+'                                <h3 class="pricing-plan-name cms-editable-highlight" data-field="cards.'+idx+'.name">'+card.name+"</h3>\n"+'                                <div class="pricing-meta-item">\n'+'                                    <span class="pricing-meta-label">MINIMUM CAPITAL</span>\n'+'                                    <span class="pricing-meta-value cms-editable-highlight" data-field="cards.'+idx+'.min_capital">'+card.min_capital+"</span>\n"+"                                </div>\n"+'                                <div class="pricing-card-divider"></div>\n'+'                                <div class="pricing-price-box">\n'+'                                    <span class="pricing-price cms-editable-highlight" data-field="cards.'+idx+'.price_display">'+card.price_display+"</span>\n"+"                                </div>\n"+'                                <div class="pricing-duration cms-editable-highlight" data-field="cards.'+idx+'.duration">'+card.duration+"</div>\n"+'                                <div class="pricing-card-divider"></div>\n'+"                            </div>\n"+'                            <div class="pricing-card-footer">\n'+"                                <button class=\"btn-pricing-scroll\" onclick=\"document.getElementById('comparison-section').scrollIntoView({ behavior: 'smooth' })\">READ MORE</button>\n"+"                            </div>\n"+"                        </div>"}).join("\n\n")}function generateComparisonTableHtml(config){var tableHtml='<table class="comparison-table show-plan-1">\n'+"                            <thead>\n"+"                                <tr>\n"+"                                    <th>Parameters</th>\n";config.table_plans.forEach(function(plan,idx){var isHighlight=plan.highlight||idx===1;var highlightClass=isHighlight?' class="highlight-col"':"";tableHtml+="                                    <th"+highlightClass+'><span class="cms-editable-highlight" data-field="table_plans.'+idx+'.name">'+plan.name+"</span></th>\n"});tableHtml+="                                </tr>\n"+"                            </thead>\n"+"                            <tbody>\n";config.parameters.forEach(function(param){tableHtml+="                                <tr>\n"+'                                    <td class="param-name">'+param+"</td>\n";config.table_plans.forEach(function(plan,idx){var isHighlight=plan.highlight||idx===1;var highlightClass=isHighlight?' class="highlight-col"':"";var val=plan.values[param]||"—";tableHtml+="                                    <td"+highlightClass+">"+val+"</td>\n"});tableHtml+="                                </tr>\n"});tableHtml+='                                <tr class="action-row">\n'+'                                    <td class="param-name"></td>\n';config.table_plans.forEach(function(plan,idx){var isHighlight=plan.highlight||idx===1;var highlightClass=isHighlight?' class="highlight-col"':"";tableHtml+="                                    <td"+highlightClass+">\n"+'                                        <a href="'+plan.cta_link+'" target="_blank" rel="noopener noreferrer" class="table-btn">Subscribe Now</a>\n'+"                                    </td>\n"});tableHtml+="                                </tr>\n"+"                            </tbody>\n"+"                        </table>";return tableHtml}function applyConfigs(){var page=window.location.pathname.split("/").pop()||"index.html";if(page==="index.html"){if(homepageConfig&&homepageConfig.navigation){replaceCmsSection("NAV",generateNavHtml(homepageConfig.navigation,""))}if(homepageConfig&&homepageConfig.header_buttons){var contactLink=homepageConfig.header_buttons.contact_us;var contactTarget=contactLink.new_tab?' target="_blank" rel="noopener noreferrer"':"";var contactHtml='                <a href="'+contactLink.url+'" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"'+contactTarget+">"+contactLink.text+"</a>";replaceCmsSection("NAV_CONTACT",contactHtml)}if(homepageConfig&&homepageConfig.portfolio){replaceCmsSection("PORTFOLIO_TITLE",'<h2 class="team-section-heading cms-editable-highlight" data-field="portfolio.title" data-label="Portfolio Title">'+homepageConfig.portfolio.title+"</h2>");replaceCmsSection("PORTFOLIO_TRACK",homepageConfig.portfolio.embed_html);if(typeof initPortfolioCarousel==="function"){initPortfolioCarousel()}if(window.scEmbedController&&typeof window.scEmbedController.load==="function"){window.scEmbedController.load()}}if(homepageConfig&&homepageConfig.homepage_pricing){var hpPricing=homepageConfig.homepage_pricing;var hpTargetAttr=hpPricing.button_new_tab?' target="_blank" rel="noopener noreferrer"':"";var pricingHtml='                    <h2 class="pricing-section-header-title cms-editable-highlight" data-field="homepage_pricing.title" data-label="Pricing Title">'+hpPricing.title+"</h2>\n\n"+'                    <div style="margin-top: 2.2rem; margin-bottom: 1.5rem;">\n'+'                        <a href="'+hpPricing.button_url+'"'+hpTargetAttr+' class="btn-vibrate-outline cms-editable-highlight" data-field="homepage_pricing.button_text" data-label="Pricing Button Text">\n'+"                            "+hpPricing.button_text+"\n"+"                        </a>\n"+"                    </div>";replaceCmsSection("HOMEPAGE_PRICING",pricingHtml)}if(homepageConfig&&homepageConfig.compliance){var compHeaderHtml='                <span class="disclosures-pre-title cms-editable-highlight" data-field="compliance.pre_title" data-label="Compliance Pre-title">'+(homepageConfig.compliance.pre_title||"REGULATORY CORNER")+"</span>\n"+'                <h2 class="disclosures-main-title cms-editable-highlight" data-field="compliance.title" data-label="Compliance Title">'+(homepageConfig.compliance.title||"Transparency &amp; <em>Compliance</em>.")+"</h2>\n"+'                <p class="disclosures-sub-title cms-editable-highlight" data-field="compliance.sub_title" data-label="Compliance Description">'+(homepageConfig.compliance.sub_title||"Review our regulatory disclosures, client complaint statistics, and compliance audit history in accordance with SEBI guidelines.")+"</p>";replaceCmsSection("COMPLIANCE_HEADER",compHeaderHtml);replaceCmsSection("COMPLIANCE_GRIEVANCE_TITLE",'                        <h3 class="disclosure-title cms-editable-highlight" data-field="compliance.title_grievance" data-label="Grievance Title">'+(homepageConfig.compliance.title_grievance||"Grievance Status")+"</h3>");replaceCmsSection("COMPLIANCE_AUDIT_TITLE",'                        <h3 class="disclosure-title cms-editable-highlight" data-field="compliance.title_audit" data-label="Audit Title">'+(homepageConfig.compliance.title_audit||"Compliance Audit Status")+"</h3>");replaceCmsSection("COMPLIANCE_AUDIT_INTRO",'                            <p class="disclosure-intro-text cms-editable-highlight" data-field="compliance.audit_intro" data-label="Audit Intro Text">\n'+"                                "+(homepageConfig.compliance.audit_intro||"“Disclosure with respect to compliance with Annual compliance audit requirement under Regulation 25(3) of SEBI (Research Analyst) Regulations, 2014 for last financial years are as under:")+"\n"+"                            </p>")}if(pricingConfig){replaceCmsSection("PRICING_TITLE",generatePricingTitleHtml(pricingConfig.pricing_title));replaceCmsSection("PRICING_SUBTITLE",generatePricingSubtitleHtml(pricingConfig.pricing_subtitle));replaceCmsSection("COMPARISON_TITLE",'<h2 class="comparison-main-title">'+pricingConfig.comparison_title+"</h2>");replaceCmsSection("COMPARISON_SUBTITLE",'<p class="comparison-subtitle">'+pricingConfig.comparison_subtitle+"</p>");replaceCmsSection("PRICING_CARDS",generatePricingCardsHtml(pricingConfig.cards));replaceCmsSection("COMPARISON_TABLE",generateComparisonTableHtml(pricingConfig))}}else if(page==="pricing.html"){if(homepageConfig&&homepageConfig.navigation){replaceCmsSection("NAV",generateNavHtml(homepageConfig.navigation,""))}if(homepageConfig&&homepageConfig.header_buttons){var contactLink=homepageConfig.header_buttons.contact_us;var contactTarget=contactLink.new_tab?' target="_blank" rel="noopener noreferrer"':"";var contactHtml='                <a href="'+contactLink.url+'" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"'+contactTarget+">"+contactLink.text+"</a>";replaceCmsSection("NAV_CONTACT",contactHtml)}if(pricingConfig){replaceCmsSection("PRICING_TITLE",generatePricingTitleHtml(pricingConfig.pricing_title));replaceCmsSection("PRICING_SUBTITLE",generatePricingSubtitleHtml(pricingConfig.pricing_subtitle));replaceCmsSection("COMPARISON_TITLE",'<h2 class="comparison-main-title">'+pricingConfig.comparison_title+"</h2>");replaceCmsSection("COMPARISON_SUBTITLE",'<p class="comparison-subtitle">'+pricingConfig.comparison_subtitle+"</p>");replaceCmsSection("PRICING_CARDS",generatePricingCardsHtml(pricingConfig.cards));replaceCmsSection("COMPARISON_TABLE",generateComparisonTableHtml(pricingConfig))}}else if(page==="about.html"){if(homepageConfig&&homepageConfig.navigation){replaceCmsSection("NAV",generateNavHtml(homepageConfig.navigation,""))}if(homepageConfig&&homepageConfig.header_buttons){var contactLink=homepageConfig.header_buttons.contact_us;var contactTarget=contactLink.new_tab?' target="_blank" rel="noopener noreferrer"':"";var contactHtml='                <a href="'+contactLink.url+'" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"'+contactTarget+">"+contactLink.text+"</a>";replaceCmsSection("NAV_CONTACT",contactHtml)}if(homepageConfig&&homepageConfig.about_profile){var ap=homepageConfig.about_profile;var headerHtml='<div class="profile-title-area">\n'+'                            <h1 class="profile-name cms-editable-highlight" data-field="about_profile.name" data-label="Bio Name">'+ap.name+"</h1>\n"+'                            <p class="profile-subtitle cms-editable-highlight" data-field="about_profile.role" data-label="Bio Role">'+ap.role+"</p>\n"+'                            <div class="profile-underline"></div>\n'+"                        </div>";replaceCmsSection("ABOUT_PROFILE_HEADER",headerHtml);var socialsHtml='<div class="profile-socials">\n'+'                            <a href="'+ap.linkedin+'" target="_blank" rel="noopener noreferrer" class="social-link-btn cms-editable-highlight" data-field="about_profile.linkedin" data-label="LinkedIn Link" aria-label="LinkedIn">\n'+'                                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>\n'+"                            </a>\n"+'                            <a href="'+ap.twitter+'" target="_blank" rel="noopener noreferrer" class="social-link-btn cms-editable-highlight" data-field="about_profile.twitter" data-label="Twitter Link" aria-label="Twitter">\n'+'                                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>\n'+"                            </a>\n"+'                            <a href="'+ap.youtube+'" target="_blank" rel="noopener noreferrer" class="social-link-btn cms-editable-highlight" data-field="about_profile.youtube" data-label="YouTube Link" aria-label="YouTube">\n'+'                                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.163c-.272-1.016-1.071-1.815-2.087-2.087C19.574 3.543 12 3.543 12 3.543s-7.574 0-9.411.533c-1.016.272-1.815 1.071-2.087 2.087C0 8.007 0 12 0 12s0 3.993.502 5.837c.272 1.016 1.071 1.815 2.087 2.087 1.837.533 9.411.533 9.411.533s7.574 0 9.411-.533c1.016-.272 1.815-1.071 2.087-2.087.502-1.844.502-5.837.502-5.837s0-3.993-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>\n'+"                            </a>\n"+"                        </div>";replaceCmsSection("ABOUT_PROFILE_SOCIALS",socialsHtml);var paragraphsHtml='<div class="profile-paragraphs">\n'+ap.paragraphs.map(function(p,idx){return'                        <p class="cms-editable-highlight" data-field="about_profile.paragraphs.'+idx+'" data-label="Bio Paragraph '+(idx+1)+'">'+p+"</p>"}).join("\n")+"\n                    </div>";replaceCmsSection("ABOUT_PROFILE_PARAGRAPHS",paragraphsHtml);var quoteHtml='<div class="profile-quote-box">\n'+'                        <p class="quote-text cms-editable-highlight" data-field="about_profile.quote" data-label="Bio Quote">'+ap.quote+"</p>\n"+"                    </div>";replaceCmsSection("ABOUT_PROFILE_QUOTE",quoteHtml);var photoHtml='<div class="profile-image-col">\n'+'                    <div class="profile-img-wrapper glow-border">\n'+'                        <img src="'+(ap.photo||"profile.jpeg")+'" alt="'+ap.name+'" class="profile-photo cms-editable-highlight" data-field="about_profile.photo" data-label="Bio Photo" loading="lazy">\n'+"                    </div>\n"+"                </div>";replaceCmsSection("ABOUT_PROFILE_PHOTO",photoHtml)}if(homepageConfig&&homepageConfig.team){replaceCmsSection("TEAM_TITLE",'                    <h2 class="team-section-title cms-editable-highlight" data-field="team.title">'+homepageConfig.team.title+"</h2>");replaceCmsSection("TEAM_CARDS",generateTeamCardsHtmlForAbout(homepageConfig.team.members))}}applyLayoutStyles();syncConfigsToDom();setContentEditableOnFields();if(typeof initMobilePricingTabs==="function")initMobilePricingTabs()}function syncConfigsToDom(){var page=window.location.pathname.split("/").pop()||"index.html";var elements=document.querySelectorAll("[data-field]");elements.forEach(function(el){var field=el.getAttribute("data-field");if(field.indexOf("navigation")===0)return;if(document.activeElement===el)return;var isPricingField=page==="pricing.html"||field.indexOf("pricing_")===0||field.indexOf("comparison_")===0||field.indexOf("cards")===0||field.indexOf("table_plans")===0;var configObj=isPricingField?pricingConfig:homepageConfig;if(!configObj)return;var val=getNestedKey(configObj,field);if(val!==undefined&&val!==null){if(el.tagName==="A"&&(field.indexOf("about_profile.linkedin")===0||field.indexOf("about_profile.twitter")===0||field.indexOf("about_profile.youtube")===0)){if(el.getAttribute("href")!==val){el.setAttribute("href",val)}return}if(el.tagName==="IMG"){if(el.getAttribute("src")!==val){el.setAttribute("src",val)}return}var isHtml=/<[a-z][\s\S]*>/i.test(val)||field.indexOf("heading_html")!==-1||field.indexOf("desc")!==-1||field.indexOf("answer")!==-1||field.indexOf("title")!==-1||field.indexOf("quote")!==-1||field.indexOf("disclaimer")!==-1;if(isHtml){if(el.innerHTML!==val){el.innerHTML=val}}else{if(el.innerText!==val){el.innerText=val}}if(el.classList.contains("count-up")){el.setAttribute("data-target",val)}}})}function applyLayoutStyles(){var pageName=window.location.pathname.split("/").pop()||"index.html";var isPricing=pageName==="pricing.html";var configTarget=isPricing?pricingConfig:homepageConfig;if(!configTarget||!configTarget.layout_styles)return;var styleTag=document.getElementById("cms-preview-style-override");if(!styleTag){styleTag=document.createElement("style");styleTag.id="cms-preview-style-override";document.head.appendChild(styleTag)}var cssText="";for(var key in configTarget.layout_styles){var rules=configTarget.layout_styles[key];var cssSel=key;if(isPricing){if(key==="pricing-title")cssSel=".cms-pricing-title";else if(key==="pricing-subtitle")cssSel=".cms-pricing-subtitle";else if(key==="pricing-page-section")cssSel=".pricing-page-section";else if(key==="pricing-card-3d")cssSel=".pricing-card-3d";else if(key==="comparison-table-wrapper")cssSel=".comparison-table-wrapper"}else{if(key==="hero-section")cssSel=".iv-hero";else if(key==="hero-title")cssSel=".iv-hero-h1";else if(key==="hero-desc")cssSel=".iv-hero-desc";else if(key==="philosophy-card")cssSel=".spiral-card";else if(key==="testimonial-card")cssSel=".testimonial-card";else if(key==="team-card")cssSel=".team-card";else if(key==="faq-item")cssSel=".faq-item"}cssText+=cssSel+" {\n  "+rules+"\n}\n"}styleTag.innerHTML=cssText}function openInlineEditor(target){closeActivePopover();var fieldPath=target.getAttribute("data-field");var label=target.getAttribute("data-label")||"Edit Field";var pageName=window.location.pathname.split("/").pop()||"index.html";var isPricingField=pageName==="pricing.html"||fieldPath.indexOf("pricing_")===0||fieldPath.indexOf("comparison_")===0||fieldPath.indexOf("cards")===0||fieldPath.indexOf("table_plans")===0;var configObj=isPricingField?pricingConfig:homepageConfig;var currentValue=getNestedKey(configObj,fieldPath);if(currentValue===undefined){currentValue=target.innerText.trim()}var popover=document.createElement("div");popover.className="cms-inline-popover";activePopover=popover;var header=document.createElement("div");header.className="cms-popover-header";header.innerText=label;popover.appendChild(header);var body=document.createElement("div");var inputField;if(currentValue.length>60||currentValue.indexOf("\n")!==-1||target.tagName==="P"){inputField=document.createElement("textarea");inputField.className="cms-popover-textarea";inputField.value=currentValue}else{inputField=document.createElement("input");inputField.type="text";inputField.className="cms-popover-input";inputField.value=currentValue}body.appendChild(inputField);popover.appendChild(body);var actions=document.createElement("div");actions.className="cms-popover-actions";var cancelBtn=document.createElement("button");cancelBtn.className="cms-popover-btn cms-popover-cancel";cancelBtn.innerText="Cancel";cancelBtn.onclick=function(e){e.stopPropagation();closeActivePopover()};var saveBtn=document.createElement("button");saveBtn.className="cms-popover-btn cms-popover-save";saveBtn.innerText="Save";saveBtn.onclick=function(e){e.stopPropagation();var newVal=inputField.value;setNestedKey(configObj,fieldPath,newVal);applyConfigs();window.parent.postMessage({type:"update_cms_state_from_iframe",isPricing:isPricingField,key:fieldPath,value:newVal},"*");closeActivePopover()};actions.appendChild(cancelBtn);actions.appendChild(saveBtn);popover.appendChild(actions);popover.style.visibility="hidden";document.body.appendChild(popover);var rect=target.getBoundingClientRect();var popoverWidth=320;var popoverHeight=popover.offsetHeight||135;var spaceAbove=rect.top;var spaceBelow=window.innerHeight-rect.bottom;var topPos=rect.top+window.scrollY-popoverHeight-12;var isAbove=true;if(spaceAbove<popoverHeight+15){if(spaceBelow>popoverHeight+15){topPos=rect.bottom+window.scrollY+12;isAbove=false}else{if(spaceBelow>spaceAbove){topPos=rect.bottom+window.scrollY+12;isAbove=false}}}var leftPos=rect.left+window.scrollX+rect.width/2-popoverWidth/2;if(leftPos<10)leftPos=10;if(leftPos+popoverWidth>window.innerWidth-10){leftPos=window.innerWidth-popoverWidth-10}popover.style.top=topPos+"px";popover.style.left=leftPos+"px";popover.style.visibility="visible";var arrow=document.createElement("div");arrow.id="cms-popover-arrow-el";arrow.className="cms-popover-arrow "+(isAbove?"cms-popover-arrow-bottom":"cms-popover-arrow-top");var arrowLeft=rect.left+window.scrollX+rect.width/2-leftPos-8;if(arrowLeft<15)arrowLeft=15;if(arrowLeft>popoverWidth-30)arrowLeft=popoverWidth-30;arrow.style.left=leftPos+arrowLeft+"px";if(isAbove){arrow.style.top=rect.top+window.scrollY-12+"px"}else{arrow.style.top=rect.bottom+window.scrollY+4+"px"}document.body.appendChild(arrow);setTimeout(function(){inputField.focus();if(typeof inputField.select==="function"){inputField.select()}},50);popover.onclick=function(e){e.stopPropagation()}}window.addEventListener("message",function(event){var msg=event.data;if(!msg)return;if(msg.type==="init_cms_state"){homepageConfig=msg.homepageConfig;pricingConfig=msg.pricingConfig;applyConfigs();setHighlightMode(msg.enabled)}else if(msg.type==="toggle_edit_mode"){setHighlightMode(msg.enabled)}else if(msg.type==="update_cms_value"){var configTarget=msg.isPricing?pricingConfig:homepageConfig;if(configTarget){setNestedKey(configTarget,msg.key,msg.value);applyConfigs()}}else if(msg.type==="update_preview_style"){var pageName=window.location.pathname.split("/").pop()||"index.html";var isPricing=pageName==="pricing.html";var configTarget=isPricing?pricingConfig:homepageConfig;if(configTarget){configTarget.layout_styles=configTarget.layout_styles||{};configTarget.layout_styles[msg.targetKey]=msg.styles;applyLayoutStyles()}}else if(msg.type==="clear_selection"){var selectedEls=document.querySelectorAll(".cms-selected-element");selectedEls.forEach(function(el){el.classList.remove("cms-selected-element")})}});window.addEventListener("click",function(e){if(!isHighlightEnabled)return;var textTarget=e.target.closest("[data-field]");if(textTarget){var isInline=textTarget.getAttribute("contenteditable")==="true";if(isInline){var closestLink=e.target.closest("a");if(closestLink){e.preventDefault();textTarget.focus()}}else{e.preventDefault();e.stopPropagation()}if(!isInline){openInlineEditor(textTarget)}return}closeActivePopover()},true);var pageName=window.location.pathname.split("/").pop()||"index.html";window.parent.postMessage({type:"iframe_ready",page:pageName},"*")})();
+(function () {
+    if (window.self === window.top) {
+        return; // Only run inside preview iframe
+    }
+    console.log("[CMS Preview] Visual Inline Controller with Rich Text Formatting loaded.");
+
+    var homepageConfig = null;
+    var pricingConfig = null;
+    var legalConfig = null;
+    var nikhilProfileConfig = null;
+    var highlightStyles = null;
+    var activePopover = null;
+    var isHighlightEnabled = true;
+    var savedSelectionRange = null;
+
+    function setNestedKey(obj, path, value) {
+        if (!obj || !path) return;
+        var parts = path.split(".");
+        var current = obj;
+        for (var i = 0; i < parts.length - 1; i++) {
+            if (!current[parts[i]]) {
+                current[parts[i]] = {};
+            }
+            current = current[parts[i]];
+        }
+        current[parts[parts.length - 1]] = value;
+    }
+
+    function getNestedKey(obj, path) {
+        if (!obj || !path) return undefined;
+        var parts = path.split(".");
+        var current = obj;
+        for (var i = 0; i < parts.length; i++) {
+            if (current === null || current === undefined) return undefined;
+            current = current[parts[i]];
+        }
+        return current;
+    }
+
+    // =========================================================================
+    // INJECT RICH TEXT FORMATTING TOOLBAR & STYLES
+    // =========================================================================
+    function injectToolbarStyles() {
+        if (document.getElementById("cms-rich-text-styles")) return;
+        var styleEl = document.createElement("style");
+        styleEl.id = "cms-rich-text-styles";
+        styleEl.innerHTML = `
+            .cms-editable-highlight {
+                outline: 2px dashed #FF8C00 !important;
+                outline-offset: 4px !important;
+                box-shadow: 0 0 15px rgba(255, 140, 0, 0.4) !important;
+                cursor: text !important;
+                position: relative !important;
+                transition: outline 0.15s ease, box-shadow 0.15s ease !important;
+            }
+            .cms-editable-highlight:hover {
+                outline-color: #E6B53D !important;
+                box-shadow: 0 0 22px rgba(230, 181, 61, 0.6) !important;
+            }
+            [contenteditable="true"] {
+                cursor: text !important;
+            }
+            [contenteditable="true"]:focus {
+                outline: none !important;
+                box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.7), 0 0 18px rgba(255, 140, 0, 0.3) !important;
+                background: rgba(255, 140, 0, 0.04) !important;
+                border-radius: 4px !important;
+            }
+            
+            /* Floating Rich Text Format Toolbar */
+            #cmsFloatingFormatToolbar {
+                position: absolute;
+                display: none;
+                align-items: center;
+                gap: 2px;
+                background: #181818;
+                border: 1px solid #FF8C00;
+                border-radius: 8px;
+                padding: 4px 6px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 16px rgba(255, 140, 0, 0.3);
+                z-index: 999999;
+                font-family: system-ui, -apple-system, sans-serif;
+                user-select: none;
+                animation: cmsToolbarFadeIn 0.15s ease-out forwards;
+            }
+            @keyframes cmsToolbarFadeIn {
+                from { opacity: 0; transform: translateY(4px) scale(0.96); }
+                to { opacity: 1; transform: translateY(0) scale(1); }
+            }
+            .cms-fmt-btn {
+                background: transparent;
+                border: none;
+                color: #e5e5e5;
+                font-size: 13px;
+                font-weight: 600;
+                width: 28px;
+                height: 28px;
+                border-radius: 5px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.15s;
+                padding: 0;
+            }
+            .cms-fmt-btn:hover {
+                background: rgba(255, 140, 0, 0.2);
+                color: #FF8C00;
+            }
+            .cms-fmt-btn.active {
+                background: #FF8C00;
+                color: #000;
+            }
+            .cms-fmt-divider {
+                width: 1px;
+                height: 18px;
+                background: rgba(255, 255, 255, 0.15);
+                margin: 0 3px;
+            }
+
+            /* Color Palette Popover */
+            #cmsColorPalettePopover {
+                position: absolute;
+                display: none;
+                flex-direction: column;
+                gap: 8px;
+                background: #1e1e1e;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 8px;
+                padding: 10px;
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.9);
+                z-index: 1000000;
+                width: 190px;
+            }
+            .cms-color-presets {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 6px;
+            }
+            .cms-color-preset-item {
+                width: 32px;
+                height: 26px;
+                border-radius: 4px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                cursor: pointer;
+                transition: transform 0.1s, border-color 0.1s;
+            }
+            .cms-color-preset-item:hover {
+                transform: scale(1.15);
+                border-color: #fff;
+            }
+            .cms-custom-color-row {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                margin-top: 4px;
+            }
+            .cms-custom-color-input {
+                flex: 1;
+                background: #111;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: #fff;
+                font-size: 11px;
+                padding: 4px 6px;
+                border-radius: 4px;
+                font-family: monospace;
+            }
+            .cms-custom-color-btn {
+                background: #FF8C00;
+                color: #000;
+                border: none;
+                font-size: 11px;
+                font-weight: 700;
+                padding: 4px 8px;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            /* Link Popover */
+            #cmsLinkPopover {
+                position: absolute;
+                display: none;
+                flex-direction: column;
+                gap: 6px;
+                background: #1e1e1e;
+                border: 1px solid #FF8C00;
+                border-radius: 8px;
+                padding: 10px;
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.9);
+                z-index: 1000000;
+                width: 250px;
+            }
+            .cms-link-input {
+                width: 100%;
+                background: #111;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: #fff;
+                font-size: 12px;
+                padding: 6px 8px;
+                border-radius: 4px;
+                box-sizing: border-box;
+                outline: none;
+            }
+            .cms-link-input:focus {
+                border-color: #FF8C00;
+            }
+            .cms-link-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 6px;
+            }
+
+            /* Inline click popover for images/links */
+            .cms-inline-popover {
+                position: absolute;
+                width: 320px;
+                background: #111111;
+                border: 1px solid #FF8C00;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 140, 0, 0.2);
+                z-index: 100000;
+                font-family: system-ui, -apple-system, sans-serif;
+                color: #ffffff;
+                padding: 12px;
+                box-sizing: border-box;
+                animation: popoverFadeIn 0.2s ease-out forwards;
+            }
+        `;
+        document.head.appendChild(styleEl);
+    }
+
+    function createFloatingToolbar() {
+        if (document.getElementById("cmsFloatingFormatToolbar")) return;
+        injectToolbarStyles();
+
+        // 1. Toolbar DOM
+        var toolbar = document.createElement("div");
+        toolbar.id = "cmsFloatingFormatToolbar";
+        toolbar.innerHTML = `
+            <button type="button" class="cms-fmt-btn" id="cmsBtnBold" title="Bold (Ctrl+B)"><b>B</b></button>
+            <button type="button" class="cms-fmt-btn" id="cmsBtnItalic" title="Italic (Ctrl+I)"><i>I</i></button>
+            <button type="button" class="cms-fmt-btn" id="cmsBtnUnderline" title="Underline (Ctrl+U)"><u>U</u></button>
+            <button type="button" class="cms-fmt-btn" id="cmsBtnStrike" title="Strikethrough"><s>S</s></button>
+            <div class="cms-fmt-divider"></div>
+            <button type="button" class="cms-fmt-btn" id="cmsBtnColor" title="Font Color">
+                <span style="display:inline-block; width:12px; height:12px; background:#FF8C00; border-radius:50%; border:1px solid #fff;"></span>
+            </button>
+            <button type="button" class="cms-fmt-btn" id="cmsBtnLink" title="Insert / Edit Link">🔗</button>
+            <div class="cms-fmt-divider"></div>
+            <button type="button" class="cms-fmt-btn" id="cmsBtnClear" title="Clear Formatting">🧹</button>
+        `;
+        document.body.appendChild(toolbar);
+
+        // 2. Color Palette Popover
+        var colorPalette = document.createElement("div");
+        colorPalette.id = "cmsColorPalettePopover";
+        colorPalette.innerHTML = `
+            <div style="font-size: 10px; font-weight: 700; color: #FF8C00; text-transform: uppercase;">Select Text Color</div>
+            <div class="cms-color-presets">
+                <div class="cms-color-preset-item" data-color="#FF8C00" style="background:#FF8C00;" title="Orange Accent"></div>
+                <div class="cms-color-preset-item" data-color="#E6B53D" style="background:#E6B53D;" title="Gold"></div>
+                <div class="cms-color-preset-item" data-color="#FFFFFF" style="background:#FFFFFF;" title="White"></div>
+                <div class="cms-color-preset-item" data-color="#9CA3AF" style="background:#9CA3AF;" title="Muted Grey"></div>
+                <div class="cms-color-preset-item" data-color="#10B981" style="background:#10B981;" title="Green"></div>
+                <div class="cms-color-preset-item" data-color="#EF4444" style="background:#EF4444;" title="Red"></div>
+                <div class="cms-color-preset-item" data-color="#3B82F6" style="background:#3B82F6;" title="Blue"></div>
+                <div class="cms-color-preset-item" data-color="#A855F7" style="background:#A855F7;" title="Purple"></div>
+            </div>
+            <div class="cms-custom-color-row">
+                <input type="text" id="cmsCustomColorHex" class="cms-custom-color-input" placeholder="#FF8C00" value="#FF8C00">
+                <button type="button" id="cmsApplyColorBtn" class="cms-custom-color-btn">Apply</button>
+            </div>
+        `;
+        document.body.appendChild(colorPalette);
+
+        // 3. Link Popover
+        var linkPopover = document.createElement("div");
+        linkPopover.id = "cmsLinkPopover";
+        linkPopover.innerHTML = `
+            <div style="font-size: 10px; font-weight: 700; color: #FF8C00; text-transform: uppercase;">Insert Link URL</div>
+            <input type="text" id="cmsLinkUrlInput" class="cms-link-input" placeholder="https://example.com" value="https://">
+            <div class="cms-link-actions">
+                <button type="button" id="cmsLinkCancelBtn" class="cms-fmt-btn" style="width: auto; padding: 4px 8px; font-size: 11px;">Cancel</button>
+                <button type="button" id="cmsLinkApplyBtn" class="cms-custom-color-btn">Insert Link</button>
+            </div>
+        `;
+        document.body.appendChild(linkPopover);
+
+        // Event listeners for toolbar buttons
+        function saveRange() {
+            var sel = window.getSelection();
+            if (sel.rangeCount > 0) {
+                savedSelectionRange = sel.getRangeAt(0).cloneRange();
+            }
+        }
+
+        function restoreRange() {
+            if (savedSelectionRange) {
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(savedSelectionRange);
+            }
+        }
+
+        function triggerActiveInput() {
+            var active = document.activeElement;
+            if (active && active.isContentEditable) {
+                active.dispatchEvent(new Event("input", { bubbles: true }));
+            }
+        }
+
+        document.getElementById("cmsBtnBold").addEventListener("click", function (e) {
+            e.preventDefault();
+            document.execCommand("bold", false, null);
+            triggerActiveInput();
+        });
+
+        document.getElementById("cmsBtnItalic").addEventListener("click", function (e) {
+            e.preventDefault();
+            document.execCommand("italic", false, null);
+            triggerActiveInput();
+        });
+
+        document.getElementById("cmsBtnUnderline").addEventListener("click", function (e) {
+            e.preventDefault();
+            document.execCommand("underline", false, null);
+            triggerActiveInput();
+        });
+
+        document.getElementById("cmsBtnStrike").addEventListener("click", function (e) {
+            e.preventDefault();
+            document.execCommand("strikeThrough", false, null);
+            triggerActiveInput();
+        });
+
+        document.getElementById("cmsBtnClear").addEventListener("click", function (e) {
+            e.preventDefault();
+            document.execCommand("removeFormat", false, null);
+            triggerActiveInput();
+        });
+
+        document.getElementById("cmsBtnColor").addEventListener("click", function (e) {
+            e.preventDefault();
+            saveRange();
+            var rect = toolbar.getBoundingClientRect();
+            colorPalette.style.top = rect.bottom + window.scrollY + 6 + "px";
+            colorPalette.style.left = rect.left + window.scrollX + "px";
+            colorPalette.style.display = colorPalette.style.display === "flex" ? "none" : "flex";
+            linkPopover.style.display = "none";
+        });
+
+        colorPalette.querySelectorAll(".cms-color-preset-item").forEach(function (item) {
+            item.addEventListener("click", function () {
+                var color = item.getAttribute("data-color");
+                restoreRange();
+                document.execCommand("foreColor", false, color);
+                colorPalette.style.display = "none";
+                triggerActiveInput();
+            });
+        });
+
+        document.getElementById("cmsApplyColorBtn").addEventListener("click", function () {
+            var color = document.getElementById("cmsCustomColorHex").value.trim();
+            if (!color.startsWith("#")) color = "#" + color;
+            restoreRange();
+            document.execCommand("foreColor", false, color);
+            colorPalette.style.display = "none";
+            triggerActiveInput();
+        });
+
+        document.getElementById("cmsBtnLink").addEventListener("click", function (e) {
+            e.preventDefault();
+            saveRange();
+            var rect = toolbar.getBoundingClientRect();
+            linkPopover.style.top = rect.bottom + window.scrollY + 6 + "px";
+            linkPopover.style.left = rect.left + window.scrollX + "px";
+            linkPopover.style.display = linkPopover.style.display === "flex" ? "none" : "flex";
+            colorPalette.style.display = "none";
+            var linkInput = document.getElementById("cmsLinkUrlInput");
+            setTimeout(function () {
+                linkInput.focus();
+                linkInput.select();
+            }, 50);
+        });
+
+        document.getElementById("cmsLinkApplyBtn").addEventListener("click", function () {
+            var url = document.getElementById("cmsLinkUrlInput").value.trim();
+            if (url && url !== "https://") {
+                restoreRange();
+                document.execCommand("createLink", false, url);
+                var sel = window.getSelection();
+                if (sel && sel.anchorNode) {
+                    var parentEl = sel.anchorNode.nodeType === 3 ? sel.anchorNode.parentElement : sel.anchorNode;
+                    var linkEl = parentEl ? parentEl.closest("a") : null;
+                    if (linkEl) {
+                        linkEl.setAttribute("target", "_blank");
+                        linkEl.setAttribute("rel", "noopener noreferrer");
+                        linkEl.style.color = "var(--accent, #FF8C00)";
+                        linkEl.style.textDecoration = "underline";
+                    }
+                }
+                triggerActiveInput();
+            }
+            linkPopover.style.display = "none";
+        });
+
+        document.getElementById("cmsLinkCancelBtn").addEventListener("click", function () {
+            linkPopover.style.display = "none";
+        });
+
+        // Hide toolbar when clicking outside
+        document.addEventListener("mousedown", function (e) {
+            if (
+                !toolbar.contains(e.target) &&
+                !colorPalette.contains(e.target) &&
+                !linkPopover.contains(e.target) &&
+                !e.target.isContentEditable
+            ) {
+                toolbar.style.display = "none";
+                colorPalette.style.display = "none";
+                linkPopover.style.display = "none";
+            }
+        });
+
+        // Handle selection to show floating toolbar
+        function handleSelectionChange() {
+            var selection = window.getSelection();
+            if (selection.rangeCount > 0 && !selection.isCollapsed) {
+                var range = selection.getRangeAt(0);
+                var node = range.commonAncestorContainer;
+                if (node.nodeType === 3) node = node.parentNode;
+                var editable = node.closest('[contenteditable="true"]');
+                if (editable) {
+                    var rects = range.getClientRects();
+                    if (rects.length > 0) {
+                        var rect = rects[0];
+                        toolbar.style.display = "flex";
+                        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                        var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+                        var tbHeight = toolbar.offsetHeight || 36;
+                        var tbWidth = toolbar.offsetWidth || 230;
+
+                        var topPos = rect.top + scrollTop - tbHeight - 8;
+                        var leftPos = rect.left + scrollLeft + (rect.width - tbWidth) / 2;
+                        if (leftPos < 10) leftPos = 10;
+                        if (leftPos + tbWidth > window.innerWidth - 10) leftPos = window.innerWidth - tbWidth - 10;
+
+                        toolbar.style.top = topPos + "px";
+                        toolbar.style.left = leftPos + "px";
+                        return;
+                    }
+                }
+            }
+            if (
+                toolbar.style.display !== "none" &&
+                colorPalette.style.display !== "flex" &&
+                linkPopover.style.display !== "flex"
+            ) {
+                toolbar.style.display = "none";
+            }
+        }
+
+        document.addEventListener("selectionchange", handleSelectionChange);
+    }
+
+    function setContentEditableOnFields() {
+        createFloatingToolbar();
+
+        // 1. Mark fields with data-field as contenteditable
+        var elements = document.querySelectorAll("[data-field]");
+        elements.forEach(function (el) {
+            var field = el.getAttribute("data-field");
+            if (
+                field.indexOf("navigation") === 0 ||
+                field.endsWith(".num") ||
+                field.endsWith(".suffix") ||
+                el.tagName === "IMG" ||
+                field.indexOf("about_profile.linkedin") === 0 ||
+                field.indexOf("about_profile.twitter") === 0 ||
+                field.indexOf("about_profile.youtube") === 0
+            ) {
+                el.removeAttribute("contenteditable");
+                return;
+            }
+            if (isHighlightEnabled) {
+                el.setAttribute("contenteditable", "true");
+                bindInputListeners(el, field);
+            } else {
+                el.removeAttribute("contenteditable");
+            }
+        });
+
+        // 2. On Legal Pages, make headings, paragraphs, and list items inside .legal-content editable
+        var legalContent = document.querySelector(".legal-content");
+        if (legalContent && isHighlightEnabled) {
+            var textElements = legalContent.querySelectorAll("h1, h2, h3, h4, p, li, strong");
+            textElements.forEach(function (item) {
+                item.setAttribute("contenteditable", "true");
+                if (!item.dataset.cmsLegalBound) {
+                    item.dataset.cmsLegalBound = "true";
+                    item.addEventListener("input", function () {
+                        var pathname = window.location.pathname;
+                        var page = pathname.split("/").pop() || "disclaimer.html";
+                        var docId = "disclaimer";
+                        if (page.indexOf("privacypolicy") !== -1) docId = "privacypolicy";
+                        else if (page.indexOf("tnc") !== -1) docId = "tnc";
+                        else if (page.indexOf("investorcharter") !== -1) docId = "investorcharter";
+                        else if (page.indexOf("Grievance") !== -1) docId = "grievance_redressal";
+
+                        if (legalConfig && legalConfig[docId]) {
+                            var cleanHtml = legalContent.innerHTML;
+                            legalConfig[docId].html_content = cleanHtml;
+                            window.parent.postMessage(
+                                {
+                                    type: "update_cms_state_from_iframe",
+                                    isLegal: true,
+                                    docId: docId,
+                                    key: docId + ".html_content",
+                                    value: cleanHtml
+                                },
+                                "*"
+                            );
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    function bindInputListeners(el, field) {
+        if (!el.dataset.cmsKeydownBound) {
+            el.dataset.cmsKeydownBound = "true";
+            el.addEventListener("keydown", function (event) {
+                var isSingleLine =
+                    el.tagName === "H1" ||
+                    el.tagName === "H2" ||
+                    el.tagName === "H3" ||
+                    el.tagName === "H4" ||
+                    el.tagName === "H5" ||
+                    el.tagName === "H6" ||
+                    el.tagName === "SPAN" ||
+                    el.tagName === "A" ||
+                    el.classList.contains("iv-hero-tag") ||
+                    el.classList.contains("iv-sebi-badge") ||
+                    el.classList.contains("team-role") ||
+                    el.classList.contains("position") ||
+                    el.classList.contains("pricing-duration") ||
+                    el.classList.contains("pricing-plan-name") ||
+                    el.classList.contains("pricing-meta-value") ||
+                    el.classList.contains("pricing-price");
+                if (isSingleLine && event.key === "Enter") {
+                    event.preventDefault();
+                    el.blur();
+                }
+            });
+        }
+        if (!el.dataset.cmsInputBound) {
+            el.dataset.cmsInputBound = "true";
+            el.addEventListener("input", function () {
+                var pathname = window.location.pathname;
+                var pageName = pathname.split("/").pop() || "index.html";
+                var isPricingField = pageName === "pricing.html" || field.indexOf("pricing_") === 0 || field.indexOf("comparison_") === 0 || field.indexOf("cards") === 0 || field.indexOf("table_plans") === 0;
+                var isNikhilField = pageName.indexOf("nikhil-gangil") !== -1 || field.indexOf("profile.") === 0;
+                var isLegalField = pathname.indexOf("Legal&Compliance") !== -1 || field.indexOf("legal.") === 0;
+
+                var configObj = isPricingField ? pricingConfig : isNikhilField ? nikhilProfileConfig : isLegalField ? legalConfig : homepageConfig;
+                if (!configObj) return;
+
+                var newVal = el.innerHTML;
+                var isHtml = /<[a-z][\s\S]*>/i.test(el.innerHTML) || field.indexOf("heading_html") !== -1 || field.indexOf("desc") !== -1 || field.indexOf("answer") !== -1 || field.indexOf("title") !== -1 || field.indexOf("quote") !== -1 || field.indexOf("disclaimer") !== -1;
+                if (!isHtml) {
+                    newVal = el.innerText.trim();
+                }
+                
+                var cleanKey = field.replace(/^profile\./, '').replace(/^legal\./, '');
+                setNestedKey(configObj, cleanKey, newVal);
+
+                window.parent.postMessage(
+                    {
+                        type: "update_cms_state_from_iframe",
+                        isPricing: isPricingField,
+                        isNikhil: isNikhilField,
+                        isLegal: isLegalField,
+                        key: cleanKey,
+                        value: newVal
+                    },
+                    "*"
+                );
+            });
+        }
+    }
+
+    function replaceCmsSection(name, htmlString) {
+        var startNode = null;
+        var endNode = null;
+        var iterator = document.createNodeIterator(document.documentElement, NodeFilter.SHOW_COMMENT, null, false);
+        var node;
+        while ((node = iterator.nextNode())) {
+            var val = node.nodeValue.trim();
+            if (val === "CMS_" + name + "_START") {
+                startNode = node;
+            } else if (val === "CMS_" + name + "_END") {
+                endNode = node;
+                break;
+            }
+        }
+        if (!startNode || !endNode) {
+            return;
+        }
+        var isFocusedInside = false;
+        var activeEl = document.activeElement;
+        if (activeEl && activeEl !== document.body) {
+            var current = startNode.nextSibling;
+            while (current && current !== endNode) {
+                if (current === activeEl || (current.nodeType === 1 && current.contains(activeEl))) {
+                    isFocusedInside = true;
+                    break;
+                }
+                current = current.nextSibling;
+            }
+        }
+        if (isFocusedInside) {
+            return;
+        }
+        var parent = startNode.parentNode;
+        var current = startNode.nextSibling;
+        while (current && current !== endNode) {
+            var next = current.nextSibling;
+            parent.removeChild(current);
+            current = next;
+        }
+        var fragment = document.createRange().createContextualFragment(htmlString);
+        parent.insertBefore(fragment, endNode);
+    }
+
+    // Generator helpers for Nikhil Profile Page
+    function renderNikhilProfileFromConfig(cfg) {
+        if (!cfg) return;
+        
+        // 1. Header
+        if (cfg.header) {
+            var headerHtml = `
+                <div class="profile-title-area">
+                    <h1 class="profile-name cms-editable-highlight" data-field="profile.header.name">${cfg.header.name || "Nikhil Gangil"}</h1>
+                    <p class="profile-subtitle cms-editable-highlight" data-field="profile.header.subtitle">${cfg.header.subtitle || ""}</p>
+                    <div class="profile-underline"></div>
+                </div>
+            `;
+            replaceCmsSection("NIKHIL_HEADER", headerHtml);
+        }
+
+        // 2. Bio Paragraphs
+        if (cfg.bio_paragraphs && Array.isArray(cfg.bio_paragraphs)) {
+            var bioHtml = cfg.bio_paragraphs.map(function (p, idx) {
+                return `<p class="cms-editable-highlight" data-field="profile.bio_paragraphs.${idx}">${p}</p>`;
+            }).join("\n");
+            replaceCmsSection("NIKHIL_BIO", bioHtml);
+        }
+
+        // 3. Philosophy
+        if (cfg.philosophy) {
+            var philHtml = `
+                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.philosophy.title">${cfg.philosophy.title || "Investment Philosophy"}</h3>
+                ${(cfg.philosophy.paragraphs || []).map(function (p, idx) {
+                    return `<p class="cms-editable-highlight" data-field="profile.philosophy.paragraphs.${idx}">${p}</p>`;
+                }).join("\n")}
+            `;
+            replaceCmsSection("NIKHIL_PHILOSOPHY", philHtml);
+        }
+
+        // 4. Experience
+        if (cfg.experience) {
+            var expHtml = `
+                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.experience.title">${cfg.experience.title || "Experience & Background"}</h3>
+                <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem;">
+                    ${(cfg.experience.items || []).map(function (item, idx) {
+                        return `
+                            <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
+                                <span style="color: var(--accent); font-size: 1.1rem; line-height: 1.2;"><i class="${item.icon || 'fa-solid fa-check'}"></i></span>
+                                <div class="cms-editable-highlight" data-field="profile.experience.items.${idx}.description"><strong>${item.title}</strong>${item.description ? " – " + item.description : ""}</div>
+                            </li>
+                        `;
+                    }).join("\n")}
+                </ul>
+            `;
+            replaceCmsSection("NIKHIL_EXPERIENCE", expHtml);
+        }
+
+        // 5. Media Reach
+        if (cfg.media_reach) {
+            var reachHtml = `
+                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.media_reach.title">${cfg.media_reach.title || "Media Presence & Public Reach"}</h3>
+                <p class="cms-editable-highlight" data-field="profile.media_reach.intro">${cfg.media_reach.intro || ""}</p>
+                <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 1.5rem;">
+                    ${(cfg.media_reach.stats || []).map(function (st, idx) {
+                        return `
+                            <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
+                                <span style="color: var(--accent); font-size: 1.1rem; line-height: 1.2;"><i class="${st.icon || 'fa-solid fa-chart-simple'}"></i></span>
+                                <div>${st.bold ? "<strong>" + st.bold + "</strong> " : ""}${st.text || ""}</div>
+                            </li>
+                        `;
+                    }).join("\n")}
+                </ul>
+            `;
+            replaceCmsSection("NIKHIL_MEDIA_REACH", reachHtml);
+        }
+
+        // 6. Predictions
+        if (cfg.predictions) {
+            var predHtml = `
+                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.predictions.title">${cfg.predictions.title || "Market Cycle Predictions"}</h3>
+                <p style="margin-bottom: 1.5rem;" class="cms-editable-highlight" data-field="profile.predictions.subtitle">${cfg.predictions.subtitle || ""}</p>
+                <div style="display: flex; flex-direction: column; gap: 1.5rem; border-left: 2px solid rgba(255, 255, 255, 0.05); padding-left: 1.5rem; margin-left: 0.5rem;">
+                    ${(cfg.predictions.items || []).map(function (pred, idx) {
+                        var linkHtml = pred.link_url ? ` <a href="${pred.link_url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">${pred.link_text || "View Link"} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i></a>` : "";
+                        return `
+                            <div style="position: relative;">
+                                <div style="position: absolute; left: -29px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent);"></div>
+                                <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;" class="cms-editable-highlight" data-field="profile.predictions.items.${idx}.date_title">${pred.date_title}</strong>
+                                <p style="font-size: 0.95rem; margin: 0 0 6px 0;" class="cms-editable-highlight" data-field="profile.predictions.items.${idx}.description">${pred.description}${linkHtml}</p>
+                            </div>
+                        `;
+                    }).join("\n")}
+                </div>
+            `;
+            replaceCmsSection("NIKHIL_PREDICTIONS", predHtml);
+        }
+
+        // 7. Achievements
+        if (cfg.achievements) {
+            var achHtml = `
+                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.achievements.title">${cfg.achievements.title || "Key Achievements & Contributions"}</h3>
+                <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem;">
+                    ${(cfg.achievements.items || []).map(function (ach, idx) {
+                        return `
+                            <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
+                                <span style="color: var(--accent); font-size: 1.1rem; line-height: 1.2;"><i class="${ach.icon || 'fa-solid fa-award'}"></i></span>
+                                <div class="cms-editable-highlight" data-field="profile.achievements.items.${idx}.html">${ach.html}</div>
+                            </li>
+                        `;
+                    }).join("\n")}
+                </ul>
+            `;
+            replaceCmsSection("NIKHIL_ACHIEVEMENTS", achHtml);
+        }
+
+        // 8. Expertise
+        if (cfg.expertise) {
+            var expListHtml = `
+                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;" class="cms-editable-highlight" data-field="profile.expertise.title">${cfg.expertise.title || "Areas of Expertise:"}</h3>
+                <div style="width: 60px; height: 4px; background-color: var(--accent); margin: 0 0 1.5rem 0; border-radius: 2px;"></div>
+                <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.1rem; line-height: 1.6; color: var(--text-muted);">
+                    ${(cfg.expertise.items || []).map(function (it, idx) {
+                        return `
+                            <li style="display: flex; align-items: flex-start; gap: 8px;">
+                                <span>–</span>
+                                <span class="cms-editable-highlight" data-field="profile.expertise.items.${idx}">${it}</span>
+                            </li>
+                        `;
+                    }).join("\n")}
+                </ul>
+            `;
+            replaceCmsSection("NIKHIL_EXPERTISE", expListHtml);
+        }
+
+        // 9. Featured Articles
+        if (cfg.featured_articles) {
+            var artHtml = `
+                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.featured_articles.title">${cfg.featured_articles.title || "Key Featured Articles"}</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    ${(cfg.featured_articles.items || []).map(function (art, idx) {
+                        return `
+                            <a href="${art.url}" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); border-radius: 12px; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'; this.style.borderColor='var(--accent)';" onmouseout="this.style.background='rgba(255,255,255,0.01)'; this.style.borderColor='rgba(255,255,255,0.03)';">
+                                <span style="color: var(--text-primary); font-size: 0.95rem;"><strong>${art.publication}:</strong> ${art.title}</span>
+                                <span style="color: var(--accent); font-size: 0.9rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+                            </a>
+                        `;
+                    }).join("\n")}
+                </div>
+            `;
+            replaceCmsSection("NIKHIL_ARTICLES", artHtml);
+        }
+
+        // 10. YouTube Interviews
+        if (cfg.youtube_interviews) {
+            var ytHtml = `
+                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;" class="cms-editable-highlight" data-field="profile.youtube_interviews.title">${cfg.youtube_interviews.title || "Interviews on Prominent Youtube channels:"}</h3>
+                <div style="width: 60px; height: 4px; background-color: var(--accent); margin: 0 0 1.5rem 0; border-radius: 2px;"></div>
+                <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.1rem; line-height: 1.6; color: var(--text-muted);">
+                    ${(cfg.youtube_interviews.items || []).map(function (yt, idx) {
+                        return `
+                            <li style="word-break: break-all;">
+                                ${yt.title} – <a href="${yt.url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none;">${yt.url}</a>
+                            </li>
+                        `;
+                    }).join("\n")}
+                </ul>
+            `;
+            replaceCmsSection("NIKHIL_INTERVIEWS", ytHtml);
+        }
+
+        // 11. News Mentions
+        if (cfg.news_mentions) {
+            var newsHtml = `
+                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.news_mentions.title">${cfg.news_mentions.title || "Other News & Media Mentions"}</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem;">
+                    ${(cfg.news_mentions.items || []).map(function (nm, idx) {
+                        return `
+                            <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px;">
+                                <span style="font-size: 0.95rem; color: var(--text-muted);"><strong>${nm.source}:</strong> ${nm.headline}</span>
+                                <a href="${nm.url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">Read Article <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i></a>
+                            </div>
+                        `;
+                    }).join("\n")}
+                </div>
+            `;
+            replaceCmsSection("NIKHIL_NEWS", newsHtml);
+        }
+    }
+
+    // Generator helpers for Legal & Compliance
+    function renderLegalDocFromConfig(cfg, docId) {
+        if (!cfg) return;
+        var doc = cfg[docId];
+        if (!doc) return;
+
+        if (doc.title !== undefined) {
+            var headerHtml = `
+                <h1 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 0.75rem;" class="cms-editable-highlight" data-field="legal.${docId}.title">${doc.title}</h1>
+                <p style="color: var(--text-secondary); font-size: 1rem;" class="cms-editable-highlight" data-field="legal.${docId}.subtitle">${doc.subtitle || ""}</p>
+                <div style="width: 60px; height: 3px; background: var(--accent-primary, #f97316); border-radius: 2px; margin-top: 1rem;"></div>
+            `;
+            replaceCmsSection("LEGAL_HEADER", headerHtml);
+        }
+
+        if (doc.html_content) {
+            replaceCmsSection("LEGAL_CONTENT", doc.html_content);
+        }
+    }
+
+    function generateNavHtml(navigation, prefix) {
+        if (!navigation) return "";
+        var htmlList = navigation.map(function (link, idx) {
+            var isAbsolute = /^(?:https?:)?\/\//i.test(link.url) || link.url.startsWith("/") || link.url.startsWith("#");
+            var url = isAbsolute ? link.url : prefix + link.url;
+            var targetAttr = link.new_tab ? ' target="_blank" rel="noopener noreferrer"' : "";
+            return (
+                '                    <li><a href="' +
+                url +
+                '" class="nav-link nav-item-el cms-editable-highlight" data-field="navigation.' +
+                idx +
+                '.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Navigation Link Text"' +
+                targetAttr +
+                ">" +
+                link.text +
+                "</a></li>"
+            );
+        });
+        if (homepageConfig && homepageConfig.header_buttons) {
+            var loginLink = homepageConfig.header_buttons.client_login;
+            var loginTarget = loginLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : "";
+            htmlList.push(
+                '                    <li><a href="' +
+                loginLink.url +
+                '" class="nav-link nav-item-el cms-editable-highlight" data-field="header_buttons.client_login.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Client Login Text"' +
+                loginTarget +
+                '><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>' +
+                loginLink.text +
+                "</a></li>"
+            );
+            var contactLink = homepageConfig.header_buttons.contact_us;
+            var contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : "";
+            htmlList.push(
+                '                    <li class="nav-actions-mobile">\n' +
+                '                        <a href="' +
+                contactLink.url +
+                '" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' +
+                contactTarget +
+                ">" +
+                contactLink.text +
+                "</a>\n" +
+                "                    </li>"
+            );
+        }
+        return htmlList.join("\n");
+    }
+
+    function applyConfigs() {
+        var pathname = window.location.pathname;
+        var page = pathname.split("/").pop() || "index.html";
+
+        if (page === "index.html" || pathname === "/" || pathname === "") {
+            if (homepageConfig && homepageConfig.navigation) {
+                replaceCmsSection("NAV", generateNavHtml(homepageConfig.navigation, ""));
+            }
+            if (homepageConfig && homepageConfig.header_buttons) {
+                var contactLink = homepageConfig.header_buttons.contact_us;
+                var contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : "";
+                var contactHtml = '                <a href="' + contactLink.url + '" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' + contactTarget + ">" + contactLink.text + "</a>";
+                replaceCmsSection("NAV_CONTACT", contactHtml);
+            }
+            if (homepageConfig && homepageConfig.portfolio) {
+                replaceCmsSection("PORTFOLIO_TITLE", '<h2 class="team-section-heading cms-editable-highlight" data-field="portfolio.title" data-label="Portfolio Title">' + homepageConfig.portfolio.title + "</h2>");
+                replaceCmsSection("PORTFOLIO_TRACK", homepageConfig.portfolio.embed_html);
+                if (typeof initPortfolioCarousel === "function") initPortfolioCarousel();
+                if (window.scEmbedController && typeof window.scEmbedController.load === "function") window.scEmbedController.load();
+            }
+        } else if (page.indexOf("nikhil-gangil") !== -1) {
+            if (nikhilProfileConfig) {
+                renderNikhilProfileFromConfig(nikhilProfileConfig);
+            }
+        } else if (pathname.indexOf("Legal&Compliance") !== -1) {
+            var docId = "disclaimer";
+            if (page.indexOf("privacypolicy") !== -1) docId = "privacypolicy";
+            else if (page.indexOf("tnc") !== -1) docId = "tnc";
+            else if (page.indexOf("investorcharter") !== -1) docId = "investorcharter";
+            else if (page.indexOf("Grievance") !== -1) docId = "grievance_redressal";
+
+            if (legalConfig) {
+                renderLegalDocFromConfig(legalConfig, docId);
+            }
+        }
+
+        setContentEditableOnFields();
+    }
+
+    window.addEventListener("message", function (event) {
+        var msg = event.data;
+        if (!msg) return;
+        if (msg.type === "init_cms_state") {
+            homepageConfig = msg.homepageConfig;
+            pricingConfig = msg.pricingConfig;
+            legalConfig = msg.legalConfig;
+            nikhilProfileConfig = msg.nikhilProfileConfig;
+            applyConfigs();
+        } else if (msg.type === "toggle_edit_mode") {
+            isHighlightEnabled = msg.enabled;
+            setContentEditableOnFields();
+        } else if (msg.type === "update_cms_value") {
+            var configTarget = msg.isPricing ? pricingConfig : msg.isNikhil ? nikhilProfileConfig : msg.isLegal ? legalConfig : homepageConfig;
+            if (configTarget) {
+                var cleanKey = msg.key.replace(/^profile\./, '').replace(/^legal\./, '');
+                setNestedKey(configTarget, cleanKey, msg.value);
+                applyConfigs();
+            }
+        } else if (msg.type === "set_legal_config") {
+            legalConfig = msg.config;
+            applyConfigs();
+        } else if (msg.type === "set_nikhil_profile_config") {
+            nikhilProfileConfig = msg.config;
+            applyConfigs();
+        }
+    });
+
+    window.addEventListener(
+        "click",
+        function (e) {
+            if (!isHighlightEnabled) return;
+            var textTarget = e.target.closest("[contenteditable='true'], [data-field]");
+            if (textTarget) {
+                var closestLink = e.target.closest("a");
+                if (closestLink) {
+                    e.preventDefault();
+                    textTarget.focus();
+                }
+            }
+        },
+        true
+    );
+
+    var pageName = window.location.pathname.split("/").pop() || "index.html";
+    window.parent.postMessage({ type: "iframe_ready", page: pageName }, "*");
+})();

@@ -70,7 +70,7 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
                     
                     # Run static compilation scripts automatically
                     import subprocess
-                    if "homepage_config.json" in file_path or "pricing.json" in file_path or "blogs.json" in file_path:
+                    if "homepage_config.json" in file_path or "pricing.json" in file_path or "blogs.json" in file_path or "legal_config.json" in file_path or "nikhil_profile_config.json" in file_path:
                         subprocess.run(['node', 'scripts/update_homepage.js'], cwd=DIRECTORY, shell=True)
                     if "pricing.json" in file_path:
                         subprocess.run(['node', 'scripts/update_pricing.js'], cwd=DIRECTORY, shell=True)

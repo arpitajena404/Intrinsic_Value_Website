@@ -467,45 +467,49 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(5, 5, 5, 0.98);
+            width: 100vw;
+            height: 100vh;
+            background: #111111;
             z-index: 2000;
-            overflow-y: auto;
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            padding: 40px 20px;
+            overflow: hidden;
+            padding: 0 !important;
+            margin: 0 !important;
             box-sizing: border-box;
-            animation: fadeInCms 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeInCms 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes fadeInCms {
-            from { opacity: 0; transform: scale(1.02); }
+            from { opacity: 0; transform: scale(1.01); }
             to { opacity: 1; transform: scale(1); }
         }
 
         .iv-cms-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, rgba(20, 20, 20, 0.6), rgba(10, 10, 10, 0.85));
-            border: 1px solid rgba(255, 140, 0, 0.15);
-            border-radius: 24px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8), var(--glow-soft);
+            max-width: 100% !important;
+            width: 100% !important;
+            height: 100vh !important;
+            max-height: 100vh !important;
+            margin: 0 !important;
+            background: #111111;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            min-height: 80vh;
         }
 
         /* Workspace Header */
         .iv-cms-header {
-            padding: 24px 32px;
+            padding: 14px 28px;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(18, 18, 18, 0.6);
+            background: rgba(18, 18, 18, 0.95);
             backdrop-filter: blur(10px);
+            flex: 0 0 auto;
+            height: 70px;
+            box-sizing: border-box;
         }
 
         .iv-cms-header h3 {
@@ -905,11 +909,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
            VISUAL LAYOUT & STYLE PANEL CMS BUILDER STYLES
            ---------------------------------------------------- */
         
-        /* Full-screen Layout for CMS Workspaces */
+        /* Full-screen Layout for ALL CMS Workspaces */
         #homepageCmsWorkspace,
-        #blogsCmsWorkspace {
+        #blogsCmsWorkspace,
+        #legalCmsWorkspace,
+        #nikhilProfileCmsWorkspace {
             padding: 0 !important;
             overflow: hidden !important;
+            width: 100vw !important;
+            height: 100vh !important;
         }
 
         /* Mode specific workspace filters to separate Homepage & Pricing CMS */
@@ -926,7 +934,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         #homepageCmsWorkspace.mode-pricing #exportLiveBlock {
             display: none;
         }
-        #homepageCmsWorkspace .iv-cms-container {
+        #homepageCmsWorkspace .iv-cms-container,
+        #blogsCmsWorkspace .iv-cms-container,
+        #legalCmsWorkspace .iv-cms-container,
+        #nikhilProfileCmsWorkspace .iv-cms-container {
             max-width: 100% !important;
             width: 100% !important;
             height: 100vh !important;
@@ -943,8 +954,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         .iv-cms-workspace-split {
             display: flex;
             flex-direction: row;
-            flex: 1 1 0%;
-            height: auto;
+            flex: 1 1 auto;
+            height: calc(100vh - 70px);
             width: 100%;
             overflow: hidden;
             box-sizing: border-box;
@@ -1486,8 +1497,20 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                         <h4>Legal Disclosures</h4>
                         <p>Update SEBI-mandated warnings, disclosures, advisor registration details, and privacy policies.</p>
                     </div>
-                    <button class="iv-admin-action-btn" onclick="alert('Legal documents manager is coming soon.')">
-                        Manage Disclosures
+                    <button id="openLegalCmsBtn" class="iv-admin-action-btn">
+                        <i class="fa-solid fa-screwdriver-wrench"></i> Manage Disclosures
+                    </button>
+                </div>
+
+                <!-- Nikhil Gangil Profile CMS -->
+                <div class="iv-admin-card">
+                    <div class="iv-admin-card-head">
+                        <span class="iv-admin-card-icon">👨‍💼</span>
+                        <h4>Nikhil Gangil Bio Page</h4>
+                        <p>Customize bio summary, investment philosophy, career experience, public reach, cycle predictions timeline, achievements, and media articles.</p>
+                    </div>
+                    <button id="openNikhilProfileCmsBtn" class="iv-admin-action-btn">
+                        <i class="fa-solid fa-screwdriver-wrench"></i> Manage Bio & Articles
                     </button>
                 </div>
 
@@ -1581,8 +1604,8 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                         <input type="checkbox" id="editModeToggle" checked style="accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer;">
                         Highlight Elements
                     </label>
-                    <button id="toggleLayoutBtn" class="iv-admin-btn" style="border-style: solid; border-color: rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.05); width: auto; padding: 10px 20px;">
-                        <i class="fa-solid fa-list-check"></i> Show/Hide Sidebar
+                    <button id="toggleHomepageSidebarBtn" class="iv-admin-btn" style="border-style: solid; border-color: rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.05); width: auto; padding: 10px 18px; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-table-columns"></i> <span class="sidebar-btn-text">Hide Sidebar</span>
                     </button>
                     <button id="cmsSaveBtn" class="iv-admin-btn" style="border-style: solid; border-color: var(--accent); background: rgba(255, 140, 0, 0.1); width: auto; padding: 10px 20px;">
                         <i class="fa-solid fa-cloud-arrow-up"></i> Generate Config
@@ -2411,6 +2434,9 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                     </button>
 
                     <!-- Standard Actions -->
+                    <button id="toggleBlogsSidebarBtn" class="iv-admin-btn" style="border-style: solid; border-color: rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.05); width: auto; padding: 10px 18px; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-table-columns"></i> <span class="sidebar-btn-text">Hide Sidebar</span>
+                    </button>
                     <button id="blogsSaveBtn" class="iv-admin-btn" style="border-style: solid; border-color: var(--accent); background: rgba(255, 140, 0, 0.1); width: auto; padding: 10px 20px;">
                         <i class="fa-solid fa-cloud-arrow-up"></i> Generate JSON
                     </button>
@@ -2621,6 +2647,409 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
 
         </div>
     </div>
+
+    <!-- 5. Legal & Compliance Disclosures CMS Workspace Overlay -->
+    <div id="legalCmsWorkspace" class="iv-cms-workspace">
+        <div class="iv-cms-container" style="display: flex; flex-direction: column; height: 100%; max-width: 100%;">
+            
+            <!-- Header -->
+            <div class="iv-cms-header" style="flex: 0 0 auto;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div>
+                        <span class="iv-kicker" style="color: var(--accent); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;">SEBI Disclosures & Compliance</span>
+                        <h3 style="margin: 0;">Legal Documents CMS</h3>
+                    </div>
+                    <div style="margin-left: 20px;">
+                        <select id="legalDocSelector" class="iv-cms-select" style="background: #181818; border: 1px solid var(--accent); color: #fff; font-weight: 600; padding: 6px 14px; border-radius: 6px; font-size: 13px; cursor: pointer;">
+                            <option value="disclaimer">Disclaimer (disclaimer.html)</option>
+                            <option value="privacypolicy">Privacy Policy (privacypolicy.html)</option>
+                            <option value="tnc">Terms & Conditions / MITC (tnc.html)</option>
+                            <option value="investorcharter">Investor Charter (investorcharter.html)</option>
+                            <option value="grievance_redressal">Grievance Redressal (Grievance Redressal.html)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="iv-cms-header-actions">
+                    <button id="toggleLegalSidebarBtn" class="iv-admin-btn" style="border-style: solid; border-color: rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.05); width: auto; padding: 10px 18px; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-table-columns"></i> <span class="sidebar-btn-text">Hide Sidebar</span>
+                    </button>
+                    <button id="legalSaveBtn" class="iv-admin-btn" style="border-style: solid; border-color: var(--accent); background: rgba(255, 140, 0, 0.1); width: auto; padding: 10px 20px;">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Disclosures
+                    </button>
+                    <button id="closeLegalCmsBtn" class="iv-cms-close-btn" title="Close Legal CMS">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Split Layout Container -->
+            <div class="iv-cms-workspace-split">
+                
+                <!-- Left Pane: Editor Forms -->
+                <div class="iv-cms-editor-pane" id="legalEditorSidebar" style="display: flex; flex: 0 0 520px; width: 520px; min-width: 20px; flex-direction: column; height: 100%; overflow: hidden; background: #252525; border-right: 1px solid rgba(255, 255, 255, 0.1);">
+                    <!-- Tabs Navigation -->
+                    <div class="iv-cms-tabs-nav">
+                        <button class="iv-cms-tab-link active" id="tab-btn-legal-edit" data-tab="tab-legal-edit">Document Editor</button>
+                        <button class="iv-cms-tab-link" id="tab-btn-legal-meta" data-tab="tab-legal-meta">Compliance Meta</button>
+                        <button class="iv-cms-tab-link" id="tab-btn-legal-export" data-tab="tab-legal-export">Export Legal JSON</button>
+                    </div>
+
+                    <!-- Workspace Body -->
+                    <div class="iv-cms-body">
+
+                        <!-- TAB 1: DOCUMENT EDITOR -->
+                        <div id="tab-legal-edit" class="iv-cms-tab-content active">
+                            <h4 id="legalCurrentDocHeading" style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Disclaimer Details</h4>
+                            
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Document Title <span class="req">Required</span></label>
+                                <input type="text" id="legal-edit-title" class="iv-cms-input" placeholder="e.g. Disclaimer" oninput="updateLegalLivePreview();">
+                            </div>
+
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Subtitle / Description / Last Updated</label>
+                                <input type="text" id="legal-edit-subtitle" class="iv-cms-input" placeholder="e.g. Disclaimer for reports issued by Intrinsic Value" oninput="updateLegalLivePreview();">
+                            </div>
+
+                            <div id="legalGrievanceExtraFields" style="display: none;">
+                                <div class="iv-cms-group">
+                                    <label class="iv-cms-label">Grievance Officer Email</label>
+                                    <input type="text" id="legal-edit-officer-email" class="iv-cms-input" placeholder="info@intrinsicvalueequity.in" oninput="updateLegalLivePreview();">
+                                </div>
+                                <div class="iv-cms-group">
+                                    <label class="iv-cms-label">Support Help Intro Text</label>
+                                    <textarea id="legal-edit-grievance-intro" class="iv-cms-textarea" style="min-height: 80px;" oninput="updateLegalLivePreview();"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="iv-cms-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <label class="iv-cms-label" style="margin: 0;">Document Content (Formatted HTML / Sections) <span class="req">Required</span></label>
+                                    <div style="display: flex; gap: 4px;">
+                                        <button type="button" class="iv-cms-btn-add" style="padding: 2px 8px; font-size: 11px; width: auto;" onclick="insertLegalTag('h2')">+ Heading</button>
+                                        <button type="button" class="iv-cms-btn-add" style="padding: 2px 8px; font-size: 11px; width: auto;" onclick="insertLegalTag('p')">+ Paragraph</button>
+                                        <button type="button" class="iv-cms-btn-add" style="padding: 2px 8px; font-size: 11px; width: auto;" onclick="insertLegalTag('strong')">Bold</button>
+                                        <button type="button" class="iv-cms-btn-add" style="padding: 2px 8px; font-size: 11px; width: auto;" onclick="insertLegalTag('ul')">+ List</button>
+                                    </div>
+                                </div>
+                                <textarea id="legal-edit-content" class="iv-cms-textarea" style="min-height: 380px; font-family: monospace; font-size: 12px; line-height: 1.5;" placeholder="Enter document content HTML..." oninput="updateLegalLivePreview();"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- TAB 2: COMPLIANCE METADATA -->
+                        <div id="tab-legal-meta" class="iv-cms-tab-content">
+                            <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">SEBI Registration & Contact Info</h4>
+                            
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Entity Name</label>
+                                <input type="text" id="legal-meta-entity" class="iv-cms-input" placeholder="Intrinsic Value Equity Advisors">
+                            </div>
+                            <div class="iv-cms-row">
+                                <div class="iv-cms-group">
+                                    <label class="iv-cms-label">SEBI Registration No.</label>
+                                    <input type="text" id="legal-meta-reg" class="iv-cms-input" placeholder="INH000009047">
+                                </div>
+                                <div class="iv-cms-group">
+                                    <label class="iv-cms-label">Registration Validity</label>
+                                    <input type="text" id="legal-meta-validity" class="iv-cms-input" placeholder="Jan 31, 2027">
+                                </div>
+                            </div>
+                            <div class="iv-cms-row">
+                                <div class="iv-cms-group">
+                                    <label class="iv-cms-label">Primary Support Phone</label>
+                                    <input type="text" id="legal-meta-phone1" class="iv-cms-input" placeholder="+91 73542 59486">
+                                </div>
+                                <div class="iv-cms-group">
+                                    <label class="iv-cms-label">Secondary Support Phone</label>
+                                    <input type="text" id="legal-meta-phone2" class="iv-cms-input" placeholder="+91 98064 71956">
+                                </div>
+                            </div>
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Official Support Email</label>
+                                <input type="text" id="legal-meta-email" class="iv-cms-input" placeholder="info@intrinsicvalueequity.in">
+                            </div>
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Registered Office Address</label>
+                                <textarea id="legal-meta-address" class="iv-cms-textarea" style="min-height: 80px;"></textarea>
+                            </div>
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Smart ODR Portal URL</label>
+                                <input type="text" id="legal-meta-odr" class="iv-cms-input" placeholder="https://smartodr.in/login">
+                            </div>
+                        </div>
+
+                        <!-- TAB 3: EXPORT LEGAL JSON -->
+                        <div id="tab-legal-export" class="iv-cms-tab-content">
+                            <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Export Legal JSON File</h4>
+                            
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Generated legal_config.json Payload</label>
+                                <div id="legalJsonDisplay" class="iv-cms-json-box">Click "Save Disclosures" or switch tabs to compile legal configuration.</div>
+                            </div>
+
+                            <div class="iv-cms-export-actions">
+                                <button type="button" id="legalCopyJsonBtn" class="iv-admin-btn" style="width: auto; padding: 12px 24px; border-style: solid; border-color: var(--accent);">
+                                    <i class="fa-solid fa-copy"></i> Copy to Clipboard
+                                </button>
+                                <button type="button" id="legalDownloadJsonBtn" class="iv-admin-btn" style="width: auto; padding: 12px 24px;">
+                                    <i class="fa-solid fa-circle-down"></i> Download JSON File
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Resizer Drag Handle -->
+                <div id="legalCmsSplitter" class="iv-cms-splitter">
+                    <div style="width: 2px; height: 30px; background: rgba(255,255,255,0.15); border-radius: 1px;"></div>
+                </div>
+
+                <!-- Right Pane: Preview Iframe -->
+                <div class="iv-cms-preview-pane device-laptop">
+                    <div class="iv-cms-preview-toolbar">
+                        <div style="font-size: 13px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-eye" style="color: var(--accent);"></i> <span id="legalPreviewTitle">Live Preview: disclaimer.html</span>
+                        </div>
+                        <div class="preview-device-toggle">
+                            <button class="btn-device-toggle-legal active" data-device="laptop" title="Laptop View">
+                                <i class="fa-solid fa-laptop"></i> Laptop
+                            </button>
+                            <button class="btn-device-toggle-legal" data-device="phone" title="Phone View">
+                                <i class="fa-solid fa-mobile-screen-button"></i> Phone
+                            </button>
+                        </div>
+                    </div>
+                    <div class="iframe-container-wrapper">
+                        <iframe id="legalPreviewIframe" src="Legal&Compliance/disclaimer.html" class="iv-cms-preview-iframe" style="background: #111;"></iframe>
+                    </div>
+                </div>
+
+            </div> <!-- Ends .iv-cms-workspace-split -->
+
+        </div>
+    </div>
+
+    <!-- 6. Nikhil Gangil Profile CMS Workspace Overlay -->
+    <div id="nikhilProfileCmsWorkspace" class="iv-cms-workspace">
+        <div class="iv-cms-container" style="display: flex; flex-direction: column; height: 100%; max-width: 100%;">
+            
+            <!-- Header -->
+            <div class="iv-cms-header" style="flex: 0 0 auto;">
+                <div>
+                    <span class="iv-kicker" style="color: var(--accent); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;">Advisor Profile Manager</span>
+                    <h3 style="margin: 0;">Nikhil Gangil Bio & Profile CMS</h3>
+                </div>
+                <div class="iv-cms-header-actions">
+                    <button id="toggleNikhilProfileSidebarBtn" class="iv-admin-btn" style="border-style: solid; border-color: rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.05); width: auto; padding: 10px 18px; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-table-columns"></i> <span class="sidebar-btn-text">Hide Sidebar</span>
+                    </button>
+                    <button id="nikhilProfileSaveBtn" class="iv-admin-btn" style="border-style: solid; border-color: var(--accent); background: rgba(255, 140, 0, 0.1); width: auto; padding: 10px 20px;">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Profile
+                    </button>
+                    <button id="closeNikhilProfileCmsBtn" class="iv-cms-close-btn" title="Close Profile CMS">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Split Layout Container -->
+            <div class="iv-cms-workspace-split">
+                
+                <!-- Left Pane: Editor Forms -->
+                <div class="iv-cms-editor-pane" id="nikhilProfileEditorSidebar" style="display: flex; flex: 0 0 540px; width: 540px; min-width: 20px; flex-direction: column; height: 100%; overflow: hidden; background: #252525; border-right: 1px solid rgba(255, 255, 255, 0.1);">
+                    <!-- Tabs Navigation -->
+                    <div class="iv-cms-tabs-nav">
+                        <button class="iv-cms-tab-link active" id="tab-btn-nikhil-bio" data-tab="tab-nikhil-bio">Bio & Philosophy</button>
+                        <button class="iv-cms-tab-link" id="tab-btn-nikhil-exp" data-tab="tab-nikhil-exp">Experience & Reach</button>
+                        <button class="iv-cms-tab-link" id="tab-btn-nikhil-predictions" data-tab="tab-nikhil-predictions">Predictions</button>
+                        <button class="iv-cms-tab-link" id="tab-btn-nikhil-achievements" data-tab="tab-nikhil-achievements">Achievements</button>
+                        <button class="iv-cms-tab-link" id="tab-btn-nikhil-media" data-tab="tab-nikhil-media">Media & Articles</button>
+                        <button class="iv-cms-tab-link" id="tab-btn-nikhil-export" data-tab="tab-nikhil-export">Export JSON</button>
+                    </div>
+
+                    <!-- Workspace Body -->
+                    <div class="iv-cms-body">
+
+                        <!-- TAB 1: BIO & PHILOSOPHY -->
+                        <div id="tab-nikhil-bio" class="iv-cms-tab-content active">
+                            <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Bio Header & Intro</h4>
+                            
+                            <div class="iv-cms-row">
+                                <div class="iv-cms-group">
+                                    <label class="iv-cms-label">Profile Name</label>
+                                    <input type="text" id="nikhil-header-name" class="iv-cms-input" oninput="updateNikhilLivePreview();">
+                                </div>
+                                <div class="iv-cms-group">
+                                    <label class="iv-cms-label">Subtitle / Role Tagline</label>
+                                    <input type="text" id="nikhil-header-subtitle" class="iv-cms-input" oninput="updateNikhilLivePreview();">
+                                </div>
+                            </div>
+
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Profile Image URL</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <input type="text" id="nikhil-header-photo" class="iv-cms-input" style="flex: 1;" oninput="updateNikhilLivePreview();">
+                                    <button type="button" class="iv-cms-btn-add" style="width: auto; padding: 0 16px;" onclick="simulateFileUpload('nikhil-header-photo', 'images')">Upload</button>
+                                </div>
+                            </div>
+
+                            <h5 style="margin: 20px 0 10px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Bio Introductory Paragraphs</h5>
+                            <div id="nikhil-bio-paragraphs-list">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                            <button type="button" class="iv-cms-btn-add" style="width: 100%; margin-top: 10px;" onclick="addNikhilBioParagraph()">+ Add Paragraph</button>
+
+                            <h5 style="margin: 24px 0 10px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Investment Philosophy</h5>
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Philosophy Section Title</label>
+                                <input type="text" id="nikhil-philosophy-title" class="iv-cms-input" oninput="updateNikhilLivePreview();">
+                            </div>
+                            <div id="nikhil-philosophy-paragraphs-list">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                            <button type="button" class="iv-cms-btn-add" style="width: 100%; margin-top: 10px;" onclick="addNikhilPhilosophyParagraph()">+ Add Philosophy Paragraph</button>
+                        </div>
+
+                        <!-- TAB 2: EXPERIENCE & REACH -->
+                        <div id="tab-nikhil-exp" class="iv-cms-tab-content">
+                            <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Experience & Background</h4>
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Section Title</label>
+                                <input type="text" id="nikhil-exp-title" class="iv-cms-input" oninput="updateNikhilLivePreview();">
+                            </div>
+                            <div id="nikhil-experience-items-list">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                            <button type="button" class="iv-cms-btn-add" style="width: 100%; margin-top: 10px;" onclick="addNikhilExperienceItem()">+ Add Experience Item</button>
+
+                            <h4 style="margin: 28px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Media Presence & Public Reach</h4>
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Section Title</label>
+                                <input type="text" id="nikhil-reach-title" class="iv-cms-input" oninput="updateNikhilLivePreview();">
+                            </div>
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Intro Text</label>
+                                <textarea id="nikhil-reach-intro" class="iv-cms-textarea" style="min-height: 70px;" oninput="updateNikhilLivePreview();"></textarea>
+                            </div>
+                            <div id="nikhil-reach-stats-list">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                            <button type="button" class="iv-cms-btn-add" style="width: 100%; margin-top: 10px;" onclick="addNikhilReachStat()">+ Add Reach Metric</button>
+                        </div>
+
+                        <!-- TAB 3: PREDICTIONS TIMELINE -->
+                        <div id="tab-nikhil-predictions" class="iv-cms-tab-content">
+                            <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Market Cycle Predictions Timeline</h4>
+                            <div class="iv-cms-row">
+                                <div class="iv-cms-group">
+                                    <label class="iv-cms-label">Section Title</label>
+                                    <input type="text" id="nikhil-pred-title" class="iv-cms-input" oninput="updateNikhilLivePreview();">
+                                </div>
+                                <div class="iv-cms-group">
+                                    <label class="iv-cms-label">Subtitle</label>
+                                    <input type="text" id="nikhil-pred-subtitle" class="iv-cms-input" oninput="updateNikhilLivePreview();">
+                                </div>
+                            </div>
+                            
+                            <div id="nikhil-predictions-list">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                            <button type="button" class="iv-cms-btn-add" style="width: 100%; margin-top: 10px;" onclick="addNikhilPredictionItem()">+ Add Prediction Event</button>
+                        </div>
+
+                        <!-- TAB 4: ACHIEVEMENTS & EXPERTISE -->
+                        <div id="tab-nikhil-achievements" class="iv-cms-tab-content">
+                            <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Key Achievements & Contributions</h4>
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Section Title</label>
+                                <input type="text" id="nikhil-ach-title" class="iv-cms-input" oninput="updateNikhilLivePreview();">
+                            </div>
+                            <div id="nikhil-achievements-list">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                            <button type="button" class="iv-cms-btn-add" style="width: 100%; margin-top: 10px;" onclick="addNikhilAchievementItem()">+ Add Achievement</button>
+
+                            <h4 style="margin: 28px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Areas of Expertise</h4>
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Section Title</label>
+                                <input type="text" id="nikhil-exp-list-title" class="iv-cms-input" oninput="updateNikhilLivePreview();">
+                            </div>
+                            <div id="nikhil-expertise-list">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                            <button type="button" class="iv-cms-btn-add" style="width: 100%; margin-top: 10px;" onclick="addNikhilExpertiseItem()">+ Add Expertise Bullet</button>
+                        </div>
+
+                        <!-- TAB 5: MEDIA & ARTICLES -->
+                        <div id="tab-nikhil-media" class="iv-cms-tab-content">
+                            <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Key Featured Articles</h4>
+                            <div id="nikhil-featured-articles-list">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                            <button type="button" class="iv-cms-btn-add" style="width: 100%; margin-top: 10px;" onclick="addNikhilArticleItem()">+ Add Featured Article</button>
+
+                            <h4 style="margin: 28px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">YouTube Interviews</h4>
+                            <div id="nikhil-youtube-interviews-list">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                            <button type="button" class="iv-cms-btn-add" style="width: 100%; margin-top: 10px;" onclick="addNikhilInterviewItem()">+ Add YouTube Interview</button>
+
+                            <h4 style="margin: 28px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Other News & Media Mentions</h4>
+                            <div id="nikhil-news-mentions-list">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                            <button type="button" class="iv-cms-btn-add" style="width: 100%; margin-top: 10px;" onclick="addNikhilNewsMentionItem()">+ Add News Mention</button>
+                        </div>
+
+                        <!-- TAB 6: EXPORT PROFILE JSON -->
+                        <div id="tab-nikhil-export" class="iv-cms-tab-content">
+                            <h4 style="margin: 0 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Export Profile JSON File</h4>
+                            
+                            <div class="iv-cms-group">
+                                <label class="iv-cms-label">Generated nikhil_profile_config.json Payload</label>
+                                <div id="nikhilJsonDisplay" class="iv-cms-json-box">Click "Save Profile" or switch tabs to compile profile configuration.</div>
+                            </div>
+
+                            <div class="iv-cms-export-actions">
+                                <button type="button" id="nikhilCopyJsonBtn" class="iv-admin-btn" style="width: auto; padding: 12px 24px; border-style: solid; border-color: var(--accent);">
+                                    <i class="fa-solid fa-copy"></i> Copy to Clipboard
+                                </button>
+                                <button type="button" id="nikhilDownloadJsonBtn" class="iv-admin-btn" style="width: auto; padding: 12px 24px;">
+                                    <i class="fa-solid fa-circle-down"></i> Download JSON File
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Resizer Drag Handle -->
+                <div id="nikhilProfileCmsSplitter" class="iv-cms-splitter">
+                    <div style="width: 2px; height: 30px; background: rgba(255,255,255,0.15); border-radius: 1px;"></div>
+                </div>
+
+                <!-- Right Pane: Preview Iframe -->
+                <div class="iv-cms-preview-pane device-laptop">
+                    <div class="iv-cms-preview-toolbar">
+                        <div style="font-size: 13px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-eye" style="color: var(--accent);"></i> Live Preview: nikhil-gangil-indian-value-investor.html
+                        </div>
+                        <div class="preview-device-toggle">
+                            <button class="btn-device-toggle-nikhil active" data-device="laptop" title="Laptop View">
+                                <i class="fa-solid fa-laptop"></i> Laptop
+                            </button>
+                            <button class="btn-device-toggle-nikhil" data-device="phone" title="Phone View">
+                                <i class="fa-solid fa-mobile-screen-button"></i> Phone
+                            </button>
+                        </div>
+                    </div>
+                    <div class="iframe-container-wrapper">
+                        <iframe id="nikhilPreviewIframe" src="nikhil-gangil-indian-value-investor.html" class="iv-cms-preview-iframe" style="background: #111;"></iframe>
+                    </div>
+                </div>
+
+            </div> <!-- Ends .iv-cms-workspace-split -->
 
         </div>
     </div>

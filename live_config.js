@@ -12,7 +12,7 @@ var LIVE_CONFIG = {
     "indexTrustPill3": "Josh Talks Speaker",
     "indexTrustPill4": "11+ years in market research",
     "indexCtaBtnText": "Watch the Free Session Now",
-    "indexRatingText": "SEBI Registered Research Analyst · 11+ years in market research",
+    "indexRatingText": "SEBI Registered Research Analyst \u00b7 11+ years in market research",
     "indexUnderstandTitle": "What you will understand in this session",
     "indexCard1Text": "How institutions think about idle surplus & how most businesses don't",
     "indexCard2Text": "Why liquidity, control, and allocation are the three questions every treasury decision needs to answer",
