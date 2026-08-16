@@ -3119,6 +3119,7 @@
                 }
                 
                 workspace.style.display = 'block';
+                resetSidebarToHidden('homepageEditorSidebar', 'homepageCmsSplitter', 'toggleHomepageSidebarBtn');
                 loadCmsData();
                 var firstTabLink = document.querySelector('.iv-cms-tab-link[data-tab="tab-hero-nav"]');
                 if (firstTabLink) firstTabLink.click();
@@ -3138,6 +3139,7 @@
                 }
                 
                 workspace.style.display = 'block';
+                resetSidebarToHidden('homepageEditorSidebar', 'homepageCmsSplitter', 'toggleHomepageSidebarBtn');
                 loadCmsData();
                 var pricingTabLink = document.querySelector('.iv-cms-tab-link[data-tab="tab-pricing"]');
                 if (pricingTabLink) pricingTabLink.click();
@@ -3353,6 +3355,22 @@
             });
         }
 
+        // Universal Reset Sidebar to Hidden state
+        window.resetSidebarToHidden = function(sidebarId, splitterId, btnId) {
+            var sidebar = document.getElementById(sidebarId);
+            var splitter = splitterId ? document.getElementById(splitterId) : null;
+            var btn = document.getElementById(btnId);
+            if (sidebar) sidebar.style.display = 'none';
+            if (splitter) splitter.style.display = 'none';
+            if (btn) {
+                btn.classList.remove('active');
+                btn.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                btn.style.background = 'rgba(255, 255, 255, 0.05)';
+                var label = btn.querySelector('.sidebar-btn-text');
+                if (label) label.innerText = 'Show Sidebar';
+            }
+        };
+
         // Universal Toggle Sidebar Layout (Left Pane) for all CMS workspaces
         function bindSidebarToggle(btnId, sidebarId, splitterId) {
             var btn = document.getElementById(btnId);
@@ -3361,21 +3379,21 @@
             if (!btn || !sidebar) return;
 
             btn.addEventListener('click', function() {
-                var isHidden = sidebar.style.display === 'none';
+                var isHidden = (sidebar.style.display === 'none' || window.getComputedStyle(sidebar).display === 'none');
                 if (isHidden) {
                     sidebar.style.display = 'flex';
                     if (splitter) splitter.style.display = 'flex';
-                    btn.classList.remove('active');
-                    btn.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                    btn.style.background = 'rgba(255, 255, 255, 0.05)';
+                    btn.classList.add('active');
+                    btn.style.borderColor = 'var(--accent)';
+                    btn.style.background = 'rgba(255, 140, 0, 0.15)';
                     var label = btn.querySelector('.sidebar-btn-text');
                     if (label) label.innerText = 'Hide Sidebar';
                 } else {
                     sidebar.style.display = 'none';
                     if (splitter) splitter.style.display = 'none';
-                    btn.classList.add('active');
-                    btn.style.borderColor = 'var(--accent)';
-                    btn.style.background = 'rgba(255, 140, 0, 0.15)';
+                    btn.classList.remove('active');
+                    btn.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    btn.style.background = 'rgba(255, 255, 255, 0.05)';
                     var label = btn.querySelector('.sidebar-btn-text');
                     if (label) label.innerText = 'Show Sidebar';
                 }
@@ -4694,6 +4712,7 @@
         if (openBtn && workspace) {
             openBtn.addEventListener('click', function () {
                 workspace.style.display = 'block';
+                resetSidebarToHidden('blogsEditorSidebar', 'blogsCmsSplitter', 'toggleBlogsSidebarBtn');
                 loadBlogsCmsData();
                 var firstTabLink = document.getElementById('tab-btn-blogs-list');
                 if (firstTabLink) firstTabLink.click();
@@ -5019,6 +5038,7 @@
         if (openBtn && workspace) {
             openBtn.addEventListener('click', function () {
                 workspace.style.display = 'block';
+                resetSidebarToHidden('legalEditorSidebar', 'legalCmsSplitter', 'toggleLegalSidebarBtn');
                 loadLegalCmsData();
                 var firstTab = document.getElementById('tab-btn-legal-edit');
                 if (firstTab) firstTab.click();
@@ -5795,6 +5815,7 @@
         if (openBtn && workspace) {
             openBtn.addEventListener('click', function () {
                 workspace.style.display = 'block';
+                resetSidebarToHidden('nikhilProfileEditorSidebar', 'nikhilProfileCmsSplitter', 'toggleNikhilProfileSidebarBtn');
                 loadNikhilProfileCmsData();
                 var firstTab = document.getElementById('tab-btn-nikhil-bio');
                 if (firstTab) firstTab.click();
