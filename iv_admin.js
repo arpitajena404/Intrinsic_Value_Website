@@ -3445,13 +3445,37 @@
                 currentPreviewPage = msg.page || 'index.html';
                 console.log("[CMS Admin] Preview Iframe ready (" + currentPreviewPage + "), syncing state...");
                 syncAllToIframe();
+                if (typeof syncLegalToIframe === 'function') syncLegalToIframe();
+                if (typeof syncNikhilToIframe === 'function') syncNikhilToIframe();
             } else if (msg.type === 'update_cms_state_from_iframe') {
-                var targetConfig = msg.isPricing ? pricingCmsState : cmsState;
-                setNestedKey(targetConfig, msg.key, msg.value);
-                if (msg.isPricing) {
-                    populatePricingForms();
+                if (msg.isLegal) {
+                    if (!legalConfigState) legalConfigState = {};
+                    var docKey = msg.docId || currentLegalDoc;
+                    if (!legalConfigState[docKey]) legalConfigState[docKey] = {};
+                    
+                    if (msg.key && msg.key.endsWith('.html_content')) {
+                        legalConfigState[docKey].html_content = msg.value;
+                        var cInput = document.getElementById('legal-edit-content');
+                        if (cInput && currentLegalDoc === docKey) {
+                            cInput.value = msg.value;
+                        }
+                    } else if (msg.key) {
+                        setNestedKey(legalConfigState, msg.key, msg.value);
+                    }
+                    saveConfigToServer('legal_config.json', legalConfigState);
+                } else if (msg.isNikhil) {
+                    if (nikhilProfileState) {
+                        setNestedKey(nikhilProfileState, msg.key, msg.value);
+                        saveConfigToServer('nikhil_profile_config.json', nikhilProfileState);
+                    }
                 } else {
-                    populateCmsForms();
+                    var targetConfig = msg.isPricing ? pricingCmsState : cmsState;
+                    setNestedKey(targetConfig, msg.key, msg.value);
+                    if (msg.isPricing) {
+                        populatePricingForms();
+                    } else {
+                        populateCmsForms();
+                    }
                 }
             }
         });
@@ -4954,7 +4978,13 @@
         var iframe = document.getElementById('legalPreviewIframe');
         var titleSpan = document.getElementById('legalPreviewTitle');
         var targetFile = legalDocFileMap[docId] || 'Legal&Compliance/disclaimer.html';
-        if (iframe) iframe.src = targetFile;
+        if (iframe) {
+            iframe.src = targetFile;
+            iframe.onload = function () {
+                syncLegalToIframe();
+                setTimeout(syncLegalToIframe, 100);
+            };
+        }
         if (titleSpan) titleSpan.innerText = 'Live Preview: ' + targetFile.split('/').pop();
 
         populateLegalForm();
@@ -4963,6 +4993,11 @@
     function syncLegalToIframe() {
         var iframe = document.getElementById('legalPreviewIframe');
         if (iframe && iframe.contentWindow && legalConfigState) {
+            iframe.contentWindow.postMessage({
+                type: 'init_cms_state',
+                legalConfig: legalConfigState,
+                enabled: true
+            }, '*');
             iframe.contentWindow.postMessage({
                 type: 'set_legal_config',
                 config: legalConfigState

@@ -830,19 +830,22 @@
         }
     }
 
+    function getLegalDocId() {
+        var pathname = window.location.pathname;
+        var page = decodeURIComponent(pathname.split("/").pop() || "disclaimer.html").toLowerCase();
+        if (page.indexOf("privacy") !== -1) return "privacypolicy";
+        if (page.indexOf("tnc") !== -1 || page.indexOf("terms") !== -1) return "tnc";
+        if (page.indexOf("investor") !== -1 || page.indexOf("charter") !== -1) return "investorcharter";
+        if (page.indexOf("grievance") !== -1) return "grievance_redressal";
+        return "disclaimer";
+    }
+
     function initLegalBlockEditor() {
         var legalContent = document.querySelector(".legal-content");
-        if (!legalContent || !isHighlightEnabled) return;
+        if (!legalContent) return;
 
         legalContent.classList.add("legal-content-editable-mode");
-
-        var pathname = window.location.pathname;
-        var page = pathname.split("/").pop() || "disclaimer.html";
-        var docId = "disclaimer";
-        if (page.indexOf("privacypolicy") !== -1) docId = "privacypolicy";
-        else if (page.indexOf("tnc") !== -1) docId = "tnc";
-        else if (page.indexOf("investorcharter") !== -1) docId = "investorcharter";
-        else if (page.indexOf("Grievance") !== -1) docId = "grievance_redressal";
+        var docId = getLegalDocId();
 
         var existingWrappers = legalContent.querySelectorAll(".legal-block-wrapper");
         if (existingWrappers.length === 0) {
@@ -1288,12 +1291,7 @@
                 renderNikhilProfileFromConfig(nikhilProfileConfig);
             }
         } else if (pathname.indexOf("Legal&Compliance") !== -1) {
-            var docId = "disclaimer";
-            if (page.indexOf("privacypolicy") !== -1) docId = "privacypolicy";
-            else if (page.indexOf("tnc") !== -1) docId = "tnc";
-            else if (page.indexOf("investorcharter") !== -1) docId = "investorcharter";
-            else if (page.indexOf("Grievance") !== -1) docId = "grievance_redressal";
-
+            var docId = getLegalDocId();
             if (legalConfig) {
                 renderLegalDocFromConfig(legalConfig, docId);
             }
@@ -1306,10 +1304,11 @@
         var msg = event.data;
         if (!msg) return;
         if (msg.type === "init_cms_state") {
-            homepageConfig = msg.homepageConfig;
-            pricingConfig = msg.pricingConfig;
-            legalConfig = msg.legalConfig;
-            nikhilProfileConfig = msg.nikhilProfileConfig;
+            if (msg.homepageConfig) homepageConfig = msg.homepageConfig;
+            if (msg.pricingConfig) pricingConfig = msg.pricingConfig;
+            if (msg.legalConfig) legalConfig = msg.legalConfig;
+            if (msg.nikhilProfileConfig) nikhilProfileConfig = msg.nikhilProfileConfig;
+            if (msg.enabled !== undefined) isHighlightEnabled = msg.enabled;
             applyConfigs();
         } else if (msg.type === "toggle_edit_mode") {
             isHighlightEnabled = msg.enabled;
@@ -1345,6 +1344,14 @@
         },
         true
     );
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function () {
+            setContentEditableOnFields();
+        });
+    } else {
+        setContentEditableOnFields();
+    }
 
     var pageName = window.location.pathname.split("/").pop() || "index.html";
     window.parent.postMessage({ type: "iframe_ready", page: pageName }, "*");
