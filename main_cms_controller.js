@@ -1,7 +1,28 @@
 (function () {
-    if (window.self === window.top) {
-        return; // Only run inside preview iframe
+    var isIframe = (window.self !== window.top);
+    if (!isIframe) {
+        document.addEventListener("DOMContentLoaded", function () {
+            var pathname = window.location.pathname;
+            var page = decodeURIComponent(pathname.split("/").pop() || "index.html").toLowerCase();
+            if (page.indexOf("nikhil-gangil") !== -1) {
+                fetch("nikhil_profile_config.json?t=" + Date.now())
+                    .then(function (r) { return r.json(); })
+                    .then(function (cfg) {
+                        renderNikhilProfileFromConfig(cfg);
+                    })
+                    .catch(function () {});
+            } else if (pathname.indexOf("Legal&Compliance") !== -1) {
+                var docId = getLegalDocId();
+                fetch("../legal_config.json?t=" + Date.now())
+                    .then(function (r) { return r.json(); })
+                    .then(function (cfg) {
+                        renderLegalDocFromConfig(cfg, docId);
+                    })
+                    .catch(function () {});
+            }
+        });
     }
+
     console.log("[CMS Preview] Visual Inline Controller with Rich Text Formatting loaded.");
 
     var homepageConfig = null;
@@ -1289,11 +1310,29 @@
         } else if (page.indexOf("nikhil-gangil") !== -1) {
             if (nikhilProfileConfig) {
                 renderNikhilProfileFromConfig(nikhilProfileConfig);
+            } else {
+                fetch("nikhil_profile_config.json?t=" + Date.now())
+                    .then(function(r) { return r.json(); })
+                    .then(function(cfg) {
+                        nikhilProfileConfig = cfg;
+                        renderNikhilProfileFromConfig(nikhilProfileConfig);
+                        setContentEditableOnFields();
+                    })
+                    .catch(function(err) { console.warn("Error fetching nikhil_profile_config.json:", err); });
             }
         } else if (pathname.indexOf("Legal&Compliance") !== -1) {
             var docId = getLegalDocId();
             if (legalConfig) {
                 renderLegalDocFromConfig(legalConfig, docId);
+            } else {
+                fetch("../legal_config.json?t=" + Date.now())
+                    .then(function(r) { return r.json(); })
+                    .then(function(cfg) {
+                        legalConfig = cfg;
+                        renderLegalDocFromConfig(legalConfig, docId);
+                        setContentEditableOnFields();
+                    })
+                    .catch(function(err) { console.warn("Error fetching legal_config.json:", err); });
             }
         }
 
@@ -1345,14 +1384,16 @@
         true
     );
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", function () {
+    if (isIframe) {
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", function () {
+                setContentEditableOnFields();
+            });
+        } else {
             setContentEditableOnFields();
-        });
-    } else {
-        setContentEditableOnFields();
-    }
+        }
 
-    var pageName = window.location.pathname.split("/").pop() || "index.html";
-    window.parent.postMessage({ type: "iframe_ready", page: pageName }, "*");
+        var pageName = window.location.pathname.split("/").pop() || "index.html";
+        window.parent.postMessage({ type: "iframe_ready", page: pageName }, "*");
+    }
 })();

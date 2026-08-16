@@ -3467,6 +3467,9 @@
                     if (nikhilProfileState) {
                         setNestedKey(nikhilProfileState, msg.key, msg.value);
                         saveConfigToServer('nikhil_profile_config.json', nikhilProfileState);
+                        if (typeof populateNikhilProfileForms === 'function') {
+                            populateNikhilProfileForms();
+                        }
                     }
                 } else {
                     var targetConfig = msg.isPricing ? pricingCmsState : cmsState;
@@ -5466,7 +5469,7 @@
         syncNikhilProfileFromForm();
         if (!nikhilProfileState.experience) nikhilProfileState.experience = {};
         if (!nikhilProfileState.experience.items) nikhilProfileState.experience.items = [];
-        nikhilProfileState.experience.items.push({ icon: 'fa-solid fa-check', title: 'New Role / Background', description: 'Description' });
+        nikhilProfileState.experience.items.unshift({ icon: 'fa-solid fa-check', title: 'New Role / Background', description: 'Description' });
         renderNikhilExperienceItems();
         window.updateNikhilLivePreview();
     };
@@ -5514,7 +5517,7 @@
         syncNikhilProfileFromForm();
         if (!nikhilProfileState.media_reach) nikhilProfileState.media_reach = {};
         if (!nikhilProfileState.media_reach.stats) nikhilProfileState.media_reach.stats = [];
-        nikhilProfileState.media_reach.stats.push({ icon: 'fa-solid fa-users', bold: '10,000+', text: 'community members' });
+        nikhilProfileState.media_reach.stats.unshift({ icon: 'fa-solid fa-users', bold: '10,000+', text: 'community members' });
         renderNikhilReachStats();
         window.updateNikhilLivePreview();
     };
@@ -5570,7 +5573,7 @@
         syncNikhilProfileFromForm();
         if (!nikhilProfileState.predictions) nikhilProfileState.predictions = {};
         if (!nikhilProfileState.predictions.items) nikhilProfileState.predictions.items = [];
-        nikhilProfileState.predictions.items.push({ date_title: 'Month Year – Prediction Event', description: 'Event description...', link_text: 'View Link', link_url: '#' });
+        nikhilProfileState.predictions.items.unshift({ date_title: 'Month Year – Prediction Event', description: 'Event description...', link_text: 'View Link', link_url: '#' });
         renderNikhilPredictions();
         window.updateNikhilLivePreview();
     };
@@ -5625,7 +5628,7 @@
         syncNikhilProfileFromForm();
         if (!nikhilProfileState.achievements) nikhilProfileState.achievements = {};
         if (!nikhilProfileState.achievements.items) nikhilProfileState.achievements.items = [];
-        nikhilProfileState.achievements.items.push({ icon: 'fa-solid fa-award', html: '<strong>Achievement title</strong> – details and link' });
+        nikhilProfileState.achievements.items.unshift({ icon: 'fa-solid fa-award', html: '<strong>Achievement title</strong> – details and link' });
         renderNikhilAchievements();
         window.updateNikhilLivePreview();
     };
@@ -5657,7 +5660,7 @@
         syncNikhilProfileFromForm();
         if (!nikhilProfileState.expertise) nikhilProfileState.expertise = {};
         if (!nikhilProfileState.expertise.items) nikhilProfileState.expertise.items = [];
-        nikhilProfileState.expertise.items.push("New Area of Expertise");
+        nikhilProfileState.expertise.items.unshift("New Area of Expertise");
         renderNikhilExpertise();
         window.updateNikhilLivePreview();
     };
@@ -5705,7 +5708,7 @@
         syncNikhilProfileFromForm();
         if (!nikhilProfileState.featured_articles) nikhilProfileState.featured_articles = {};
         if (!nikhilProfileState.featured_articles.items) nikhilProfileState.featured_articles.items = [];
-        nikhilProfileState.featured_articles.items.push({ publication: 'Publication', title: 'Headline', url: '#' });
+        nikhilProfileState.featured_articles.items.unshift({ publication: 'Publication', title: 'Headline', url: '#' });
         renderNikhilArticles();
         window.updateNikhilLivePreview();
     };
@@ -5747,7 +5750,7 @@
         syncNikhilProfileFromForm();
         if (!nikhilProfileState.youtube_interviews) nikhilProfileState.youtube_interviews = {};
         if (!nikhilProfileState.youtube_interviews.items) nikhilProfileState.youtube_interviews.items = [];
-        nikhilProfileState.youtube_interviews.items.push({ title: 'Channel Name', url: 'https://youtube.com/...' });
+        nikhilProfileState.youtube_interviews.items.unshift({ title: 'Channel Name', url: 'https://youtube.com/...' });
         renderNikhilInterviews();
         window.updateNikhilLivePreview();
     };
@@ -5795,7 +5798,7 @@
         syncNikhilProfileFromForm();
         if (!nikhilProfileState.news_mentions) nikhilProfileState.news_mentions = {};
         if (!nikhilProfileState.news_mentions.items) nikhilProfileState.news_mentions.items = [];
-        nikhilProfileState.news_mentions.items.push({ source: 'Media Outlet', headline: 'Article Headline', url: '#' });
+        nikhilProfileState.news_mentions.items.unshift({ source: 'Source', headline: 'Headline topic', url: '#' });
         renderNikhilNewsMentions();
         window.updateNikhilLivePreview();
     };
