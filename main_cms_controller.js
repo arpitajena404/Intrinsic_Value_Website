@@ -1,19 +1,46 @@
 (function () {
+    function getDecodedPath() {
+        try {
+            return decodeURIComponent(window.location.pathname).toLowerCase();
+        } catch (e) {
+            return window.location.pathname.toLowerCase();
+        }
+    }
+
+    function isLegalPage() {
+        var path = getDecodedPath();
+        return path.indexOf("legal&compliance") !== -1 || path.indexOf("legal%26compliance") !== -1 || !!document.querySelector(".legal-content") || !!document.querySelector(".legal-page-header");
+    }
+
+    function isNikhilBioPage() {
+        var path = getDecodedPath();
+        return path.indexOf("nikhil-gangil") !== -1 || path.indexOf("nikhil") !== -1 || !!document.querySelector(".profile-title-area");
+    }
+
+    function getLegalDocId() {
+        var path = getDecodedPath();
+        var page = path.split("/").pop() || "disclaimer.html";
+        if (page.indexOf("privacy") !== -1) return "privacypolicy";
+        if (page.indexOf("tnc") !== -1 || page.indexOf("terms") !== -1) return "tnc";
+        if (page.indexOf("investor") !== -1 || page.indexOf("charter") !== -1) return "investorcharter";
+        if (page.indexOf("grievance") !== -1) return "grievance_redressal";
+        return "disclaimer";
+    }
+
     var isIframe = (window.self !== window.top);
     if (!isIframe) {
         document.addEventListener("DOMContentLoaded", function () {
-            var pathname = window.location.pathname;
-            var page = decodeURIComponent(pathname.split("/").pop() || "index.html").toLowerCase();
-            if (page.indexOf("nikhil-gangil") !== -1) {
+            if (isNikhilBioPage()) {
                 fetch("nikhil_profile_config.json?t=" + Date.now())
                     .then(function (r) { return r.json(); })
                     .then(function (cfg) {
                         renderNikhilProfileFromConfig(cfg);
                     })
                     .catch(function () {});
-            } else if (pathname.indexOf("Legal&Compliance") !== -1) {
+            } else if (isLegalPage()) {
                 var docId = getLegalDocId();
-                fetch("../legal_config.json?t=" + Date.now())
+                var prefix = window.location.pathname.indexOf("Legal") !== -1 ? "../" : "";
+                fetch(prefix + "legal_config.json?t=" + Date.now())
                     .then(function (r) { return r.json(); })
                     .then(function (cfg) {
                         renderLegalDocFromConfig(cfg, docId);
@@ -862,18 +889,44 @@
     }
 
     function initLegalBlockEditor() {
+        if (!isLegalPage()) return;
+        var docId = getLegalDocId();
+
+        // 1. Make Legal Page Header Title & Subtitle editable
+        var legalHeader = document.querySelector(".legal-page-header");
+        if (legalHeader) {
+            var h1 = legalHeader.querySelector("h1");
+            var p = legalHeader.querySelector("p");
+            if (h1) {
+                h1.classList.add("cms-editable-highlight");
+                h1.setAttribute("data-field", "legal." + docId + ".title");
+                if (isHighlightEnabled) {
+                    h1.setAttribute("contenteditable", "true");
+                    bindInputListeners(h1, "legal." + docId + ".title");
+                }
+            }
+            if (p) {
+                p.classList.add("cms-editable-highlight");
+                p.setAttribute("data-field", "legal." + docId + ".subtitle");
+                if (isHighlightEnabled) {
+                    p.setAttribute("contenteditable", "true");
+                    bindInputListeners(p, "legal." + docId + ".subtitle");
+                }
+            }
+        }
+
+        // 2. Transform Legal Content into interactive block editor
         var legalContent = document.querySelector(".legal-content");
         if (!legalContent) return;
 
         legalContent.classList.add("legal-content-editable-mode");
-        var docId = getLegalDocId();
 
         var existingWrappers = legalContent.querySelectorAll(".legal-block-wrapper");
         if (existingWrappers.length === 0) {
             var rawChildren = Array.from(legalContent.children);
             if (rawChildren.length > 0) {
                 var newHtml = "";
-                rawChildren.forEach(function(child, idx) {
+                rawChildren.forEach(function (child, idx) {
                     if (child.classList.contains("legal-bottom-adder")) return;
                     newHtml += createBlockWrapperHtml(idx, child.outerHTML);
                 });
@@ -884,7 +937,7 @@
                 tempDiv.innerHTML = legalContent.innerHTML;
                 var children = Array.from(tempDiv.children);
                 var newHtml = "";
-                children.forEach(function(child, idx) {
+                children.forEach(function (child, idx) {
                     newHtml += createBlockWrapperHtml(idx, child.outerHTML);
                 });
                 newHtml += createBottomAdderHtml();
@@ -893,6 +946,37 @@
         }
 
         bindLegalBlockEvents(legalContent, docId);
+    }
+
+    function initNikhilBioEditor() {
+        if (!isNikhilBioPage()) return;
+        var selectors = [
+            ".profile-title-area h1",
+            ".profile-title-area p",
+            ".profile-bio p",
+            ".philosophy-section p",
+            ".philosophy-section h3",
+            ".experience-section h3",
+            ".media-section h3",
+            ".predictions-section h3",
+            ".predictions-section p",
+            ".achievements-section h3",
+            ".predictions-section strong",
+            ".achievements-section li div"
+        ];
+        var elements = document.querySelectorAll(selectors.join(", "));
+        elements.forEach(function (el, idx) {
+            var field = el.getAttribute("data-field");
+            if (!field) {
+                field = "profile.auto_field_" + idx;
+                el.setAttribute("data-field", field);
+            }
+            el.classList.add("cms-editable-highlight");
+            if (isHighlightEnabled) {
+                el.setAttribute("contenteditable", "true");
+                bindInputListeners(el, field);
+            }
+        });
     }
 
     function setContentEditableOnFields() {
@@ -923,9 +1007,13 @@
         });
 
         // 2. On Legal Pages, initialize block-based editor
-        var pathname = window.location.pathname;
-        if (pathname.indexOf("Legal&Compliance") !== -1) {
+        if (isLegalPage()) {
             initLegalBlockEditor();
+        }
+
+        // 3. On Nikhil Bio Page, initialize bio editor
+        if (isNikhilBioPage()) {
+            initNikhilBioEditor();
         }
     }
 
@@ -959,17 +1047,15 @@
         if (!el.dataset.cmsInputBound) {
             el.dataset.cmsInputBound = "true";
             el.addEventListener("input", function () {
-                var pathname = window.location.pathname;
-                var pageName = pathname.split("/").pop() || "index.html";
-                var isPricingField = pageName === "pricing.html" || field.indexOf("pricing_") === 0 || field.indexOf("comparison_") === 0 || field.indexOf("cards") === 0 || field.indexOf("table_plans") === 0;
-                var isNikhilField = pageName.indexOf("nikhil-gangil") !== -1 || field.indexOf("profile.") === 0;
-                var isLegalField = pathname.indexOf("Legal&Compliance") !== -1 || field.indexOf("legal.") === 0;
+                var isPricingField = field.indexOf("pricing_") === 0 || field.indexOf("comparison_") === 0 || field.indexOf("cards") === 0 || field.indexOf("table_plans") === 0;
+                var isNikhilField = isNikhilBioPage() || field.indexOf("profile.") === 0;
+                var isLegalField = isLegalPage() || field.indexOf("legal.") === 0;
 
                 var configObj = isPricingField ? pricingConfig : isNikhilField ? nikhilProfileConfig : isLegalField ? legalConfig : homepageConfig;
                 if (!configObj) return;
 
                 var newVal = el.innerHTML;
-                var isHtml = /<[a-z][\s\S]*>/i.test(el.innerHTML) || field.indexOf("heading_html") !== -1 || field.indexOf("desc") !== -1 || field.indexOf("answer") !== -1 || field.indexOf("title") !== -1 || field.indexOf("quote") !== -1 || field.indexOf("disclaimer") !== -1;
+                var isHtml = /<[a-z][\s\S]*>/i.test(el.innerHTML) || field.indexOf("heading_html") !== -1 || field.indexOf("desc") !== -1 || field.indexOf("answer") !== -1 || field.indexOf("title") !== -1 || field.indexOf("quote") !== -1 || field.indexOf("disclaimer") !== -1 || field.indexOf("subtitle") !== -1;
                 if (!isHtml) {
                     newVal = el.innerText.trim();
                 }
@@ -983,6 +1069,7 @@
                         isPricing: isPricingField,
                         isNikhil: isNikhilField,
                         isLegal: isLegalField,
+                        docId: isLegalField ? getLegalDocId() : undefined,
                         key: cleanKey,
                         value: newVal
                     },
@@ -1307,32 +1394,33 @@
                 if (typeof initPortfolioCarousel === "function") initPortfolioCarousel();
                 if (window.scEmbedController && typeof window.scEmbedController.load === "function") window.scEmbedController.load();
             }
-        } else if (page.indexOf("nikhil-gangil") !== -1) {
+        } else if (isNikhilBioPage()) {
             if (nikhilProfileConfig) {
                 renderNikhilProfileFromConfig(nikhilProfileConfig);
             } else {
                 fetch("nikhil_profile_config.json?t=" + Date.now())
-                    .then(function(r) { return r.json(); })
-                    .then(function(cfg) {
+                    .then(function (r) { return r.json(); })
+                    .then(function (cfg) {
                         nikhilProfileConfig = cfg;
                         renderNikhilProfileFromConfig(nikhilProfileConfig);
                         setContentEditableOnFields();
                     })
-                    .catch(function(err) { console.warn("Error fetching nikhil_profile_config.json:", err); });
+                    .catch(function (err) { console.warn("Error fetching nikhil_profile_config.json:", err); });
             }
-        } else if (pathname.indexOf("Legal&Compliance") !== -1) {
+        } else if (isLegalPage()) {
             var docId = getLegalDocId();
+            var prefix = window.location.pathname.indexOf("Legal") !== -1 ? "../" : "";
             if (legalConfig) {
                 renderLegalDocFromConfig(legalConfig, docId);
             } else {
-                fetch("../legal_config.json?t=" + Date.now())
-                    .then(function(r) { return r.json(); })
-                    .then(function(cfg) {
+                fetch(prefix + "legal_config.json?t=" + Date.now())
+                    .then(function (r) { return r.json(); })
+                    .then(function (cfg) {
                         legalConfig = cfg;
                         renderLegalDocFromConfig(legalConfig, docId);
                         setContentEditableOnFields();
                     })
-                    .catch(function(err) { console.warn("Error fetching legal_config.json:", err); });
+                    .catch(function (err) { console.warn("Error fetching legal_config.json:", err); });
             }
         }
 
