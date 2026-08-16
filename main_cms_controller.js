@@ -72,12 +72,12 @@
                 position: absolute;
                 display: none;
                 align-items: center;
-                gap: 2px;
+                gap: 4px;
                 background: #181818;
-                border: 1px solid #FF8C00;
+                border: 1px solid rgba(255, 140, 0, 0.4);
                 border-radius: 8px;
-                padding: 4px 6px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 16px rgba(255, 140, 0, 0.3);
+                padding: 4px 8px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 16px rgba(255, 140, 0, 0.25);
                 z-index: 999999;
                 font-family: system-ui, -apple-system, sans-serif;
                 user-select: none;
@@ -93,7 +93,7 @@
                 color: #e5e5e5;
                 font-size: 13px;
                 font-weight: 600;
-                width: 28px;
+                min-width: 26px;
                 height: 28px;
                 border-radius: 5px;
                 display: inline-flex;
@@ -101,7 +101,7 @@
                 justify-content: center;
                 cursor: pointer;
                 transition: all 0.15s;
-                padding: 0;
+                padding: 0 4px;
             }
             .cms-fmt-btn:hover {
                 background: rgba(255, 140, 0, 0.2);
@@ -210,20 +210,170 @@
                 gap: 6px;
             }
 
-            /* Inline click popover for images/links */
-            .cms-inline-popover {
+            /* Legal Compliance & Rich Content Block Editor Styles */
+            .legal-content-editable-mode {
+                position: relative;
+            }
+            .legal-block-wrapper {
+                position: relative;
+                margin: 14px 0 18px 0;
+                transition: all 0.2s ease;
+            }
+            .legal-block-top-controls {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 6px;
+                position: relative;
+                opacity: 0.85;
+                transition: opacity 0.2s ease;
+            }
+            .legal-block-wrapper:hover .legal-block-top-controls,
+            .legal-block-wrapper:focus-within .legal-block-top-controls {
+                opacity: 1;
+            }
+            .legal-adder-btn {
+                background: #1a1a1a;
+                border: 1px solid var(--accent, #FF8C00);
+                color: var(--accent, #FF8C00);
+                font-size: 11px;
+                font-weight: 700;
+                padding: 4px 14px;
+                border-radius: 16px;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+                transition: transform 0.2s, background 0.2s, color 0.2s;
+                user-select: none;
+            }
+            .legal-adder-btn:hover {
+                background: var(--accent, #FF8C00);
+                color: #000;
+                transform: scale(1.04);
+            }
+            .legal-block-actions {
+                display: inline-flex;
+                align-items: center;
+                gap: 3px;
+                background: #1c1c1c;
+                border: 1px solid rgba(255, 140, 0, 0.3);
+                border-radius: 6px;
+                padding: 3px 6px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+                user-select: none;
+            }
+            .legal-action-btn {
+                background: transparent;
+                border: none;
+                color: #fff;
+                font-size: 11px;
+                padding: 3px 6px;
+                cursor: pointer;
+                border-radius: 4px;
+                transition: background 0.2s, color 0.2s;
+                line-height: 1;
+            }
+            .legal-action-btn:hover {
+                background: var(--accent, #FF8C00);
+                color: #000;
+            }
+            .legal-action-btn.btn-delete:hover {
+                background: #ef4444;
+                color: #fff;
+            }
+            .legal-adder-popover {
                 position: absolute;
-                width: 320px;
-                background: #111111;
-                border: 1px solid #FF8C00;
-                border-radius: 12px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 140, 0, 0.2);
+                top: 32px;
+                left: 0;
+                background: #1c1c1c;
+                border: 1px solid rgba(255, 140, 0, 0.4);
+                border-radius: 8px;
+                padding: 6px;
+                display: none;
+                flex-direction: column;
+                gap: 4px;
                 z-index: 100000;
-                font-family: system-ui, -apple-system, sans-serif;
-                color: #ffffff;
-                padding: 12px;
-                box-sizing: border-box;
-                animation: popoverFadeIn 0.2s ease-out forwards;
+                width: 170px;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.85);
+            }
+            .legal-adder-item {
+                background: transparent;
+                border: none;
+                color: #fff;
+                text-align: left;
+                padding: 7px 12px;
+                font-size: 12px;
+                font-weight: 500;
+                border-radius: 4px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: background 0.15s, color 0.15s;
+            }
+            .legal-adder-item:hover {
+                background: var(--accent, #FF8C00);
+                color: #000;
+            }
+            .legal-block-inner {
+                border: 2px dashed rgba(255, 140, 0, 0.6) !important;
+                border-radius: 8px !important;
+                padding: 16px 20px !important;
+                background: rgba(255, 140, 0, 0.015) !important;
+                transition: border-color 0.2s, box-shadow 0.2s, background 0.2s !important;
+                outline: none !important;
+                cursor: text !important;
+                min-height: 32px;
+            }
+            .legal-block-inner:hover,
+            .legal-block-inner:focus {
+                border-color: #FF8C00 !important;
+                box-shadow: 0 0 16px rgba(255, 140, 0, 0.25) !important;
+                background: rgba(255, 140, 0, 0.035) !important;
+            }
+            /* High-contrast blog-style typography for legal content */
+            .legal-content {
+                color: #ffffff !important;
+                font-size: 1.05rem !important;
+                line-height: 1.85 !important;
+            }
+            .legal-content p {
+                color: #f0f0f0 !important;
+                font-size: 1.05rem !important;
+                line-height: 1.85 !important;
+                margin-bottom: 1.25rem !important;
+            }
+            .legal-content h1, .legal-content h2, .legal-content h3, .legal-content h4 {
+                font-family: var(--font-heading), 'Outfit', sans-serif !important;
+                color: #ffffff !important;
+                font-weight: 700 !important;
+            }
+            .legal-content h2 {
+                font-size: 1.35rem !important;
+                margin: 2rem 0 1rem !important;
+            }
+            .legal-content h3 {
+                font-size: 1.15rem !important;
+                margin: 1.5rem 0 0.75rem !important;
+            }
+            .legal-content strong, .legal-content b {
+                color: #ffffff !important;
+                font-weight: 700 !important;
+            }
+            .legal-content a {
+                color: var(--accent, #FF8C00) !important;
+                text-decoration: underline !important;
+            }
+            .legal-content ul, .legal-content ol {
+                padding-left: 1.5rem !important;
+                margin-bottom: 1.25rem !important;
+                color: #f0f0f0 !important;
+            }
+            .legal-content li {
+                margin-bottom: 0.5rem !important;
+                line-height: 1.85 !important;
             }
         `;
         document.head.appendChild(styleEl);
@@ -240,14 +390,12 @@
             <button type="button" class="cms-fmt-btn" id="cmsBtnBold" title="Bold (Ctrl+B)"><b>B</b></button>
             <button type="button" class="cms-fmt-btn" id="cmsBtnItalic" title="Italic (Ctrl+I)"><i>I</i></button>
             <button type="button" class="cms-fmt-btn" id="cmsBtnUnderline" title="Underline (Ctrl+U)"><u>U</u></button>
-            <button type="button" class="cms-fmt-btn" id="cmsBtnStrike" title="Strikethrough"><s>S</s></button>
-            <div class="cms-fmt-divider"></div>
-            <button type="button" class="cms-fmt-btn" id="cmsBtnColor" title="Font Color">
-                <span style="display:inline-block; width:12px; height:12px; background:#FF8C00; border-radius:50%; border:1px solid #fff;"></span>
-            </button>
+            <button type="button" class="cms-fmt-btn" id="cmsBtnList" title="Bulleted List" style="font-size: 15px; line-height: 1;"><b>≡</b></button>
             <button type="button" class="cms-fmt-btn" id="cmsBtnLink" title="Insert / Edit Link">🔗</button>
             <div class="cms-fmt-divider"></div>
-            <button type="button" class="cms-fmt-btn" id="cmsBtnClear" title="Clear Formatting">🧹</button>
+            <button type="button" class="cms-fmt-btn" id="cmsBtnColor" title="Font Color" style="width: auto; padding: 0 8px; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: #FF8C00;">
+                <span style="font-size:12px;">🎨</span> Color
+            </button>
         `;
         document.body.appendChild(toolbar);
 
@@ -327,15 +475,9 @@
             triggerActiveInput();
         });
 
-        document.getElementById("cmsBtnStrike").addEventListener("click", function (e) {
+        document.getElementById("cmsBtnList").addEventListener("click", function (e) {
             e.preventDefault();
-            document.execCommand("strikeThrough", false, null);
-            triggerActiveInput();
-        });
-
-        document.getElementById("cmsBtnClear").addEventListener("click", function (e) {
-            e.preventDefault();
-            document.execCommand("removeFormat", false, null);
+            document.execCommand("insertUnorderedList", false, null);
             triggerActiveInput();
         });
 
@@ -463,6 +605,272 @@
         document.addEventListener("selectionchange", handleSelectionChange);
     }
 
+    function createBlockWrapperHtml(index, innerHtml) {
+        return `
+            <div class="legal-block-wrapper" data-block-index="${index}">
+                <div class="legal-block-top-controls">
+                    <button type="button" class="legal-adder-btn" data-action="toggle-adder">
+                        <i class="fa-solid fa-plus"></i> Add Block
+                    </button>
+                    <div class="legal-adder-popover">
+                        <button type="button" class="legal-adder-item" data-insert="p"><i class="fa-solid fa-paragraph"></i> Paragraph</button>
+                        <button type="button" class="legal-adder-item" data-insert="h2"><i class="fa-solid fa-heading"></i> Heading</button>
+                        <button type="button" class="legal-adder-item" data-insert="ul"><i class="fa-solid fa-list-ul"></i> Bullet List</button>
+                    </div>
+                    <div class="legal-block-actions">
+                        <button type="button" class="legal-action-btn" data-action="move-up" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+                        <button type="button" class="legal-action-btn" data-action="move-down" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                        <button type="button" class="legal-action-btn btn-delete" data-action="delete" title="Delete Block"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="legal-block-inner" contenteditable="true">
+                    ${innerHtml}
+                </div>
+            </div>
+        `;
+    }
+
+    function createBottomAdderHtml() {
+        return `
+            <div class="legal-bottom-adder" style="display:flex; justify-content:center; margin: 24px 0 10px 0; position:relative;">
+                <button type="button" class="legal-adder-btn" data-action="toggle-bottom-adder">
+                    <i class="fa-solid fa-plus"></i> Add Block
+                </button>
+                <div class="legal-adder-popover" style="left:50%; transform:translateX(-50%); top:36px;">
+                    <button type="button" class="legal-adder-item" data-insert-bottom="p"><i class="fa-solid fa-paragraph"></i> Paragraph</button>
+                    <button type="button" class="legal-adder-item" data-insert-bottom="h2"><i class="fa-solid fa-heading"></i> Heading</button>
+                    <button type="button" class="legal-adder-item" data-insert-bottom="ul"><i class="fa-solid fa-list-ul"></i> Bullet List</button>
+                </div>
+            </div>
+        `;
+    }
+
+    function syncLegalContentToConfig(legalContent, docId) {
+        if (!legalContent) return;
+        var wrappers = legalContent.querySelectorAll(".legal-block-wrapper");
+        var compiledHtml = [];
+        wrappers.forEach(function(w) {
+            var inner = w.querySelector(".legal-block-inner");
+            if (inner) {
+                var content = inner.innerHTML.trim();
+                if (content) {
+                    compiledHtml.push(content);
+                }
+            }
+        });
+        var fullHtml = compiledHtml.join("\n\n");
+        if (legalConfig && legalConfig[docId]) {
+            legalConfig[docId].html_content = fullHtml;
+            window.parent.postMessage(
+                {
+                    type: "update_cms_state_from_iframe",
+                    isLegal: true,
+                    docId: docId,
+                    key: docId + ".html_content",
+                    value: fullHtml
+                },
+                "*"
+            );
+        }
+    }
+
+    function bindLegalBlockEvents(legalContent, docId) {
+        // Handle input inside blocks
+        legalContent.querySelectorAll(".legal-block-inner").forEach(function(inner) {
+            if (!inner.dataset.cmsBlockBound) {
+                inner.dataset.cmsBlockBound = "true";
+                inner.addEventListener("input", function() {
+                    syncLegalContentToConfig(legalContent, docId);
+                });
+            }
+        });
+
+        // Event delegation for actions (Add Block, Move Up, Move Down, Delete)
+        if (!legalContent.dataset.cmsEventsBound) {
+            legalContent.dataset.cmsEventsBound = "true";
+            
+            legalContent.addEventListener("click", function(e) {
+                var target = e.target.closest("button");
+                if (!target) return;
+
+                var isToggle = target.dataset.action === "toggle-adder" || target.dataset.action === "toggle-bottom-adder";
+                if (!isToggle) {
+                    legalContent.querySelectorAll(".legal-adder-popover").forEach(function(p) {
+                        p.style.display = "none";
+                    });
+                }
+
+                // 1. Toggle Adder Popover
+                if (target.dataset.action === "toggle-adder") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var wrapper = target.closest(".legal-block-wrapper");
+                    var popover = wrapper ? wrapper.querySelector(".legal-adder-popover") : null;
+                    if (popover) {
+                        var isVisible = popover.style.display === "flex";
+                        legalContent.querySelectorAll(".legal-adder-popover").forEach(function(p) { p.style.display = "none"; });
+                        popover.style.display = isVisible ? "none" : "flex";
+                    }
+                    return;
+                }
+
+                // 2. Toggle Bottom Adder Popover
+                if (target.dataset.action === "toggle-bottom-adder") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var bottomAdder = target.closest(".legal-bottom-adder");
+                    var popover = bottomAdder ? bottomAdder.querySelector(".legal-adder-popover") : null;
+                    if (popover) {
+                        var isVisible = popover.style.display === "flex";
+                        legalContent.querySelectorAll(".legal-adder-popover").forEach(function(p) { p.style.display = "none"; });
+                        popover.style.display = isVisible ? "none" : "flex";
+                    }
+                    return;
+                }
+
+                // 3. Insert Block at Index
+                var insertType = target.dataset.insert;
+                if (insertType) {
+                    e.preventDefault();
+                    var wrapper = target.closest(".legal-block-wrapper");
+                    if (wrapper) {
+                        var defaultHtml = "<p>Enter text here...</p>";
+                        if (insertType === "h2") defaultHtml = "<h2>Section Title</h2>";
+                        else if (insertType === "ul") defaultHtml = "<ul><li>List item 1</li><li>List item 2</li></ul>";
+                        
+                        var newWrapperHtml = createBlockWrapperHtml(0, defaultHtml);
+                        var tempEl = document.createElement("div");
+                        tempEl.innerHTML = newWrapperHtml;
+                        var newWrapperNode = tempEl.firstElementChild;
+                        wrapper.parentNode.insertBefore(newWrapperNode, wrapper);
+                        
+                        syncLegalContentToConfig(legalContent, docId);
+                        bindLegalBlockEvents(legalContent, docId);
+                        
+                        var newInner = newWrapperNode.querySelector(".legal-block-inner");
+                        if (newInner) {
+                            newInner.focus();
+                        }
+                    }
+                    return;
+                }
+
+                // 4. Insert Block at Bottom
+                var insertBottomType = target.dataset.insertBottom;
+                if (insertBottomType) {
+                    e.preventDefault();
+                    var bottomAdder = legalContent.querySelector(".legal-bottom-adder");
+                    var defaultHtml = "<p>Enter text here...</p>";
+                    if (insertBottomType === "h2") defaultHtml = "<h2>Section Title</h2>";
+                    else if (insertBottomType === "ul") defaultHtml = "<ul><li>List item 1</li><li>List item 2</li></ul>";
+
+                    var newWrapperHtml = createBlockWrapperHtml(0, defaultHtml);
+                    var tempEl = document.createElement("div");
+                    tempEl.innerHTML = newWrapperHtml;
+                    var newWrapperNode = tempEl.firstElementChild;
+                    if (bottomAdder) {
+                        bottomAdder.parentNode.insertBefore(newWrapperNode, bottomAdder);
+                    } else {
+                        legalContent.appendChild(newWrapperNode);
+                    }
+                    
+                    syncLegalContentToConfig(legalContent, docId);
+                    bindLegalBlockEvents(legalContent, docId);
+                    
+                    var newInner = newWrapperNode.querySelector(".legal-block-inner");
+                    if (newInner) {
+                        newInner.focus();
+                    }
+                    return;
+                }
+
+                // 5. Move Up
+                if (target.dataset.action === "move-up") {
+                    e.preventDefault();
+                    var wrapper = target.closest(".legal-block-wrapper");
+                    if (wrapper && wrapper.previousElementSibling && wrapper.previousElementSibling.classList.contains("legal-block-wrapper")) {
+                        wrapper.parentNode.insertBefore(wrapper, wrapper.previousElementSibling);
+                        syncLegalContentToConfig(legalContent, docId);
+                    }
+                    return;
+                }
+
+                // 6. Move Down
+                if (target.dataset.action === "move-down") {
+                    e.preventDefault();
+                    var wrapper = target.closest(".legal-block-wrapper");
+                    if (wrapper && wrapper.nextElementSibling && wrapper.nextElementSibling.classList.contains("legal-block-wrapper")) {
+                        wrapper.parentNode.insertBefore(wrapper.nextElementSibling, wrapper);
+                        syncLegalContentToConfig(legalContent, docId);
+                    }
+                    return;
+                }
+
+                // 7. Delete Block
+                if (target.dataset.action === "delete") {
+                    e.preventDefault();
+                    if (confirm("Delete this content block?")) {
+                        var wrapper = target.closest(".legal-block-wrapper");
+                        if (wrapper) {
+                            wrapper.remove();
+                            syncLegalContentToConfig(legalContent, docId);
+                        }
+                    }
+                    return;
+                }
+            });
+
+            document.addEventListener("click", function(e) {
+                if (!e.target.closest(".legal-block-top-controls") && !e.target.closest(".legal-bottom-adder")) {
+                    legalContent.querySelectorAll(".legal-adder-popover").forEach(function(p) {
+                        p.style.display = "none";
+                    });
+                }
+            });
+        }
+    }
+
+    function initLegalBlockEditor() {
+        var legalContent = document.querySelector(".legal-content");
+        if (!legalContent || !isHighlightEnabled) return;
+
+        legalContent.classList.add("legal-content-editable-mode");
+
+        var pathname = window.location.pathname;
+        var page = pathname.split("/").pop() || "disclaimer.html";
+        var docId = "disclaimer";
+        if (page.indexOf("privacypolicy") !== -1) docId = "privacypolicy";
+        else if (page.indexOf("tnc") !== -1) docId = "tnc";
+        else if (page.indexOf("investorcharter") !== -1) docId = "investorcharter";
+        else if (page.indexOf("Grievance") !== -1) docId = "grievance_redressal";
+
+        var existingWrappers = legalContent.querySelectorAll(".legal-block-wrapper");
+        if (existingWrappers.length === 0) {
+            var rawChildren = Array.from(legalContent.children);
+            if (rawChildren.length > 0) {
+                var newHtml = "";
+                rawChildren.forEach(function(child, idx) {
+                    if (child.classList.contains("legal-bottom-adder")) return;
+                    newHtml += createBlockWrapperHtml(idx, child.outerHTML);
+                });
+                newHtml += createBottomAdderHtml();
+                legalContent.innerHTML = newHtml;
+            } else if (legalContent.innerHTML.trim()) {
+                var tempDiv = document.createElement("div");
+                tempDiv.innerHTML = legalContent.innerHTML;
+                var children = Array.from(tempDiv.children);
+                var newHtml = "";
+                children.forEach(function(child, idx) {
+                    newHtml += createBlockWrapperHtml(idx, child.outerHTML);
+                });
+                newHtml += createBottomAdderHtml();
+                legalContent.innerHTML = newHtml;
+            }
+        }
+
+        bindLegalBlockEvents(legalContent, docId);
+    }
+
     function setContentEditableOnFields() {
         createFloatingToolbar();
 
@@ -490,40 +898,10 @@
             }
         });
 
-        // 2. On Legal Pages, make headings, paragraphs, and list items inside .legal-content editable
-        var legalContent = document.querySelector(".legal-content");
-        if (legalContent && isHighlightEnabled) {
-            var textElements = legalContent.querySelectorAll("h1, h2, h3, h4, p, li, strong");
-            textElements.forEach(function (item) {
-                item.setAttribute("contenteditable", "true");
-                if (!item.dataset.cmsLegalBound) {
-                    item.dataset.cmsLegalBound = "true";
-                    item.addEventListener("input", function () {
-                        var pathname = window.location.pathname;
-                        var page = pathname.split("/").pop() || "disclaimer.html";
-                        var docId = "disclaimer";
-                        if (page.indexOf("privacypolicy") !== -1) docId = "privacypolicy";
-                        else if (page.indexOf("tnc") !== -1) docId = "tnc";
-                        else if (page.indexOf("investorcharter") !== -1) docId = "investorcharter";
-                        else if (page.indexOf("Grievance") !== -1) docId = "grievance_redressal";
-
-                        if (legalConfig && legalConfig[docId]) {
-                            var cleanHtml = legalContent.innerHTML;
-                            legalConfig[docId].html_content = cleanHtml;
-                            window.parent.postMessage(
-                                {
-                                    type: "update_cms_state_from_iframe",
-                                    isLegal: true,
-                                    docId: docId,
-                                    key: docId + ".html_content",
-                                    value: cleanHtml
-                                },
-                                "*"
-                            );
-                        }
-                    });
-                }
-            });
+        // 2. On Legal Pages, initialize block-based editor
+        var pathname = window.location.pathname;
+        if (pathname.indexOf("Legal&Compliance") !== -1) {
+            initLegalBlockEditor();
         }
     }
 
