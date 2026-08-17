@@ -91,12 +91,12 @@ function generateNavHtml(prefix) {
     if (config.header_buttons) {
         const loginLink = config.header_buttons.client_login;
         const loginTarget = loginLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
-        htmlList.push(`                    <li><a href="${loginLink.url}" class="nav-link cms-editable-highlight" data-field="header_buttons.client_login.text" data-label="Client Login Text"${loginTarget}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>${loginLink.text}</a></li>`);
+        htmlList.push(`                    <li><a href="${loginLink.url}" class="nav-link" data-field="header_buttons.client_login.text" data-label="Client Login Text"${loginTarget}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>${loginLink.text}</a></li>`);
         
         const contactLink = config.header_buttons.contact_us;
         const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
         htmlList.push(`                    <li class="nav-actions-mobile">
-                        <a href="${contactLink.url}" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>
+                        <a href="${contactLink.url}" class="btn-glow" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>
                     </li>`);
     }
     return htmlList.join('\n');
@@ -108,34 +108,34 @@ replaceSection('NAV', navHtml);
 if (config.header_buttons) {
     const contactLink = config.header_buttons.contact_us;
     const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
-    const contactHtml = `                <a href="${contactLink.url}" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>`;
+    const contactHtml = `                <a href="${contactLink.url}" class="btn-glow" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>`;
     replaceSection('NAV_CONTACT', contactHtml);
 }
 
 // 2. Hero Left Column
 const heroCtaTarget = config.hero.cta_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
-const heroLeftHtml = `                        <div class="iv-hero-tag cms-editable-highlight" data-field="hero.tag">${config.hero.tag}</div>
+const heroLeftHtml = `                        <div class="iv-hero-tag" data-field="hero.tag">${config.hero.tag}</div>
 
-                        <h1 class="iv-hero-h1 cms-editable-highlight" data-field="hero.heading_html">
+                        <h1 class="iv-hero-h1" data-field="hero.heading_html">
                             ${config.hero.heading_html}
                         </h1>
 
                         <div class="iv-hero-bar"></div>
 
-                        <p class="iv-hero-desc cms-editable-highlight" data-field="hero.desc1">
+                        <p class="iv-hero-desc" data-field="hero.desc1">
                             ${config.hero.desc1}
                         </p>
 
-                        <p class="iv-hero-desc iv-hero-desc-2 cms-editable-highlight" data-field="hero.desc2">
+                        <p class="iv-hero-desc iv-hero-desc-2" data-field="hero.desc2">
                             ${config.hero.desc2}
                         </p>
 
-                        <a href="${config.hero.cta_url}"${heroCtaTarget} class="iv-hero-cta cms-editable-highlight" data-field="hero.cta_text">
+                        <a href="${config.hero.cta_url}"${heroCtaTarget} class="iv-hero-cta" data-field="hero.cta_text">
                             ${config.hero.cta_text}
                             <span class="iv-hero-cta-arrow">&rarr;</span>
                         </a>
 
-                        <div class="iv-sebi-badge cms-editable-highlight" data-field="hero.sebi_badge">${config.hero.sebi_badge}</div>`;
+                        <div class="iv-sebi-badge" data-field="hero.sebi_badge">${config.hero.sebi_badge}</div>`;
 replaceSection('HERO_LEFT', heroLeftHtml);
 
 // 3. Hero Stats HTML Generator
@@ -145,10 +145,10 @@ function generateStatsHtml() {
         return `                            <!-- Stat Item ${idx+1} -->
                             <div class="iv-stat-item">
                                 <div class="iv-stat-num">
-                                    <span class="count-up cms-editable-highlight" data-target="${stat.num}" data-field="hero.stats.${idx}.num" data-label="Stat Number ${idx+1}">${stat.num}</span>
-                                    <span class="cms-editable-highlight" data-field="hero.stats.${idx}.suffix" data-label="Stat Suffix ${idx+1}">${stat.suffix}</span>
+                                    <span class="count-up" data-target="${stat.num}" data-field="hero.stats.${idx}.num" data-label="Stat Number ${idx+1}">${stat.num}</span>
+                                    <span class="" data-field="hero.stats.${idx}.suffix" data-label="Stat Suffix ${idx+1}">${stat.suffix}</span>
                                 </div>
-                                <div class="iv-stat-label cms-editable-highlight" data-field="hero.stats.${idx}.label">${stat.label}</div>
+                                <div class="iv-stat-label" data-field="hero.stats.${idx}.label">${stat.label}</div>
                             </div>${divider}`;
     }).join('\n');
 }
@@ -163,10 +163,10 @@ if (config.hero.media.type === 'animation') {
                         <div class="iv-hero-card">
                             <div class="iv-card-planet">🪐</div>
 
-                            <div class="iv-card-headline cms-editable-highlight" data-field="hero.card_headline_html" data-label="Card Headline">
+                            <div class="iv-card-headline" data-field="hero.card_headline_html" data-label="Card Headline">
                                 ${config.hero.card_headline_html || '<em>Compound</em> Wealth,<br>Real Value.'}
                             </div>
-                            <div class="iv-card-sub cms-editable-highlight" data-field="hero.card_sub" data-label="Card Subtitle">${config.hero.card_sub || 'Intrinsic Value Equity Advisors'}</div>
+                            <div class="iv-card-sub" data-field="hero.card_sub" data-label="Card Subtitle">${config.hero.card_sub || 'Intrinsic Value Equity Advisors'}</div>
 
                             <!-- Staircase bar animation and walking figure -->
                             <div class="iv-staircase">
@@ -197,7 +197,7 @@ const typewriterWordsHtml = config.hero.typewriter_words.map(w => `             
 replaceSection('TYPEWRITER_WORDS', typewriterWordsHtml);
 
 // 6. Philosophy Section Title & Cards
-const philTitleHtml = `                        <h2 class="cms-editable-highlight" data-field="philosophy.title">${config.philosophy.title}</h2>`;
+const philTitleHtml = `                        <h2 class="" data-field="philosophy.title">${config.philosophy.title}</h2>`;
 replaceSection('PHILOSOPHY_TITLE', philTitleHtml);
 
 const philCardsHtml = config.philosophy.cards.map((card, idx) => {
@@ -206,8 +206,8 @@ const philCardsHtml = config.philosophy.cards.map((card, idx) => {
                         <div class="spiral-card" data-index="${idx}">
                             <a href="${card.link}"${targetAttr}>
                                 <div class="spiral-card-icon"><i class="${card.icon}"></i></div>
-                                <h5 class="cms-editable-highlight" data-field="philosophy.cards.${idx}.title">${card.title}</h5>
-                                <p class="cms-editable-highlight" data-field="philosophy.cards.${idx}.desc">${card.desc}</p>
+                                <h5 class="" data-field="philosophy.cards.${idx}.title">${card.title}</h5>
+                                <p class="" data-field="philosophy.cards.${idx}.desc">${card.desc}</p>
                                 <div class="spiral-card-readmore">
                                     <span>Read more</span>
                                     <span class="stm-amsterdam-arrow"></span>
@@ -219,7 +219,7 @@ replaceSection('PHILOSOPHY_CARDS', philCardsHtml);
 
 // 7. Case Studies Section Title & Companies Accordion
 const caseStudiesTitleHtml = `                        <span class="cases-pre-title">CASE STUDIES</span>
-                        <h2 class="cases-main-title cms-editable-highlight" data-field="case_studies.title">${config.case_studies.title}</h2>`;
+                        <h2 class="cases-main-title" data-field="case_studies.title">${config.case_studies.title}</h2>`;
 replaceSection('CASE_STUDIES_TITLE', caseStudiesTitleHtml);
 
 const rowCardsHtml = config.case_studies.companies.map((comp, globalIdx) => {
@@ -269,7 +269,7 @@ replaceSection('CASE_STUDIES_COMPANIES', caseStudiesCompaniesHtml);
 // 8. News Section Display Area & Cards Row
 const firstNewsItem = config.news.items[0] || { quote: "", source: "" };
 const newsDisplayHtml = `                        <span class="featured-pre-title">FEATURED</span>
-                        <h2 class="featured-main-title cms-editable-highlight" data-field="news.title">${config.news.title}</h2>
+                        <h2 class="featured-main-title" data-field="news.title">${config.news.title}</h2>
 
                         <div class="featured-quote-container">
                             <blockquote class="featured-quote">"${firstNewsItem.quote}"</blockquote>
@@ -311,7 +311,7 @@ replaceSection('NEWS_CARDS', newsCardsHtml);
 
 // 9. Testimonials Section Title & Cards Track
 const testimonialsTitleHtml = `                    <span class="testimonials-pre-title">Reviews</span>
-                    <h2 class="testimonials-main-title cms-editable-highlight" data-field="testimonials.title">${config.testimonials.title}</h2>`;
+                    <h2 class="testimonials-main-title" data-field="testimonials.title">${config.testimonials.title}</h2>`;
 replaceSection('TESTIMONIALS_TITLE', testimonialsTitleHtml);
 
 const testimonialsCardsHtml = config.testimonials.items.map((item, idx) => {
@@ -321,19 +321,19 @@ const testimonialsCardsHtml = config.testimonials.items.map((item, idx) => {
                                 <div class="card-dot"></div>
                                 <img class="testimonial-avatar" src="${item.avatar || 'testimonials_images/avatar_page_1.jpg'}" alt="${item.name}" loading="lazy" />
                             </div>
-                            <div class="testimonial-quote cms-editable-highlight" data-field="testimonials.items.${idx}.quote">
+                            <div class="testimonial-quote" data-field="testimonials.items.${idx}.quote">
                                 "${item.quote}"
                             </div>
                             <div class="testimonial-author">
-                                <h6 class="cms-editable-highlight" data-field="testimonials.items.${idx}.name">${item.name}</h6>
-                                <div class="position cms-editable-highlight" data-field="testimonials.items.${idx}.position">${item.position}</div>
+                                <h6 class="" data-field="testimonials.items.${idx}.name">${item.name}</h6>
+                                <div class="position" data-field="testimonials.items.${idx}.position">${item.position}</div>
                             </div>
                         </div>`;
 }).join('\n');
 replaceSection('TESTIMONIALS_CARDS', testimonialsCardsHtml);
 
 // 10. Team Section Title & Cards Row
-const teamTitleHtml = `                        <h2 class="team-section-heading cms-editable-highlight" data-field="team.title">
+const teamTitleHtml = `                        <h2 class="team-section-heading" data-field="team.title">
                             ${config.team.title}
                         </h2>`;
 replaceSection('TEAM_TITLE', teamTitleHtml);
@@ -351,8 +351,8 @@ const teamCardsHtml = config.team.members.map((member, idx) => {
                                         <img src="${member.photo || 'profile.jpeg'}" alt="${member.name}" class="team-avatar" loading="lazy">
                                     </div>
                                     <div class="team-info">
-                                        <h3 class="team-name cms-editable-highlight" data-field="team.members.${idx}.name">${member.name}</h3>
-                                        <p class="team-role cms-editable-highlight" data-field="team.members.${idx}.role">${member.role}</p>
+                                        <h3 class="team-name" data-field="team.members.${idx}.name">${member.name}</h3>
+                                        <p class="team-role" data-field="team.members.${idx}.role">${member.role}</p>
 ${linkedinHtml}
                                     </div>
                                 </div>`;
@@ -361,7 +361,7 @@ replaceSection('TEAM_CARDS', teamCardsHtml);
 
 // 10.5. Portfolio Section Title & Embed Track
 if (config.portfolio) {
-    const portfolioTitleHtml = `                        <h2 class="team-section-heading cms-editable-highlight" data-field="portfolio.title" data-label="Portfolio Title">
+    const portfolioTitleHtml = `                        <h2 class="team-section-heading" data-field="portfolio.title" data-label="Portfolio Title">
                             ${config.portfolio.title}
                         </h2>`;
     replaceSection('PORTFOLIO_TITLE', portfolioTitleHtml);
@@ -372,10 +372,10 @@ if (config.portfolio) {
 if (config.homepage_pricing) {
     const hpPricing = config.homepage_pricing;
     const targetAttr = hpPricing.button_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
-    const pricingHtml = `                    <h2 class="pricing-section-header-title cms-editable-highlight" data-field="homepage_pricing.title" data-label="Pricing Title">${hpPricing.title}</h2>
+    const pricingHtml = `                    <h2 class="pricing-section-header-title" data-field="homepage_pricing.title" data-label="Pricing Title">${hpPricing.title}</h2>
 
                     <div style="margin-top: 2.2rem; margin-bottom: 1.5rem;">
-                        <a href="${hpPricing.button_url}"${targetAttr} class="btn-vibrate-outline cms-editable-highlight" data-field="homepage_pricing.button_text" data-label="Pricing Button Text">
+                        <a href="${hpPricing.button_url}"${targetAttr} class="btn-vibrate-outline" data-field="homepage_pricing.button_text" data-label="Pricing Button Text">
                             ${hpPricing.button_text}
                         </a>
                     </div>`;
@@ -384,7 +384,7 @@ if (config.homepage_pricing) {
 
 // 11. FAQ Section Title & List Accordion
 const faqTitleHtml = `                <span class="faq-pre-title">COMMON QUERIES</span>
-                <h2 class="faq-main-title cms-editable-highlight" data-field="faqs.title">${config.faqs.title}</h2>
+                <h2 class="faq-main-title" data-field="faqs.title">${config.faqs.title}</h2>
                 <p class="faq-sub-title">Can't find the answer you're looking for? Reach out to us at <a class="faq-email-link">info@intrinsicvalueequity.in</a></p>`;
 replaceSection('FAQ_TITLE', faqTitleHtml);
 
@@ -392,7 +392,7 @@ const faqListHtml = config.faqs.items.map((item, idx) => {
     return `                <!-- FAQ Item ${idx + 1} -->
                 <div class="faq-item">
                     <div class="faq-question-header">
-                        <h3 class="faq-question cms-editable-highlight" data-field="faqs.items.${idx}.question">${item.question}</h3>
+                        <h3 class="faq-question" data-field="faqs.items.${idx}.question">${item.question}</h3>
                         <div class="faq-icon">
                             <span class="line horizontal"></span>
                             <span class="line vertical"></span>
@@ -400,7 +400,7 @@ const faqListHtml = config.faqs.items.map((item, idx) => {
                     </div>
                     <div class="faq-accent-bar"></div>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner cms-editable-highlight" data-field="faqs.items.${idx}.answer">
+                        <div class="faq-answer-inner" data-field="faqs.items.${idx}.answer">
                             ${item.answer}
                         </div>
                     </div>
@@ -409,7 +409,7 @@ const faqListHtml = config.faqs.items.map((item, idx) => {
 replaceSection('FAQ_LIST', faqListHtml);
 
 // 12. Footer Section Brand & Links
-const footerBrandHtml = `                    <p class="footer-desc cms-editable-highlight" data-field="footer.desc">
+const footerBrandHtml = `                    <p class="footer-desc" data-field="footer.desc">
                         ${config.footer.desc}
                     </p>`;
 replaceSection('FOOTER_BRAND', footerBrandHtml);
@@ -428,15 +428,15 @@ replaceSection('FOOTER_IMPORTANT_INFO', footerImportantHtml);
 
 const footerBottomHtml = `            <div class="footer-bottom">
                 <div class="footer-disclaimers">
-                    <p class="disclaimer-text cms-editable-highlight" data-field="footer.disclaimer_p1">
+                    <p class="disclaimer-text" data-field="footer.disclaimer_p1">
                         ${config.footer.disclaimer_p1}
                     </p>
-                    <p class="disclaimer-text cms-editable-highlight" data-field="footer.disclaimer_p2">
+                    <p class="disclaimer-text" data-field="footer.disclaimer_p2">
                         ${config.footer.disclaimer_p2}
                     </p>
                 </div>
                 <div class="footer-copyright">
-                    <p>&copy; <span class="cms-editable-highlight" data-field="footer.copyright_year">${config.footer.copyright_year}</span> Intrinsic Value Equity Advisors. All rights reserved.</p>
+                    <p>&copy; <span class="" data-field="footer.copyright_year">${config.footer.copyright_year}</span> Intrinsic Value Equity Advisors. All rights reserved.</p>
                 </div>
             </div>`;
 replaceSection('FOOTER_BOTTOM', footerBottomHtml);
@@ -505,7 +505,7 @@ ${phoneLinksHtml}
                         </svg>
                     </div>
                     <div class="contact-text">
-                        <a href="mailto:${config.footer.contact?.email || ''}" class="contact-link cms-editable-highlight" data-field="footer.contact.email">${config.footer.contact?.email || ''}</a>
+                        <a href="mailto:${config.footer.contact?.email || ''}" class="contact-link" data-field="footer.contact.email">${config.footer.contact?.email || ''}</a>
                     </div>
                 </div>
                 <div class="contact-item contact-item-address">
@@ -516,7 +516,7 @@ ${phoneLinksHtml}
                         </svg>
                     </div>
                     <div class="contact-text">
-                        <span class="cms-editable-highlight" data-field="footer.contact.address">${config.footer.contact?.address || ''}</span>
+                        <span class="" data-field="footer.contact.address">${config.footer.contact?.address || ''}</span>
                     </div>
                 </div>
                 <div class="contact-item">
@@ -535,16 +535,16 @@ replaceSection('FOOTER_CONTACT', footerContactHtml);
 
 // 14.5. Compliance Header & Titles
 if (config.compliance) {
-    const compHeaderHtml = `                <span class="disclosures-pre-title cms-editable-highlight" data-field="compliance.pre_title" data-label="Compliance Pre-title">${config.compliance.pre_title || 'REGULATORY CORNER'}</span>
-                <h2 class="disclosures-main-title cms-editable-highlight" data-field="compliance.title" data-label="Compliance Title">${config.compliance.title || 'Transparency &amp; <em>Compliance</em>.'}</h2>
-                <p class="disclosures-sub-title cms-editable-highlight" data-field="compliance.sub_title" data-label="Compliance Description">${config.compliance.sub_title || 'Review our regulatory disclosures, client complaint statistics, and compliance audit history in accordance with SEBI guidelines.'}</p>`;
+    const compHeaderHtml = `                <span class="disclosures-pre-title" data-field="compliance.pre_title" data-label="Compliance Pre-title">${config.compliance.pre_title || 'REGULATORY CORNER'}</span>
+                <h2 class="disclosures-main-title" data-field="compliance.title" data-label="Compliance Title">${config.compliance.title || 'Transparency &amp; <em>Compliance</em>.'}</h2>
+                <p class="disclosures-sub-title" data-field="compliance.sub_title" data-label="Compliance Description">${config.compliance.sub_title || 'Review our regulatory disclosures, client complaint statistics, and compliance audit history in accordance with SEBI guidelines.'}</p>`;
     replaceSection('COMPLIANCE_HEADER', compHeaderHtml);
     
-    replaceSection('COMPLIANCE_GRIEVANCE_TITLE', `                        <h3 class="disclosure-title cms-editable-highlight" data-field="compliance.title_grievance" data-label="Grievance Title">${config.compliance.title_grievance || 'Grievance Status'}</h3>`);
+    replaceSection('COMPLIANCE_GRIEVANCE_TITLE', `                        <h3 class="disclosure-title" data-field="compliance.title_grievance" data-label="Grievance Title">${config.compliance.title_grievance || 'Grievance Status'}</h3>`);
     
-    replaceSection('COMPLIANCE_AUDIT_TITLE', `                        <h3 class="disclosure-title cms-editable-highlight" data-field="compliance.title_audit" data-label="Audit Title">${config.compliance.title_audit || 'Compliance Audit Status'}</h3>`);
+    replaceSection('COMPLIANCE_AUDIT_TITLE', `                        <h3 class="disclosure-title" data-field="compliance.title_audit" data-label="Audit Title">${config.compliance.title_audit || 'Compliance Audit Status'}</h3>`);
     
-    replaceSection('COMPLIANCE_AUDIT_INTRO', `                            <p class="disclosure-intro-text cms-editable-highlight" data-field="compliance.audit_intro" data-label="Audit Intro Text">
+    replaceSection('COMPLIANCE_AUDIT_INTRO', `                            <p class="disclosure-intro-text" data-field="compliance.audit_intro" data-label="Audit Intro Text">
                                 ${config.compliance.audit_intro || '“Disclosure with respect to compliance with Annual compliance audit requirement under Regulation 25(3) of SEBI (Research Analyst) Regulations, 2014 for last financial years are as under:'}
                             </p>`);
 }
@@ -689,7 +689,7 @@ function updateAllPagesNavigation() {
             if (startIndex !== -1 && endIndex !== -1) {
                 const contactLink = config.header_buttons.contact_us;
                 const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
-                const relativeContactHtml = `                <a href="${contactLink.url}" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>`;
+                const relativeContactHtml = `                <a href="${contactLink.url}" class="btn-glow" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>`;
                 
                 const before = content.substring(0, startIndex + startMarker.length);
                 const after = content.substring(endIndex);
@@ -762,15 +762,15 @@ function updateAllPagesFooterBottom() {
                 const spaces = '            ';
                 const compiledFooterBottom = `${spaces}<div class="footer-bottom">
                     <div class="footer-disclaimers">
-                        <p class="disclaimer-text cms-editable-highlight" data-field="footer.disclaimer_p1">
+                        <p class="disclaimer-text" data-field="footer.disclaimer_p1">
                             ${config.footer.disclaimer_p1}
                         </p>
-                        <p class="disclaimer-text cms-editable-highlight" data-field="footer.disclaimer_p2">
+                        <p class="disclaimer-text" data-field="footer.disclaimer_p2">
                             ${config.footer.disclaimer_p2}
                         </p>
                     </div>
                     <div class="footer-copyright">
-                        <p>&copy; <span class="cms-editable-highlight" data-field="footer.copyright_year">${config.footer.copyright_year}</span> Intrinsic Value Equity Advisors. All rights reserved.</p>
+                        <p>&copy; <span class="" data-field="footer.copyright_year">${config.footer.copyright_year}</span> Intrinsic Value Equity Advisors. All rights reserved.</p>
                     </div>
                 </div>`;
                 
@@ -807,7 +807,7 @@ function updateAllPagesTeam() {
         const startIndex = content.indexOf(startMarker);
         const endIndex = content.indexOf(endMarker);
         if (startIndex !== -1 && endIndex !== -1) {
-            const teamTitleHtml = `                    <h2 class="team-section-title cms-editable-highlight" data-field="team.title">${config.team.title}</h2>`;
+            const teamTitleHtml = `                    <h2 class="team-section-title" data-field="team.title">${config.team.title}</h2>`;
             content = content.substring(0, startIndex + startMarker.length) + "\n" + teamTitleHtml + "\n" + content.substring(endIndex);
             modified = true;
         }
@@ -826,8 +826,8 @@ function updateAllPagesTeam() {
                             <img src="${member.photo || 'profile.jpeg'}" alt="${member.name}" class="team-avatar" loading="lazy">
                         </div>
                         <div class="team-info">
-                            <h3 class="team-name cms-editable-highlight" data-field="team.members.${idx}.name">${member.name}</h3>
-                            <p class="team-role cms-editable-highlight" data-field="team.members.${idx}.role">${member.role}</p>
+                            <h3 class="team-name" data-field="team.members.${idx}.name">${member.name}</h3>
+                            <p class="team-role" data-field="team.members.${idx}.role">${member.role}</p>
                         </div>
                     </div>`;
             }).join('\n');
@@ -861,8 +861,8 @@ function updateAllPagesAboutBio() {
         const endIndex = content.indexOf(endMarker);
         if (startIndex !== -1 && endIndex !== -1) {
             const headerHtml = `                        <div class="profile-title-area">
-                            <h1 class="profile-name cms-editable-highlight" data-field="about_profile.name" data-label="Bio Name">${ap.name}</h1>
-                            <p class="profile-subtitle cms-editable-highlight" data-field="about_profile.role" data-label="Bio Role">${ap.role}</p>
+                            <h1 class="profile-name" data-field="about_profile.name" data-label="Bio Name">${ap.name}</h1>
+                            <p class="profile-subtitle" data-field="about_profile.role" data-label="Bio Role">${ap.role}</p>
                             <div class="profile-underline"></div>
                         </div>`;
             content = content.substring(0, startIndex + startMarker.length) + "\n" + headerHtml + "\n" + content.substring(endIndex);
@@ -880,7 +880,7 @@ function updateAllPagesAboutBio() {
             const socialsHtml = `                        <div class="profile-socials">
                             <!-- LinkedIn Link -->
                             <a href="${ap.linkedin}" target="_blank"
-                                rel="noopener noreferrer" class="social-link-btn cms-editable-highlight" data-field="about_profile.linkedin" data-label="LinkedIn Link" aria-label="LinkedIn">
+                                rel="noopener noreferrer" class="social-link-btn" data-field="about_profile.linkedin" data-label="LinkedIn Link" aria-label="LinkedIn">
                                 <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
                                     <path
                                         d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
@@ -888,7 +888,7 @@ function updateAllPagesAboutBio() {
                             </a>
                             <!-- Twitter/X Link -->
                             <a href="${ap.twitter}" target="_blank" rel="noopener noreferrer"
-                                class="social-link-btn cms-editable-highlight" data-field="about_profile.twitter" data-label="Twitter Link" aria-label="Twitter">
+                                class="social-link-btn" data-field="about_profile.twitter" data-label="Twitter Link" aria-label="Twitter">
                                 <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
                                     <path
                                         d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -896,7 +896,7 @@ function updateAllPagesAboutBio() {
                             </a>
                             <!-- YouTube Link -->
                             <a href="${ap.youtube}" target="_blank"
-                                rel="noopener noreferrer" class="social-link-btn cms-editable-highlight" data-field="about_profile.youtube" data-label="YouTube Link" aria-label="YouTube">
+                                rel="noopener noreferrer" class="social-link-btn" data-field="about_profile.youtube" data-label="YouTube Link" aria-label="YouTube">
                                 <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
                                     <path
                                         d="M23.498 6.163c-.272-1.016-1.071-1.815-2.087-2.087C19.574 3.543 12 3.543 12 3.543s-7.574 0-9.411.533c-1.016.272-1.815 1.071-2.087 2.087C0 8.007 0 12 0 12s0 3.993.502 5.837c.272 1.016 1.071 1.815 2.087 2.087 1.837.533 9.411.533 9.411.533s7.574 0 9.411-.533c1.016-.272 1.815-1.071 2.087-2.087.502-1.844.502-5.837.502-5.837s0-3.993-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
@@ -916,7 +916,7 @@ function updateAllPagesAboutBio() {
         const endIndex = content.indexOf(endMarker);
         if (startIndex !== -1 && endIndex !== -1) {
             const paragraphsHtml = `                    <div class="profile-paragraphs">\n` + 
-                ap.paragraphs.map((p, idx) => `                        <p class="cms-editable-highlight" data-field="about_profile.paragraphs.${idx}" data-label="Bio Paragraph ${idx+1}">${p}</p>`).join('\n') +
+                ap.paragraphs.map((p, idx) => `                        <p class="" data-field="about_profile.paragraphs.${idx}" data-label="Bio Paragraph ${idx+1}">${p}</p>`).join('\n') +
                 `\n                    </div>`;
             content = content.substring(0, startIndex + startMarker.length) + "\n" + paragraphsHtml + "\n" + content.substring(endIndex);
             modified = true;
@@ -931,7 +931,7 @@ function updateAllPagesAboutBio() {
         const endIndex = content.indexOf(endMarker);
         if (startIndex !== -1 && endIndex !== -1) {
             const quoteHtml = `                    <div class="profile-quote-box">
-                        <p class="quote-text cms-editable-highlight" data-field="about_profile.quote" data-label="Bio Quote">${ap.quote}</p>
+                        <p class="quote-text" data-field="about_profile.quote" data-label="Bio Quote">${ap.quote}</p>
                     </div>`;
             content = content.substring(0, startIndex + startMarker.length) + "\n" + quoteHtml + "\n" + content.substring(endIndex);
             modified = true;
@@ -947,7 +947,7 @@ function updateAllPagesAboutBio() {
         if (startIndex !== -1 && endIndex !== -1) {
             const photoHtml = `                <div class="profile-image-col">
                     <div class="profile-img-wrapper glow-border">
-                        <img src="${ap.photo || 'profile.jpeg'}" alt="${ap.name}" class="profile-photo cms-editable-highlight" data-field="about_profile.photo" data-label="Bio Photo" loading="lazy">
+                        <img src="${ap.photo || 'profile.jpeg'}" alt="${ap.name}" class="profile-photo" data-field="about_profile.photo" data-label="Bio Photo" loading="lazy">
                     </div>
                 </div>`;
             content = content.substring(0, startIndex + startMarker.length) + "\n" + photoHtml + "\n" + content.substring(endIndex);
@@ -1067,8 +1067,8 @@ function updateNikhilProfilePage() {
         // Header
         if (nikhilConfig.header) {
             const headerHtml = `                        <div class="profile-title-area">
-                            <h1 class="profile-name cms-editable-highlight" data-field="profile.header.name">${nikhilConfig.header.name || "Nikhil Gangil"}</h1>
-                            <p class="profile-subtitle cms-editable-highlight" data-field="profile.header.subtitle">${nikhilConfig.header.subtitle || ""}</p>
+                            <h1 class="profile-name" data-field="profile.header.name">${nikhilConfig.header.name || "Nikhil Gangil"}</h1>
+                            <p class="profile-subtitle" data-field="profile.header.subtitle">${nikhilConfig.header.subtitle || ""}</p>
                             <div class="profile-underline"></div>
                         </div>`;
             replaceInFile('NIKHIL_HEADER', headerHtml);
@@ -1076,14 +1076,14 @@ function updateNikhilProfilePage() {
 
         // Bio Paragraphs
         if (nikhilConfig.bio_paragraphs && Array.isArray(nikhilConfig.bio_paragraphs)) {
-            const bioHtml = nikhilConfig.bio_paragraphs.map((p, idx) => `                            <p class="cms-editable-highlight" data-field="profile.bio_paragraphs.${idx}">${p}</p>`).join('\n');
+            const bioHtml = nikhilConfig.bio_paragraphs.map((p, idx) => `                            <p class="" data-field="profile.bio_paragraphs.${idx}">${p}</p>`).join('\n');
             replaceInFile('NIKHIL_BIO', bioHtml);
         }
 
         // Philosophy
         if (nikhilConfig.philosophy) {
-            const philHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.philosophy.title">${nikhilConfig.philosophy.title || "Investment Philosophy"}</h3>\n` +
-                (nikhilConfig.philosophy.paragraphs || []).map((p, idx) => `                            <p class="cms-editable-highlight" data-field="profile.philosophy.paragraphs.${idx}">${p}</p>`).join('\n');
+            const philHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="" data-field="profile.philosophy.title">${nikhilConfig.philosophy.title || "Investment Philosophy"}</h3>\n` +
+                (nikhilConfig.philosophy.paragraphs || []).map((p, idx) => `                            <p class="" data-field="profile.philosophy.paragraphs.${idx}">${p}</p>`).join('\n');
             replaceInFile('NIKHIL_PHILOSOPHY', philHtml);
         }
 
@@ -1091,9 +1091,9 @@ function updateNikhilProfilePage() {
         if (nikhilConfig.experience) {
             const expList = (nikhilConfig.experience.items || []).map((item, idx) => `                                <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
                                     <span style="color: var(--accent); font-size: 1.1rem; line-height: 1.2;"><i class="${item.icon || 'fa-solid fa-briefcase'}"></i></span>
-                                    <div class="cms-editable-highlight" data-field="profile.experience.items.${idx}.description"><strong>${item.title}</strong>${item.description ? " – " + item.description : ""}</div>
+                                    <div class="" data-field="profile.experience.items.${idx}.description"><strong>${item.title}</strong>${item.description ? " – " + item.description : ""}</div>
                                 </li>`).join('\n');
-            const expHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.experience.title">${nikhilConfig.experience.title || "Experience & Background"}</h3>
+            const expHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="" data-field="profile.experience.title">${nikhilConfig.experience.title || "Experience & Background"}</h3>
                             <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem;">
 ${expList}
                             </ul>`;
@@ -1104,10 +1104,10 @@ ${expList}
         if (nikhilConfig.media_reach) {
             const reachList = (nikhilConfig.media_reach.stats || []).map((st, idx) => `                                <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
                                     <span style="color: var(--accent); font-size: 1.1rem; line-height: 1.2;"><i class="${st.icon || 'fa-brands fa-youtube'}"></i></span>
-                                    <div class="cms-editable-highlight" data-field="profile.media_reach.stats.${idx}.text">${st.bold ? "<strong>" + st.bold + "</strong> " : ""}${st.text || ""}</div>
+                                    <div class="" data-field="profile.media_reach.stats.${idx}.text">${st.bold ? "<strong>" + st.bold + "</strong> " : ""}${st.text || ""}</div>
                                 </li>`).join('\n');
-            const reachHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.media_reach.title">${nikhilConfig.media_reach.title || "Media Presence & Public Reach"}</h3>
-                            <p class="cms-editable-highlight" data-field="profile.media_reach.intro">${nikhilConfig.media_reach.intro || ""}</p>
+            const reachHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="" data-field="profile.media_reach.title">${nikhilConfig.media_reach.title || "Media Presence & Public Reach"}</h3>
+                            <p class="" data-field="profile.media_reach.intro">${nikhilConfig.media_reach.intro || ""}</p>
                             <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 1.5rem;">
 ${reachList}
                             </ul>`;
@@ -1120,12 +1120,12 @@ ${reachList}
                 const linkHtml = pred.link_url ? ` <a href="${pred.link_url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">${pred.link_text || "View Link"} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i></a>` : "";
                 return `                                <div style="position: relative;">
                                     <div style="position: absolute; left: -29px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent);"></div>
-                                    <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;" class="cms-editable-highlight" data-field="profile.predictions.items.${idx}.date_title">${pred.date_title}</strong>
-                                    <p style="font-size: 0.95rem; margin: 0 0 6px 0;" class="cms-editable-highlight" data-field="profile.predictions.items.${idx}.description">${pred.description}${linkHtml}</p>
+                                    <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;" class="" data-field="profile.predictions.items.${idx}.date_title">${pred.date_title}</strong>
+                                    <p style="font-size: 0.95rem; margin: 0 0 6px 0;" class="" data-field="profile.predictions.items.${idx}.description">${pred.description}${linkHtml}</p>
                                 </div>`;
             }).join('\n\n');
-            const predHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.predictions.title">${nikhilConfig.predictions.title || "Market Cycle Predictions"}</h3>
-                            <p style="margin-bottom: 1.5rem;" class="cms-editable-highlight" data-field="profile.predictions.subtitle">${nikhilConfig.predictions.subtitle || ""}</p>
+            const predHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="" data-field="profile.predictions.title">${nikhilConfig.predictions.title || "Market Cycle Predictions"}</h3>
+                            <p style="margin-bottom: 1.5rem;" class="" data-field="profile.predictions.subtitle">${nikhilConfig.predictions.subtitle || ""}</p>
                             
                             <div style="display: flex; flex-direction: column; gap: 1.5rem; border-left: 2px solid rgba(255, 255, 255, 0.05); padding-left: 1.5rem; margin-left: 0.5rem;">
 ${predItems}
@@ -1137,9 +1137,9 @@ ${predItems}
         if (nikhilConfig.achievements) {
             const achList = (nikhilConfig.achievements.items || []).map((ach, idx) => `                                <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
                                     <span style="color: var(--accent); font-size: 1.1rem; line-height: 1.2;"><i class="${ach.icon || 'fa-solid fa-award'}"></i></span>
-                                    <div class="cms-editable-highlight" data-field="profile.achievements.items.${idx}.html">${ach.html}</div>
+                                    <div class="" data-field="profile.achievements.items.${idx}.html">${ach.html}</div>
                                 </li>`).join('\n');
-            const achHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.achievements.title">${nikhilConfig.achievements.title || "Key Achievements & Contributions"}</h3>
+            const achHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="" data-field="profile.achievements.title">${nikhilConfig.achievements.title || "Key Achievements & Contributions"}</h3>
                             <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem;">
 ${achList}
                             </ul>`;
@@ -1150,9 +1150,9 @@ ${achList}
         if (nikhilConfig.expertise) {
             const expList = (nikhilConfig.expertise.items || []).map((it, idx) => `                                <li style="display: flex; align-items: flex-start; gap: 8px;">
                                     <span>–</span>
-                                    <span class="cms-editable-highlight" data-field="profile.expertise.items.${idx}">${it}</span>
+                                    <span class="" data-field="profile.expertise.items.${idx}">${it}</span>
                                 </li>`).join('\n');
-            const expHtml = `                            <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;" class="cms-editable-highlight" data-field="profile.expertise.title">${nikhilConfig.expertise.title || "Areas of Expertise:"}</h3>
+            const expHtml = `                            <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;" class="" data-field="profile.expertise.title">${nikhilConfig.expertise.title || "Areas of Expertise:"}</h3>
                             <div style="width: 60px; height: 4px; background-color: var(--accent); margin: 0 0 1.5rem 0; border-radius: 2px;"></div>
                             <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.1rem; line-height: 1.6; color: var(--text-muted);">
 ${expList}
@@ -1166,7 +1166,7 @@ ${expList}
                                     <span style="color: var(--text-primary); font-size: 0.95rem;"><strong>${art.publication}:</strong> ${art.title}</span>
                                     <span style="color: var(--accent); font-size: 0.9rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
                                 </a>`).join('\n\n');
-            const artHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.featured_articles.title">${nikhilConfig.featured_articles.title || "Key Featured Articles"}</h3>
+            const artHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="" data-field="profile.featured_articles.title">${nikhilConfig.featured_articles.title || "Key Featured Articles"}</h3>
                             <div style="display: flex; flex-direction: column; gap: 0.75rem;">
 ${artItems}
                             </div>`;
@@ -1178,7 +1178,7 @@ ${artItems}
             const ytList = (nikhilConfig.youtube_interviews.items || []).map(yt => `                                <li style="word-break: break-all;">
                                     ${yt.title} – <a href="${yt.url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none;">${yt.url}</a>
                                 </li>`).join('\n');
-            const ytHtml = `                            <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;" class="cms-editable-highlight" data-field="profile.youtube_interviews.title">${nikhilConfig.youtube_interviews.title || "Interviews on Prominent Youtube channels:"}</h3>
+            const ytHtml = `                            <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;" class="" data-field="profile.youtube_interviews.title">${nikhilConfig.youtube_interviews.title || "Interviews on Prominent Youtube channels:"}</h3>
                             <div style="width: 60px; height: 4px; background-color: var(--accent); margin: 0 0 1.5rem 0; border-radius: 2px;"></div>
                             <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.1rem; line-height: 1.6; color: var(--text-muted);">
 ${ytList}
@@ -1192,7 +1192,7 @@ ${ytList}
                                     <span style="font-size: 0.95rem; color: var(--text-muted);"><strong>${nm.source}:</strong> ${nm.headline}</span>
                                     <a href="${nm.url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">Read Article <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i></a>
                                 </div>`).join('\n\n');
-            const newsHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.news_mentions.title">${nikhilConfig.news_mentions.title || "Other News & Media Mentions"}</h3>
+            const newsHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="" data-field="profile.news_mentions.title">${nikhilConfig.news_mentions.title || "Other News & Media Mentions"}</h3>
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem;">
 ${newsItems}
                             </div>`;

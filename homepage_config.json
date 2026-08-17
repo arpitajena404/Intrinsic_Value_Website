@@ -35,7 +35,7 @@
         "desc2": "At Intrinsic Value, alpha is a natural result of a robust, data-driven strategy.\n                            <strong>Capital protection, strict risk management, and process</strong> govern every stock\n                            recommendation. We are a SEBI-registered equity research analyst service dedicated to\n                            sustainable wealth creation.",
         "cta_text": "Accelerate Your Wealth Now",
         "cta_url": "pricing.html",
-        "sebi_badge": "SEBI Registered \u00b7 INH000009047",
+        "sebi_badge": "SEBI Registered · INH000009047",
         "stats": [
             {
                 "num": "15",
@@ -71,14 +71,14 @@
         "cards": [
             {
                 "icon": "fas fa-sort-numeric-up",
-                "title": "Numbers don\u2019t lie",
-                "desc": "Our Research is based on Numbers not narratives, while there is nothing wrong with\n                                    Growth stories, a lot of over valued narratives end up very badly when the Tide is\n                                    over. If you have numbers you don\u2019t need a story, if you don\u2019t have numbers, story\n                                    can\u2019t help you. Remember Cons are the best story tellers.",
+                "title": "Numbers don’t lie",
+                "desc": "Our Research is based on Numbers not narratives, while there is nothing wrong with\n                                    Growth stories, a lot of over valued narratives end up very badly when the Tide is\n                                    over. If you have numbers you don’t need a story, if you don’t have numbers, story\n                                    can’t help you. Remember Cons are the best story tellers.",
                 "link": "#services_item1"
             },
             {
                 "icon": "fas fa-hand-holding-usd",
                 "title": "Charlie Munger at Ben Graham",
-                "desc": "If we can Buy Charlie\u2019s stocks at Benjamin Graham prices, it will be some thing\n                                    Extraordinary- Mohnish Pabrai <br>\n                                    We are trying to achieve that.",
+                "desc": "If we can Buy Charlie’s stocks at Benjamin Graham prices, it will be some thing\n                                    Extraordinary- Mohnish Pabrai <br>\n                                    We are trying to achieve that.",
                 "link": "#services_item2"
             },
             {
@@ -321,7 +321,7 @@
             {
                 "label": "Economic Times",
                 "link": "https://economictimes.indiatimes.com/news/india/15-business-leaders-to-lookout-in-2024/articleshow/108236623.cms?from=mdr",
-                "quote": "\ud83c\udfc6 Recognized by The Economic Times as One of the 15 Business Leaders to Look Out for in 2024",
+                "quote": "🏆 Recognized by The Economic Times as One of the 15 Business Leaders to Look Out for in 2024",
                 "source": "Economic Times",
                 "logo": "featuring_icon/et.png",
                 "wrapperClass": "brand-et"
@@ -649,7 +649,7 @@
             },
             {
                 "question": "What can one expect from the recommendation service?",
-                "answer": "<ol>\n                                <li>Total 20-22 stock recommendation</li>\n                                <li>Research reports (with Buying price, %Allocation, and actionable insights)</li>\n                                <li>Quarterly newsletters</li>\n                                <li>One video meet every quarter</li>\n                                <li>0-4 no of Dark horses, (High risk \u2013 High Reward Stocks)</li>\n                                <li>1 stock of the month ( 7-8 every year) from Large cap.</li>\n                                <li>Peaceful long term behavior through thick and thin of market.</li>\n                                <li>Exit Recommendations when the price reaches the Target.</li>\n                                <li>Stock picks based on their potential of becoming the multibagger over the next\n                                    3-5 years.</li>\n                            </ol>"
+                "answer": "<ol>\n                                <li>Total 20-22 stock recommendation</li>\n                                <li>Research reports (with Buying price, %Allocation, and actionable insights)</li>\n                                <li>Quarterly newsletters</li>\n                                <li>One video meet every quarter</li>\n                                <li>0-4 no of Dark horses, (High risk – High Reward Stocks)</li>\n                                <li>1 stock of the month ( 7-8 every year) from Large cap.</li>\n                                <li>Peaceful long term behavior through thick and thin of market.</li>\n                                <li>Exit Recommendations when the price reaches the Target.</li>\n                                <li>Stock picks based on their potential of becoming the multibagger over the next\n                                    3-5 years.</li>\n                            </ol>"
             },
             {
                 "question": "What should not be expected from the service?",
@@ -728,7 +728,7 @@
             "email": "info@intrinsicvalueequity.in",
             "address": "Floor No : 3, Office No :106, Mont vert Spectra Opp. Hotel Wadeshwar, Baner, Pune, Maharashtra PIN Code: 411045",
             "timings": [
-                "Sat\u2013Thursday: 8:00 AM\u20138:00 PM",
+                "Sat–Thursday: 8:00 AM–8:00 PM",
                 "Friday: Closed",
                 "Sat-Sun:- Open"
             ]
@@ -837,9 +837,9 @@
     },
     "header_buttons": {
         "client_login": {
-            "text": "Client Login",
-            "url": "https://premium.intrinsicvalueequity.in/eud/courses",
-            "new_tab": true
+            "text": "<font color=\"#ffffff\">Client Login</font>",
+            "url": "https://premium.intrinsicvalueequity.in/eud/login/email?next=https%3A%2F%2Fpremium.intrinsicvalueequity.in%2Feud%2Fcourses%3F_gl%3D1*165ir88*_gcl_aw*R0NMLjE3ODU3NzY4OTQuQ2owS0NRanctTURUQmhDZ0FSSXNBS0FrZGxRcThhWEJQc1U2RVdZeFRCZ1puLWZUMXlGdGx5Y0ZBb0lrdjRrRW9yRXh0dG9oM21zVG5xQWFBc1dKRUFMd193Y0I.*_gcl_au*Mzc2MzgwNzkwLjE3ODQ0NTY3NDQuLS4tLjE3ODU1MDAyNDUuMTAyNDI5MDI5My4xNzg2OTY3MzkwLjE3ODY5NjczODk.",
+            "new_tab": false
         },
         "contact_us": {
             "text": "Contact Us",

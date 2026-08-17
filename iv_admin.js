@@ -3419,6 +3419,19 @@
             });
         }
 
+        var nikhilEditModeToggle = document.getElementById('nikhilEditModeToggle');
+        if (nikhilEditModeToggle) {
+            nikhilEditModeToggle.addEventListener('change', function() {
+                var iframe = document.getElementById('nikhilPreviewIframe');
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({
+                        type: 'toggle_edit_mode',
+                        enabled: nikhilEditModeToggle.checked
+                    }, '*');
+                }
+            });
+        }
+
         // Auto sync state to iframe when parent form inputs change
         if (workspace) {
             workspace.addEventListener('input', function(e) {

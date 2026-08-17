@@ -890,6 +890,8 @@
 
     function initLegalBlockEditor() {
         if (!isLegalPage()) return;
+        createFloatingToolbar();
+        var legalContainer = document.querySelector(".legal-container");
         var docId = getLegalDocId();
 
         // 1. Make Legal Page Header Title & Subtitle editable
@@ -898,19 +900,25 @@
             var h1 = legalHeader.querySelector("h1");
             var p = legalHeader.querySelector("p");
             if (h1) {
-                h1.classList.add("cms-editable-highlight");
                 h1.setAttribute("data-field", "legal." + docId + ".title");
                 if (isHighlightEnabled) {
+                    h1.classList.add("cms-editable-highlight");
                     h1.setAttribute("contenteditable", "true");
                     bindInputListeners(h1, "legal." + docId + ".title");
+                } else {
+                    h1.classList.remove("cms-editable-highlight");
+                    h1.removeAttribute("contenteditable");
                 }
             }
             if (p) {
-                p.classList.add("cms-editable-highlight");
                 p.setAttribute("data-field", "legal." + docId + ".subtitle");
                 if (isHighlightEnabled) {
+                    p.classList.add("cms-editable-highlight");
                     p.setAttribute("contenteditable", "true");
                     bindInputListeners(p, "legal." + docId + ".subtitle");
+                } else {
+                    p.classList.remove("cms-editable-highlight");
+                    p.removeAttribute("contenteditable");
                 }
             }
         }
@@ -950,6 +958,7 @@
 
     function initNikhilBioEditor() {
         if (!isNikhilBioPage()) return;
+        createFloatingToolbar();
         var selectors = [
             ".profile-title-area h1",
             ".profile-title-area p",
@@ -978,10 +987,13 @@
                 field = "profile.auto_field_" + idx;
                 el.setAttribute("data-field", field);
             }
-            el.classList.add("cms-editable-highlight");
             if (isHighlightEnabled) {
+                el.classList.add("cms-editable-highlight");
                 el.setAttribute("contenteditable", "true");
                 bindInputListeners(el, field);
+            } else {
+                el.classList.remove("cms-editable-highlight");
+                el.removeAttribute("contenteditable");
             }
         });
     }
@@ -1006,9 +1018,11 @@
                 return;
             }
             if (isHighlightEnabled) {
+                el.classList.add("cms-editable-highlight");
                 el.setAttribute("contenteditable", "true");
                 bindInputListeners(el, field);
             } else {
+                el.classList.remove("cms-editable-highlight");
                 el.removeAttribute("contenteditable");
             }
         });
@@ -1137,8 +1151,8 @@
         if (cfg.header) {
             var headerHtml = `
                 <div class="profile-title-area">
-                    <h1 class="profile-name cms-editable-highlight" data-field="profile.header.name">${cfg.header.name || "Nikhil Gangil"}</h1>
-                    <p class="profile-subtitle cms-editable-highlight" data-field="profile.header.subtitle">${cfg.header.subtitle || ""}</p>
+                    <h1 class="profile-name" data-field="profile.header.name">${cfg.header.name || "Nikhil Gangil"}</h1>
+                    <p class="profile-subtitle" data-field="profile.header.subtitle">${cfg.header.subtitle || ""}</p>
                     <div class="profile-underline"></div>
                 </div>
             `;
@@ -1148,7 +1162,7 @@
         // 2. Bio Paragraphs
         if (cfg.bio_paragraphs && Array.isArray(cfg.bio_paragraphs)) {
             var bioHtml = cfg.bio_paragraphs.map(function (p, idx) {
-                return `<p class="cms-editable-highlight" data-field="profile.bio_paragraphs.${idx}">${p}</p>`;
+                return `<p data-field="profile.bio_paragraphs.${idx}">${p}</p>`;
             }).join("\n");
             replaceCmsSection("NIKHIL_BIO", bioHtml);
         }
@@ -1156,9 +1170,9 @@
         // 3. Philosophy
         if (cfg.philosophy) {
             var philHtml = `
-                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.philosophy.title">${cfg.philosophy.title || "Investment Philosophy"}</h3>
+                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" data-field="profile.philosophy.title">${cfg.philosophy.title || "Investment Philosophy"}</h3>
                 ${(cfg.philosophy.paragraphs || []).map(function (p, idx) {
-                    return `<p class="cms-editable-highlight" data-field="profile.philosophy.paragraphs.${idx}">${p}</p>`;
+                    return `<p data-field="profile.philosophy.paragraphs.${idx}">${p}</p>`;
                 }).join("\n")}
             `;
             replaceCmsSection("NIKHIL_PHILOSOPHY", philHtml);
@@ -1167,13 +1181,13 @@
         // 4. Experience
         if (cfg.experience) {
             var expHtml = `
-                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.experience.title">${cfg.experience.title || "Experience & Background"}</h3>
+                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" data-field="profile.experience.title">${cfg.experience.title || "Experience & Background"}</h3>
                 <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem;">
                     ${(cfg.experience.items || []).map(function (item, idx) {
                         return `
                             <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
                                 <span style="color: var(--accent); font-size: 1.1rem; line-height: 1.2;"><i class="${item.icon || 'fa-solid fa-check'}"></i></span>
-                                <div class="cms-editable-highlight" data-field="profile.experience.items.${idx}.description"><strong>${item.title}</strong>${item.description ? " – " + item.description : ""}</div>
+                                <div data-field="profile.experience.items.${idx}.description"><strong>${item.title}</strong>${item.description ? " – " + item.description : ""}</div>
                             </li>
                         `;
                     }).join("\n")}
@@ -1185,8 +1199,8 @@
         // 5. Media Reach
         if (cfg.media_reach) {
             var reachHtml = `
-                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.media_reach.title">${cfg.media_reach.title || "Media Presence & Public Reach"}</h3>
-                <p class="cms-editable-highlight" data-field="profile.media_reach.intro">${cfg.media_reach.intro || ""}</p>
+                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" data-field="profile.media_reach.title">${cfg.media_reach.title || "Media Presence & Public Reach"}</h3>
+                <p data-field="profile.media_reach.intro">${cfg.media_reach.intro || ""}</p>
                 <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 1.5rem;">
                     ${(cfg.media_reach.stats || []).map(function (st, idx) {
                         return `
@@ -1204,16 +1218,16 @@
         // 6. Predictions
         if (cfg.predictions) {
             var predHtml = `
-                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.predictions.title">${cfg.predictions.title || "Market Cycle Predictions"}</h3>
-                <p style="margin-bottom: 1.5rem;" class="cms-editable-highlight" data-field="profile.predictions.subtitle">${cfg.predictions.subtitle || ""}</p>
+                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" data-field="profile.predictions.title">${cfg.predictions.title || "Market Cycle Predictions"}</h3>
+                <p style="margin-bottom: 1.5rem;" data-field="profile.predictions.subtitle">${cfg.predictions.subtitle || ""}</p>
                 <div style="display: flex; flex-direction: column; gap: 1.5rem; border-left: 2px solid rgba(255, 255, 255, 0.05); padding-left: 1.5rem; margin-left: 0.5rem;">
                     ${(cfg.predictions.items || []).map(function (pred, idx) {
                         var linkHtml = pred.link_url ? ` <a href="${pred.link_url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">${pred.link_text || "View Link"} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i></a>` : "";
                         return `
                             <div style="position: relative;">
                                 <div style="position: absolute; left: -29px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent);"></div>
-                                <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;" class="cms-editable-highlight" data-field="profile.predictions.items.${idx}.date_title">${pred.date_title}</strong>
-                                <p style="font-size: 0.95rem; margin: 0 0 6px 0;" class="cms-editable-highlight" data-field="profile.predictions.items.${idx}.description">${pred.description}${linkHtml}</p>
+                                <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;" data-field="profile.predictions.items.${idx}.date_title">${pred.date_title}</strong>
+                                <p style="font-size: 0.95rem; margin: 0 0 6px 0;" data-field="profile.predictions.items.${idx}.description">${pred.description}${linkHtml}</p>
                             </div>
                         `;
                     }).join("\n")}
@@ -1225,13 +1239,13 @@
         // 7. Achievements
         if (cfg.achievements) {
             var achHtml = `
-                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.achievements.title">${cfg.achievements.title || "Key Achievements & Contributions"}</h3>
+                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" data-field="profile.achievements.title">${cfg.achievements.title || "Key Achievements & Contributions"}</h3>
                 <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem;">
                     ${(cfg.achievements.items || []).map(function (ach, idx) {
                         return `
                             <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
                                 <span style="color: var(--accent); font-size: 1.1rem; line-height: 1.2;"><i class="${ach.icon || 'fa-solid fa-award'}"></i></span>
-                                <div class="cms-editable-highlight" data-field="profile.achievements.items.${idx}.html">${ach.html}</div>
+                                <div data-field="profile.achievements.items.${idx}.html">${ach.html}</div>
                             </li>
                         `;
                     }).join("\n")}
@@ -1243,14 +1257,14 @@
         // 8. Expertise
         if (cfg.expertise) {
             var expListHtml = `
-                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;" class="cms-editable-highlight" data-field="profile.expertise.title">${cfg.expertise.title || "Areas of Expertise:"}</h3>
+                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;" data-field="profile.expertise.title">${cfg.expertise.title || "Areas of Expertise:"}</h3>
                 <div style="width: 60px; height: 4px; background-color: var(--accent); margin: 0 0 1.5rem 0; border-radius: 2px;"></div>
                 <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.1rem; line-height: 1.6; color: var(--text-muted);">
                     ${(cfg.expertise.items || []).map(function (it, idx) {
                         return `
                             <li style="display: flex; align-items: flex-start; gap: 8px;">
                                 <span>–</span>
-                                <span class="cms-editable-highlight" data-field="profile.expertise.items.${idx}">${it}</span>
+                                <span data-field="profile.expertise.items.${idx}">${it}</span>
                             </li>
                         `;
                     }).join("\n")}
@@ -1262,7 +1276,7 @@
         // 9. Featured Articles
         if (cfg.featured_articles) {
             var artHtml = `
-                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.featured_articles.title">${cfg.featured_articles.title || "Key Featured Articles"}</h3>
+                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" data-field="profile.featured_articles.title">${cfg.featured_articles.title || "Key Featured Articles"}</h3>
                 <div style="display: flex; flex-direction: column; gap: 0.75rem;">
                     ${(cfg.featured_articles.items || []).map(function (art, idx) {
                         return `
@@ -1280,7 +1294,7 @@
         // 10. YouTube Interviews
         if (cfg.youtube_interviews) {
             var ytHtml = `
-                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;" class="cms-editable-highlight" data-field="profile.youtube_interviews.title">${cfg.youtube_interviews.title || "Interviews on Prominent Youtube channels:"}</h3>
+                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;" data-field="profile.youtube_interviews.title">${cfg.youtube_interviews.title || "Interviews on Prominent Youtube channels:"}</h3>
                 <div style="width: 60px; height: 4px; background-color: var(--accent); margin: 0 0 1.5rem 0; border-radius: 2px;"></div>
                 <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.1rem; line-height: 1.6; color: var(--text-muted);">
                     ${(cfg.youtube_interviews.items || []).map(function (yt, idx) {
@@ -1298,7 +1312,7 @@
         // 11. News Mentions
         if (cfg.news_mentions) {
             var newsHtml = `
-                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.news_mentions.title">${cfg.news_mentions.title || "Other News & Media Mentions"}</h3>
+                <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" data-field="profile.news_mentions.title">${cfg.news_mentions.title || "Other News & Media Mentions"}</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem;">
                     ${(cfg.news_mentions.items || []).map(function (nm, idx) {
                         return `
@@ -1322,8 +1336,8 @@
 
         if (doc.title !== undefined) {
             var headerHtml = `
-                <h1 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 0.75rem;" class="cms-editable-highlight" data-field="legal.${docId}.title">${doc.title}</h1>
-                <p style="color: var(--text-secondary); font-size: 1rem;" class="cms-editable-highlight" data-field="legal.${docId}.subtitle">${doc.subtitle || ""}</p>
+                <h1 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 0.75rem;" data-field="legal.${docId}.title">${doc.title}</h1>
+                <p style="color: var(--text-secondary); font-size: 1rem;" data-field="legal.${docId}.subtitle">${doc.subtitle || ""}</p>
                 <div style="width: 60px; height: 3px; background: var(--accent-primary, #f97316); border-radius: 2px; margin-top: 1rem;"></div>
             `;
             replaceCmsSection("LEGAL_HEADER", headerHtml);
@@ -1343,7 +1357,7 @@
             return (
                 '                    <li><a href="' +
                 url +
-                '" class="nav-link nav-item-el cms-editable-highlight" data-field="navigation.' +
+                '" class="nav-link nav-item-el" data-field="navigation.' +
                 idx +
                 '.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Navigation Link Text"' +
                 targetAttr +
@@ -1358,7 +1372,7 @@
             htmlList.push(
                 '                    <li><a href="' +
                 loginLink.url +
-                '" class="nav-link nav-item-el cms-editable-highlight" data-field="header_buttons.client_login.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Client Login Text"' +
+                '" class="nav-link nav-item-el" data-field="header_buttons.client_login.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Client Login Text"' +
                 loginTarget +
                 '><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>' +
                 loginLink.text +
@@ -1370,7 +1384,7 @@
                 '                    <li class="nav-actions-mobile">\n' +
                 '                        <a href="' +
                 contactLink.url +
-                '" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' +
+                '" class="btn-glow" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' +
                 contactTarget +
                 ">" +
                 contactLink.text +
@@ -1392,11 +1406,11 @@
             if (homepageConfig && homepageConfig.header_buttons) {
                 var contactLink = homepageConfig.header_buttons.contact_us;
                 var contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : "";
-                var contactHtml = '                <a href="' + contactLink.url + '" class="btn-glow cms-editable-highlight" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' + contactTarget + ">" + contactLink.text + "</a>";
+                var contactHtml = '                <a href="' + contactLink.url + '" class="btn-glow" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' + contactTarget + ">" + contactLink.text + "</a>";
                 replaceCmsSection("NAV_CONTACT", contactHtml);
             }
             if (homepageConfig && homepageConfig.portfolio) {
-                replaceCmsSection("PORTFOLIO_TITLE", '<h2 class="team-section-heading cms-editable-highlight" data-field="portfolio.title" data-label="Portfolio Title">' + homepageConfig.portfolio.title + "</h2>");
+                replaceCmsSection("PORTFOLIO_TITLE", '<h2 class="team-section-heading" data-field="portfolio.title" data-label="Portfolio Title">' + homepageConfig.portfolio.title + "</h2>");
                 replaceCmsSection("PORTFOLIO_TRACK", homepageConfig.portfolio.embed_html);
                 if (typeof initPortfolioCarousel === "function") initPortfolioCarousel();
                 if (window.scEmbedController && typeof window.scEmbedController.load === "function") window.scEmbedController.load();

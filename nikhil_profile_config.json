@@ -12,7 +12,7 @@
     "philosophy": {
         "title": "Investment Philosophy",
         "paragraphs": [
-            "Nikhil\u2019s investing philosophy is built on the belief that value and growth are not opposites, but complements. He emphasizes that long-term wealth creation comes from buying well-run businesses at reasonable valuations and allowing time, process, and discipline to work in the investor\u2019s favor.",
+            "Nikhil’s investing philosophy is built on the belief that value and growth are not opposites, but complements. He emphasizes that long-term wealth creation comes from buying well-run businesses at reasonable valuations and allowing time, process, and discipline to work in the investor’s favor.",
             "His approach prioritizes downside risk management first, with returns viewed as a by-product of correct decision-making rather than speculation."
         ]
     },
@@ -67,7 +67,19 @@
         "subtitle": "Nikhil has successfully predicted many market cycles",
         "items": [
             {
-                "date_title": "April 2026 \u2013 Bull Market Bottom",
+                "date_title": "29 March 2026 - Predicted Indian Market Bottom",
+                "description": "Called the Indian stock market bottom on March 29, 2026, supported by a detailed market thesis and analysis. The market’s subsequent performance validated the prediction.",
+                "link_text": "Watch Video",
+                "link_url": "#https://www.youtube.com/watch?v=cMSGq2VGiK8"
+            },
+            {
+                "date_title": "April 2026  - FII Comeback Strategy Explained ",
+                "description": "Predicted the return of Foreign Institutional Investors (FIIs), explaining the key tailwinds, headwinds, and valuation factors that could trigger their comeback. FIIs subsequently returned to the Indian market in August 2026",
+                "link_text": "Watch Full Analysis",
+                "link_url": "#https://www.youtube.com/watch?v=9gjXWyVZJYM"
+            },
+            {
+                "date_title": "April 2026 – Bull Market Bottom",
                 "description": "Predicted the start of the bull market and market bottom in a featured interview with Money 9 Managing Director, Sandeep Grover.",
                 "link_text": "Watch Interview",
                 "link_url": "https://youtu.be/rbc_PGQY-FU?si=kFBu4IvE9qjeokYX"
@@ -79,7 +91,7 @@
                 "link_url": "/intrinsic-value-feb-newsletter"
             },
             {
-                "date_title": "October 2024 \u2013 Calling the Market Top",
+                "date_title": "October 2024 – Calling the Market Top",
                 "description": "Publicly called the market top on October 16, 2024, and announced one of his largest portfolio exits.",
                 "link_text": "View Post on X",
                 "link_url": "https://x.com/Intrinsic_cycle/status/1846495829214773491?s=20"
@@ -97,16 +109,16 @@
                 "link_url": "https://x.com/Intrinsic_cycle/status/1293087292916002816?s=20"
             },
             {
-                "date_title": "Hindustan Unilever Top",
-                "description": "Predicted the end of the bull cycle for Hindustan Unilever at peak intrinsic value.",
-                "link_text": "View Post on X",
-                "link_url": "https://x.com/Intrinsic_cycle/status/1616709143624314882?s=20"
-            },
-            {
                 "date_title": "Challenging 2025 Market Outlook",
                 "description": "Successfully predicted in December 2024 that 2025 would be a challenging yet familiar year for equity markets.",
                 "link_text": "Read Business Today Article",
                 "link_url": "https://www.businesstoday.in/personal-finance/investment/story/2025-will-be-challenging-for-equity-markets-but-familiar-says-nikhil-gangil-of-intrinsic-value-455725-2024-11-30"
+            },
+            {
+                "date_title": "Hindustan Unilever Top",
+                "description": "Predicted the end of the bull cycle for Hindustan Unilever at peak intrinsic value.",
+                "link_text": "View Post on X",
+                "link_url": "https://x.com/Intrinsic_cycle/status/1616709143624314882?s=20"
             }
         ]
     },
