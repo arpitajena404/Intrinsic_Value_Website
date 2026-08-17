@@ -5370,10 +5370,11 @@
     function syncNikhilToIframe() {
         var iframe = document.getElementById('nikhilPreviewIframe');
         if (iframe && iframe.contentWindow && nikhilProfileState) {
+            var toggle = document.getElementById('nikhilEditModeToggle');
             iframe.contentWindow.postMessage({
                 type: 'init_cms_state',
                 nikhilProfileConfig: nikhilProfileState,
-                enabled: true
+                enabled: toggle ? toggle.checked : true
             }, '*');
             iframe.contentWindow.postMessage({
                 type: 'set_nikhil_profile_config',

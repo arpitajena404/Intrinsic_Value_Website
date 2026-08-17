@@ -837,7 +837,7 @@
     },
     "header_buttons": {
         "client_login": {
-            "text": "<font color=\"#ffffff\">Client Login</font>",
+            "text": "Client Login",
             "url": "https://premium.intrinsicvalueequity.in/eud/login/email?next=https%3A%2F%2Fpremium.intrinsicvalueequity.in%2Feud%2Fcourses%3F_gl%3D1*165ir88*_gcl_aw*R0NMLjE3ODU3NzY4OTQuQ2owS0NRanctTURUQmhDZ0FSSXNBS0FrZGxRcThhWEJQc1U2RVdZeFRCZ1puLWZUMXlGdGx5Y0ZBb0lrdjRrRW9yRXh0dG9oM21zVG5xQWFBc1dKRUFMd193Y0I.*_gcl_au*Mzc2MzgwNzkwLjE3ODQ0NTY3NDQuLS4tLjE3ODU1MDAyNDUuMTAyNDI5MDI5My4xNzg2OTY3MzkwLjE3ODY5NjczODk.",
             "new_tab": false
         },

@@ -58,7 +58,7 @@
     var nikhilProfileConfig = null;
     var highlightStyles = null;
     var activePopover = null;
-    var isHighlightEnabled = true;
+    var isHighlightEnabled = false;
     var savedSelectionRange = null;
 
     function setNestedKey(obj, path, value) {
