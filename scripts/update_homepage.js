@@ -1067,8 +1067,8 @@ function updateNikhilProfilePage() {
         // Header
         if (nikhilConfig.header) {
             const headerHtml = `                        <div class="profile-title-area">
-                            <h1 class="profile-name">${nikhilConfig.header.name || "Nikhil Gangil"}</h1>
-                            <p class="profile-subtitle">${nikhilConfig.header.subtitle || ""}</p>
+                            <h1 class="profile-name cms-editable-highlight" data-field="profile.header.name">${nikhilConfig.header.name || "Nikhil Gangil"}</h1>
+                            <p class="profile-subtitle cms-editable-highlight" data-field="profile.header.subtitle">${nikhilConfig.header.subtitle || ""}</p>
                             <div class="profile-underline"></div>
                         </div>`;
             replaceInFile('NIKHIL_HEADER', headerHtml);
@@ -1076,24 +1076,24 @@ function updateNikhilProfilePage() {
 
         // Bio Paragraphs
         if (nikhilConfig.bio_paragraphs && Array.isArray(nikhilConfig.bio_paragraphs)) {
-            const bioHtml = nikhilConfig.bio_paragraphs.map(p => `                            <p>${p}</p>`).join('\n');
+            const bioHtml = nikhilConfig.bio_paragraphs.map((p, idx) => `                            <p class="cms-editable-highlight" data-field="profile.bio_paragraphs.${idx}">${p}</p>`).join('\n');
             replaceInFile('NIKHIL_BIO', bioHtml);
         }
 
         // Philosophy
         if (nikhilConfig.philosophy) {
-            const philHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;">${nikhilConfig.philosophy.title || "Investment Philosophy"}</h3>\n` +
-                (nikhilConfig.philosophy.paragraphs || []).map(p => `                            <p>${p}</p>`).join('\n');
+            const philHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.philosophy.title">${nikhilConfig.philosophy.title || "Investment Philosophy"}</h3>\n` +
+                (nikhilConfig.philosophy.paragraphs || []).map((p, idx) => `                            <p class="cms-editable-highlight" data-field="profile.philosophy.paragraphs.${idx}">${p}</p>`).join('\n');
             replaceInFile('NIKHIL_PHILOSOPHY', philHtml);
         }
 
         // Experience
         if (nikhilConfig.experience) {
-            const expList = (nikhilConfig.experience.items || []).map(item => `                                <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
+            const expList = (nikhilConfig.experience.items || []).map((item, idx) => `                                <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
                                     <span style="color: var(--accent); font-size: 1.1rem; line-height: 1.2;"><i class="${item.icon || 'fa-solid fa-briefcase'}"></i></span>
-                                    <div><strong>${item.title}</strong>${item.description ? " – " + item.description : ""}</div>
+                                    <div class="cms-editable-highlight" data-field="profile.experience.items.${idx}.description"><strong>${item.title}</strong>${item.description ? " – " + item.description : ""}</div>
                                 </li>`).join('\n');
-            const expHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;">${nikhilConfig.experience.title || "Experience & Background"}</h3>
+            const expHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.experience.title">${nikhilConfig.experience.title || "Experience & Background"}</h3>
                             <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem;">
 ${expList}
                             </ul>`;
@@ -1102,12 +1102,12 @@ ${expList}
 
         // Media Reach
         if (nikhilConfig.media_reach) {
-            const reachList = (nikhilConfig.media_reach.stats || []).map(st => `                                <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
+            const reachList = (nikhilConfig.media_reach.stats || []).map((st, idx) => `                                <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
                                     <span style="color: var(--accent); font-size: 1.1rem; line-height: 1.2;"><i class="${st.icon || 'fa-brands fa-youtube'}"></i></span>
-                                    <div>${st.bold ? "<strong>" + st.bold + "</strong> " : ""}${st.text || ""}</div>
+                                    <div class="cms-editable-highlight" data-field="profile.media_reach.stats.${idx}.text">${st.bold ? "<strong>" + st.bold + "</strong> " : ""}${st.text || ""}</div>
                                 </li>`).join('\n');
-            const reachHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;">${nikhilConfig.media_reach.title || "Media Presence & Public Reach"}</h3>
-                            <p>${nikhilConfig.media_reach.intro || ""}</p>
+            const reachHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.media_reach.title">${nikhilConfig.media_reach.title || "Media Presence & Public Reach"}</h3>
+                            <p class="cms-editable-highlight" data-field="profile.media_reach.intro">${nikhilConfig.media_reach.intro || ""}</p>
                             <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 1.5rem;">
 ${reachList}
                             </ul>`;
@@ -1116,16 +1116,16 @@ ${reachList}
 
         // Predictions
         if (nikhilConfig.predictions) {
-            const predItems = (nikhilConfig.predictions.items || []).map(pred => {
+            const predItems = (nikhilConfig.predictions.items || []).map((pred, idx) => {
                 const linkHtml = pred.link_url ? ` <a href="${pred.link_url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">${pred.link_text || "View Link"} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i></a>` : "";
                 return `                                <div style="position: relative;">
                                     <div style="position: absolute; left: -29px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent);"></div>
-                                    <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;">${pred.date_title}</strong>
-                                    <p style="font-size: 0.95rem; margin: 0 0 6px 0;">${pred.description}${linkHtml}</p>
+                                    <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;" class="cms-editable-highlight" data-field="profile.predictions.items.${idx}.date_title">${pred.date_title}</strong>
+                                    <p style="font-size: 0.95rem; margin: 0 0 6px 0;" class="cms-editable-highlight" data-field="profile.predictions.items.${idx}.description">${pred.description}${linkHtml}</p>
                                 </div>`;
             }).join('\n\n');
-            const predHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;">${nikhilConfig.predictions.title || "Market Cycle Predictions"}</h3>
-                            <p style="margin-bottom: 1.5rem;">${nikhilConfig.predictions.subtitle || ""}</p>
+            const predHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.predictions.title">${nikhilConfig.predictions.title || "Market Cycle Predictions"}</h3>
+                            <p style="margin-bottom: 1.5rem;" class="cms-editable-highlight" data-field="profile.predictions.subtitle">${nikhilConfig.predictions.subtitle || ""}</p>
                             
                             <div style="display: flex; flex-direction: column; gap: 1.5rem; border-left: 2px solid rgba(255, 255, 255, 0.05); padding-left: 1.5rem; margin-left: 0.5rem;">
 ${predItems}
@@ -1135,11 +1135,11 @@ ${predItems}
 
         // Achievements
         if (nikhilConfig.achievements) {
-            const achList = (nikhilConfig.achievements.items || []).map(ach => `                                <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
+            const achList = (nikhilConfig.achievements.items || []).map((ach, idx) => `                                <li style="display: flex; align-items: flex-start; gap: 12px; color: var(--text-muted); line-height: 1.6;">
                                     <span style="color: var(--accent); font-size: 1.1rem; line-height: 1.2;"><i class="${ach.icon || 'fa-solid fa-award'}"></i></span>
-                                    <div>${ach.html}</div>
+                                    <div class="cms-editable-highlight" data-field="profile.achievements.items.${idx}.html">${ach.html}</div>
                                 </li>`).join('\n');
-            const achHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;">${nikhilConfig.achievements.title || "Key Achievements & Contributions"}</h3>
+            const achHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.achievements.title">${nikhilConfig.achievements.title || "Key Achievements & Contributions"}</h3>
                             <ul class="custom-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem;">
 ${achList}
                             </ul>`;
@@ -1148,11 +1148,11 @@ ${achList}
 
         // Expertise
         if (nikhilConfig.expertise) {
-            const expList = (nikhilConfig.expertise.items || []).map(it => `                                <li style="display: flex; align-items: flex-start; gap: 8px;">
+            const expList = (nikhilConfig.expertise.items || []).map((it, idx) => `                                <li style="display: flex; align-items: flex-start; gap: 8px;">
                                     <span>–</span>
-                                    <span>${it}</span>
+                                    <span class="cms-editable-highlight" data-field="profile.expertise.items.${idx}">${it}</span>
                                 </li>`).join('\n');
-            const expHtml = `                            <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;">${nikhilConfig.expertise.title || "Areas of Expertise:"}</h3>
+            const expHtml = `                            <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;" class="cms-editable-highlight" data-field="profile.expertise.title">${nikhilConfig.expertise.title || "Areas of Expertise:"}</h3>
                             <div style="width: 60px; height: 4px; background-color: var(--accent); margin: 0 0 1.5rem 0; border-radius: 2px;"></div>
                             <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.1rem; line-height: 1.6; color: var(--text-muted);">
 ${expList}
@@ -1166,7 +1166,7 @@ ${expList}
                                     <span style="color: var(--text-primary); font-size: 0.95rem;"><strong>${art.publication}:</strong> ${art.title}</span>
                                     <span style="color: var(--accent); font-size: 0.9rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
                                 </a>`).join('\n\n');
-            const artHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;">${nikhilConfig.featured_articles.title || "Key Featured Articles"}</h3>
+            const artHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.featured_articles.title">${nikhilConfig.featured_articles.title || "Key Featured Articles"}</h3>
                             <div style="display: flex; flex-direction: column; gap: 0.75rem;">
 ${artItems}
                             </div>`;
@@ -1178,7 +1178,7 @@ ${artItems}
             const ytList = (nikhilConfig.youtube_interviews.items || []).map(yt => `                                <li style="word-break: break-all;">
                                     ${yt.title} – <a href="${yt.url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none;">${yt.url}</a>
                                 </li>`).join('\n');
-            const ytHtml = `                            <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;">${nikhilConfig.youtube_interviews.title || "Interviews on Prominent Youtube channels:"}</h3>
+            const ytHtml = `                            <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700;" class="cms-editable-highlight" data-field="profile.youtube_interviews.title">${nikhilConfig.youtube_interviews.title || "Interviews on Prominent Youtube channels:"}</h3>
                             <div style="width: 60px; height: 4px; background-color: var(--accent); margin: 0 0 1.5rem 0; border-radius: 2px;"></div>
                             <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.1rem; line-height: 1.6; color: var(--text-muted);">
 ${ytList}
@@ -1192,7 +1192,7 @@ ${ytList}
                                     <span style="font-size: 0.95rem; color: var(--text-muted);"><strong>${nm.source}:</strong> ${nm.headline}</span>
                                     <a href="${nm.url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">Read Article <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i></a>
                                 </div>`).join('\n\n');
-            const newsHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;">${nikhilConfig.news_mentions.title || "Other News & Media Mentions"}</h3>
+            const newsHtml = `                            <h3 style="color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 1.25rem;" class="cms-editable-highlight" data-field="profile.news_mentions.title">${nikhilConfig.news_mentions.title || "Other News & Media Mentions"}</h3>
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem;">
 ${newsItems}
                             </div>`;
@@ -1201,7 +1201,10 @@ ${newsItems}
 
         // Ensure main_cms_controller.js is loaded
         if (!content.includes('main_cms_controller.js')) {
-            content = content.replace('</body>', '    <script src="main_cms_controller.js?v=9" defer></script>\n</body>');
+            content = content.replace('</body>', '    <script src="main_cms_controller.js?v=12" defer></script>\n</body>');
+            modified = true;
+        } else {
+            content = content.replace(/main_cms_controller\.js\?v=\d+/g, 'main_cms_controller.js?v=12');
             modified = true;
         }
 
@@ -1269,7 +1272,10 @@ function updateLegalCompliancePages() {
 
             // Ensure main_cms_controller.js is loaded
             if (!content.includes('main_cms_controller.js')) {
-                content = content.replace('</body>', '    <script src="../main_cms_controller.js?v=9" defer></script>\n</body>');
+                content = content.replace('</body>', '    <script src="../main_cms_controller.js?v=12" defer></script>\n</body>');
+                modified = true;
+            } else {
+                content = content.replace(/main_cms_controller\.js\?v=\d+/g, 'main_cms_controller.js?v=12');
                 modified = true;
             }
 
