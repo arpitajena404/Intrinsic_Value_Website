@@ -5358,6 +5358,11 @@
         var iframe = document.getElementById('nikhilPreviewIframe');
         if (iframe && iframe.contentWindow && nikhilProfileState) {
             iframe.contentWindow.postMessage({
+                type: 'init_cms_state',
+                nikhilProfileConfig: nikhilProfileState,
+                enabled: true
+            }, '*');
+            iframe.contentWindow.postMessage({
                 type: 'set_nikhil_profile_config',
                 config: nikhilProfileState
             }, '*');
@@ -5855,6 +5860,14 @@
                 workspace.style.display = 'block';
                 resetSidebarToHidden('nikhilProfileEditorSidebar', 'nikhilProfileCmsSplitter', 'toggleNikhilProfileSidebarBtn');
                 loadNikhilProfileCmsData();
+                var iframe = document.getElementById('nikhilPreviewIframe');
+                if (iframe) {
+                    syncNikhilToIframe();
+                    iframe.onload = function () {
+                        syncNikhilToIframe();
+                        setTimeout(syncNikhilToIframe, 100);
+                    };
+                }
                 var firstTab = document.getElementById('tab-btn-nikhil-bio');
                 if (firstTab) firstTab.click();
             });

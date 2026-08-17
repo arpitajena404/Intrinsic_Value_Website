@@ -953,16 +953,23 @@
         var selectors = [
             ".profile-title-area h1",
             ".profile-title-area p",
-            ".profile-bio p",
-            ".philosophy-section p",
+            ".bio-section p",
             ".philosophy-section h3",
+            ".philosophy-section p",
             ".experience-section h3",
+            ".experience-section li div",
             ".media-section h3",
+            ".media-section p",
+            ".media-section li div",
             ".predictions-section h3",
             ".predictions-section p",
-            ".achievements-section h3",
             ".predictions-section strong",
-            ".achievements-section li div"
+            ".achievements-section h3",
+            ".achievements-section li div",
+            ".interviews-section h3",
+            ".interviews-section li",
+            ".news-section h3",
+            ".news-section span"
         ];
         var elements = document.querySelectorAll(selectors.join(", "));
         elements.forEach(function (el, idx) {
@@ -1475,9 +1482,11 @@
     if (isIframe) {
         if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", function () {
+                applyConfigs();
                 setContentEditableOnFields();
             });
         } else {
+            applyConfigs();
             setContentEditableOnFields();
         }
 
