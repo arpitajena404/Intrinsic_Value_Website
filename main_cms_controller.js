@@ -1372,7 +1372,7 @@
             htmlList.push(
                 '                    <li><a href="' +
                 loginLink.url +
-                '" class="nav-link nav-item-el" data-field="header_buttons.client_login.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Client Login Text"' +
+                '" class="btn-solid nav-item-el" style="padding: 8px 18px; font-size: 0.95rem;" data-field="header_buttons.client_login.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Client Login Text"' +
                 loginTarget +
                 '><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>' +
                 loginLink.text +

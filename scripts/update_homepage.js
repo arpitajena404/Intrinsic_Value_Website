@@ -91,7 +91,7 @@ function generateNavHtml(prefix) {
     if (config.header_buttons) {
         const loginLink = config.header_buttons.client_login;
         const loginTarget = loginLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
-        htmlList.push(`                    <li><a href="${loginLink.url}" class="nav-link" data-field="header_buttons.client_login.text" data-label="Client Login Text"${loginTarget}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>${loginLink.text}</a></li>`);
+        htmlList.push(`                    <li><a href="${loginLink.url}" class="btn-solid" style="padding: 8px 18px; font-size: 0.95rem;" data-field="header_buttons.client_login.text" data-label="Client Login Text"${loginTarget}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>${loginLink.text}</a></li>`);
         
         const contactLink = config.header_buttons.contact_us;
         const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
