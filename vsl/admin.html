@@ -179,8 +179,8 @@
             <span>VSL Page CMS</span>
         </div>
         <div class="admin-actions">
-            <a href="../iv_admin.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Central Admin</a>
-            <button id="saveBtn" class="btn-save" onclick="saveConfiguration()"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+            <a href="../iv_admin.html" class="btn-back" style="background: rgba(46, 107, 230, 0.2); border: 1px solid rgba(46, 107, 230, 0.4);"><i class="fa-brands fa-github"></i> Go to Main Admin to Publish</a>
+            <button id="saveBtn" class="btn-save" onclick="saveConfiguration()"><i class="fa-solid fa-floppy-disk"></i> Save Draft</button>
         </div>
     </header>
 
@@ -258,7 +258,7 @@
         </main>
     </div>
 
-    <div id="toast" class="toast"><i class="fa-solid fa-check-circle"></i> VSL Configuration Saved Successfully!</div>
+    <div id="toast" class="toast"><i class="fa-solid fa-triangle-exclamation"></i> Draft saved locally! Click 'Go to Main Admin to Publish' to push live.</div>
 
     <script>
         var currentConfig = Object.assign({}, VSL_CONFIG);

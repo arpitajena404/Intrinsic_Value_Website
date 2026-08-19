@@ -10,7 +10,9 @@
         "nikhilgangil333@gmail.com",
         "intrinsicvalueequity@gmail.com",
         "gvaibhav870@gmail.com",
-        "valuemev.jayate@gmail.com"
+        "valuemev.jayate@gmail.com",
+        "nikhil@intrinsicvalueequity.in",
+        "info@intrinsicvalueequity.in"
     ];
 
     var SESSION_TIMEOUT = 15 * 60 * 1000; // 15 minutes of inactivity
@@ -202,10 +204,11 @@
             return;
         }
 
-        // Case-insensitive validation against ALLOWED_ADMINS list
+        // Case-insensitive validation against ALLOWED_ADMINS list or company domain
+        var normalizedEmail = (email || '').toLowerCase().trim();
         var isAllowed = ALLOWED_ADMINS.some(function (allowedEmail) {
-            return allowedEmail.toLowerCase() === email.toLowerCase();
-        });
+            return allowedEmail.toLowerCase() === normalizedEmail;
+        }) || normalizedEmail.endsWith('@intrinsicvalueequity.in');
 
         if (!isAllowed) {
             showLoginError("Access Denied: <strong>" + escapeHtml(email) + "</strong> is not authorized to access this administrative portal.");
@@ -3503,10 +3506,23 @@
         var gitCommitInput = document.getElementById('gitCommitMessage');
         var gitStatusMsg = document.getElementById('gitStatusMessage');
         
+        function checkPatStatus() {
+            var currentPat = localStorage.getItem('git_pat') || '';
+            if (!currentPat && gitStatusMsg) {
+                gitStatusMsg.style.display = 'block';
+                gitStatusMsg.style.color = '#FF8C00';
+                gitStatusMsg.innerText = '⚠️ Notice: No GitHub PAT token configured in this browser.\nTo publish edits live, enter your GitHub Personal Access Token in the panel below.';
+            }
+        }
+
         if (patInput) {
             patInput.value = localStorage.getItem('git_pat') || '';
             patInput.addEventListener('input', function() {
-                localStorage.setItem('git_pat', patInput.value.trim());
+                var trimmed = patInput.value.trim();
+                localStorage.setItem('git_pat', trimmed);
+                if (trimmed && gitStatusMsg && gitStatusMsg.innerText.indexOf('No GitHub PAT token configured') !== -1) {
+                    gitStatusMsg.style.display = 'none';
+                }
             });
         }
         
@@ -3517,11 +3533,14 @@
             });
         }
 
+        checkPatStatus();
+
         // Highlight push button if there are already pending unsaved edits in localStorage on load
-        if (localStorage.getItem('pending_homepage_config') || localStorage.getItem('pending_pricing_config') || localStorage.getItem('pending_blogs_config') || localStorage.getItem('pending_live_config') || localStorage.getItem('pending_vsl_config') || localStorage.getItem('pending_workshop_config')) {
+        var hasPendingEdits = !!(localStorage.getItem('pending_homepage_config') || localStorage.getItem('pending_pricing_config') || localStorage.getItem('pending_blogs_config') || localStorage.getItem('pending_live_config') || localStorage.getItem('pending_vsl_config') || localStorage.getItem('pending_workshop_config') || localStorage.getItem('pending_legal_config') || localStorage.getItem('pending_nikhil_profile_config'));
+        if (hasPendingEdits) {
             if (gitPushBtn) {
                 gitPushBtn.style.boxShadow = '0 0 12px var(--accent)';
-                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub';
+                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub (Pending Drafts Found)';
             }
         }
 
@@ -3562,8 +3581,9 @@
                 gitStatusMsg.innerText = 'Connecting to GitHub...';
             }
 
+            var authHeader = (pat.startsWith('Bearer ') || pat.startsWith('token ')) ? pat : 'Bearer ' + pat;
             var headers = {
-                'Authorization': 'token ' + pat,
+                'Authorization': authHeader,
                 'Accept': 'application/vnd.github.v3+json',
                 'Content-Type': 'application/json'
             };
@@ -3732,6 +3752,99 @@
             });
         }
 
+        function runGitHubContentsApiPush(filesToCommit, commitMessage, pat, cleanRepo) {
+            gitPushBtn.disabled = true;
+            gitPushBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Updating files...';
+            if (gitStatusMsg) {
+                gitStatusMsg.style.display = 'block';
+                gitStatusMsg.style.color = '#FF8C00';
+                gitStatusMsg.innerText = 'Falling back to GitHub Contents API...';
+            }
+
+            var authHeader = (pat.startsWith('Bearer ') || pat.startsWith('token ')) ? pat : 'Bearer ' + pat;
+            var headers = {
+                'Authorization': authHeader,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            };
+
+            var sequence = Promise.resolve();
+            var successCount = 0;
+
+            filesToCommit.forEach(function(fileObj, index) {
+                sequence = sequence.then(function() {
+                    if (gitStatusMsg) {
+                        gitStatusMsg.innerText = 'Updating file (' + (index + 1) + '/' + filesToCommit.length + '): ' + fileObj.path + '...';
+                    }
+
+                    var encodedContent = fileObj.encoding === 'base64' ? 
+                        fileObj.content : 
+                        btoa(unescape(encodeURIComponent(fileObj.content)));
+
+                    return fetch('https://api.github.com/repos/' + cleanRepo + '/contents/' + fileObj.path + '?ref=main', { headers: headers })
+                        .then(function(res) {
+                            if (res.ok) return res.json();
+                            return null;
+                        })
+                        .then(function(existingData) {
+                            var bodyObj = {
+                                message: (commitMessage || 'CMS Update') + ' [' + fileObj.path + ']',
+                                content: encodedContent,
+                                branch: 'main'
+                            };
+                            if (existingData && existingData.sha) {
+                                bodyObj.sha = existingData.sha;
+                            }
+
+                            return fetch('https://api.github.com/repos/' + cleanRepo + '/contents/' + fileObj.path, {
+                                method: 'PUT',
+                                headers: headers,
+                                body: JSON.stringify(bodyObj)
+                            });
+                        })
+                        .then(function(res) {
+                            if (!res.ok) {
+                                return res.json().then(function(d) {
+                                    throw new Error('Failed to update ' + fileObj.path + ': ' + (d.message || res.status));
+                                });
+                            }
+                            successCount++;
+                            return res.json();
+                        });
+                });
+            });
+
+            return sequence.then(function() {
+                localStorage.removeItem('pending_homepage_config');
+                localStorage.removeItem('pending_pricing_config');
+                localStorage.removeItem('pending_blogs_config');
+                localStorage.removeItem('pending_live_config');
+                localStorage.removeItem('pending_vsl_config');
+                localStorage.removeItem('pending_workshop_config');
+                localStorage.removeItem('pending_legal_config');
+                localStorage.removeItem('pending_nikhil_profile_config');
+                localStorage.removeItem('pending_file_uploads');
+                pendingUploads = [];
+
+                gitPushBtn.disabled = false;
+                gitPushBtn.style.boxShadow = 'none';
+                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                if (gitCommitInput) gitCommitInput.value = '';
+
+                if (gitStatusMsg) {
+                    gitStatusMsg.style.color = '#34A853';
+                    gitStatusMsg.innerText = 'Successfully updated ' + successCount + ' file(s) on GitHub!\n\nThis will trigger the GitHub Action build workflow to deploy the changes live.';
+                }
+            }).catch(function(err) {
+                gitPushBtn.disabled = false;
+                gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
+                if (gitStatusMsg) {
+                    gitStatusMsg.style.color = '#EA4335';
+                    gitStatusMsg.innerText = 'Deployment Failed:\n' + err.message;
+                }
+            });
+        }
+
         function runGitHubDirectPush(commitMessage, pat, repo) {
             if (!pat || !repo) {
                 gitPushBtn.disabled = false;
@@ -3764,6 +3877,13 @@
             var pendingBlogs = localStorage.getItem('pending_blogs_config');
             if (pendingBlogs) {
                 filesToCommit.push({ path: 'blogs.json', content: pendingBlogs, encoding: 'utf-8' });
+                try {
+                    var parsedBlogs = JSON.parse(pendingBlogs);
+                    var blogsJsContent = "// Automatically compiled fallback data for local file:// browsing\nvar BLOGS_DATA = " + JSON.stringify(parsedBlogs, null, 4) + ";\n";
+                    filesToCommit.push({ path: 'blogs.js', content: blogsJsContent, encoding: 'utf-8' });
+                } catch(e) {
+                    console.warn("Could not generate blogs.js fallback:", e);
+                }
             }
             var pendingLive = localStorage.getItem('pending_live_config');
             if (pendingLive) {
@@ -3815,8 +3935,9 @@
             var cleanRepo = repo.replace(/^https?:\/\/github\.com\//i, '').replace(/\.git$/i, '');
             var branch = 'main';
 
+            var authHeader = (pat.startsWith('Bearer ') || pat.startsWith('token ')) ? pat : 'Bearer ' + pat;
             var headers = {
-                'Authorization': 'token ' + pat,
+                'Authorization': authHeader,
                 'Accept': 'application/vnd.github.v3+json',
                 'Content-Type': 'application/json'
             };
@@ -3947,6 +4068,8 @@
                     localStorage.removeItem('pending_live_config');
                     localStorage.removeItem('pending_vsl_config');
                     localStorage.removeItem('pending_workshop_config');
+                    localStorage.removeItem('pending_legal_config');
+                    localStorage.removeItem('pending_nikhil_profile_config');
                     localStorage.removeItem('pending_file_uploads');
                     pendingUploads = [];
 
@@ -3961,12 +4084,8 @@
                     }
                 })
                 .catch(function(err) {
-                    gitPushBtn.disabled = false;
-                    gitPushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Push to GitHub';
-                    if (gitStatusMsg) {
-                        gitStatusMsg.style.color = '#EA4335';
-                        gitStatusMsg.innerText = 'Deployment Failed:\n' + err.message;
-                    }
+                    console.warn('[CMS Admin] Git Database API failed, falling back to Contents API file update. Error:', err);
+                    runGitHubContentsApiPush(filesToCommit, commitMessage, pat, cleanRepo);
                 });
         }
 
@@ -4684,7 +4803,11 @@
                     centerStyle = 'position: relative; left: 100%; transform: translateX(-100%);';
                 }
                 var widthStyle = 'width:' + widthVal + '; max-width:none; height:auto; ' + centerStyle;
-                var imgSrc = fixImageUrl(block.url);
+                var rawUrl = (block.url || '').trim();
+                var imgSrc = rawUrl;
+                if (imgSrc && !imgSrc.startsWith('http://') && !imgSrc.startsWith('https://') && !imgSrc.startsWith('data:') && !imgSrc.startsWith('/')) {
+                    imgSrc = '/' + imgSrc;
+                }
                 html += '<p style="' + alignStyle + '"><img loading="lazy" decoding="async" class="aligncenter blog-zoomable-img" src="' + escapeHtml(imgSrc) + '" style="' + widthStyle + '; cursor:zoom-in;" alt="" /></p>\n';
             } else if (block.type === 'video') {
                 var videoUrl = block.url || '';

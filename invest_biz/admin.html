@@ -725,7 +725,8 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
 
             <div class="cms-controls-right">
                 <button class="cms-action-btn secondary" id="previewChangesBtn"><i class="fa-solid fa-rotate-right"></i> Reload Page</button>
-                <button class="cms-action-btn" id="saveCmsBtn"><i class="fa-solid fa-save"></i> Save Changes</button>
+                <button class="cms-action-btn" id="saveCmsBtn"><i class="fa-solid fa-save"></i> Save Draft</button>
+                <button class="cms-action-btn secondary" style="background: rgba(46, 107, 230, 0.15); border: 1px solid rgba(46, 107, 230, 0.4); color: #fff;" onclick="window.location.href='../iv_admin.html'"><i class="fa-brands fa-github"></i> Go to Main Admin to Publish</button>
             </div>
         </section>
 
@@ -780,7 +781,9 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
             "nikhilgangil333@gmail.com",
             "intrinsicvalueequity@gmail.com",
             "gvaibhav870@gmail.com",
-            "valuemev.jayate@gmail.com"
+            "valuemev.jayate@gmail.com",
+            "nikhil@intrinsicvalueequity.in",
+            "info@intrinsicvalueequity.in"
         ];
 
         var liveCmsState = Object.assign({
@@ -812,7 +815,8 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
 
                 if (payload && payload.email) {
                     var email = payload.email.toLowerCase().trim();
-                    if (ALLOWED_ADMINS.indexOf(email) !== -1) {
+                    var isAllowed = ALLOWED_ADMINS.some(function(a) { return a.toLowerCase().trim() === email; }) || email.endsWith('@intrinsicvalueequity.in');
+                    if (isAllowed) {
                         setSession(payload);
                     } else {
                         showError("Access Denied: '" + email + "' is not whitelisted in ALLOWED_ADMINS.");
@@ -1057,17 +1061,17 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                     })
                     .then(function(results) {
                         if (results[0].success && results[1].success) {
-                            showToast("Saved to local cache and direct disk files successfully!");
+                            showToast("Draft saved locally and to server disk! Click 'Go to Main Admin to Publish' to make it live.");
                         } else {
-                            showToast("Saved to local cache! Go to the main Admin Panel to publish edits.");
+                            showToast("⚠️ Draft saved locally! Click 'Go to Main Admin to Publish' to push changes live.");
                         }
                     })
                     .catch(function(err) {
                         console.warn("Direct save failed, falling back to cache notice:", err);
-                        showToast("Saved to local cache! Go to the main Admin Panel to publish edits.");
+                        showToast("⚠️ Draft saved locally! Click 'Go to Main Admin to Publish' to push changes live.");
                     });
             } else {
-                showToast("Saved to local cache! Go to the main Admin Panel to publish edits.");
+                showToast("⚠️ Draft saved locally! Click 'Go to Main Admin to Publish' to push changes live.");
             }
         });
 
