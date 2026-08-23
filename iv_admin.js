@@ -1094,20 +1094,46 @@
             return trimmed;
         }
         
+        var withoutSlash = trimmed.startsWith('/') ? trimmed.substring(1) : trimmed;
+        var withSlash = trimmed.startsWith('/') ? trimmed : '/' + trimmed;
+
+        try {
+            var memMap = window.inMemoryImageMap || (window.parent && window.parent.inMemoryImageMap);
+            if (memMap) {
+                if (memMap[trimmed]) return memMap[trimmed];
+                if (memMap[withSlash]) return memMap[withSlash];
+                if (memMap[withoutSlash]) return memMap[withoutSlash];
+            }
+        } catch(e) {}
+
+        try {
+            var memUploads = window.pendingUploads || (window.parent && window.parent.pendingUploads);
+            if (memUploads && Array.isArray(memUploads)) {
+                var foundMem = memUploads.find(function(u) { return u && (u.path === withoutSlash || u.path === trimmed || u.path === withSlash); });
+                if (foundMem && foundMem.content) {
+                    var ext = withoutSlash.split('.').pop().toLowerCase();
+                    var mime = 'image/jpeg';
+                    if (ext === 'png') mime = 'image/png';
+                    else if (ext === 'svg') mime = 'image/svg+xml';
+                    else if (ext === 'webp') mime = 'image/webp';
+                    else if (ext === 'gif') mime = 'image/gif';
+                    return 'data:' + mime + ';base64,' + foundMem.content;
+                }
+            }
+        } catch(e) {}
+
         try {
             var pendingMap = JSON.parse(localStorage.getItem('pending_images_map')) || {};
             if (pendingMap[trimmed]) return pendingMap[trimmed];
-            if (pendingMap['/' + trimmed]) return pendingMap['/' + trimmed];
-            var withoutSlash = trimmed.startsWith('/') ? trimmed.substring(1) : trimmed;
+            if (pendingMap[withSlash]) return pendingMap[withSlash];
             if (pendingMap[withoutSlash]) return pendingMap[withoutSlash];
         } catch(e) {}
         
         try {
             var uploads = JSON.parse(localStorage.getItem('pending_file_uploads')) || [];
-            var cleanPath = trimmed.startsWith('/') ? trimmed.substring(1) : trimmed;
-            var found = uploads.find(function(u) { return u.path === cleanPath || u.path === trimmed; });
+            var found = uploads.find(function(u) { return u && (u.path === withoutSlash || u.path === trimmed || u.path === withSlash); });
             if (found && found.content) {
-                var ext = cleanPath.split('.').pop().toLowerCase();
+                var ext = withoutSlash.split('.').pop().toLowerCase();
                 var mime = 'image/jpeg';
                 if (ext === 'png') mime = 'image/png';
                 else if (ext === 'svg') mime = 'image/svg+xml';
@@ -1150,6 +1176,14 @@
                 path = uniqueFileName;
             }
 
+            try {
+                var blobUrl = URL.createObjectURL(file);
+                window.inMemoryImageMap = window.inMemoryImageMap || {};
+                window.inMemoryImageMap[path] = blobUrl;
+                window.inMemoryImageMap['/' + path] = blobUrl;
+                window.inMemoryImageMap[uniqueFileName] = blobUrl;
+            } catch(e) {}
+
             var reader = new FileReader();
             reader.onload = function(e) {
                 var fullDataUrl = e.target.result;
@@ -1179,6 +1213,7 @@
                     var formData = new FormData();
                     formData.append('file', file);
                     formData.append('folder', simulatedUploadFolder);
+                    formData.append('filename', uniqueFileName);
                     fetch('/api/upload-file', {
                         method: 'POST',
                         body: formData

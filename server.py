@@ -108,9 +108,13 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
                 )
                 file_item = form['file']
                 folder = form.getfirst('folder', '')
+                filename_override = form.getfirst('filename', '')
                 
                 if file_item.filename:
-                    fn = os.path.basename(file_item.filename)
+                    if filename_override:
+                        fn = os.path.basename(filename_override)
+                    else:
+                        fn = os.path.basename(file_item.filename)
                     target_dir = os.path.join(DIRECTORY, folder)
                     os.makedirs(target_dir, exist_ok=True)
                     
