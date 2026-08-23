@@ -1208,7 +1208,10 @@
                     var targetInput = document.getElementById(simulatedUploadTargetId);
                     if (targetInput) {
                         targetInput.value = path;
-                        targetInput.dispatchEvent(new Event('input'));
+                        targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+                        if (typeof window.updateLivePreview === 'function') {
+                            window.updateLivePreview();
+                        }
                         showToast("File '" + file.name + "' selected! Ready to publish to GitHub.");
                     }
                 }
@@ -4314,7 +4317,7 @@
     window.deleteBlog = function (index) {
         if (confirm("Are you sure you want to delete the blog post: \"" + blogsState[index].title + "\"?")) {
             blogsState.splice(index, 1);
-            localStorage.setItem('pending_blogs_config', JSON.stringify(blogsState));
+            saveConfigToServer('blogs.json', blogsState);
             renderBlogsList();
             
             // Highlight the push button to indicate unsaved edits
@@ -4730,7 +4733,7 @@
             blogsState[currentEditingBlogIndex] = currentEditingBlog;
         }
 
-        safeSetLocalStorage('pending_blogs_config', JSON.stringify(blogsState));
+        saveConfigToServer('blogs.json', blogsState);
         renderBlogsList();
         
         // Highlight the push button to indicate unsaved edits
