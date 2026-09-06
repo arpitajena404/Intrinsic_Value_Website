@@ -8,7 +8,7 @@
         if (!view) return;
 
         if (view === "tools") {
-          window.location.href = "https://premium.intrinsicvalueequity.in/checkout/98ce69d1-d43b-47b2-a06c-f816b3ee8c91?dynamic_link=4ab4ed75-6d6f-4b1a-8084-aee9854d4863";
+          window.location.href = "https://premium.intrinsicvalueequity.in/checkout/38ec7375-07c1-481b-b248-76d1626ae50e";
           return;
         }
 

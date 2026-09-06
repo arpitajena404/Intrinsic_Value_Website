@@ -67,10 +67,16 @@
         "subtitle": "Nikhil has successfully predicted many market cycles",
         "items": [
             {
-                "date_title": "March 2026 – Indian Market Bottom",
-                "description": "Called the Indian stock market bottom on March 29, 2026, supported by a detailed market thesis and analysis. The market’s subsequent performance validated the prediction. ",
+                "date_title": "29 March 2026 - Predicted Indian Market Bottom",
+                "description": "Called the Indian stock market bottom on March 29, 2026, supported by a detailed market thesis and analysis. The market’s subsequent performance validated the prediction.",
                 "link_text": "Watch Video",
-                "link_url": "https://youtu.be/cMSGq2VGiK8?si=ogHxeERmnD7tnx2S"
+                "link_url": "#https://www.youtube.com/watch?v=cMSGq2VGiK8"
+            },
+            {
+                "date_title": "April 2026  - FII Comeback Strategy Explained ",
+                "description": "Predicted the return of Foreign Institutional Investors (FIIs), explaining the key tailwinds, headwinds, and valuation factors that could trigger their comeback. FIIs subsequently returned to the Indian market in August 2026",
+                "link_text": "Watch Full Analysis",
+                "link_url": "#https://www.youtube.com/watch?v=9gjXWyVZJYM"
             },
             {
                 "date_title": "April 2026 – Bull Market Bottom",
@@ -103,16 +109,16 @@
                 "link_url": "https://x.com/Intrinsic_cycle/status/1293087292916002816?s=20"
             },
             {
-                "date_title": "Hindustan Unilever Top",
-                "description": "Predicted the end of the bull cycle for Hindustan Unilever at peak intrinsic value.",
-                "link_text": "View Post on X",
-                "link_url": "https://x.com/Intrinsic_cycle/status/1616709143624314882?s=20"
-            },
-            {
                 "date_title": "Challenging 2025 Market Outlook",
                 "description": "Successfully predicted in December 2024 that 2025 would be a challenging yet familiar year for equity markets.",
                 "link_text": "Read Business Today Article",
                 "link_url": "https://www.businesstoday.in/personal-finance/investment/story/2025-will-be-challenging-for-equity-markets-but-familiar-says-nikhil-gangil-of-intrinsic-value-455725-2024-11-30"
+            },
+            {
+                "date_title": "Hindustan Unilever Top",
+                "description": "Predicted the end of the bull cycle for Hindustan Unilever at peak intrinsic value.",
+                "link_text": "View Post on X",
+                "link_url": "https://x.com/Intrinsic_cycle/status/1616709143624314882?s=20"
             }
         ]
     },
