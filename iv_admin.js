@@ -3115,7 +3115,13 @@
             pushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub';
         }
 
-        if (window.location.protocol.indexOf('http') !== -1 && window.location.hostname === 'localhost') {
+        // Save to local server if running on any local/LAN origin (localhost, 127.0.0.1, or any http:// LAN IP).
+        // Previously this was restricted to only 'localhost' which caused saves to silently fail
+        // for admins accessing via IP address (e.g. 192.168.x.x) — data was lost on next refresh.
+        var isLocalServer = window.location.protocol === 'http:' ||
+                            window.location.hostname === 'localhost' ||
+                            window.location.hostname === '127.0.0.1';
+        if (isLocalServer) {
             fetch('/api/save-config', {
                 method: 'POST',
                 headers: {
@@ -4257,27 +4263,33 @@
     };
 
     function loadBlogsCmsData() {
-        var pendingBlogs = localStorage.getItem('pending_blogs_config');
-        if (pendingBlogs) {
-            try {
-                blogsState = JSON.parse(pendingBlogs);
+        // Always fetch fresh data from server first so all admins see the latest saved blogs.
+        // We clear any stale pending_blogs_config from localStorage after a successful fetch
+        // so one admin's cache doesn't block others from loading or editing blogs.
+        fetch('blogs.json?t=' + Date.now())
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                blogsState = data;
+                // Clear stale localStorage cache now that we have fresh server data
+                localStorage.removeItem('pending_blogs_config');
                 renderBlogsList();
-            } catch(e) {
-                console.error("Error parsing pending_blogs_config", e);
-            }
-        } else {
-            fetch('blogs.json?t=' + Date.now())
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                    blogsState = data;
-                    renderBlogsList();
-                })
-                .catch(function (err) {
-                    console.warn("Could not fetch blogs.json directly.", err);
+            })
+            .catch(function (err) {
+                console.warn("[CMS] Could not fetch blogs.json from server, falling back to localStorage cache.", err);
+                // Fall back to localStorage only if server is unavailable (e.g. offline/local dev)
+                var pendingBlogs = localStorage.getItem('pending_blogs_config');
+                if (pendingBlogs) {
+                    try {
+                        blogsState = JSON.parse(pendingBlogs);
+                    } catch(e) {
+                        console.error("[CMS] Error parsing pending_blogs_config from localStorage", e);
+                        blogsState = [];
+                    }
+                } else {
                     blogsState = [];
-                    renderBlogsList();
-                });
-        }
+                }
+                renderBlogsList();
+            });
     }
 
     function renderBlogsList() {
