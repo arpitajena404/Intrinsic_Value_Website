@@ -1643,6 +1643,7 @@
     }
 
     function compilePricingCmsState() {
+        if (!pricingCmsState) return;
         pricingCmsState.pricing_title = document.getElementById('cms-pricing-title').value;
         pricingCmsState.pricing_subtitle = document.getElementById('cms-pricing-subtitle').value;
         if (document.getElementById('cms-analytics-unlock-url')) {
@@ -1866,6 +1867,8 @@
 
     // Compile from forms to output JSON
     function compileCmsState() {
+        // Guard: cmsState may not be populated yet if the homepage config hasn't loaded
+        if (!cmsState || !cmsState.hero) return;
         cmsState.hero.tag = document.getElementById('cms-hero-tag').value;
         cmsState.hero.heading_html = document.getElementById('cms-hero-heading').value;
         
