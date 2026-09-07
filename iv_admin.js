@@ -3029,9 +3029,15 @@
                             currentEditingBlogIndex = -1;
                         }
                         renderBlogEditor();
-                        updateLivePreview();
                         if (iframe) {
+                            // Load the preview iframe first, then send blog data once it's ready
+                            iframe.onload = function() {
+                                iframe.onload = null; // run once
+                                updateLivePreview();
+                            };
                             iframe.src = 'blog-detail.html?preview=true';
+                        } else {
+                            updateLivePreview();
                         }
                     } else {
                         if (sidebar) sidebar.style.display = 'flex';
@@ -3097,13 +3103,13 @@
     }
 
     function saveConfigToServer(filePath, configState) {
-        // Save to localStorage for browser persistence (supports offline / static hosting edit sessions)
+        // Save to localStorage for browser persistence (supports offline / static hosting edit sessions).
+        // NOTE: blogs.json is excluded from localStorage caching because it can exceed the 5MB quota.
+        // The Blogs CMS always fetches fresh data from the server instead (see loadBlogsCmsData).
         if (filePath === 'homepage_config.json') {
             localStorage.setItem('pending_homepage_config', JSON.stringify(configState));
         } else if (filePath === 'pricing.json') {
             localStorage.setItem('pending_pricing_config', JSON.stringify(configState));
-        } else if (filePath === 'blogs.json') {
-            localStorage.setItem('pending_blogs_config', JSON.stringify(configState));
         } else if (filePath === 'live_config.js') {
             localStorage.setItem('pending_live_config', JSON.stringify(configState));
         }
@@ -4254,11 +4260,11 @@
             }
         }
         
-        localStorage.setItem('preview_blog_data', JSON.stringify(currentEditingBlog));
-        
+        // Send blog data directly in the postMessage payload — avoids localStorage quota errors
+        // for large blog datasets. blog-detail.html reads from event.data.blog instead of localStorage.
         var iframe = document.getElementById('blogsPreviewIframe');
         if (iframe && iframe.contentWindow) {
-            iframe.contentWindow.postMessage('update_blog_preview', '*');
+            iframe.contentWindow.postMessage({ type: 'update_blog_preview', blog: JSON.parse(JSON.stringify(currentEditingBlog)) }, '*');
         }
     };
 

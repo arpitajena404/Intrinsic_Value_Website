@@ -1057,11 +1057,18 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
 
                 let currentPost = null;
                 
-                function updateFromPreviewData(fullRender = false) {
-                    const previewDataStr = localStorage.getItem('preview_blog_data');
-                    if (previewDataStr) {
+                function updateFromPreviewData(fullRender = false, blogData = null) {
+                    // Accept blog data passed directly (via postMessage) or fall back to localStorage
+                    let postData = blogData;
+                    if (!postData) {
+                        const previewDataStr = localStorage.getItem('preview_blog_data');
+                        if (previewDataStr) {
+                            try { postData = JSON.parse(previewDataStr); } catch(e) {}
+                        }
+                    }
+                    if (postData) {
                         try {
-                            currentPost = JSON.parse(previewDataStr);
+                            currentPost = postData;
                             document.title = `${currentPost.title || 'Preview'} | Intrinsic Value`;
                             
                             // Update top fields if not actively typing
@@ -1100,7 +1107,7 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                                 renderAllBlocks();
                             }
                         } catch(e) {
-                            console.error("Error parsing preview blog data", e);
+                            console.error("Error applying preview blog data", e);
                         }
                     }
                 }
@@ -1874,67 +1881,50 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                     }
                 }
 
-                // If postKey is specified, load that post in visual editor preview mode
+                // If postKey is specified, load that post from blogs.json (preview mode with slug)
                 if (postKey) {
                     var loadedPost = null;
-                    var pendingBlogs = localStorage.getItem('pending_blogs_config');
-                    if (pendingBlogs) {
-                        try {
-                            var blogsList = JSON.parse(pendingBlogs);
+                    fetch('blogs.json?t=' + Date.now())
+                        .then(function(res) { return res.json(); })
+                        .then(function(blogsList) {
                             loadedPost = blogsList.find(function(b) {
                                 return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === safeDecode(postKey).trim().toLowerCase();
                             });
-                        } catch (e) {
-                            console.error("Error parsing pending_blogs_config", e);
-                        }
-                    }
-                    
-                    if (loadedPost) {
-                        initLoadedPost(loadedPost);
-                    } else {
-                        fetch('blogs.json?t=' + Date.now())
-                            .then(function(res) { return res.json(); })
-                            .then(function(blogsList) {
-                                loadedPost = blogsList.find(function(b) {
+                            if (loadedPost) {
+                                initLoadedPost(loadedPost);
+                            } else if (typeof BLOGS_DATA !== 'undefined' && Array.isArray(BLOGS_DATA)) {
+                                loadedPost = BLOGS_DATA.find(function(b) {
                                     return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === safeDecode(postKey).trim().toLowerCase();
                                 });
                                 if (loadedPost) {
                                     initLoadedPost(loadedPost);
-                                } else if (typeof BLOGS_DATA !== 'undefined' && Array.isArray(BLOGS_DATA)) {
-                                    loadedPost = BLOGS_DATA.find(function(b) {
-                                        return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === safeDecode(postKey).trim().toLowerCase();
-                                    });
-                                    if (loadedPost) {
-                                        initLoadedPost(loadedPost);
-                                    } else {
-                                        updateFromPreviewData(true);
-                                    }
-                                } else {
-                                    updateFromPreviewData(true);
                                 }
-                            })
-                            .catch(function(err) {
-                                console.error("Error fetching blogs.json in preview mode", err);
-                                if (typeof BLOGS_DATA !== 'undefined' && Array.isArray(BLOGS_DATA)) {
-                                    loadedPost = BLOGS_DATA.find(function(b) {
-                                        return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === safeDecode(postKey).trim().toLowerCase();
-                                    });
-                                    if (loadedPost) {
-                                        initLoadedPost(loadedPost);
-                                    } else {
-                                        updateFromPreviewData(true);
-                                    }
-                                } else {
-                                    updateFromPreviewData(true);
+                                // else: wait for postMessage from parent
+                            }
+                            // else: wait for postMessage from parent (editBlog flow)
+                        })
+                        .catch(function(err) {
+                            console.error("Error fetching blogs.json in preview mode", err);
+                            if (typeof BLOGS_DATA !== 'undefined' && Array.isArray(BLOGS_DATA)) {
+                                loadedPost = BLOGS_DATA.find(function(b) {
+                                    return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === safeDecode(postKey).trim().toLowerCase();
+                                });
+                                if (loadedPost) {
+                                    initLoadedPost(loadedPost);
                                 }
-                            });
-                    }
-                } else {
-                    updateFromPreviewData(true);
+                                // else: wait for postMessage from parent
+                            }
+                        });
                 }
-                
+                // else: no slug — wait for postMessage from parent (editBlog flow sends data via onload callback)
+
                 window.addEventListener('message', function(event) {
-                    if (event.data === 'update_blog_preview') {
+                    // Handle new object-based message (blog data sent directly, no localStorage)
+                    if (event.data && event.data.type === 'update_blog_preview' && event.data.blog) {
+                        updateFromPreviewData(true, event.data.blog);
+                    }
+                    // Legacy fallback: plain string message (old format)
+                    else if (event.data === 'update_blog_preview') {
                         updateFromPreviewData(true);
                     }
                 });
