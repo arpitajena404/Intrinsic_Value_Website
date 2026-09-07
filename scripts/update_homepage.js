@@ -1201,10 +1201,10 @@ ${newsItems}
 
         // Ensure main_cms_controller.js is loaded
         if (!content.includes('main_cms_controller.js')) {
-            content = content.replace('</body>', '    <script src="main_cms_controller.js?v=13" defer></script>\n</body>');
+            content = content.replace('</body>', '    <script src="/main_cms_controller.js?v=13" defer></script>\n</body>');
             modified = true;
         } else {
-            content = content.replace(/main_cms_controller\.js\?v=\d+/g, 'main_cms_controller.js?v=13');
+            content = content.replace(/(\/)?main_cms_controller\.js\?v=\d+/g, '/main_cms_controller.js?v=13');
             modified = true;
         }
 
