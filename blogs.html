@@ -302,8 +302,12 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
         const urlParams = new URLSearchParams(window.location.search);
         const isPreview = urlParams.get('preview') === 'true';
 
-        // Fetch blogs.json or read from localStorage pending config
-        if (isPreview && localStorage.getItem('pending_blogs_config')) {
+        // In preview mode (inside iv_admin iframe), check in-memory parent blogsState first,
+        // then localStorage, then fallback to fetch.
+        if (isPreview && window.parent && Array.isArray(window.parent.blogsState) && window.parent.blogsState.length > 0) {
+            allBlogs = window.parent.blogsState;
+            initBlogsFiltersAndRender();
+        } else if (isPreview && localStorage.getItem('pending_blogs_config')) {
             try {
                 allBlogs = JSON.parse(localStorage.getItem('pending_blogs_config'));
                 initBlogsFiltersAndRender();
@@ -314,6 +318,13 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
         } else {
             fetchBlogsJson();
         }
+
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'update_blogs_list' && Array.isArray(event.data.blogs)) {
+                allBlogs = event.data.blogs;
+                initBlogsFiltersAndRender();
+            }
+        });
 
         function fetchBlogsJson() {
             if (window.location.protocol === 'file:') {

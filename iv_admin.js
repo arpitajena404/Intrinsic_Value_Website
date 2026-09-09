@@ -3113,6 +3113,10 @@
             localStorage.setItem('pending_homepage_config', JSON.stringify(configState));
         } else if (filePath === 'pricing.json') {
             localStorage.setItem('pending_pricing_config', JSON.stringify(configState));
+        } else if (filePath === 'blogs.json') {
+            window.blogsHasUnsavedEdits = true;
+            window.blogsState = configState;
+            window.safeSetLocalStorage('pending_blogs_config', JSON.stringify(configState));
         } else if (filePath === 'live_config.js') {
             localStorage.setItem('pending_live_config', JSON.stringify(configState));
         }
@@ -3878,6 +3882,7 @@
                 localStorage.removeItem('pending_nikhil_profile_config');
                 localStorage.removeItem('pending_file_uploads');
                 pendingUploads = [];
+                window.blogsHasUnsavedEdits = false;
 
                 gitPushBtn.disabled = false;
                 gitPushBtn.style.boxShadow = 'none';
@@ -3928,6 +3933,9 @@
                 filesToCommit.push({ path: 'pricing.json', content: pendingPricing, encoding: 'utf-8' });
             }
             var pendingBlogs = localStorage.getItem('pending_blogs_config');
+            if (!pendingBlogs && window.blogsHasUnsavedEdits && Array.isArray(blogsState) && blogsState.length > 0) {
+                pendingBlogs = JSON.stringify(blogsState, null, 4);
+            }
             if (pendingBlogs) {
                 filesToCommit.push({ path: 'blogs.json', content: pendingBlogs, encoding: 'utf-8' });
                 try {
@@ -4125,6 +4133,7 @@
                     localStorage.removeItem('pending_nikhil_profile_config');
                     localStorage.removeItem('pending_file_uploads');
                     pendingUploads = [];
+                    window.blogsHasUnsavedEdits = false;
 
                     gitPushBtn.disabled = false;
                     gitPushBtn.style.boxShadow = 'none';
@@ -4272,31 +4281,35 @@
     };
 
     function loadBlogsCmsData() {
-        // Always fetch fresh data from server first so all admins see the latest saved blogs.
-        // We clear any stale pending_blogs_config from localStorage after a successful fetch
-        // so one admin's cache doesn't block others from loading or editing blogs.
+        // If there are already active unsaved edits in memory, preserve them!
+        if (window.blogsHasUnsavedEdits && Array.isArray(blogsState) && blogsState.length > 0) {
+            window.blogsState = blogsState;
+            renderBlogsList();
+            return;
+        }
+
         fetch('blogs.json?t=' + Date.now())
             .then(function (res) { return res.json(); })
             .then(function (data) {
-                blogsState = data;
-                // Clear stale localStorage cache now that we have fresh server data
-                localStorage.removeItem('pending_blogs_config');
+                if (!window.blogsHasUnsavedEdits) {
+                    blogsState = data;
+                    window.blogsState = blogsState;
+                }
                 renderBlogsList();
             })
             .catch(function (err) {
                 console.warn("[CMS] Could not fetch blogs.json from server, falling back to localStorage cache.", err);
-                // Fall back to localStorage only if server is unavailable (e.g. offline/local dev)
                 var pendingBlogs = localStorage.getItem('pending_blogs_config');
                 if (pendingBlogs) {
                     try {
                         blogsState = JSON.parse(pendingBlogs);
                     } catch(e) {
-                        console.error("[CMS] Error parsing pending_blogs_config from localStorage", e);
                         blogsState = [];
                     }
                 } else {
                     blogsState = [];
                 }
+                window.blogsState = blogsState;
                 renderBlogsList();
             });
     }
@@ -4766,21 +4779,57 @@
     };
 
     window.saveCurrentBlog = function () {
-        currentEditingBlog.title = document.getElementById('blog-edit-title').value.trim();
-        currentEditingBlog.slug = document.getElementById('blog-edit-slug').value.trim();
-        currentEditingBlog.category = document.getElementById('blog-edit-category').value.trim() || "Uncategorized";
-        currentEditingBlog.date = document.getElementById('blog-edit-date').value.trim() || formatDate(new Date());
-        currentEditingBlog.image = document.getElementById('blog-edit-image').value.trim() || null;
-        currentEditingBlog.readingTime = document.getElementById('blog-edit-time').value.trim() || "3 min read";
-        currentEditingBlog.gradient = document.getElementById('blog-edit-gradient').value.trim() || "linear-gradient(135deg, #FF8C00, #121212)";
-        currentEditingBlog.excerpt = document.getElementById('blog-edit-excerpt').value.trim();
+        if (!currentEditingBlog) return;
+
+        // 1. Pull latest live post state directly from visual editor iframe if available
+        var iframe = document.getElementById('blogsPreviewIframe');
+        if (iframe && iframe.contentWindow && typeof iframe.contentWindow.getCurrentPost === 'function') {
+            try {
+                var livePost = iframe.contentWindow.getCurrentPost();
+                if (livePost) {
+                    if (livePost.title) currentEditingBlog.title = livePost.title;
+                    if (livePost.slug) currentEditingBlog.slug = livePost.slug;
+                    if (livePost.category) currentEditingBlog.category = livePost.category;
+                    if (livePost.date) currentEditingBlog.date = livePost.date;
+                    if (livePost.image) currentEditingBlog.image = livePost.image;
+                    if (livePost.readingTime) currentEditingBlog.readingTime = livePost.readingTime;
+                    if (livePost.gradient) currentEditingBlog.gradient = livePost.gradient;
+                    if (livePost.excerpt) currentEditingBlog.excerpt = livePost.excerpt;
+                    if (livePost.blocks && livePost.blocks.length > 0) currentEditingBlog.blocks = livePost.blocks;
+                    if (livePost.content) currentEditingBlog.content = livePost.content;
+                }
+            } catch(e) {
+                console.warn("[CMS Admin] Could not sync from live iframe post:", e);
+            }
+        }
+
+        // 2. Read from sidebar inputs if not already populated or if user edited sidebar directly
+        var tInput = document.getElementById('blog-edit-title');
+        var sInput = document.getElementById('blog-edit-slug');
+        var cInput = document.getElementById('blog-edit-category');
+        var dInput = document.getElementById('blog-edit-date');
+        var iInput = document.getElementById('blog-edit-image');
+        var tmInput = document.getElementById('blog-edit-time');
+        var gInput = document.getElementById('blog-edit-gradient');
+        var eInput = document.getElementById('blog-edit-excerpt');
+
+        if (tInput && tInput.value.trim()) currentEditingBlog.title = tInput.value.trim();
+        if (sInput && sInput.value.trim()) currentEditingBlog.slug = sInput.value.trim();
+        if (cInput && cInput.value.trim()) currentEditingBlog.category = cInput.value.trim();
+        if (dInput && dInput.value.trim()) currentEditingBlog.date = dInput.value.trim();
+        if (iInput && iInput.value.trim()) currentEditingBlog.image = iInput.value.trim();
+        if (tmInput && tmInput.value.trim()) currentEditingBlog.readingTime = tmInput.value.trim();
+        if (gInput && gInput.value.trim()) currentEditingBlog.gradient = gInput.value.trim();
+        if (eInput && eInput.value.trim()) currentEditingBlog.excerpt = eInput.value.trim();
 
         if (!currentEditingBlog.title || !currentEditingBlog.slug || !currentEditingBlog.excerpt) {
             alert("Please fill in all required fields (Title, Slug, Excerpt).");
             return;
         }
 
-        currentEditingBlog.content = compileBlocksToHtml(currentEditingBlog.blocks);
+        if (currentEditingBlog.blocks && currentEditingBlog.blocks.length > 0) {
+            currentEditingBlog.content = compileBlocksToHtml(currentEditingBlog.blocks);
+        }
 
         if (currentEditingBlogIndex === -1) {
             blogsState.unshift(currentEditingBlog);
@@ -4789,6 +4838,8 @@
             blogsState[currentEditingBlogIndex] = currentEditingBlog;
         }
 
+        window.blogsState = blogsState;
+        window.blogsHasUnsavedEdits = true;
         saveConfigToServer('blogs.json', blogsState);
         renderBlogsList();
         
@@ -4804,6 +4855,11 @@
         
         var listTabLink = document.getElementById('tab-btn-blogs-list');
         if (listTabLink) listTabLink.click();
+
+        // Refresh preview iframe to show latest blogsState
+        if (iframe) {
+            iframe.src = 'blogs.html?preview=true&t=' + Date.now();
+        }
     };
 
     window.cancelBlogEdit = function () {

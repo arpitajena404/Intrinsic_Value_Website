@@ -1354,13 +1354,44 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                 };
 
                 function syncStateToParent() {
-                    currentPost.content = compileBlocksToHtml(currentPost.blocks);
-                    localStorage.setItem('preview_blog_data', JSON.stringify(currentPost));
-                    window.parent.postMessage({
-                        type: 'update_blog_state',
-                        blog: currentPost
-                    }, '*');
+                    if (!currentPost) return;
+                    try {
+                        currentPost.content = compileBlocksToHtml(currentPost.blocks);
+                    } catch(e) {}
+                    try {
+                        localStorage.setItem('preview_blog_data', JSON.stringify(currentPost));
+                    } catch(e) {}
+                    try {
+                        window.parent.postMessage({
+                            type: 'update_blog_state',
+                            blog: currentPost
+                        }, '*');
+                    } catch(e) {}
                 }
+
+                window.getCurrentPost = function() {
+                    if (!currentPost) return null;
+                    if (titleEl) {
+                        var t = (titleEl.innerText || titleEl.textContent || '').trim();
+                        if (t) currentPost.title = t;
+                    }
+                    if (dateEl) {
+                        var d = (dateEl.innerText || dateEl.textContent || '').trim();
+                        if (d) currentPost.date = d;
+                    }
+                    if (timeEl) {
+                        var tm = (timeEl.innerText || timeEl.textContent || '').trim();
+                        if (tm) currentPost.readingTime = tm;
+                    }
+                    if (badgeEl) {
+                        var c = (badgeEl.innerText || badgeEl.textContent || '').trim();
+                        if (c) currentPost.category = c;
+                    }
+                    try {
+                        currentPost.content = compileBlocksToHtml(currentPost.blocks);
+                    } catch(e) {}
+                    return currentPost;
+                };
                 
                 // Settings Modal Controls
                 const settingsModal = document.getElementById('blog-settings-modal');
@@ -1868,7 +1899,9 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                     if (!currentPost.blocks || currentPost.blocks.length === 0) {
                         currentPost.blocks = parseHtmlToBlocks(currentPost.content || "");
                     }
-                    localStorage.setItem('preview_blog_data', JSON.stringify(currentPost));
+                    try {
+                        localStorage.setItem('preview_blog_data', JSON.stringify(currentPost));
+                    } catch(e) {}
                     syncStateToParent();
                     updateFromPreviewData(true);
                 }
