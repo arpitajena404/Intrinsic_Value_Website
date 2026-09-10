@@ -1,5 +1,106 @@
-// Automatically generated fallback data for local file:// browsing
+// Automatically compiled fallback data for local file:// browsing
 var BLOGS_DATA = [
+    {
+        "id": 3532,
+        "slug": "review your portfolio",
+        "title": "Intrinsic Analytics Quality Analysis Tool: A Smarter Way to Review Stocks",
+        "date": "September 10, 2026",
+        "rawDate": "2026-09-10T07:37:52",
+        "category": "INTRINSIC ANALYTICS",
+        "readingTime": "3 min read",
+        "image": "images/1789027443344_bhide_part_10_1.png",
+        "gradient": "linear-gradient(135deg, #FF8C00, #121212)",
+        "excerpt": "Finding a promising stock is only the beginning.\nOnce you have shortlisted companies, the next question is:\nIs this actually a quality company worth researching further?\nThis is where the Intrinsic Analytics Quality Analysis Tool comes in.\nThe tool is designed to provide a quick, structured view of a company's fundamental quality and management quality, helping investors filter out weaker companies before spending more time on detailed due diligence.",
+        "blocks": [
+            {
+                "type": "paragraph",
+                "text": "Finding a promising stock is only the beginning.<div><br><div>Once you have shortlisted companies, the next question is:</div><div><br></div><div>Is this actually a quality company worth researching further?</div><div><br></div><div>This is where the Intrinsic Analytics Quality Analysis Tool comes in.</div><div><br></div><div>The tool is designed to provide a quick, structured view of a company's fundamental quality and management quality, helping investors filter out weaker companies before spending more time on detailed due diligence.</div></div>"
+            },
+            {
+                "type": "heading",
+                "text": "What Does the Quality Analysis Tool Do?"
+            },
+            {
+                "type": "paragraph",
+                "text": "The tool evaluates a company using two major components:"
+            },
+            {
+                "type": "heading",
+                "text": "1. Fundamental Score"
+            },
+            {
+                "type": "paragraph",
+                "text": "The fundamental score looks at key business and financial parameters, including:<div><ul><li>Book Value Growth</li><li>Sales Growth</li><li>ROC</li><li>Interest Coverage Ratio</li><li>CAPEX</li><li>Quality Turnover Ratio</li></ul></div><div>Each parameter is evaluated against defined thresholds and contributes positively, negatively, or neutrally to the overall score.</div><div><br></div><div>This creates a simple way to understand the underlying financial quality of a company.</div>"
+            },
+            {
+                "type": "heading",
+                "text": "2. Management Score"
+            },
+            {
+                "type": "paragraph",
+                "text": "Fundamentals alone aren't enough.<div>The tool also evaluates management-related factors such as:</div><div><ul><li>Shareholder variation</li><li>Promoter pledge percentage</li><li>Investor holding</li><li>Change in promoter holding over the last 3 years</li><li>Change in promoter holding in the latest quarter</li></ul></div><div>These factors help provide another layer of analysis when evaluating a company.<br><br>The Fundamental Score + Management Score = Quality Score.</div>"
+            },
+            {
+                "type": "photo",
+                "url": "images/1789026169251_madhvi_hide_part_2.png",
+                "width": "50%",
+                "alignment": "left"
+            },
+            {
+                "type": "heading",
+                "text": "From Ranking to Quality Analysis"
+            },
+            {
+                "type": "paragraph",
+                "text": "Suppose you have already shortlisted the top companies within an industry using a ranking tool.<div><br><div>The next step is to compare their quality.</div><div><br></div><div>For example, you may have five companies from the same industry. Instead of analyzing every company in depth immediately, you can put them into the Quality Analysis Tool and compare their scores.</div><div><br></div><div>This allows you to quickly identify:</div><div><br></div><div><ul><li>Companies with stronger fundamentals</li><li>Companies with better management indicators</li><li>Companies that may require additional investigation</li><li>Companies that may be better removed from the shortlist</li></ul></div><div>The objective isn't to blindly select the highest-scoring company.</div><div>It is to identify which companies deserve deeper due diligence.</div></div>"
+            },
+            {
+                "type": "heading",
+                "text": "Compare Multiple Companies Together"
+            },
+            {
+                "type": "paragraph",
+                "text": "One of the biggest advantages is that you can compare companies from the same industry side-by-side.<div><br><div>For example, if you are analyzing the Breweries &amp; Distilleries industry, you can compare several companies and see how their fundamental and management scores differ.</div></div>"
+            },
+            {
+                "type": "photo",
+                "url": "images/1789026580900_metha_shabah_part4.png"
+            },
+            {
+                "type": "paragraph",
+                "text": "This can reveal something that a simple stock ranking may not show.<div><br></div><div><div>A company may rank highly based on certain growth and valuation parameters, but its detailed quality analysis could reveal weaknesses that deserve attention.</div><div><br></div><div>Similarly, a lesser-known company may stand out because of a stronger combination of fundamental and management scores.</div></div>"
+            },
+            {
+                "type": "heading",
+                "text": "Review Your Existing Portfolio"
+            },
+            {
+                "type": "paragraph",
+                "text": "The tool isn't limited to finding new stocks.<div><br><div>You can also use it to review the companies you already own.</div><div><br></div><div>Simply upload your portfolio CSV file, and the tool can identify the stocks and provide their respective quality analysis.</div><div><br></div><div>This makes it useful for answering an important question:</div><div><br></div><div>Are the companies already in my portfolio maintaining acceptable quality?</div><div>This can help you regularly review your portfolio instead of relying only on the original reason you bought a stock.</div></div>"
+            },
+            {
+                "type": "heading",
+                "text": "A Quick Filter Before Deep Due Diligence"
+            },
+            {
+                "type": "paragraph",
+                "text": "The purpose of the Quality Analysis Tool is not to replace detailed fundamental research.<div><br><div>Instead, it works as a first-level quality filter.</div><div><br></div><div>A simple workflow could be:</div><div>Shortlist Companies → Check Quality → Remove Weak Companies → Conduct Detailed Due Diligence → Analyze Valuation</div><div><br></div><div>This can save significant time because you don't have to perform a full analysis on every company you initially discover.</div></div>"
+            },
+            {
+                "type": "heading",
+                "text": "Final Thoughts"
+            },
+            {
+                "type": "paragraph",
+                "text": "Good investing requires more than finding companies that look attractive on the surface.<div>You need to understand the quality of the business, its financial performance, and management-related factors before developing conviction.</div><div>The Intrinsic Analytics Quality Analysis Tool brings these factors together into a simple scoring framework.</div><div>It helps investors move from:</div><div>“This company looks interesting.”</div><div>to:</div><div>“This company deserves deeper research.”</div><div>And that is the real purpose of the tool — to make stock quality analysis more structured, objective, and efficient.<br><br>Review your portfolio :-&nbsp; <a href=\"https://intrinsicvalueequity.in/analytics/portfolio-review-tool\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: var(--accent, #FF8C00); text-decoration: underline;\">https://intrinsicvalueequity.in/analytics/portfolio-review-tool</a></div><div><br></div>"
+            },
+            {
+                "type": "video",
+                "url": "https://youtu.be/RQXdH1UH8s0?si=tuKkrWa97IFjuJW4"
+            }
+        ],
+        "content": "<p>Finding a promising stock is only the beginning.<div><br><div>Once you have shortlisted companies, the next question is:</div><div><br></div><div>Is this actually a quality company worth researching further?</div><div><br></div><div>This is where the Intrinsic Analytics Quality Analysis Tool comes in.</div><div><br></div><div>The tool is designed to provide a quick, structured view of a company's fundamental quality and management quality, helping investors filter out weaker companies before spending more time on detailed due diligence.</div></div></p>\n<h2 class=\"blog-highlighted-heading\">What Does the Quality Analysis Tool Do?</h2>\n<p>The tool evaluates a company using two major components:</p>\n<h2 class=\"blog-highlighted-heading\">1. Fundamental Score</h2>\n<p>The fundamental score looks at key business and financial parameters, including:<div><ul><li>Book Value Growth</li><li>Sales Growth</li><li>ROC</li><li>Interest Coverage Ratio</li><li>CAPEX</li><li>Quality Turnover Ratio</li></ul></div><div>Each parameter is evaluated against defined thresholds and contributes positively, negatively, or neutrally to the overall score.</div><div><br></div><div>This creates a simple way to understand the underlying financial quality of a company.</div></p>\n<h2 class=\"blog-highlighted-heading\">2. Management Score</h2>\n<p>Fundamentals alone aren't enough.<div>The tool also evaluates management-related factors such as:</div><div><ul><li>Shareholder variation</li><li>Promoter pledge percentage</li><li>Investor holding</li><li>Change in promoter holding over the last 3 years</li><li>Change in promoter holding in the latest quarter</li></ul></div><div>These factors help provide another layer of analysis when evaluating a company.<br><br>The Fundamental Score + Management Score = Quality Score.</div></p>\n<p style=\"text-align:left; overflow: visible;\"><img loading=\"lazy\" decoding=\"async\" class=\"aligncenter blog-zoomable-img\" src=\"/images/1789026169251_madhvi_hide_part_2.png\" style=\"width:50%; max-width:none; height:auto; ; cursor:zoom-in;\" alt=\"\" /></p>\n<h2 class=\"blog-highlighted-heading\">From Ranking to Quality Analysis</h2>\n<p>Suppose you have already shortlisted the top companies within an industry using a ranking tool.<div><br><div>The next step is to compare their quality.</div><div><br></div><div>For example, you may have five companies from the same industry. Instead of analyzing every company in depth immediately, you can put them into the Quality Analysis Tool and compare their scores.</div><div><br></div><div>This allows you to quickly identify:</div><div><br></div><div><ul><li>Companies with stronger fundamentals</li><li>Companies with better management indicators</li><li>Companies that may require additional investigation</li><li>Companies that may be better removed from the shortlist</li></ul></div><div>The objective isn't to blindly select the highest-scoring company.</div><div>It is to identify which companies deserve deeper due diligence.</div></div></p>\n<h2 class=\"blog-highlighted-heading\">Compare Multiple Companies Together</h2>\n<p>One of the biggest advantages is that you can compare companies from the same industry side-by-side.<div><br><div>For example, if you are analyzing the Breweries &amp; Distilleries industry, you can compare several companies and see how their fundamental and management scores differ.</div></div></p>\n<p style=\"text-align:center; overflow: visible;\"><img loading=\"lazy\" decoding=\"async\" class=\"aligncenter blog-zoomable-img\" src=\"/images/1789026580900_metha_shabah_part4.png\" style=\"width:100%; max-width:none; height:auto; position: relative; left: 50%; transform: translateX(-50%);; cursor:zoom-in;\" alt=\"\" /></p>\n<p>This can reveal something that a simple stock ranking may not show.<div><br></div><div><div>A company may rank highly based on certain growth and valuation parameters, but its detailed quality analysis could reveal weaknesses that deserve attention.</div><div><br></div><div>Similarly, a lesser-known company may stand out because of a stronger combination of fundamental and management scores.</div></div></p>\n<h2 class=\"blog-highlighted-heading\">Review Your Existing Portfolio</h2>\n<p>The tool isn't limited to finding new stocks.<div><br><div>You can also use it to review the companies you already own.</div><div><br></div><div>Simply upload your portfolio CSV file, and the tool can identify the stocks and provide their respective quality analysis.</div><div><br></div><div>This makes it useful for answering an important question:</div><div><br></div><div>Are the companies already in my portfolio maintaining acceptable quality?</div><div>This can help you regularly review your portfolio instead of relying only on the original reason you bought a stock.</div></div></p>\n<h2 class=\"blog-highlighted-heading\">A Quick Filter Before Deep Due Diligence</h2>\n<p>The purpose of the Quality Analysis Tool is not to replace detailed fundamental research.<div><br><div>Instead, it works as a first-level quality filter.</div><div><br></div><div>A simple workflow could be:</div><div>Shortlist Companies → Check Quality → Remove Weak Companies → Conduct Detailed Due Diligence → Analyze Valuation</div><div><br></div><div>This can save significant time because you don't have to perform a full analysis on every company you initially discover.</div></div></p>\n<h2 class=\"blog-highlighted-heading\">Final Thoughts</h2>\n<p>Good investing requires more than finding companies that look attractive on the surface.<div>You need to understand the quality of the business, its financial performance, and management-related factors before developing conviction.</div><div>The Intrinsic Analytics Quality Analysis Tool brings these factors together into a simple scoring framework.</div><div>It helps investors move from:</div><div>“This company looks interesting.”</div><div>to:</div><div>“This company deserves deeper research.”</div><div>And that is the real purpose of the tool — to make stock quality analysis more structured, objective, and efficient.<br><br>Review your portfolio :-&nbsp; <a href=\"https://intrinsicvalueequity.in/analytics/portfolio-review-tool\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: var(--accent, #FF8C00); text-decoration: underline;\">https://intrinsicvalueequity.in/analytics/portfolio-review-tool</a></div><div><br></div></p>\n<p><iframe loading=\"lazy\" width=\"100%\" height=\"450\" src=\"https://www.youtube.com/embed/RQXdH1UH8s0\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe></p>\n"
+    },
     {
         "id": 3531,
         "slug": "Ranking-tool",
