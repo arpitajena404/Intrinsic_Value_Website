@@ -3590,7 +3590,7 @@
         }
         
         if (repoInput) {
-            repoInput.value = localStorage.getItem('git_repo') || '';
+            repoInput.value = localStorage.getItem('git_repo') || 'arpitajena404/Intrinsic_Value_Website';
             repoInput.addEventListener('input', function() {
                 localStorage.setItem('git_repo', repoInput.value.trim());
             });
@@ -3733,7 +3733,7 @@
                 if (confirm("Are you sure you want to rollback the latest commit? This will revert the website to how it was before the last commit. This action cannot be undone.")) {
                     try {
                         var pat = patInput ? patInput.value.trim() : '';
-                        var repo = repoInput ? repoInput.value.trim() : '';
+                        var repo = (repoInput ? repoInput.value.trim() : '') || localStorage.getItem('git_repo') || 'arpitajena404/Intrinsic_Value_Website';
                         
                         gitRollbackBtn.disabled = true;
                         gitRollbackBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Rolling back...';
@@ -4178,7 +4178,7 @@
                 try {
                     var commitMessage = gitCommitInput ? gitCommitInput.value.trim() : '';
                     var pat = patInput ? patInput.value.trim() : '';
-                    var repo = repoInput ? repoInput.value.trim() : '';
+                    var repo = (repoInput ? repoInput.value.trim() : '') || localStorage.getItem('git_repo') || 'arpitajena404/Intrinsic_Value_Website';
                     
                     gitPushBtn.disabled = true;
                     gitPushBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Pushing...';
