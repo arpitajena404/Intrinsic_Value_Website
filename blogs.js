@@ -1,4 +1,4 @@
-// Automatically compiled fallback data for local file:// browsing
+// Automatically generated fallback data for local file:// browsing
 var BLOGS_DATA = [
     {
         "id": 3533,
