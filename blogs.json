@@ -1,5 +1,104 @@
 [
     {
+        "id": 3533,
+        "slug": "From Market to Portfolio: Using Intrinsic Value Analytics for End-to-End Investing",
+        "title": "From Market to Portfolio: Using Intrinsic Value Analytics for End-to-End Investing",
+        "date": "September 10, 2026",
+        "rawDate": "2026-09-10T08:16:21",
+        "category": "INTRINSIC ANALYTICS",
+        "readingTime": "3 min read",
+        "image": "images/1789029119655_Shodi_garrage_part_1.png",
+        "gradient": "linear-gradient(135deg, #FF8C00, #121212)",
+        "excerpt": "Finding a good investment opportunity is rarely about looking at just one factor.\n\nYou need to understand the market, sectors, cycles, companies, quality, valuation, and themes before building conviction.\n\nThat is the idea behind Intrinsic Value Analytics  bringing different stages of investment analysis together in one platform.",
+        "blocks": [
+            {
+                "type": "paragraph",
+                "text": "Finding a good investment opportunity is rarely about looking at just one factor.<div><br><div>You need to understand the market, sectors, cycles, companies, quality, valuation, and themes before building conviction.</div><div><br></div><div>That is the idea behind Intrinsic Value Analytics&nbsp; bringing different stages of investment analysis together in one platform.</div></div>"
+            },
+            {
+                "type": "heading",
+                "text": "From Market Analysis to Stock Selection"
+            },
+            {
+                "type": "paragraph",
+                "text": "The platform is designed to take you through the complete investment process.<div><br><div>You can start by understanding the broader market and then move towards:</div><div>Market → Sector → Cycle → Stocks → Quality → Valuation → Portfolio</div><div><br></div><div>Earlier episodes covered market valuation, earnings trends, sector cycles, stock rankings, quality analysis, and valuation.</div><div><br></div><div>The final piece of this process is Thematic Portfolios.</div></div>"
+            },
+            {
+                "type": "heading",
+                "text": "What Are Thematic Portfolios?"
+            },
+            {
+                "type": "paragraph",
+                "text": "Thematic investing allows you to search for companies that match a particular investment strategy.<div>Instead of randomly selecting stocks, you can begin with a defined set of criteria.</div><div>For example, one theme available on the platform is Growth at Value.</div><div><br></div><div>The screening criteria include factors such as:</div><div><ul><li>3-year Sales Growth above 20%</li><li>P/E between 0 and 25</li><li>P/B below 4.5</li><li>Minimum market capitalization of ₹300 crore</li></ul></div><div>But the important part is that the tool doesn't stop at screening.</div>"
+            },
+            {
+                "type": "photo",
+                "url": "images/1789029128205_Roshan_singh_sodhi_part_2.png"
+            },
+            {
+                "type": "heading",
+                "text": "From Hundreds of Companies to the Top 20–30"
+            },
+            {
+                "type": "paragraph",
+                "text": "A screener may identify hundreds of companies that meet a particular theme.<div>The challenge then becomes:</div><div><br></div><div>Which companies should I actually research?</div><div>This is where the Intrinsic Value Ranking Tool adds another layer.</div><div>The companies within the thematic portfolio are ranked using:</div><div><ul><li>Sales Growth</li><li>ROC</li><li>Price-to-Book</li></ul></div><div>Instead of analyzing hundreds of companies individually, you can focus on the top 20–30 ranked companies and then conduct detailed due diligence and valuation analysis.</div><div>This creates a simple workflow:</div><div>Theme → Screening → Ranking → Shortlist → Quality Analysis → Valuation</div>"
+            },
+            {
+                "type": "heading",
+                "text": "Different Themes for Different Investment Styles"
+            },
+            {
+                "type": "paragraph",
+                "text": "Not every investor wants the same type of portfolio.<div>The platform provides different thematic approaches, including:</div><div><br></div><div><b><font color=\"#ff8c00\">Growth at Value</font></b></div><div>Companies combining strong growth with relatively attractive valuations.</div><div><b><font color=\"#ff8c00\">High Growth Small Cap</font></b></div><div>Smaller companies with high sales growth and strong ROC.</div><div><b><font color=\"#ff8c00\">Value Large Cap</font></b></div><div>Large companies screened for relatively attractive P/E and P/B valuations.</div><div><b><font color=\"#ff8c00\">Technology Leaders</font></b></div><div>Companies from technology, IT, software, and telecommunications with strong growth characteristics.</div><div><b><font color=\"#ff8c00\">Core Compounders</font></b></div><div>Large companies with strong management efficiency and capital returns.</div><div><b><font color=\"#ff8c00\">Large Compounders</font></b></div><div>Larger companies combining growth, strong ROC, and financial strength.</div><div>Each theme has its own advantages and limitations.</div><div><br></div><div>The objective isn't to say that one strategy is always better than another.</div><div>It is to help investors find a theme that matches their investment style and risk appetite.</div>"
+            },
+            {
+                "type": "heading",
+                "text": "Ranking Makes Thematic Investing More Useful"
+            },
+            {
+                "type": "paragraph",
+                "text": "The biggest advantage is that the companies aren't simply presented as a list.<div><br><div>They are also ranked using the same quality-oriented framework.</div><div><br></div><div>For example, a company may qualify for a growth theme because it meets the screening criteria. But among all qualifying companies, the ranking system helps identify those with stronger combinations of:</div><div><br></div><div>Sales Growth + ROC + Valuation</div><div><br></div><div>This prevents the process from becoming simply:</div><div>“Find cheap stocks.”</div><div><br></div><div>Instead, the focus becomes:</div><div>“Find companies with the right combination of growth, performance, and valuation.”</div></div>"
+            },
+            {
+                "type": "photo",
+                "url": "images/1789029136119_rishan_bhahi_sidhi_garafe_part_3.png"
+            },
+            {
+                "type": "heading",
+                "text": "From Thematic Portfolio to Portfolio Review"
+            },
+            {
+                "type": "paragraph",
+                "text": "Once you have shortlisted your companies, the next step is to review their quality.<div><br><div>This is where the Portfolio Review Tool comes in.</div><div><br></div><div>You can add your shortlisted companies and review their:</div><div><ul><li>Fundamental Score</li><li>Management Score</li><li>Valuation Score</li><li>Overall Rating</li></ul></div><div>This helps separate companies that deserve further research from companies that may need to be removed from the watchlist.</div><div><br></div><div>A simple approach is:</div><div><br></div><div>Good → Continue Research</div><div>Average → Investigate Further</div><div>Poor → Consider Removing</div><div><br></div><div>The objective isn't to blindly follow a score. It is to create a structured filter before conducting deeper research.</div></div>"
+            },
+            {
+                "type": "heading",
+                "text": "One Connected Investment Process"
+            },
+            {
+                "type": "paragraph",
+                "text": "The real strength of the platform is that these tools can work together.<div>You can move from:</div><div><br></div><div>Market Analysis</div><div>↓</div><div>Sector &amp; Cycle Analysis</div><div>↓</div><div>Thematic Portfolio</div><div>↓</div><div>Intrinsic Value Ranking</div><div>↓</div><div>Quality Analysis</div><div>↓</div><div>Portfolio Review</div><div>↓</div><div>Valuation Analysis</div><div>↓</div><div>Final Investment Decision</div><div><br></div><div>This creates an end-to-end research process rather than relying on a single indicator or data point.</div>"
+            },
+            {
+                "type": "heading",
+                "text": "Why This Approach Matters"
+            },
+            {
+                "type": "paragraph",
+                "text": "Investment research can become complicated when you use different tools for every stage of the process.<div><br><div>The purpose of Intrinsic Value Analytics is to bring these stages together and make the process more structured.</div><div><br></div><div>You don't have to analyze every company in the market.</div><div><br></div><div>You can start broad, narrow the universe, rank the opportunities, remove weaker companies, and then spend your time conducting detailed research on the strongest candidates.</div><div><br></div><div>The goal isn't to analyze everything. It's to know what deserves your attention.</div></div>"
+            },
+            {
+                "type": "heading",
+                "text": "Final Thoughts"
+            },
+            {
+                "type": "paragraph",
+                "text": "Intrinsic Value Analytics is designed around a simple investment workflow:<div><br><div>Find the opportunity → Filter it → Rank it → Check quality → Analyze valuation → Build conviction.</div><div><br></div><div>Whether you prefer growth, value, small caps, technology leaders, or compounders, thematic portfolios provide a structured starting point.</div><div><br></div><div>The tools then allow you to move from a broad theme to a focused watchlist and finally to detailed company analysis.</div><div><br></div><div>Ultimately, the objective is not to replace an investor's judgment.</div><div>It is to make that judgment more informed, systematic, and efficient.<br><br>Checkout Ready-made themes&nbsp; :- https://intrinsicvalueequity.in/analytics/intrinsic-theme?type=growth-at-value</div></div>"
+            }
+        ],
+        "content": "<p>Finding a good investment opportunity is rarely about looking at just one factor.<div><br><div>You need to understand the market, sectors, cycles, companies, quality, valuation, and themes before building conviction.</div><div><br></div><div>That is the idea behind Intrinsic Value Analytics&nbsp; bringing different stages of investment analysis together in one platform.</div></div></p>\n<h2 class=\"blog-highlighted-heading\">From Market Analysis to Stock Selection</h2>\n<p>The platform is designed to take you through the complete investment process.<div><br><div>You can start by understanding the broader market and then move towards:</div><div>Market → Sector → Cycle → Stocks → Quality → Valuation → Portfolio</div><div><br></div><div>Earlier episodes covered market valuation, earnings trends, sector cycles, stock rankings, quality analysis, and valuation.</div><div><br></div><div>The final piece of this process is Thematic Portfolios.</div></div></p>\n<h2 class=\"blog-highlighted-heading\">What Are Thematic Portfolios?</h2>\n<p>Thematic investing allows you to search for companies that match a particular investment strategy.<div>Instead of randomly selecting stocks, you can begin with a defined set of criteria.</div><div>For example, one theme available on the platform is Growth at Value.</div><div><br></div><div>The screening criteria include factors such as:</div><div><ul><li>3-year Sales Growth above 20%</li><li>P/E between 0 and 25</li><li>P/B below 4.5</li><li>Minimum market capitalization of ₹300 crore</li></ul></div><div>But the important part is that the tool doesn't stop at screening.</div></p>\n<p style=\"text-align:center; overflow: visible;\"><img loading=\"lazy\" decoding=\"async\" class=\"aligncenter blog-zoomable-img\" src=\"/images/1789029128205_Roshan_singh_sodhi_part_2.png\" style=\"width:100%; max-width:none; height:auto; position: relative; left: 50%; transform: translateX(-50%);; cursor:zoom-in;\" alt=\"\" /></p>\n<h2 class=\"blog-highlighted-heading\">From Hundreds of Companies to the Top 20–30</h2>\n<p>A screener may identify hundreds of companies that meet a particular theme.<div>The challenge then becomes:</div><div><br></div><div>Which companies should I actually research?</div><div>This is where the Intrinsic Value Ranking Tool adds another layer.</div><div>The companies within the thematic portfolio are ranked using:</div><div><ul><li>Sales Growth</li><li>ROC</li><li>Price-to-Book</li></ul></div><div>Instead of analyzing hundreds of companies individually, you can focus on the top 20–30 ranked companies and then conduct detailed due diligence and valuation analysis.</div><div>This creates a simple workflow:</div><div>Theme → Screening → Ranking → Shortlist → Quality Analysis → Valuation</div></p>\n<h2 class=\"blog-highlighted-heading\">Different Themes for Different Investment Styles</h2>\n<p>Not every investor wants the same type of portfolio.<div>The platform provides different thematic approaches, including:</div><div><br></div><div><b><font color=\"#ff8c00\">Growth at Value</font></b></div><div>Companies combining strong growth with relatively attractive valuations.</div><div><b><font color=\"#ff8c00\">High Growth Small Cap</font></b></div><div>Smaller companies with high sales growth and strong ROC.</div><div><b><font color=\"#ff8c00\">Value Large Cap</font></b></div><div>Large companies screened for relatively attractive P/E and P/B valuations.</div><div><b><font color=\"#ff8c00\">Technology Leaders</font></b></div><div>Companies from technology, IT, software, and telecommunications with strong growth characteristics.</div><div><b><font color=\"#ff8c00\">Core Compounders</font></b></div><div>Large companies with strong management efficiency and capital returns.</div><div><b><font color=\"#ff8c00\">Large Compounders</font></b></div><div>Larger companies combining growth, strong ROC, and financial strength.</div><div>Each theme has its own advantages and limitations.</div><div><br></div><div>The objective isn't to say that one strategy is always better than another.</div><div>It is to help investors find a theme that matches their investment style and risk appetite.</div></p>\n<h2 class=\"blog-highlighted-heading\">Ranking Makes Thematic Investing More Useful</h2>\n<p>The biggest advantage is that the companies aren't simply presented as a list.<div><br><div>They are also ranked using the same quality-oriented framework.</div><div><br></div><div>For example, a company may qualify for a growth theme because it meets the screening criteria. But among all qualifying companies, the ranking system helps identify those with stronger combinations of:</div><div><br></div><div>Sales Growth + ROC + Valuation</div><div><br></div><div>This prevents the process from becoming simply:</div><div>“Find cheap stocks.”</div><div><br></div><div>Instead, the focus becomes:</div><div>“Find companies with the right combination of growth, performance, and valuation.”</div></div></p>\n<p style=\"text-align:center; overflow: visible;\"><img loading=\"lazy\" decoding=\"async\" class=\"aligncenter blog-zoomable-img\" src=\"/images/1789029136119_rishan_bhahi_sidhi_garafe_part_3.png\" style=\"width:100%; max-width:none; height:auto; position: relative; left: 50%; transform: translateX(-50%);; cursor:zoom-in;\" alt=\"\" /></p>\n<h2 class=\"blog-highlighted-heading\">From Thematic Portfolio to Portfolio Review</h2>\n<p>Once you have shortlisted your companies, the next step is to review their quality.<div><br><div>This is where the Portfolio Review Tool comes in.</div><div><br></div><div>You can add your shortlisted companies and review their:</div><div><ul><li>Fundamental Score</li><li>Management Score</li><li>Valuation Score</li><li>Overall Rating</li></ul></div><div>This helps separate companies that deserve further research from companies that may need to be removed from the watchlist.</div><div><br></div><div>A simple approach is:</div><div><br></div><div>Good → Continue Research</div><div>Average → Investigate Further</div><div>Poor → Consider Removing</div><div><br></div><div>The objective isn't to blindly follow a score. It is to create a structured filter before conducting deeper research.</div></div></p>\n<h2 class=\"blog-highlighted-heading\">One Connected Investment Process</h2>\n<p>The real strength of the platform is that these tools can work together.<div>You can move from:</div><div><br></div><div>Market Analysis</div><div>↓</div><div>Sector &amp; Cycle Analysis</div><div>↓</div><div>Thematic Portfolio</div><div>↓</div><div>Intrinsic Value Ranking</div><div>↓</div><div>Quality Analysis</div><div>↓</div><div>Portfolio Review</div><div>↓</div><div>Valuation Analysis</div><div>↓</div><div>Final Investment Decision</div><div><br></div><div>This creates an end-to-end research process rather than relying on a single indicator or data point.</div></p>\n<h2 class=\"blog-highlighted-heading\">Why This Approach Matters</h2>\n<p>Investment research can become complicated when you use different tools for every stage of the process.<div><br><div>The purpose of Intrinsic Value Analytics is to bring these stages together and make the process more structured.</div><div><br></div><div>You don't have to analyze every company in the market.</div><div><br></div><div>You can start broad, narrow the universe, rank the opportunities, remove weaker companies, and then spend your time conducting detailed research on the strongest candidates.</div><div><br></div><div>The goal isn't to analyze everything. It's to know what deserves your attention.</div></div></p>\n<h2 class=\"blog-highlighted-heading\">Final Thoughts</h2>\n<p>Intrinsic Value Analytics is designed around a simple investment workflow:<div><br><div>Find the opportunity → Filter it → Rank it → Check quality → Analyze valuation → Build conviction.</div><div><br></div><div>Whether you prefer growth, value, small caps, technology leaders, or compounders, thematic portfolios provide a structured starting point.</div><div><br></div><div>The tools then allow you to move from a broad theme to a focused watchlist and finally to detailed company analysis.</div><div><br></div><div>Ultimately, the objective is not to replace an investor's judgment.</div><div>It is to make that judgment more informed, systematic, and efficient.<br><br>Checkout Ready-made themes&nbsp; :- https://intrinsicvalueequity.in/analytics/intrinsic-theme?type=growth-at-value</div></div></p>\n"
+    },
+    {
         "id": 3532,
         "slug": "review your portfolio",
         "title": "Intrinsic Analytics Quality Analysis Tool: A Smarter Way to Review Stocks",
