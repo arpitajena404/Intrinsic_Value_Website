@@ -1058,8 +1058,15 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                 let currentPost = null;
                 
                 function updateFromPreviewData(fullRender = false, blogData = null) {
-                    // Accept blog data passed directly (via postMessage) or fall back to localStorage
+                    // Accept blog data passed directly (via postMessage) or fall back to parent in-memory / localStorage
                     let postData = blogData;
+                    if (!postData) {
+                        try {
+                            if (window.parent && window.parent.currentEditingBlog) {
+                                postData = window.parent.currentEditingBlog;
+                            }
+                        } catch(e) {}
+                    }
                     if (!postData) {
                         const previewDataStr = localStorage.getItem('preview_blog_data');
                         if (previewDataStr) {
@@ -1914,42 +1921,86 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                     }
                 }
 
-                // If postKey is specified, load that post from blogs.json (preview mode with slug)
+                // If postKey is specified, load that post in preview mode
                 if (postKey) {
                     var loadedPost = null;
-                    fetch('blogs.json?t=' + Date.now())
-                        .then(function(res) { return res.json(); })
-                        .then(function(blogsList) {
-                            loadedPost = blogsList.find(function(b) {
-                                return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === safeDecode(postKey).trim().toLowerCase();
+                    var targetKey = safeDecode(postKey).trim().toLowerCase();
+
+                    // 1. Check parent window's in-memory blogsState first (most authoritative unsaved state)
+                    try {
+                        var parentBlogs = (window.parent && Array.isArray(window.parent.blogsState)) ? window.parent.blogsState : null;
+                        if (parentBlogs && parentBlogs.length > 0) {
+                            loadedPost = parentBlogs.find(function(b) {
+                                return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === targetKey;
                             });
-                            if (loadedPost) {
-                                initLoadedPost(loadedPost);
-                            } else if (typeof BLOGS_DATA !== 'undefined' && Array.isArray(BLOGS_DATA)) {
-                                loadedPost = BLOGS_DATA.find(function(b) {
-                                    return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === safeDecode(postKey).trim().toLowerCase();
+                            if (!loadedPost) {
+                                loadedPost = parentBlogs.find(function(b) {
+                                    return b && ((b.id && String(b.id) === postKey) || 
+                                                (b.slug && b.slug.trim().toLowerCase() === targetKey) ||
+                                                (b.title && safeDecode(b.title).trim().toLowerCase() === targetKey));
+                                });
+                            }
+                        }
+                    } catch(e) {
+                        console.warn("[Blog Detail Preview] Error accessing parent blogsState:", e);
+                    }
+
+                    // 2. Also check if parent has currentEditingBlog that matches
+                    if (!loadedPost) {
+                        try {
+                            var parentCur = window.parent && window.parent.currentEditingBlog;
+                            if (parentCur) {
+                                var curSlug = safeDecode(parentCur.slug || '').trim().toLowerCase();
+                                var curTitle = safeDecode(parentCur.title || '').trim().toLowerCase();
+                                if (curSlug === targetKey || curTitle === targetKey || String(parentCur.id) === postKey) {
+                                    loadedPost = parentCur;
+                                }
+                            }
+                        } catch(e) {}
+                    }
+
+                    // 3. If found from in-memory state, initialize immediately!
+                    if (loadedPost) {
+                        initLoadedPost(loadedPost);
+                    } else {
+                        // 4. Fallback to fetching blogs.json from server
+                        fetch('blogs.json?t=' + Date.now())
+                            .then(function(res) { return res.json(); })
+                            .then(function(blogsList) {
+                                loadedPost = blogsList.find(function(b) {
+                                    return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === targetKey;
                                 });
                                 if (loadedPost) {
                                     initLoadedPost(loadedPost);
+                                } else if (typeof BLOGS_DATA !== 'undefined' && Array.isArray(BLOGS_DATA)) {
+                                    loadedPost = BLOGS_DATA.find(function(b) {
+                                        return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === targetKey;
+                                    });
+                                    if (loadedPost) {
+                                        initLoadedPost(loadedPost);
+                                    }
                                 }
-                                // else: wait for postMessage from parent
-                            }
-                            // else: wait for postMessage from parent (editBlog flow)
-                        })
-                        .catch(function(err) {
-                            console.error("Error fetching blogs.json in preview mode", err);
-                            if (typeof BLOGS_DATA !== 'undefined' && Array.isArray(BLOGS_DATA)) {
-                                loadedPost = BLOGS_DATA.find(function(b) {
-                                    return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === safeDecode(postKey).trim().toLowerCase();
-                                });
-                                if (loadedPost) {
-                                    initLoadedPost(loadedPost);
+                            })
+                            .catch(function(err) {
+                                console.error("Error fetching blogs.json in preview mode", err);
+                                if (typeof BLOGS_DATA !== 'undefined' && Array.isArray(BLOGS_DATA)) {
+                                    loadedPost = BLOGS_DATA.find(function(b) {
+                                        return b && b.slug && safeDecode(b.slug).trim().toLowerCase() === targetKey;
+                                    });
+                                    if (loadedPost) {
+                                        initLoadedPost(loadedPost);
+                                    }
                                 }
-                                // else: wait for postMessage from parent
-                            }
-                        });
+                            });
+                    }
+                } else {
+                    // No postKey (e.g. editBlog flow): initialize from parent currentEditingBlog if ready
+                    try {
+                        if (window.parent && window.parent.currentEditingBlog) {
+                            initLoadedPost(window.parent.currentEditingBlog);
+                        }
+                    } catch(e) {}
                 }
-                // else: no slug — wait for postMessage from parent (editBlog flow sends data via onload callback)
 
                 window.addEventListener('message', function(event) {
                     // Handle new object-based message (blog data sent directly, no localStorage)

@@ -1076,6 +1076,7 @@
     } catch(e) {
         pendingUploads = [];
     }
+    window.pendingUploads = pendingUploads;
 
     window.simulateFileUpload = function(targetInputId, folderName) {
         simulatedUploadTargetId = targetInputId;
@@ -1206,6 +1207,7 @@
                     encoding: 'base64'
                 });
                 safeSetLocalStorage('pending_file_uploads', JSON.stringify(pendingUploads));
+                window.pendingUploads = pendingUploads;
 
                 // If this is local development, write to Python server if active
                 var isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
@@ -3033,12 +3035,16 @@
                         }
                         renderBlogEditor();
                         if (iframe) {
-                            // Load the preview iframe first, then send blog data once it's ready
-                            iframe.onload = function() {
-                                iframe.onload = null; // run once
+                            // Only load preview iframe if not already showing blog-detail.html
+                            if (!iframe.src || iframe.src.indexOf('blog-detail.html') === -1) {
+                                iframe.onload = function() {
+                                    iframe.onload = null; // run once
+                                    updateLivePreview();
+                                };
+                                iframe.src = 'blog-detail.html?preview=true';
+                            } else {
                                 updateLivePreview();
-                            };
-                            iframe.src = 'blog-detail.html?preview=true';
+                            }
                         } else {
                             updateLivePreview();
                         }
@@ -3809,6 +3815,20 @@
             });
         }
 
+        function safeUtf8ToBase64(str) {
+            try {
+                var bytes = new TextEncoder().encode(str);
+                var binString = "";
+                var chunkSize = 8192;
+                for (var i = 0; i < bytes.length; i += chunkSize) {
+                    binString += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+                }
+                return btoa(binString);
+            } catch (e) {
+                return btoa(unescape(encodeURIComponent(str)));
+            }
+        }
+
         function runGitHubContentsApiPush(filesToCommit, commitMessage, pat, cleanRepo) {
             gitPushBtn.disabled = true;
             gitPushBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Updating files...';
@@ -3836,7 +3856,7 @@
 
                     var encodedContent = fileObj.encoding === 'base64' ? 
                         fileObj.content : 
-                        btoa(unescape(encodeURIComponent(fileObj.content)));
+                        safeUtf8ToBase64(fileObj.content);
 
                     return fetch('https://api.github.com/repos/' + cleanRepo + '/contents/' + fileObj.path + '?ref=main', { headers: headers })
                         .then(function(res) {
@@ -3932,9 +3952,13 @@
             if (pendingPricing) {
                 filesToCommit.push({ path: 'pricing.json', content: pendingPricing, encoding: 'utf-8' });
             }
-            var pendingBlogs = localStorage.getItem('pending_blogs_config');
-            if (!pendingBlogs && window.blogsHasUnsavedEdits && Array.isArray(blogsState) && blogsState.length > 0) {
+            var pendingBlogs = null;
+            if (window.blogsHasUnsavedEdits && Array.isArray(blogsState) && blogsState.length > 0) {
                 pendingBlogs = JSON.stringify(blogsState, null, 4);
+            } else if (window.blogsHasUnsavedEdits && Array.isArray(window.blogsState) && window.blogsState.length > 0) {
+                pendingBlogs = JSON.stringify(window.blogsState, null, 4);
+            } else {
+                pendingBlogs = localStorage.getItem('pending_blogs_config');
             }
             if (pendingBlogs) {
                 filesToCommit.push({ path: 'blogs.json', content: pendingBlogs, encoding: 'utf-8' });
@@ -4030,17 +4054,14 @@
                     if (gitStatusMsg) gitStatusMsg.innerText = 'Creating blobs on GitHub...';
 
                     var blobPromises = filesToCommit.map(function(fileObj) {
-                        var encodedContent = fileObj.encoding === 'base64' ? 
-                            fileObj.content : 
-                            btoa(unescape(encodeURIComponent(fileObj.content)));
+                        var blobBody = fileObj.encoding === 'base64'
+                            ? { content: fileObj.content, encoding: 'base64' }
+                            : { content: fileObj.content, encoding: 'utf-8' };
                             
                         return fetch('https://api.github.com/repos/' + cleanRepo + '/git/blobs', {
                             method: 'POST',
                             headers: headers,
-                            body: JSON.stringify({
-                                content: encodedContent,
-                                encoding: 'base64'
-                            })
+                            body: JSON.stringify(blobBody)
                         })
                         .then(function(r) {
                             if (!r.ok) {
@@ -4286,6 +4307,26 @@
             window.blogsState = blogsState;
             renderBlogsList();
             return;
+        }
+
+        // Check if there are pending unsaved edits from localStorage (e.g. after page refresh)
+        var pendingBlogs = localStorage.getItem('pending_blogs_config');
+        if (pendingBlogs) {
+            try {
+                var parsedPending = JSON.parse(pendingBlogs);
+                if (Array.isArray(parsedPending) && parsedPending.length > 0) {
+                    blogsState = parsedPending;
+                    window.blogsState = blogsState;
+                    window.blogsHasUnsavedEdits = true;
+                    renderBlogsList();
+                    var pushBtn = document.getElementById('gitPushBtn');
+                    if (pushBtn) {
+                        pushBtn.style.boxShadow = '0 0 12px var(--accent)';
+                        pushBtn.innerHTML = '<i class="fa-brands fa-github"></i> Publish Edits to GitHub';
+                    }
+                    return;
+                }
+            } catch(e) {}
         }
 
         fetch('blogs.json?t=' + Date.now())
@@ -4803,7 +4844,7 @@
             }
         }
 
-        // 2. Read from sidebar inputs if not already populated or if user edited sidebar directly
+        // 2. Read from sidebar inputs ONLY as fallback if not already populated from livePost
         var tInput = document.getElementById('blog-edit-title');
         var sInput = document.getElementById('blog-edit-slug');
         var cInput = document.getElementById('blog-edit-category');
@@ -4813,14 +4854,24 @@
         var gInput = document.getElementById('blog-edit-gradient');
         var eInput = document.getElementById('blog-edit-excerpt');
 
-        if (tInput && tInput.value.trim()) currentEditingBlog.title = tInput.value.trim();
-        if (sInput && sInput.value.trim()) currentEditingBlog.slug = sInput.value.trim();
-        if (cInput && cInput.value.trim()) currentEditingBlog.category = cInput.value.trim();
-        if (dInput && dInput.value.trim()) currentEditingBlog.date = dInput.value.trim();
-        if (iInput && iInput.value.trim()) currentEditingBlog.image = iInput.value.trim();
-        if (tmInput && tmInput.value.trim()) currentEditingBlog.readingTime = tmInput.value.trim();
-        if (gInput && gInput.value.trim()) currentEditingBlog.gradient = gInput.value.trim();
-        if (eInput && eInput.value.trim()) currentEditingBlog.excerpt = eInput.value.trim();
+        if (!currentEditingBlog.title && tInput && tInput.value.trim()) currentEditingBlog.title = tInput.value.trim();
+        if (!currentEditingBlog.slug && sInput && sInput.value.trim()) currentEditingBlog.slug = sInput.value.trim();
+        if (!currentEditingBlog.category && cInput && cInput.value.trim()) currentEditingBlog.category = cInput.value.trim();
+        if (!currentEditingBlog.date && dInput && dInput.value.trim()) currentEditingBlog.date = dInput.value.trim();
+        if (!currentEditingBlog.image && iInput && iInput.value.trim()) currentEditingBlog.image = iInput.value.trim();
+        if (!currentEditingBlog.readingTime && tmInput && tmInput.value.trim()) currentEditingBlog.readingTime = tmInput.value.trim();
+        if (!currentEditingBlog.gradient && gInput && gInput.value.trim()) currentEditingBlog.gradient = gInput.value.trim();
+        if (!currentEditingBlog.excerpt && eInput && eInput.value.trim()) currentEditingBlog.excerpt = eInput.value.trim();
+
+        // Keep sidebar DOM inputs synchronized with currentEditingBlog
+        if (tInput) tInput.value = currentEditingBlog.title || "";
+        if (sInput) sInput.value = currentEditingBlog.slug || "";
+        if (cInput) cInput.value = currentEditingBlog.category || "";
+        if (dInput) dInput.value = currentEditingBlog.date || "";
+        if (iInput) iInput.value = currentEditingBlog.image || "";
+        if (tmInput) tmInput.value = currentEditingBlog.readingTime || "";
+        if (gInput) gInput.value = currentEditingBlog.gradient || "";
+        if (eInput) eInput.value = currentEditingBlog.excerpt || "";
 
         if (!currentEditingBlog.title || !currentEditingBlog.slug || !currentEditingBlog.excerpt) {
             alert("Please fill in all required fields (Title, Slug, Excerpt).");
@@ -4832,8 +4883,17 @@
         }
 
         if (currentEditingBlogIndex === -1) {
-            blogsState.unshift(currentEditingBlog);
-            currentEditingBlogIndex = 0;
+            var existingIdx = blogsState.findIndex(function(b) {
+                return b && ((currentEditingBlog.id && b.id === currentEditingBlog.id) ||
+                             (b.slug && currentEditingBlog.slug && b.slug.trim().toLowerCase() === currentEditingBlog.slug.trim().toLowerCase()));
+            });
+            if (existingIdx !== -1) {
+                currentEditingBlogIndex = existingIdx;
+                blogsState[existingIdx] = currentEditingBlog;
+            } else {
+                blogsState.unshift(currentEditingBlog);
+                currentEditingBlogIndex = 0;
+            }
         } else {
             blogsState[currentEditingBlogIndex] = currentEditingBlog;
         }
@@ -5048,11 +5108,14 @@
             } else if (event.data.type === 'update_blog_state') {
                 currentEditingBlog = event.data.blog;
                 
-                // Sync currentEditingBlogIndex by matching ID
+                // Sync currentEditingBlogIndex by matching ID, slug, or title
                 var idx = -1;
                 if (currentEditingBlog) {
                     for (var i = 0; i < blogsState.length; i++) {
-                        if (blogsState[i] && blogsState[i].id === currentEditingBlog.id) {
+                        var b = blogsState[i];
+                        if (b && ((currentEditingBlog.id && b.id === currentEditingBlog.id) ||
+                                  (b.slug && currentEditingBlog.slug && b.slug.trim().toLowerCase() === currentEditingBlog.slug.trim().toLowerCase()) ||
+                                  (b.title && currentEditingBlog.title && b.title.trim().toLowerCase() === currentEditingBlog.title.trim().toLowerCase()))) {
                             idx = i;
                             break;
                         }
@@ -5082,10 +5145,35 @@
                 // Render left editor inputs/sequence blocks
                 renderBlogEditor();
 
-                // Switch to edit tab if we are not already there
+                // Switch UI toolbar to edit mode WITHOUT reloading iframe
                 var editTabLink = document.getElementById('tab-btn-blogs-edit');
                 if (editTabLink && !editTabLink.classList.contains('active')) {
-                    editTabLink.click();
+                    document.querySelectorAll('.iv-cms-nav-item[data-tab^="tab-blogs-"]').forEach(function(item) {
+                        item.classList.remove('active');
+                    });
+                    editTabLink.classList.add('active');
+
+                    document.querySelectorAll('.iv-cms-tab-content[id^="tab-blogs-"]').forEach(function(tc) {
+                        tc.classList.remove('active');
+                        tc.style.display = 'none';
+                    });
+                    var editTab = document.getElementById('tab-blogs-edit');
+                    if (editTab) {
+                        editTab.classList.add('active');
+                        editTab.style.display = 'block';
+                    }
+
+                    var sidebar = document.getElementById('blogsEditorSidebar');
+                    var postSaveBtn = document.getElementById('blogPostSaveBtn');
+                    var postCancelBtn = document.getElementById('blogPostCancelBtn');
+                    var standardSaveBtn = document.getElementById('blogsSaveBtn');
+                    var standardCloseBtn = document.getElementById('closeBlogsCmsBtn');
+
+                    if (sidebar) sidebar.style.display = 'none';
+                    if (postSaveBtn) postSaveBtn.style.display = 'inline-block';
+                    if (postCancelBtn) postCancelBtn.style.display = 'inline-block';
+                    if (standardSaveBtn) standardSaveBtn.style.display = 'none';
+                    if (standardCloseBtn) standardCloseBtn.style.display = 'none';
                 }
             }
         });

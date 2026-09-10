@@ -72,6 +72,14 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
                     import subprocess
                     if "homepage_config.json" in file_path or "pricing.json" in file_path or "blogs.json" in file_path or "legal_config.json" in file_path or "nikhil_profile_config.json" in file_path:
                         subprocess.run(['node', 'scripts/update_homepage.js'], cwd=DIRECTORY, shell=True)
+                    if "blogs.json" in file_path:
+                        try:
+                            blogs_js_path = os.path.abspath(os.path.join(DIRECTORY, "blogs.js"))
+                            with open(blogs_js_path, 'w', encoding='utf-8') as bjf:
+                                bjf.write(f"// Automatically compiled fallback data for local file:// browsing\nvar BLOGS_DATA = {json.dumps(config, indent=4)};\n")
+                        except Exception as bje:
+                            print(f"Failed to update blogs.js fallback: {bje}")
+                    
                     if "pricing.json" in file_path:
                         subprocess.run(['node', 'scripts/update_pricing.js'], cwd=DIRECTORY, shell=True)
                 else:
