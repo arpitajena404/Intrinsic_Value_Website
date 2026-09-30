@@ -58,7 +58,7 @@
     var nikhilProfileConfig = null;
     var highlightStyles = null;
     var activePopover = null;
-    var isHighlightEnabled = false;
+    var isHighlightEnabled = isIframe;
     var savedSelectionRange = null;
 
     function setNestedKey(obj, path, value) {
@@ -999,6 +999,7 @@
     }
 
     function setContentEditableOnFields() {
+        injectToolbarStyles();
         createFloatingToolbar();
 
         // 1. Mark fields with data-field as contenteditable
@@ -1443,6 +1444,18 @@
                     })
                     .catch(function (err) { console.warn("Error fetching legal_config.json:", err); });
             }
+        }
+
+        if (homepageConfig && homepageConfig.footer && homepageConfig.footer.registration) {
+            var reg = homepageConfig.footer.registration;
+            var regTitleEl = document.querySelector('[data-field="footer.registration.title"]');
+            if (regTitleEl && reg.title !== undefined) regTitleEl.textContent = reg.title;
+            var regNameEl = document.querySelector('[data-field="footer.registration.name"]');
+            if (regNameEl && reg.name !== undefined) regNameEl.textContent = reg.name;
+            var regSebiEl = document.querySelector('[data-field="footer.registration.sebi_reg_no"]');
+            if (regSebiEl && reg.sebi_reg_no !== undefined) regSebiEl.textContent = reg.sebi_reg_no;
+            var regValEl = document.querySelector('[data-field="footer.registration.validity"]');
+            if (regValEl && reg.validity !== undefined) regValEl.textContent = reg.validity;
         }
 
         setContentEditableOnFields();

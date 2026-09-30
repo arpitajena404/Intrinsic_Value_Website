@@ -1264,6 +1264,7 @@
             try {
                 cmsState = JSON.parse(pendingCms);
                 populateCmsForms();
+                syncAllToIframe();
             } catch (e) {
                 console.error("Error parsing pending_homepage_config", e);
             }
@@ -1273,11 +1274,13 @@
                 .then(function (data) {
                     cmsState = data;
                     populateCmsForms();
+                    syncAllToIframe();
                 })
                 .catch(function (err) {
                     console.warn("Could not fetch homepage_config.json directly. Loading fallback configuration:", err);
                     cmsState = JSON.parse(JSON.stringify(DEFAULT_FALLBACK_CONFIG));
                     populateCmsForms();
+                    syncAllToIframe();
                 });
         }
 
@@ -1286,6 +1289,7 @@
             try {
                 pricingCmsState = JSON.parse(pendingPricing);
                 populatePricingForms();
+                syncAllToIframe();
             } catch (e) {
                 console.error("Error parsing pending_pricing_config", e);
             }
@@ -1295,11 +1299,13 @@
                 .then(function (data) {
                     pricingCmsState = data;
                     populatePricingForms();
+                    syncAllToIframe();
                 })
                 .catch(function (err) {
                     console.warn("Could not fetch pricing.json directly. Loading fallback configuration:", err);
                     pricingCmsState = JSON.parse(JSON.stringify(DEFAULT_PRICING_FALLBACK_CONFIG));
                     populatePricingForms();
+                    syncAllToIframe();
                 });
         }
 
@@ -1430,6 +1436,17 @@
         document.getElementById('cms-footer-disclaimer-p1').value = cmsState.footer.disclaimer_p1 || '';
         document.getElementById('cms-footer-disclaimer-p2').value = cmsState.footer.disclaimer_p2 || '';
         document.getElementById('cms-footer-copyright-year').value = cmsState.footer.copyright_year || '';
+
+        // Registration Details
+        cmsState.footer.registration = cmsState.footer.registration || {};
+        var regTitleInput = document.getElementById('cms-footer-reg-title');
+        if (regTitleInput) regTitleInput.value = cmsState.footer.registration.title || 'Registration Details';
+        var regNameInput = document.getElementById('cms-footer-reg-name');
+        if (regNameInput) regNameInput.value = cmsState.footer.registration.name || 'Intrinsic Value Equity Advisors';
+        var regSebiInput = document.getElementById('cms-footer-reg-sebi');
+        if (regSebiInput) regSebiInput.value = cmsState.footer.registration.sebi_reg_no || 'INH000009047';
+        var regValidityInput = document.getElementById('cms-footer-reg-validity');
+        if (regValidityInput) regValidityInput.value = cmsState.footer.registration.validity || 'Jan 31, 2027';
 
         // Apps
         document.getElementById('cms-footer-play-store-url').value = cmsState.footer.apps?.play_store?.url || '';
@@ -1944,6 +1961,17 @@
         cmsState.footer.disclaimer_p1 = document.getElementById('cms-footer-disclaimer-p1').value;
         cmsState.footer.disclaimer_p2 = document.getElementById('cms-footer-disclaimer-p2').value;
         cmsState.footer.copyright_year = document.getElementById('cms-footer-copyright-year').value;
+
+        // Registration Details
+        cmsState.footer.registration = cmsState.footer.registration || {};
+        var regTitleInput = document.getElementById('cms-footer-reg-title');
+        if (regTitleInput) cmsState.footer.registration.title = regTitleInput.value.trim();
+        var regNameInput = document.getElementById('cms-footer-reg-name');
+        if (regNameInput) cmsState.footer.registration.name = regNameInput.value.trim();
+        var regSebiInput = document.getElementById('cms-footer-reg-sebi');
+        if (regSebiInput) cmsState.footer.registration.sebi_reg_no = regSebiInput.value.trim();
+        var regValidityInput = document.getElementById('cms-footer-reg-validity');
+        if (regValidityInput) cmsState.footer.registration.validity = regValidityInput.value.trim();
 
         // Apps
         cmsState.footer.apps = cmsState.footer.apps || {};
@@ -3501,11 +3529,13 @@
         // Auto sync state to iframe when parent form inputs change
         if (workspace) {
             workspace.addEventListener('input', function(e) {
+                if (e.target.id === 'editModeToggle' || e.target.id === 'nikhilEditModeToggle') return;
                 if (e.target.closest('input') || e.target.closest('textarea') || e.target.closest('select')) {
                     syncAllToIframe();
                 }
             });
             workspace.addEventListener('change', function(e) {
+                if (e.target.id === 'editModeToggle' || e.target.id === 'nikhilEditModeToggle') return;
                 if (e.target.closest('input') || e.target.closest('textarea') || e.target.closest('select')) {
                     syncAllToIframe();
                 }

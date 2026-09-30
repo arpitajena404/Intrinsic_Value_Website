@@ -373,14 +373,16 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                         <li><a href="https://smartodr.in/login" target="_blank" rel="noopener noreferrer">Smart ODR</a></li>
                     </ul>
                 </div>
+                <!-- CMS_FOOTER_REGISTRATION_START -->
                 <div class="footer-col-reg">
-                    <h3 class="footer-heading">Registration Details</h3>
+                    <h3 class="footer-heading" data-field="footer.registration.title">Registration Details</h3>
                     <p class="footer-reg-details">
-                        <span class="reg-label">Name:</span> Intrinsic Value Equity Advisors<br>
-                        <span class="reg-label">SEBI Registration No:</span> INH000009047<br>
-                        <span class="reg-label">Validity:</span> Jan 31, 2027
+                        <span class="reg-label">Name:</span> <span data-field="footer.registration.name">Intrinsic Value Equity Advisors</span><br>
+                        <span class="reg-label">SEBI Registration No:</span> <span data-field="footer.registration.sebi_reg_no">INH000009047</span><br>
+                        <span class="reg-label">Validity:</span> <span data-field="footer.registration.validity">Jan 31, 2027</span>
                     </p>
                 </div>
+<!-- CMS_FOOTER_REGISTRATION_END -->
             </div>
 
             <div class="footer-contact-bar">
@@ -484,7 +486,7 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
 
     <!-- Link Logic Script -->
     <script src="script.js?v=8" defer></script>
-    <script src="/main_cms_controller.js?v=13" defer></script>
+    <script src="/main_cms_controller.js?v=15" defer></script>
 </body>
 
 </html>

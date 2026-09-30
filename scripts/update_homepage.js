@@ -426,6 +426,24 @@ const footerImportantHtml = config.footer.important_info.map(link => {
 }).join('\n');
 replaceSection('FOOTER_IMPORTANT_INFO', footerImportantHtml);
 
+// 12.5. Footer Registration Details
+const regConfig = config.footer?.registration || {
+    title: "Registration Details",
+    name: "Intrinsic Value Equity Advisors",
+    sebi_reg_no: "INH000009047",
+    validity: "Jan 31, 2027"
+};
+
+const footerRegistrationHtml = `                <div class="footer-col-reg">
+                    <h3 class="footer-heading" data-field="footer.registration.title">${regConfig.title || 'Registration Details'}</h3>
+                    <p class="footer-reg-details">
+                        <span class="reg-label">Name:</span> <span data-field="footer.registration.name">${regConfig.name || ''}</span><br>
+                        <span class="reg-label">SEBI Registration No:</span> <span data-field="footer.registration.sebi_reg_no">${regConfig.sebi_reg_no || ''}</span><br>
+                        <span class="reg-label">Validity:</span> <span data-field="footer.registration.validity">${regConfig.validity || ''}</span>
+                    </p>
+                </div>`;
+replaceSection('FOOTER_REGISTRATION', footerRegistrationHtml);
+
 const footerBottomHtml = `            <div class="footer-bottom">
                 <div class="footer-disclaimers">
                     <p class="disclaimer-text" data-field="footer.disclaimer_p1">
@@ -791,6 +809,89 @@ function updateAllPagesFooterBottom() {
 
 updateAllPagesFooterBottom();
 
+function updateAllPagesFooterRegistration() {
+    const rootDir = path.join(__dirname, '..');
+    
+    function walkAndFindHtml(dir, fileList = []) {
+        const files = fs.readdirSync(dir);
+        for (const file of files) {
+            const filePath = path.join(dir, file);
+            const stat = fs.statSync(filePath);
+            if (stat.isDirectory()) {
+                if (file !== '.git' && file !== 'node_modules' && file !== 'analytics' && file !== 'CS reports') {
+                    walkAndFindHtml(filePath, fileList);
+                }
+            } else if (file.endsWith('.html')) {
+                fileList.push(filePath);
+            }
+        }
+        return fileList;
+    }
+
+    const regConfig = (config.footer && config.footer.registration) || {
+        title: "Registration Details",
+        name: "Intrinsic Value Equity Advisors",
+        sebi_reg_no: "INH000009047",
+        validity: "Jan 31, 2027"
+    };
+
+    const compiledRegistration = `                <div class="footer-col-reg">
+                    <h3 class="footer-heading" data-field="footer.registration.title">${regConfig.title || 'Registration Details'}</h3>
+                    <p class="footer-reg-details">
+                        <span class="reg-label">Name:</span> <span data-field="footer.registration.name">${regConfig.name || ''}</span><br>
+                        <span class="reg-label">SEBI Registration No:</span> <span data-field="footer.registration.sebi_reg_no">${regConfig.sebi_reg_no || ''}</span><br>
+                        <span class="reg-label">Validity:</span> <span data-field="footer.registration.validity">${regConfig.validity || ''}</span>
+                    </p>
+                </div>`;
+
+    const htmlFiles = walkAndFindHtml(rootDir);
+    for (const filePath of htmlFiles) {
+        let content = fs.readFileSync(filePath, 'utf8').replace(/\r\n/g, '\n');
+        let modified = false;
+
+        // 1. Inject markers if they don't exist
+        if (!content.includes('CMS_FOOTER_REGISTRATION_START')) {
+            const startIdx = content.indexOf('<div class="footer-col-reg">');
+            if (startIdx !== -1) {
+                const endDivIdx = content.indexOf('</div>', startIdx);
+                if (endDivIdx !== -1) {
+                    const blockEndIdx = endDivIdx + '</div>'.length;
+                    const before = content.substring(0, startIdx);
+                    const blockToReplace = content.substring(startIdx, blockEndIdx);
+                    const after = content.substring(blockEndIdx);
+                    
+                    content = before + `<!-- CMS_FOOTER_REGISTRATION_START -->\n` + blockToReplace + `\n<!-- CMS_FOOTER_REGISTRATION_END -->` + after;
+                    modified = true;
+                    console.log(`Injected footer registration markers into: ${path.relative(rootDir, filePath)}`);
+                }
+            }
+        }
+
+        // 2. Update content between markers
+        if (content.includes('CMS_FOOTER_REGISTRATION_START')) {
+            const startMarker = '<!-- CMS_FOOTER_REGISTRATION_START -->';
+            const endMarker = '<!-- CMS_FOOTER_REGISTRATION_END -->';
+            const startIndex = content.indexOf(startMarker);
+            const endIndex = content.indexOf(endMarker);
+            
+            if (startIndex !== -1 && endIndex !== -1) {
+                const before = content.substring(0, startIndex + startMarker.length);
+                const after = content.substring(endIndex);
+                
+                content = before + "\n" + compiledRegistration + "\n" + after;
+                modified = true;
+                console.log(`Updated footer registration in: ${path.relative(rootDir, filePath)}`);
+            }
+        }
+
+        if (modified) {
+            safeWriteFileSync(filePath, content, 'utf8');
+        }
+    }
+}
+
+updateAllPagesFooterRegistration();
+
 // 13.5. Update Team and About Bio Sections on static pages (like about.html)
 function updateAllPagesTeam() {
     const rootDir = path.join(__dirname, '..');
@@ -964,6 +1065,7 @@ function updateAllPagesAboutBio() {
 updateAllPagesTeam();
 updateAllPagesAboutBio();
 updateAllPagesFooterBottom();
+updateAllPagesFooterRegistration();
 
 // 14. Generate sitemap.xml dynamically
 function generateSitemap() {
@@ -1201,10 +1303,10 @@ ${newsItems}
 
         // Ensure main_cms_controller.js is loaded
         if (!content.includes('main_cms_controller.js')) {
-            content = content.replace('</body>', '    <script src="/main_cms_controller.js?v=13" defer></script>\n</body>');
+            content = content.replace('</body>', '    <script src="/main_cms_controller.js?v=15" defer></script>\n</body>');
             modified = true;
         } else {
-            content = content.replace(/(\/)?main_cms_controller\.js\?v=\d+/g, '/main_cms_controller.js?v=13');
+            content = content.replace(/(\/)?main_cms_controller\.js\?v=\d+/g, '/main_cms_controller.js?v=15');
             modified = true;
         }
 
@@ -1272,10 +1374,10 @@ function updateLegalCompliancePages() {
 
             // Ensure main_cms_controller.js is loaded
             if (!content.includes('main_cms_controller.js')) {
-                content = content.replace('</body>', '    <script src="/main_cms_controller.js?v=13" defer></script>\n</body>');
+                content = content.replace('</body>', '    <script src="/main_cms_controller.js?v=15" defer></script>\n</body>');
                 modified = true;
             } else {
-                content = content.replace(/(\.\.\/|\/)?main_cms_controller\.js\?v=\d+/g, '/main_cms_controller.js?v=13');
+                content = content.replace(/(\.\.\/|\/)?main_cms_controller\.js\?v=\d+/g, '/main_cms_controller.js?v=15');
                 modified = true;
             }
 
