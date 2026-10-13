@@ -1454,6 +1454,8 @@
             if (regNameEl && reg.name !== undefined) regNameEl.textContent = reg.name;
             var regSebiEl = document.querySelector('[data-field="footer.registration.sebi_reg_no"]');
             if (regSebiEl && reg.sebi_reg_no !== undefined) regSebiEl.textContent = reg.sebi_reg_no;
+            var regBseEl = document.querySelector('[data-field="footer.registration.bse_enlistment_no"]');
+            if (regBseEl && reg.bse_enlistment_no !== undefined) regBseEl.textContent = reg.bse_enlistment_no;
             var regValEl = document.querySelector('[data-field="footer.registration.validity"]');
             if (regValEl && reg.validity !== undefined) regValEl.textContent = reg.validity;
         }

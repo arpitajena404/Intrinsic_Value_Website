@@ -431,6 +431,7 @@ const regConfig = config.footer?.registration || {
     title: "Registration Details",
     name: "Intrinsic Value Equity Advisors",
     sebi_reg_no: "INH000009047",
+    bse_enlistment_no: "5512",
     validity: "Jan 31, 2027"
 };
 
@@ -439,6 +440,7 @@ const footerRegistrationHtml = `                <div class="footer-col-reg">
                     <p class="footer-reg-details">
                         <span class="reg-label">Name:</span> <span data-field="footer.registration.name">${regConfig.name || ''}</span><br>
                         <span class="reg-label">SEBI Registration No:</span> <span data-field="footer.registration.sebi_reg_no">${regConfig.sebi_reg_no || ''}</span><br>
+                        <span class="reg-label">BSE Enlistment No:</span> <span data-field="footer.registration.bse_enlistment_no">${regConfig.bse_enlistment_no || ''}</span><br>
                         <span class="reg-label">Validity:</span> <span data-field="footer.registration.validity">${regConfig.validity || ''}</span>
                     </p>
                 </div>`;
@@ -832,6 +834,7 @@ function updateAllPagesFooterRegistration() {
         title: "Registration Details",
         name: "Intrinsic Value Equity Advisors",
         sebi_reg_no: "INH000009047",
+        bse_enlistment_no: "5512",
         validity: "Jan 31, 2027"
     };
 
@@ -840,6 +843,7 @@ function updateAllPagesFooterRegistration() {
                     <p class="footer-reg-details">
                         <span class="reg-label">Name:</span> <span data-field="footer.registration.name">${regConfig.name || ''}</span><br>
                         <span class="reg-label">SEBI Registration No:</span> <span data-field="footer.registration.sebi_reg_no">${regConfig.sebi_reg_no || ''}</span><br>
+                        <span class="reg-label">BSE Enlistment No:</span> <span data-field="footer.registration.bse_enlistment_no">${regConfig.bse_enlistment_no || ''}</span><br>
                         <span class="reg-label">Validity:</span> <span data-field="footer.registration.validity">${regConfig.validity || ''}</span>
                     </p>
                 </div>`;

@@ -1018,6 +1018,13 @@
                             }
                     ],
                     "disclaimer": "SEBI Registration No: INH000009047. Investment in securities market are subject to market risks. Read all the related documents carefully before investing.",
+                    "registration": {
+                        "title": "Registration Details",
+                        "name": "Intrinsic Value Equity Advisors",
+                        "sebi_reg_no": "INH000009047",
+                        "bse_enlistment_no": "5512",
+                        "validity": "Jan 31, 2027"
+                    },
                     "apps": {
                         "play_store": {
                             "url": "https://play.google.com/store/apps/details?id=com.exly.intrinsicvalueequity&pli=1",
@@ -1446,6 +1453,8 @@
         if (regNameInput) regNameInput.value = cmsState.footer.registration.name || 'Intrinsic Value Equity Advisors';
         var regSebiInput = document.getElementById('cms-footer-reg-sebi');
         if (regSebiInput) regSebiInput.value = cmsState.footer.registration.sebi_reg_no || 'INH000009047';
+        var regBseInput = document.getElementById('cms-footer-reg-bse');
+        if (regBseInput) regBseInput.value = cmsState.footer.registration.bse_enlistment_no || '5512';
         var regValidityInput = document.getElementById('cms-footer-reg-validity');
         if (regValidityInput) regValidityInput.value = cmsState.footer.registration.validity || 'Jan 31, 2027';
 
@@ -1971,6 +1980,8 @@
         if (regNameInput) cmsState.footer.registration.name = regNameInput.value.trim();
         var regSebiInput = document.getElementById('cms-footer-reg-sebi');
         if (regSebiInput) cmsState.footer.registration.sebi_reg_no = regSebiInput.value.trim();
+        var regBseInput = document.getElementById('cms-footer-reg-bse');
+        if (regBseInput) cmsState.footer.registration.bse_enlistment_no = regBseInput.value.trim();
         var regValidityInput = document.getElementById('cms-footer-reg-validity');
         if (regValidityInput) cmsState.footer.registration.validity = regValidityInput.value.trim();
 
