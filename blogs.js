@@ -1,5 +1,80 @@
-// Automatically generated fallback data for local file:// browsing
+// Automatically compiled fallback data for local file:// browsing
 var BLOGS_DATA = [
+    {
+        "id": 3535,
+        "slug": "Ashok Leyland: A Good Business, But Is It a Good Investment?",
+        "title": "Ashok Leyland: A Good Business, But Is It a Good Investment?",
+        "date": "October 13, 2026",
+        "rawDate": "2026-10-13T09:20:37",
+        "category": "STOCK ANALYSIS",
+        "readingTime": "3 min read",
+        "image": "images/1791883275391_s-blob-v1-IMAGE--mylPU-amxc.png",
+        "gradient": "linear-gradient(135deg, #FF8C00, #121212)",
+        "excerpt": "At first glance, Ashok Leyland looks like the kind of company investors would want to own.\n\nA market cap of around ₹1 lakh crore, a respectable ROCE of 13%, and roughly 10× returns over the last decade make the story look attractive.\n\nBut when we looked deeper, the picture became much more interesting.",
+        "blocks": [
+            {
+                "type": "paragraph",
+                "text": "At first glance, Ashok Leyland looks like the kind of company investors would want to own.<div><br><div>A market cap of around ₹1 lakh crore, a respectable ROCE of 13%, and roughly 10× returns over the last decade make the story look attractive.</div><div><br></div><div>But when we looked deeper, the picture became much more interesting.</div><div><br></div></div>"
+            },
+            {
+                "type": "heading",
+                "text": "The First Red Flag: Promoter Pledge"
+            },
+            {
+                "type": "paragraph",
+                "text": "The first number that stood out was 40.1% promoter pledge.<div><br><div>Promoters hold roughly 51% of the company, but a significant portion of that holding is pledged.</div><div><br></div><div>Pledging isn't automatically a reason to reject a stock. But when the percentage becomes this high, it deserves serious attention.</div><div><br></div><div>The important question isn't simply “Is the company good?”</div><div>It's:</div><div>“Why are such a large portion of the promoter shares pledged?”</div><div><br></div></div>"
+            },
+            {
+                "type": "photo",
+                "url": "images/1791883377013_s-blob-v1-IMAGE-Qjs1KjXUkSQ.png"
+            },
+            {
+                "type": "heading",
+                "text": "A Good Ranking Doesn't Always Mean a Good Investment<div><br></div>"
+            },
+            {
+                "type": "paragraph",
+                "text": "Interestingly, Ashok Leyland ranks #2 in our Intrinsic Analytics Commercial Vehicle ranking.<div><br><div>That makes the analysis even more interesting.</div><div><br></div><div>Because ranking highly on business quality doesn't automatically mean the stock is attractive at its current price.</div><div><br></div><div>There is a major difference between:</div><div>Good Company ≠ Good Investment</div><div>Valuation matters.</div><div>Balance-sheet strength matters.</div><div>And promoter actions matter.</div><div><br></div></div>"
+            },
+            {
+                "type": "photo",
+                "url": "images/1791883537964_s-blob-v1-IMAGE-qCf8HI4vhBI.png"
+            },
+            {
+                "type": "heading",
+                "text": "Then We Looked at Valuation"
+            },
+            {
+                "type": "paragraph",
+                "text": "Ashok Leyland is currently trading at approximately:<div>PE: ~27×</div><div>P/B: ~7.2×</div><div><br></div><div>More importantly, its Price-to-Book and Price-to-Sales ratios are significantly above their historical medians.</div><div><br></div><div>That suggests investors are already paying a substantial premium for the company's future growth.</div><div><br></div><div>And that's where the risk begins.</div><div>When expectations are high, even a good company can disappoint investors if earnings don't grow fast enough to justify the valuation.</div><div><br></div>"
+            },
+            {
+                "type": "photo",
+                "url": "images/1791883600699_s-blob-v1-IMAGE-0fTfvoatAIU.png"
+            },
+            {
+                "type": "heading",
+                "text": "The Balance Sheet Adds Another Layer<div><br></div>"
+            },
+            {
+                "type": "paragraph",
+                "text": "The next thing we looked at was debt.<div><br><div>Borrowings have increased dramatically:</div><div>₹24,000 Cr → ₹63,000 Cr</div><div><br></div><div>At the same time, interest coverage is only around 2.1×.</div><div>That means the company's earnings provide a relatively thin cushion against its interest obligations.</div><div><br></div><div>Debt isn't necessarily bad when a company can comfortably service it.</div><div>But when valuations are already elevated, rising debt creates another variable investors need to monitor.</div><div><br></div></div>"
+            },
+            {
+                "type": "heading",
+                "text": "The Bigger Lesson for Investors"
+            },
+            {
+                "type": "paragraph",
+                "text": "The biggest takeaway from analysing Ashok Leyland isn't necessarily about Ashok Leyland.<div>It's about how we analyse stocks.</div><div><br></div><div>Investors often ask:</div><div>“Is this a good company?”</div><div>But that is only the first question.</div><div><br></div><div>The better question is:</div><div>“Is this a good investment at this valuation?”</div><div><br></div><div>A great business bought at an expensive valuation can still generate disappointing returns.</div><div>And a strong business with rising risks needs much deeper analysis before making an investment decision</div><div><br></div>"
+            },
+            {
+                "type": "video",
+                "url": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/AX2V_MGGhr0?si=pOY6tJmtRuJQwAPe\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+            }
+        ],
+        "content": "<p>At first glance, Ashok Leyland looks like the kind of company investors would want to own.<div><br><div>A market cap of around ₹1 lakh crore, a respectable ROCE of 13%, and roughly 10× returns over the last decade make the story look attractive.</div><div><br></div><div>But when we looked deeper, the picture became much more interesting.</div><div><br></div></div></p>\n<h2 class=\"blog-highlighted-heading\">The First Red Flag: Promoter Pledge</h2>\n<p>The first number that stood out was 40.1% promoter pledge.<div><br><div>Promoters hold roughly 51% of the company, but a significant portion of that holding is pledged.</div><div><br></div><div>Pledging isn't automatically a reason to reject a stock. But when the percentage becomes this high, it deserves serious attention.</div><div><br></div><div>The important question isn't simply “Is the company good?”</div><div>It's:</div><div>“Why are such a large portion of the promoter shares pledged?”</div><div><br></div></div></p>\n<p style=\"text-align:center; overflow: visible;\"><img loading=\"lazy\" decoding=\"async\" class=\"aligncenter blog-zoomable-img\" src=\"/images/1791883377013_s-blob-v1-IMAGE-Qjs1KjXUkSQ.png\" style=\"width:100%; max-width:none; height:auto; position: relative; left: 50%; transform: translateX(-50%);; cursor:zoom-in;\" alt=\"\" /></p>\n<h2 class=\"blog-highlighted-heading\">A Good Ranking Doesn't Always Mean a Good Investment<div><br></div></h2>\n<p>Interestingly, Ashok Leyland ranks #2 in our Intrinsic Analytics Commercial Vehicle ranking.<div><br><div>That makes the analysis even more interesting.</div><div><br></div><div>Because ranking highly on business quality doesn't automatically mean the stock is attractive at its current price.</div><div><br></div><div>There is a major difference between:</div><div>Good Company ≠ Good Investment</div><div>Valuation matters.</div><div>Balance-sheet strength matters.</div><div>And promoter actions matter.</div><div><br></div></div></p>\n<p style=\"text-align:center; overflow: visible;\"><img loading=\"lazy\" decoding=\"async\" class=\"aligncenter blog-zoomable-img\" src=\"/images/1791883537964_s-blob-v1-IMAGE-qCf8HI4vhBI.png\" style=\"width:100%; max-width:none; height:auto; position: relative; left: 50%; transform: translateX(-50%);; cursor:zoom-in;\" alt=\"\" /></p>\n<h2 class=\"blog-highlighted-heading\">Then We Looked at Valuation</h2>\n<p>Ashok Leyland is currently trading at approximately:<div>PE: ~27×</div><div>P/B: ~7.2×</div><div><br></div><div>More importantly, its Price-to-Book and Price-to-Sales ratios are significantly above their historical medians.</div><div><br></div><div>That suggests investors are already paying a substantial premium for the company's future growth.</div><div><br></div><div>And that's where the risk begins.</div><div>When expectations are high, even a good company can disappoint investors if earnings don't grow fast enough to justify the valuation.</div><div><br></div></p>\n<p style=\"text-align:center; overflow: visible;\"><img loading=\"lazy\" decoding=\"async\" class=\"aligncenter blog-zoomable-img\" src=\"/images/1791883600699_s-blob-v1-IMAGE-0fTfvoatAIU.png\" style=\"width:100%; max-width:none; height:auto; position: relative; left: 50%; transform: translateX(-50%);; cursor:zoom-in;\" alt=\"\" /></p>\n<h2 class=\"blog-highlighted-heading\">The Balance Sheet Adds Another Layer<div><br></div></h2>\n<p>The next thing we looked at was debt.<div><br><div>Borrowings have increased dramatically:</div><div>₹24,000 Cr → ₹63,000 Cr</div><div><br></div><div>At the same time, interest coverage is only around 2.1×.</div><div>That means the company's earnings provide a relatively thin cushion against its interest obligations.</div><div><br></div><div>Debt isn't necessarily bad when a company can comfortably service it.</div><div>But when valuations are already elevated, rising debt creates another variable investors need to monitor.</div><div><br></div></div></p>\n<h2 class=\"blog-highlighted-heading\">The Bigger Lesson for Investors</h2>\n<p>The biggest takeaway from analysing Ashok Leyland isn't necessarily about Ashok Leyland.<div>It's about how we analyse stocks.</div><div><br></div><div>Investors often ask:</div><div>“Is this a good company?”</div><div>But that is only the first question.</div><div><br></div><div>The better question is:</div><div>“Is this a good investment at this valuation?”</div><div><br></div><div>A great business bought at an expensive valuation can still generate disappointing returns.</div><div>And a strong business with rising risks needs much deeper analysis before making an investment decision</div><div><br></div></p>\n<p><iframe loading=\"lazy\" width=\"100%\" height=\"450\" src=\"https://www.youtube.com/embed/AX2V_MGGhr0\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe></p>\n"
+    },
     {
         "id": 3534,
         "slug": "Has the Indian Stock Market Finally Made a  Bottom? 7 Signals Investors Should Watch",
