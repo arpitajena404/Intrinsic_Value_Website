@@ -9,6 +9,7 @@
         "arpitajena762@gmail.com",
         "nikhilgangil333@gmail.com",
         "intrinsicvalueequity@gmail.com",
+        "intrinsicvalueeq@gmail.com",
         "gvaibhav870@gmail.com",
         "valuemev.jayate@gmail.com",
         "nikhil@intrinsicvalueequity.in",
