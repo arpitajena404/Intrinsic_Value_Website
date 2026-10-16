@@ -1,11 +1,6 @@
 {
     "navigation": [
         {
-            "text": "Home",
-            "url": "https://intrinsicvalueequity.in",
-            "new_tab": false
-        },
-        {
             "text": "Service",
             "url": "pricing.html"
         },
@@ -709,7 +704,12 @@
             },
             {
                 "text": "Smart ODR",
-                "url": "https://smartodr.in/login"
+                "url": "https://smartodr.in/login",
+                "new_tab": true
+            },
+            {
+                "text": "Payment",
+                "url": "/payment"
             }
         ],
         "disclaimer_p1": "Investment in securities market are subjected to market risks, Read all the related documents carefully before investing.",

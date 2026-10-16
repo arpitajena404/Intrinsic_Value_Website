@@ -26,108 +26,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css?v=8">
-    <style>
-        .grievance-form {
-            background: rgba(18, 18, 18, 0.45);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 2.5rem;
-            margin: 2.5rem 0;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-        }
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        @media (max-width: 600px) {
-            .form-row {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            .grievance-form {
-                padding: 1.5rem;
-            }
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        .form-label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.5px;
-        }
-        .form-input, .form-textarea, .form-select {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            border-radius: 8px;
-            padding: 0.9rem 1.2rem;
-            font-size: 0.95rem;
-            color: var(--text-primary) !important;
-            transition: all 0.3s ease;
-        }
-        .form-input::placeholder, .form-textarea::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
-        .form-input:focus, .form-textarea:focus, .form-select:focus {
-            outline: none;
-            border-color: var(--accent-primary, #f97316) !important;
-            background: rgba(255, 255, 255, 0.05) !important;
-            box-shadow: 0 0 12px rgba(249, 115, 22, 0.2);
-        }
-        .form-select option {
-            background: #121212;
-            color: #ffffff;
-        }
-        .file-upload-wrapper {
-            position: relative;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px dashed rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        .file-upload-wrapper:hover {
-            border-color: var(--accent-primary, #f97316);
-            background: rgba(249, 115, 22, 0.02);
-        }
-        .file-upload-input {
-            width: 100%;
-            color: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-        }
-        .btn-submit {
-            display: block;
-            width: 150px;
-            padding: 12px 24px;
-            background: var(--accent-primary, #f97316);
-            color: #050505;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .btn-submit:hover {
-            background: var(--accent-hover, #ea580c);
-            box-shadow: 0 0 15px rgba(249, 115, 22, 0.4);
-            transform: translateY(-2px);
-        }
-        .btn-submit:active {
-            transform: translateY(0);
-        }
-    </style>
 </head>
 
 <body>
@@ -159,14 +57,13 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                 <ul class="nav-menu">
 
                     <!-- CMS_NAV_START -->
-                    <li><a href="https://intrinsicvalueequity.in" class="nav-link">Home</a></li>
                     <li><a href="../pricing.html" class="nav-link">Service</a></li>
                     <li><a href="../about.html" class="nav-link">About Us</a></li>
                     <li><a href="../blogs.html" class="nav-link">Blogs</a></li>
                     <li><a href="../analytics/dashboard" class="nav-link">Analytics</a></li>
-                    <li><a href="https://premium.intrinsicvalueequity.in/eud/login/email?next=https%3A%2F%2Fpremium.intrinsicvalueequity.in%2Feud%2Fcourses%3F_gl%3D1*165ir88*_gcl_aw*R0NMLjE3ODU3NzY4OTQuQ2owS0NRanctTURUQmhDZ0FSSXNBS0FrZGxRcThhWEJQc1U2RVdZeFRCZ1puLWZUMXlGdGx5Y0ZBb0lrdjRrRW9yRXh0dG9oM21zVG5xQWFBc1dKRUFMd193Y0I.*_gcl_au*Mzc2MzgwNzkwLjE3ODQ0NTY3NDQuLS4tLjE3ODU1MDAyNDUuMTAyNDI5MDI5My4xNzg2OTY3MzkwLjE3ODY5NjczODk." class="btn-solid" style="padding: 8px 18px; font-size: 0.95rem;" data-field="header_buttons.client_login.text" data-label="Client Login Text"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Client Login</a></li>
                     <li class="nav-actions-mobile">
                         <a href="https://api.whatsapp.com/send/?phone=917354259486&text=Hello%2C%0D%0Ai+want+to+understand+about+your+services&type=phone_number&app_absent=0" class="btn-glow" data-field="header_buttons.contact_us.text" data-label="Contact Us Text" target="_blank" rel="noopener noreferrer">Contact Us</a>
+                        <a href="https://premium.intrinsicvalueequity.in/eud/login/email?next=https%3A%2F%2Fpremium.intrinsicvalueequity.in%2Feud%2Fcourses%3F_gl%3D1*165ir88*_gcl_aw*R0NMLjE3ODU3NzY4OTQuQ2owS0NRanctTURUQmhDZ0FSSXNBS0FrZGxRcThhWEJQc1U2RVdZeFRCZ1puLWZUMXlGdGx5Y0ZBb0lrdjRrRW9yRXh0dG9oM21zVG5xQWFBc1dKRUFMd193Y0I.*_gcl_au*Mzc2MzgwNzkwLjE3ODQ0NTY3NDQuLS4tLjE3ODU1MDAyNDUuMTAyNDI5MDI5My4xNzg2OTY3MzkwLjE3ODY5NjczODk." class="btn-solid" style="padding: 8px 18px; font-size: 0.95rem;" data-field="header_buttons.client_login.text" data-label="Client Login Text"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Client Login</a>
                     </li>
 <!-- CMS_NAV_END -->
 </ul>
@@ -174,6 +71,7 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
             <div class="nav-actions">
                 <!-- CMS_NAV_CONTACT_START -->
                 <a href="https://api.whatsapp.com/send/?phone=917354259486&text=Hello%2C%0D%0Ai+want+to+understand+about+your+services&type=phone_number&app_absent=0" class="btn-glow" data-field="header_buttons.contact_us.text" data-label="Contact Us Text" target="_blank" rel="noopener noreferrer">Contact Us</a>
+                <a href="https://premium.intrinsicvalueequity.in/eud/login/email?next=https%3A%2F%2Fpremium.intrinsicvalueequity.in%2Feud%2Fcourses%3F_gl%3D1*165ir88*_gcl_aw*R0NMLjE3ODU3NzY4OTQuQ2owS0NRanctTURUQmhDZ0FSSXNBS0FrZGxRcThhWEJQc1U2RVdZeFRCZ1puLWZUMXlGdGx5Y0ZBb0lrdjRrRW9yRXh0dG9oM21zVG5xQWFBc1dKRUFMd193Y0I.*_gcl_au*Mzc2MzgwNzkwLjE3ODQ0NTY3NDQuLS4tLjE3ODU1MDAyNDUuMTAyNDI5MDI5My4xNzg2OTY3MzkwLjE3ODY5NjczODk." class="btn-solid" style="padding: 8px 18px; font-size: 0.95rem;" data-field="header_buttons.client_login.text" data-label="Client Login Text"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Client Login</a>
 <!-- CMS_NAV_CONTACT_END -->
             </div>
             <button class="menu-trigger" aria-label="Toggle Navigation Menu">
@@ -190,76 +88,81 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
     <main style="padding-top: calc(var(--header-height) + 2rem); min-height: calc(100vh - 200px);">
         <div class="container" style="padding-bottom: 4rem; max-width: 900px;">
 
-            <div class="legal-page-header" style="margin-bottom: 2.5rem; text-align: center;">
-                <span class="section-tag" style="display:inline-block; margin-bottom: 1rem;">Support</span>
-                <h1 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 0.75rem;">Grievance Redressal</h1>
-                <div style="width: 60px; height: 3px; background: var(--accent-primary, #f97316); border-radius: 2px; margin: 1rem auto 0 auto;"></div>
+            <div class="legal-page-header" style="margin-bottom: 2.5rem;">
+                <!-- CMS_LEGAL_HEADER_START -->
+                <h1 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 0.75rem;" data-field="legal.grievance_redressal.title">Grievance Redressal</h1>
+                <p style="color: var(--text-secondary); font-size: 1rem;" data-field="legal.grievance_redressal.subtitle">Raise a grievance with Intrinsic Value Equity Advisors — SEBI Registered Research Analyst INH000009047</p>
+                <div style="width: 60px; height: 3px; background: var(--accent-primary, #f97316); border-radius: 2px; margin-top: 1rem;"></div>
+<!-- CMS_LEGAL_HEADER_END -->
             </div>
 
             <div class="legal-content" style="color: var(--text-secondary); line-height: 1.9; font-size: 0.97rem;">
+                <!-- CMS_LEGAL_CONTENT_START -->
 
-                <p style="margin-bottom: 1rem;">For any grievances (e.g., non-receipt of a research report, missing pages, or other deficiencies), please raise your doubt in App chats or Whatsapp. If you don't receive any response within 24 hours, you can call our customer support number.</p>
-                
-                <p style="margin-bottom: 1rem;">In case of No response within 3 days.</p>
-                
-                <p style="margin-bottom: 1.5rem;">Email to Our <strong>designated Grievance Officer</strong> at <!--email_off--><a href="mailto:info@intrinsicvalueequity.in" style="color: var(--accent-primary, #f97316);">info@intrinsicvalueequity.in</a><!--/email_off--> within <strong>7 business days</strong> of the issue.</p>
-                
-                <p style="margin-bottom: 2rem;">After that you can Raise it using below Form.</p>
+<p style="margin-bottom: 1.25rem;">I value your trust and am committed to addressing any concerns or complaints promptly and transparently. Clients may reach out to me through any of the following channels:</p>
 
-                <!-- Grievance Form -->
-                <form id="grievance-form" class="grievance-form" enctype="multipart/form-data" onsubmit="event.preventDefault(); alert('Form submission is saved. API setup will follow later.');">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="first-name">First name *</label>
-                            <input type="text" id="first-name" name="first-name" class="form-input" required placeholder="Enter your first name">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="last-name">Last name *</label>
-                            <input type="text" id="last-name" name="last-name" class="form-input" required placeholder="Enter your last name">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="phone">Phone *</label>
-                            <input type="tel" id="phone" name="phone" class="form-input" required placeholder="Enter your phone number">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="product">Product *</label>
-                            <select id="product" name="product" class="form-select" required>
-                                <option value="" disabled selected>Select Product</option>
-                                <option value="HNI Premium">HNI Premium</option>
-                                <option value="Inner Circle">Inner Circle</option>
-                                <option value="Invest Biz">Invest Biz</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="email">E-mail *</label>
-                        <input type="email" id="email" name="email" class="form-input" required placeholder="Enter your email address">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="subject">Subject *</label>
-                        <input type="text" id="subject" name="subject" class="form-input" required placeholder="Enter the subject of your grievance">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="description">Description *</label>
-                        <textarea id="description" name="description" class="form-textarea" required placeholder="Describe your grievance in detail"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="attachment">Attachment</label>
-                        <div class="file-upload-wrapper">
-                            <input type="file" id="attachment" name="attachment" class="file-upload-input">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-submit">Submit</button>
-                </form>
+<p style="margin-bottom: 0.75rem;"><strong style="color: var(--text-primary, #ffffff);">Email:</strong> Write to us at ______________ for any queries or grievances.</p>
 
-                <p style="margin-top: 2rem; margin-bottom: 1.5rem;">If the complaint is not resolved by us in next 15 days, or if the client is not satisfied with Intrinsic Value grievance redressal, the client may, approach SEBI at: <a href="https://scores.sebi.gov.in/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-primary, #f97316);">https://scores.sebi.gov.in/</a> and can lodge complain in &ldquo;Complaint Registration&rdquo; under &ldquo;Investor Corner&rdquo;.</p>
-                
-                <p style="margin-bottom: 0.5rem;">In case, you are not able to register a complaint online, investors may send their complaints to:</p>
-                <p style="margin-bottom: 1.5rem; line-height: 1.7; padding-left: 1rem; border-left: 3px solid var(--accent-primary, #f97316); color: var(--text-primary);">Office of Investor Assistance and Education, Securities and Exchange Board of India, SEBI Bhavan. Plot No. C4-A, &lsquo;G&rsquo; Block, Bandra-Kurla Complex, Bandra (E), Mumbai &ndash; 400 051.</p>
+<p style="margin-bottom: 0.75rem;"><strong style="color: var(--text-primary, #ffffff);">Phone:</strong> Call us at +91- ____________ during working hours</p>
 
+<p style="margin-bottom: 1.25rem;"><strong style="color: var(--text-primary, #ffffff);">Post:</strong> You may also send a written complaint to my registered office at: _____________________.</p>
+
+<p style="margin-bottom: 2rem;">I aim to provide a resolution within 21 working days from the date of receiving your complaint.</p>
+
+<h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary, #ffffff); margin-top: 2rem; margin-bottom: 0.75rem;">Escalation Matrix</h2>
+
+<p style="margin-bottom: 1.25rem;">Below are the key contacts you may approach based on the nature or escalation level of your concern:</p>
+
+<div class="escalation-table-wrapper" style="overflow-x: auto; margin: 1.5rem 0 2rem 0; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;">
+    <table style="width: 100%; border-collapse: collapse; min-width: 650px; font-size: 0.95rem; text-align: left;">
+        <thead>
+            <tr style="background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                <th style="padding: 12px 16px; color: var(--text-primary, #ffffff); font-weight: 600;">Designation</th>
+                <th style="padding: 12px 16px; color: var(--text-primary, #ffffff); font-weight: 600;">Contact Person Name</th>
+                <th style="padding: 12px 16px; color: var(--text-primary, #ffffff); font-weight: 600;">Office Address</th>
+                <th style="padding: 12px 16px; color: var(--text-primary, #ffffff); font-weight: 600;">Contact No.</th>
+                <th style="padding: 12px 16px; color: var(--text-primary, #ffffff); font-weight: 600;">Email ID</th>
+                <th style="padding: 12px 16px; color: var(--text-primary, #ffffff); font-weight: 600;">Working Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                <td style="padding: 12px 16px; color: var(--text-primary, #ffffff); font-weight: 500;">Head of Customer Care</td>
+                <td style="padding: 12px 16px;">_________</td>
+                <td style="padding: 12px 16px;">__________</td>
+                <td style="padding: 12px 16px;">+91 ___________</td>
+                <td style="padding: 12px 16px;">__________________</td>
+                <td style="padding: 12px 16px;">Mon–Fri, 10:00 AM – 6:00 PM</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                <td style="padding: 12px 16px; color: var(--text-primary, #ffffff); font-weight: 500;">CEO</td>
+                <td style="padding: 12px 16px;">_________</td>
+                <td style="padding: 12px 16px;">__________</td>
+                <td style="padding: 12px 16px;">+91 ___________</td>
+                <td style="padding: 12px 16px;">__________________</td>
+                <td style="padding: 12px 16px;">Mon–Fri, 10:00 AM – 6:00 PM</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px 16px; color: var(--text-primary, #ffffff); font-weight: 500;">Principal Officer</td>
+                <td style="padding: 12px 16px;">_________</td>
+                <td style="padding: 12px 16px;">__________</td>
+                <td style="padding: 12px 16px;">+91 ___________</td>
+                <td style="padding: 12px 16px;">__________________</td>
+                <td style="padding: 12px 16px;">Mon–Fri, 10:00 AM – 6:00 PM</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary, #ffffff); margin-top: 2rem; margin-bottom: 0.75rem;">Still Not Satisfied?</h2>
+
+<p style="margin-bottom: 1.25rem;">If your grievance remains unresolved even after contacting the above authorities:</p>
+
+<p style="margin-bottom: 1rem;">Raise your concern through SEBI’s SCORES Portal (SEBI Complaints Redress System): <a href="https://scores.sebi.gov.in/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-primary, #f97316); text-decoration: underline; word-break: break-all;">https://scores.sebi.gov.in/</a></p>
+
+<p style="margin-bottom: 1.5rem;">Still dissatisfied? Proceed to Online Dispute Resolution (ODR): <a href="https://smartodr.in" target="_blank" rel="noopener noreferrer" style="color: var(--accent-primary, #f97316); text-decoration: underline; word-break: break-all;">https://smartodr.in</a></p>
+
+<!-- CMS_LEGAL_CONTENT_END -->
             </div>
 
         </div>
@@ -310,6 +213,7 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
 
     <!-- Link Logic Script -->
     <script src="../script.js?v=8"></script>
+    <script src="/main_cms_controller.js?v=25" defer></script>
 </body>
 
 </html>

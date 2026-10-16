@@ -1014,7 +1014,12 @@
                             },
                             {
                                     "text": "Smart ODR",
-                                    "url": "https://smartodr.in/login"
+                                    "url": "https://smartodr.in/login",
+                                    "new_tab": true
+                            },
+                            {
+                                    "text": "Payment",
+                                    "url": "/payment"
                             }
                     ],
                     "disclaimer": "SEBI Registration No: INH000009047. Investment in securities market are subject to market risks. Read all the related documents carefully before investing.",
@@ -5231,7 +5236,8 @@
         'privacypolicy': 'Legal&Compliance/privacypolicy.html',
         'tnc': 'Legal&Compliance/tnc.html',
         'investorcharter': 'Legal&Compliance/investorcharter.html',
-        'grievance_redressal': 'Legal&Compliance/Grievance Redressal.html'
+        'grievance_redressal': 'Legal&Compliance/Grievance Redressal.html',
+        'payment': 'payment.html'
     };
 
     function loadLegalCmsData() {
@@ -5271,7 +5277,8 @@
             'privacypolicy': 'Privacy Policy Details',
             'tnc': 'Terms & Conditions (MITC) Details',
             'investorcharter': 'Investor Charter Details',
-            'grievance_redressal': 'Grievance Redressal Details'
+            'grievance_redressal': 'Grievance Redressal Details',
+            'payment': 'Payment Information Details'
         };
         if (heading) heading.innerText = docNames[currentLegalDoc] || 'Document Details';
 

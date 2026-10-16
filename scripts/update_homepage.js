@@ -89,14 +89,13 @@ function generateNavHtml(prefix) {
     });
     
     if (config.header_buttons) {
-        const loginLink = config.header_buttons.client_login;
-        const loginTarget = loginLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
-        htmlList.push(`                    <li><a href="${loginLink.url}" class="btn-solid" style="padding: 8px 18px; font-size: 0.95rem;" data-field="header_buttons.client_login.text" data-label="Client Login Text"${loginTarget}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>${loginLink.text}</a></li>`);
-        
         const contactLink = config.header_buttons.contact_us;
         const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+        const loginLink = config.header_buttons.client_login;
+        const loginTarget = loginLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
         htmlList.push(`                    <li class="nav-actions-mobile">
                         <a href="${contactLink.url}" class="btn-glow" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>
+                        <a href="${loginLink.url}" class="btn-solid" style="padding: 8px 18px; font-size: 0.95rem;" data-field="header_buttons.client_login.text" data-label="Client Login Text"${loginTarget}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>${loginLink.text}</a>
                     </li>`);
     }
     return htmlList.join('\n');
@@ -104,11 +103,14 @@ function generateNavHtml(prefix) {
 const navHtml = generateNavHtml('');
 replaceSection('NAV', navHtml);
 
-// 1.5. Nav Contact Button (Desktop)
+// 1.5. Nav Action Buttons (Desktop)
 if (config.header_buttons) {
     const contactLink = config.header_buttons.contact_us;
     const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
-    const contactHtml = `                <a href="${contactLink.url}" class="btn-glow" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>`;
+    const loginLink = config.header_buttons.client_login;
+    const loginTarget = loginLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+    const contactHtml = `                <a href="${contactLink.url}" class="btn-glow" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>
+                <a href="${loginLink.url}" class="btn-solid" style="padding: 8px 18px; font-size: 0.95rem;" data-field="header_buttons.client_login.text" data-label="Client Login Text"${loginTarget}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>${loginLink.text}</a>`;
     replaceSection('NAV_CONTACT', contactHtml);
 }
 
@@ -709,14 +711,17 @@ function updateAllPagesNavigation() {
             if (startIndex !== -1 && endIndex !== -1) {
                 const contactLink = config.header_buttons.contact_us;
                 const contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
-                const relativeContactHtml = `                <a href="${contactLink.url}" class="btn-glow" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>`;
+                const loginLink = config.header_buttons.client_login;
+                const loginTarget = loginLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                const relativeContactHtml = `                <a href="${contactLink.url}" class="btn-glow" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"${contactTarget}>${contactLink.text}</a>
+                <a href="${loginLink.url}" class="btn-solid" style="padding: 8px 18px; font-size: 0.95rem;" data-field="header_buttons.client_login.text" data-label="Client Login Text"${loginTarget}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>${loginLink.text}</a>`;
                 
                 const before = content.substring(0, startIndex + startMarker.length);
                 const after = content.substring(endIndex);
                 
                 content = before + "\n" + relativeContactHtml + "\n" + after;
                 modified = true;
-                console.log(`Updated nav contact button in: ${path.relative(rootDir, filePath)}`);
+                console.log(`Updated nav action buttons in: ${path.relative(rootDir, filePath)}`);
             }
         }
         
@@ -1081,7 +1086,8 @@ function generateSitemap() {
         'pricing',
         'nikhil-gangil-indian-value-investor',
         'analytics/tools',
-        'smallcase-vs-advisory'
+        'smallcase-vs-advisory',
+        'payment'
     ];
     
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
@@ -1307,10 +1313,10 @@ ${newsItems}
 
         // Ensure main_cms_controller.js is loaded
         if (!content.includes('main_cms_controller.js')) {
-            content = content.replace('</body>', '    <script src="/main_cms_controller.js?v=15" defer></script>\n</body>');
+            content = content.replace('</body>', '    <script src="/main_cms_controller.js?v=25" defer></script>\n</body>');
             modified = true;
         } else {
-            content = content.replace(/(\/)?main_cms_controller\.js\?v=\d+/g, '/main_cms_controller.js?v=15');
+            content = content.replace(/(\/)?main_cms_controller\.js\?v=\d+/g, '/main_cms_controller.js?v=25');
             modified = true;
         }
 
@@ -1338,7 +1344,9 @@ function updateLegalCompliancePages() {
             'disclaimer.html': 'disclaimer',
             'privacypolicy.html': 'privacypolicy',
             'tnc.html': 'tnc',
-            'investorcharter.html': 'investorcharter'
+            'investorcharter.html': 'investorcharter',
+            'payment.html': 'payment',
+            'Grievance Redressal.html': 'grievance_redressal'
         };
 
         for (const [filename, docKey] of Object.entries(docMap)) {
@@ -1358,8 +1366,8 @@ function updateLegalCompliancePages() {
             const endHIdx = content.indexOf(endHeaderMarker);
 
             if (startHIdx !== -1 && endHIdx !== -1) {
-                const headerHtml = `                <h1 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 0.75rem;">${docData.title}</h1>
-                <p style="color: var(--text-secondary); font-size: 1rem;">${docData.subtitle || ""}</p>
+                const headerHtml = `                <h1 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 0.75rem;" data-field="legal.${docKey}.title">${docData.title}</h1>
+                <p style="color: var(--text-secondary); font-size: 1rem;" data-field="legal.${docKey}.subtitle">${docData.subtitle || ""}</p>
                 <div style="width: 60px; height: 3px; background: var(--accent-primary, #f97316); border-radius: 2px; margin-top: 1rem;"></div>`;
                 content = content.substring(0, startHIdx + startHeaderMarker.length) + "\n" + headerHtml + "\n" + content.substring(endHIdx);
                 modified = true;
@@ -1378,16 +1386,52 @@ function updateLegalCompliancePages() {
 
             // Ensure main_cms_controller.js is loaded
             if (!content.includes('main_cms_controller.js')) {
-                content = content.replace('</body>', '    <script src="/main_cms_controller.js?v=15" defer></script>\n</body>');
+                content = content.replace('</body>', '    <script src="/main_cms_controller.js?v=25" defer></script>\n</body>');
                 modified = true;
             } else {
-                content = content.replace(/(\.\.\/|\/)?main_cms_controller\.js\?v=\d+/g, '/main_cms_controller.js?v=15');
+                content = content.replace(/(\.\.\/|\/)?main_cms_controller\.js\?v=\d+/g, '/main_cms_controller.js?v=25');
                 modified = true;
             }
 
             if (modified) {
                 safeWriteFileSync(filePath, content, 'utf8');
                 console.log(`Successfully compiled Legal&Compliance/${filename}!`);
+            }
+        }
+
+        // Also compile root payment.html if it exists
+        const rootPaymentPath = path.join(__dirname, '../payment.html');
+        if (fs.existsSync(rootPaymentPath) && legalConfig.payment) {
+            const docData = legalConfig.payment;
+            let content = fs.readFileSync(rootPaymentPath, 'utf8').replace(/\r\n/g, '\n');
+            let modified = false;
+
+            const startHeaderMarker = '<!-- CMS_LEGAL_HEADER_START -->';
+            const endHeaderMarker = '<!-- CMS_LEGAL_HEADER_END -->';
+            const startHIdx = content.indexOf(startHeaderMarker);
+            const endHIdx = content.indexOf(endHeaderMarker);
+
+            if (startHIdx !== -1 && endHIdx !== -1) {
+                const headerHtml = `                <h1 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 0.75rem;" data-field="legal.payment.title">${docData.title}</h1>
+                <p style="color: var(--text-secondary); font-size: 1rem;" data-field="legal.payment.subtitle">${docData.subtitle || ""}</p>
+                <div style="width: 60px; height: 3px; background: var(--accent-primary, #f97316); border-radius: 2px; margin-top: 1rem;"></div>`;
+                content = content.substring(0, startHIdx + startHeaderMarker.length) + "\n" + headerHtml + "\n" + content.substring(endHIdx);
+                modified = true;
+            }
+
+            const startContentMarker = '<!-- CMS_LEGAL_CONTENT_START -->';
+            const endContentMarker = '<!-- CMS_LEGAL_CONTENT_END -->';
+            const startCIdx = content.indexOf(startContentMarker);
+            const endCIdx = content.indexOf(endContentMarker);
+
+            if (startCIdx !== -1 && endCIdx !== -1 && docData.html_content) {
+                content = content.substring(0, startCIdx + startContentMarker.length) + "\n\n" + docData.html_content.trim() + "\n\n" + content.substring(endCIdx);
+                modified = true;
+            }
+
+            if (modified) {
+                safeWriteFileSync(rootPaymentPath, content, 'utf8');
+                console.log("Successfully compiled payment.html!");
             }
         }
     } catch (e) {

@@ -7,7 +7,13 @@
         }
     }
 
+    function isPaymentPage() {
+        var path = getDecodedPath();
+        return path.indexOf("payment") !== -1 || window.location.pathname.toLowerCase().indexOf("payment") !== -1;
+    }
+
     function isLegalPage() {
+        if (isPaymentPage()) return true;
         var path = getDecodedPath();
         return path.indexOf("legal&compliance") !== -1 || path.indexOf("legal%26compliance") !== -1 || !!document.querySelector(".legal-content") || !!document.querySelector(".legal-page-header");
     }
@@ -19,7 +25,9 @@
 
     function getLegalDocId() {
         var path = getDecodedPath();
+        if (path.indexOf("payment") !== -1) return "payment";
         var page = path.split("/").pop() || "disclaimer.html";
+        if (page.indexOf("payment") !== -1) return "payment";
         if (page.indexOf("privacy") !== -1) return "privacypolicy";
         if (page.indexOf("tnc") !== -1 || page.indexOf("terms") !== -1) return "tnc";
         if (page.indexOf("investor") !== -1 || page.indexOf("charter") !== -1) return "investorcharter";
@@ -37,6 +45,9 @@
                         renderNikhilProfileFromConfig(cfg);
                     })
                     .catch(function () {});
+            } else if (isPaymentPage()) {
+                // Payment page is already statically compiled and self-contained; do not overwrite on normal visits
+                return;
             } else if (isLegalPage()) {
                 var docId = getLegalDocId();
                 var prefix = window.location.pathname.indexOf("Legal") !== -1 ? "../" : "";
@@ -878,15 +889,7 @@
         }
     }
 
-    function getLegalDocId() {
-        var pathname = window.location.pathname;
-        var page = decodeURIComponent(pathname.split("/").pop() || "disclaimer.html").toLowerCase();
-        if (page.indexOf("privacy") !== -1) return "privacypolicy";
-        if (page.indexOf("tnc") !== -1 || page.indexOf("terms") !== -1) return "tnc";
-        if (page.indexOf("investor") !== -1 || page.indexOf("charter") !== -1) return "investorcharter";
-        if (page.indexOf("grievance") !== -1) return "grievance_redressal";
-        return "disclaimer";
-    }
+    // Duplicate getLegalDocId removed; uses the top-level getLegalDocId definition
 
     function initLegalBlockEditor() {
         if (!isLegalPage()) return;
@@ -1329,9 +1332,12 @@
         }
     }
 
-    // Generator helpers for Legal & Compliance
     function renderLegalDocFromConfig(cfg, docId) {
         if (!cfg) return;
+        if (isPaymentPage() && docId !== "payment") {
+            console.warn("[CMS] Prevented overwriting payment page with docId:", docId);
+            return;
+        }
         var doc = cfg[docId];
         if (!doc) return;
 
@@ -1368,19 +1374,10 @@
             );
         });
         if (homepageConfig && homepageConfig.header_buttons) {
-            var loginLink = homepageConfig.header_buttons.client_login;
-            var loginTarget = loginLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : "";
-            htmlList.push(
-                '                    <li><a href="' +
-                loginLink.url +
-                '" class="btn-solid nav-item-el" style="padding: 8px 18px; font-size: 0.95rem;" data-field="header_buttons.client_login.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Client Login Text"' +
-                loginTarget +
-                '><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>' +
-                loginLink.text +
-                "</a></li>"
-            );
             var contactLink = homepageConfig.header_buttons.contact_us;
             var contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : "";
+            var loginLink = homepageConfig.header_buttons.client_login;
+            var loginTarget = loginLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : "";
             htmlList.push(
                 '                    <li class="nav-actions-mobile">\n' +
                 '                        <a href="' +
@@ -1389,6 +1386,13 @@
                 contactTarget +
                 ">" +
                 contactLink.text +
+                "</a>\n" +
+                '                        <a href="' +
+                loginLink.url +
+                '" class="btn-solid nav-item-el" style="padding: 8px 18px; font-size: 0.95rem;" data-field="header_buttons.client_login.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Client Login Text"' +
+                loginTarget +
+                '><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>' +
+                loginLink.text +
                 "</a>\n" +
                 "                    </li>"
             );
@@ -1407,7 +1411,10 @@
             if (homepageConfig && homepageConfig.header_buttons) {
                 var contactLink = homepageConfig.header_buttons.contact_us;
                 var contactTarget = contactLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : "";
-                var contactHtml = '                <a href="' + contactLink.url + '" class="btn-glow" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' + contactTarget + ">" + contactLink.text + "</a>";
+                var loginLink = homepageConfig.header_buttons.client_login;
+                var loginTarget = loginLink.new_tab ? ' target="_blank" rel="noopener noreferrer"' : "";
+                var contactHtml = '                <a href="' + contactLink.url + '" class="btn-glow" data-field="header_buttons.contact_us.text" data-label="Contact Us Text"' + contactTarget + ">" + contactLink.text + "</a>\n" +
+                    '                <a href="' + loginLink.url + '" class="btn-solid" style="padding: 8px 18px; font-size: 0.95rem;" data-field="header_buttons.client_login.text" data-tab="tab-hero-nav" data-id="cms-nav-list" data-label="Client Login Text"' + loginTarget + '><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; display: inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>' + loginLink.text + '</a>';
                 replaceCmsSection("NAV_CONTACT", contactHtml);
             }
             if (homepageConfig && homepageConfig.portfolio) {

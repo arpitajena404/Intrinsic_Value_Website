@@ -47,6 +47,10 @@
       "destination": "/pricing.html"
     },
     {
+      "source": "/payment",
+      "destination": "/payment.html"
+    },
+    {
       "source": "/nikhil-gangil-indian-value-investor",
       "destination": "/nikhil-gangil-indian-value-investor.html"
     },
@@ -254,6 +258,15 @@
     },
     {
       "source": "/pricing",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, must-revalidate, proxy-revalidate, max-age=0"
+        }
+      ]
+    },
+    {
+      "source": "/payment",
       "headers": [
         {
           "key": "Cache-Control",

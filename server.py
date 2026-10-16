@@ -9,17 +9,34 @@ class CMSRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
 
+    def end_headers(self):
+        self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header('Expires', '0')
+        super().end_headers()
+
     def do_GET(self):
+        # Force fresh responses for development - strip 304 cache headers
+        if 'If-Modified-Since' in self.headers:
+            del self.headers['If-Modified-Since']
+        if 'If-None-Match' in self.headers:
+            del self.headers['If-None-Match']
+
         path_part = self.path.split('?')[0].lstrip('/')
         if path_part and not path_part.startswith(('analytics', 'workshop', 'invest_biz', 'vsl', 'css', 'js', 'assets', 'static', 'images', 'api')):
             # Check if it has a file extension (e.g. .html, .png, .json)
             if '.' not in path_part:
-                # Check if it's a known page
-                known_pages = ('about', 'blogs', 'pricing', 'nikhil-gangil-indian-value-investor', 'iv_admin')
-                if path_part in known_pages:
-                    self.path = f'/{path_part}.html'
+                from urllib.parse import unquote
+                decoded_path = unquote(path_part)
+                potential_file = os.path.join(DIRECTORY, *decoded_path.split('/')) + '.html'
+                if os.path.exists(potential_file):
+                    self.path = f'/{decoded_path}.html'
                 else:
-                    self.path = '/blog-detail.html'
+                    known_pages = ('about', 'blogs', 'pricing', 'nikhil-gangil-indian-value-investor', 'iv_admin', 'payment')
+                    if path_part in known_pages:
+                        self.path = f'/{path_part}.html'
+                    else:
+                        self.path = '/blog-detail.html'
 
         # Clean URL rewrites for analytics sub-portal
         if self.path.startswith('/analytics'):
