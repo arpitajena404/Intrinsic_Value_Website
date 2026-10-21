@@ -1,4 +1,4 @@
-// Automatically generated fallback data for local file:// browsing
+// Automatically compiled fallback data for local file:// browsing
 var BLOGS_DATA = [
     {
         "id": 3538,
@@ -412,7 +412,7 @@ var BLOGS_DATA = [
         "rawDate": "2026-10-13T08:28:16",
         "category": "INVESTING STRATEGY",
         "readingTime": "3 min read",
-        "image": null,
+        "image": "images/1792574678833_d48bbede-d9b6-4b22-95d6-0fa4519cf1fe.png",
         "gradient": "linear-gradient(135deg, #FF8C00, #121212)",
         "excerpt": "After nearly 18 months of correction, rising investor panic and a sharp shift in market valuations, the big question is no longer just “How much further can the market fall?”  but whether the next market cycle is already beginning.\n\nMarket bottoms are rarely created when investors feel comfortable.\n\nThey are usually formed when fear is high, sentiment is weak and the majority of investors are questioning whether the market can recover at all.\n\nThat is why identifying a market bottom is less about predicting the future and more about studying multiple signals that have historically appeared around major turning points.\n\nAn analysis presented in March 2026 highlighted seven reasons to believe that the Indian equity market may have formed a short- to medium-term bottom.",
         "blocks": [
