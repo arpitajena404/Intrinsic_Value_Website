@@ -222,7 +222,7 @@ var BLOGS_DATA = [
         "rawDate": "2026-10-13T09:46:47",
         "category": "INVESTING STRATEGY",
         "readingTime": "3 min read",
-        "image": null,
+        "image": "images/1792574911541_India_s_IT_Sector__Growth_and_AI_Opportunity.png",
         "gradient": "linear-gradient(135deg, #FF8C00, #121212)",
         "excerpt": "India’s Information Technology sector has evolved into one of the most important pillars of the country’s economy. From being primarily an outsourcing destination, India has become a global technology hub, with large-scale capabilities across IT services, engineering, BPM, software products, cloud, cybersecurity and emerging technologies",
         "blocks": [
