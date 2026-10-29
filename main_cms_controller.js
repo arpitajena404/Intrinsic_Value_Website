@@ -1465,6 +1465,8 @@
             if (regBseEl && reg.bse_enlistment_no !== undefined) regBseEl.textContent = reg.bse_enlistment_no;
             var regValEl = document.querySelector('[data-field="footer.registration.validity"]');
             if (regValEl && reg.validity !== undefined) regValEl.textContent = reg.validity;
+            var regGstEl = document.querySelector('[data-field="footer.registration.gst_no"]');
+            if (regGstEl && reg.gst_no !== undefined) regGstEl.textContent = reg.gst_no;
         }
 
         setContentEditableOnFields();

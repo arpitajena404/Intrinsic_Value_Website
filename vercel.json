@@ -31,6 +31,36 @@
       "source": "/analytics/headwind-tailwind-indicator",
       "destination": "/analytics/upcycle-downcycle",
       "permanent": true
+    },
+    {
+      "source": "/Legal%26Compliance/Grievance%2520Redressal",
+      "destination": "/Legal&Compliance/grievance-redressal",
+      "permanent": true
+    },
+    {
+      "source": "/Legal&Compliance/Grievance%2520Redressal",
+      "destination": "/Legal&Compliance/grievance-redressal",
+      "permanent": true
+    },
+    {
+      "source": "/Legal%26Compliance/Grievance%20Redressal.html",
+      "destination": "/Legal&Compliance/grievance-redressal",
+      "permanent": true
+    },
+    {
+      "source": "/Legal&Compliance/Grievance%20Redressal.html",
+      "destination": "/Legal&Compliance/grievance-redressal",
+      "permanent": true
+    },
+    {
+      "source": "/Legal%26Compliance/Grievance Redressal.html",
+      "destination": "/Legal&Compliance/grievance-redressal",
+      "permanent": true
+    },
+    {
+      "source": "/Legal&Compliance/Grievance Redressal.html",
+      "destination": "/Legal&Compliance/grievance-redressal",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -213,6 +243,46 @@
     {
       "source": "/exly_homepage",
       "destination": "/exly_homepage.html"
+    },
+    {
+      "source": "/Legal%26Compliance/grievance-redressal",
+      "destination": "/Legal&Compliance/grievance-redressal.html"
+    },
+    {
+      "source": "/Legal&Compliance/grievance-redressal",
+      "destination": "/Legal&Compliance/grievance-redressal.html"
+    },
+    {
+      "source": "/Legal%26Compliance/grievance-redressal.html",
+      "destination": "/Legal&Compliance/grievance-redressal.html"
+    },
+    {
+      "source": "/Legal&Compliance/grievance-redressal.html",
+      "destination": "/Legal&Compliance/grievance-redressal.html"
+    },
+    {
+      "source": "/Legal%26Compliance/Grievance%2520Redressal",
+      "destination": "/Legal&Compliance/grievance-redressal.html"
+    },
+    {
+      "source": "/Legal&Compliance/Grievance%2520Redressal",
+      "destination": "/Legal&Compliance/grievance-redressal.html"
+    },
+    {
+      "source": "/Legal%26Compliance/Grievance%20Redressal",
+      "destination": "/Legal&Compliance/grievance-redressal.html"
+    },
+    {
+      "source": "/Legal&Compliance/Grievance%20Redressal",
+      "destination": "/Legal&Compliance/grievance-redressal.html"
+    },
+    {
+      "source": "/Legal%26Compliance/Grievance Redressal",
+      "destination": "/Legal&Compliance/grievance-redressal.html"
+    },
+    {
+      "source": "/Legal&Compliance/Grievance Redressal",
+      "destination": "/Legal&Compliance/grievance-redressal.html"
     },
     {
       "source": "/(.*)",

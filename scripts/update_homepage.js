@@ -38,7 +38,7 @@ function replaceSection(sectionName, newContent) {
     let startMarker = `<!-- CMS_${sectionName}_START -->`;
     let endMarker = `<!-- CMS_${sectionName}_END -->`;
     
-    if (sectionName === 'TYPEWRITER_WORDS' || sectionName === 'GRIEVANCE_DATA' || sectionName === 'GRIEVANCE_DEFAULTS') {
+    if (sectionName === 'TYPEWRITER_WORDS' || sectionName === 'GRIEVANCE_DATA' || sectionName === 'GRIEVANCE_DEFAULTS' || sectionName === 'MONTHLY_TREND_DATA') {
         startMarker = `// CMS_${sectionName}_START`;
         endMarker = `// CMS_${sectionName}_END`;
     }
@@ -434,7 +434,8 @@ const regConfig = config.footer?.registration || {
     name: "Intrinsic Value Equity Advisors",
     sebi_reg_no: "INH000009047",
     bse_enlistment_no: "5512",
-    validity: "Jan 31, 2027"
+    validity: "Jan 31, 2027",
+    gst_no: "27BEIPG3113B1Z6"
 };
 
 const footerRegistrationHtml = `                <div class="footer-col-reg">
@@ -443,7 +444,8 @@ const footerRegistrationHtml = `                <div class="footer-col-reg">
                         <span class="reg-label">Name:</span> <span data-field="footer.registration.name">${regConfig.name || ''}</span><br>
                         <span class="reg-label">SEBI Registration No:</span> <span data-field="footer.registration.sebi_reg_no">${regConfig.sebi_reg_no || ''}</span><br>
                         <span class="reg-label">BSE Enlistment No:</span> <span data-field="footer.registration.bse_enlistment_no">${regConfig.bse_enlistment_no || ''}</span><br>
-                        <span class="reg-label">Validity:</span> <span data-field="footer.registration.validity">${regConfig.validity || ''}</span>
+                        <span class="reg-label">Validity:</span> <span data-field="footer.registration.validity">${regConfig.validity || ''}</span><br>
+                        <span class="reg-label">GST No:</span> <span data-field="footer.registration.gst_no">${regConfig.gst_no || '27BEIPG3113B1Z6'}</span>
                     </p>
                 </div>`;
 replaceSection('FOOTER_REGISTRATION', footerRegistrationHtml);
@@ -600,8 +602,152 @@ const defaultMonth = config.compliance?.default_month || "auto";
 const grievanceDefaultsHtml = `        const GRIEVANCE_DEFAULT_YEAR = "${defaultYear}";\n        const GRIEVANCE_DEFAULT_MONTH = "${defaultMonth}";`;
 replaceSection('GRIEVANCE_DEFAULTS', grievanceDefaultsHtml);
 
+// 17.6. Monthly Disposal Trend
+const monthlyTrends = config.compliance?.monthly_disposal_trend || [];
+let mCarriedTotal = 0, mReceivedTotal = 0, mResolvedTotal = 0, mPendingTotal = 0;
+const monthlyTrendRows = monthlyTrends.map((item, idx) => {
+    const cf = parseInt(item.carried_forward) || 0;
+    const rec = parseInt(item.received) || 0;
+    const res = parseInt(item.resolved) || 0;
+    const pend = parseInt(item.pending) || 0;
+    mCarriedTotal += cf;
+    mReceivedTotal += rec;
+    mResolvedTotal += res;
+    mPendingTotal += pend;
+    return `                                        <tr>
+                                            <td>${idx + 1}</td>
+                                            <td>${item.month || ''}</td>
+                                            <td>${item.carried_forward ?? 0}</td>
+                                            <td>${item.received ?? 0}</td>
+                                            <td>${item.resolved ?? 0}</td>
+                                            <td>${item.pending ?? 0}</td>
+                                        </tr>`;
+}).join('\n');
+
+const monthlyTrendHtml = `                            <div class="compliance-trend-section" style="margin-top: 32px;">
+                                <h4 style="font-size: 1.15rem; font-weight: 600; color: var(--text-primary); margin-bottom: 14px; font-family: var(--font-heading);">Trend of monthly disposal of complaints</h4>
+                                <div class="table-responsive-wrapper">
+                                    <table id="monthly-disposal-trend-table" class="disclosure-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Sr. No.</th>
+                                                <th>Month</th>
+                                                <th>Carried forward from previous month</th>
+                                                <th>Received</th>
+                                                <th>Resolved</th>
+                                                <th>Pending</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="monthly-disposal-trend-tbody">
+${monthlyTrendRows}
+                                            <tr class="grand-total-row">
+                                                <td></td>
+                                                <td><strong>Grand Total</strong></td>
+                                                <td><strong>${mCarriedTotal}</strong></td>
+                                                <td><strong>${mReceivedTotal}</strong></td>
+                                                <td><strong>${mResolvedTotal}</strong></td>
+                                                <td><strong>${mPendingTotal}</strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>`;
+replaceSection('MONTHLY_DISPOSAL_TREND', monthlyTrendHtml);
+
+// 17.6.1 Monthly Disposal Trend Data for Client-Side auto-rolling
+const monthlyTrendDataHtml = `        const MONTHLY_TREND_DATA = ${JSON.stringify(monthlyTrends, null, 8)};`;
+replaceSection('MONTHLY_TREND_DATA', monthlyTrendDataHtml);
+
+// 17.7. Annual Disposal Trend
+const annualTrends = config.compliance?.annual_disposal_trend || [];
+let aCarriedTotal = 0, aReceivedTotal = 0, aResolvedTotal = 0, aPendingTotal = 0;
+const annualTrendRows = annualTrends.map((item, idx) => {
+    const cf = parseInt(item.carried_forward) || 0;
+    const rec = parseInt(item.received) || 0;
+    const res = parseInt(item.resolved) || 0;
+    const pend = parseInt(item.pending) || 0;
+    aCarriedTotal += cf;
+    aReceivedTotal += rec;
+    aResolvedTotal += res;
+    aPendingTotal += pend;
+    return `                                        <tr>
+                                            <td>${idx + 1}</td>
+                                            <td>${item.year || ''}</td>
+                                            <td>${item.carried_forward ?? 0}</td>
+                                            <td>${item.received ?? 0}</td>
+                                            <td>${item.resolved ?? 0}</td>
+                                            <td>${item.pending ?? 0}</td>
+                                        </tr>`;
+}).join('\n');
+
+const annualTrendHtml = `                            <div class="compliance-trend-section" style="margin-top: 32px;">
+                                <h4 style="font-size: 1.15rem; font-weight: 600; color: var(--text-primary); margin-bottom: 14px; font-family: var(--font-heading);">Trend of annual disposal of complaints</h4>
+                                <div class="table-responsive-wrapper">
+                                    <table class="disclosure-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Sr. No.</th>
+                                                <th>Year</th>
+                                                <th>Carried forward from previous year</th>
+                                                <th>Received</th>
+                                                <th>Resolved</th>
+                                                <th>Pending</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+${annualTrendRows}
+                                            <tr class="grand-total-row">
+                                                <td></td>
+                                                <td><strong>Grand Total</strong></td>
+                                                <td><strong>${aCarriedTotal}</strong></td>
+                                                <td><strong>${aReceivedTotal}</strong></td>
+                                                <td><strong>${aResolvedTotal}</strong></td>
+                                                <td><strong>${aPendingTotal}</strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>`;
+replaceSection('ANNUAL_DISPOSAL_TREND', annualTrendHtml);
+
+// 17.8. Circular Compliance Note
+const circularNote = config.compliance?.circular_note || 'The compliant data is required to be updated every month by the 7th day of the succeeding month in accordance with SEBI Master Circular for Research Analyst.';
+const circularNoteHtml = `                            <div style="margin-top: 24px; padding-top: 14px; border-top: 1px dashed var(--border-color);">
+                                <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin: 0;">
+                                    ${circularNote}
+                                </p>
+                            </div>`;
+replaceSection('GRIEVANCE_CIRCULAR_NOTE', circularNoteHtml);
+
 safeWriteFileSync(htmlPath, html, 'utf8');
 console.log("Statically compiled index.html successfully!");
+
+// Update exly_homepage.html if it contains the markers
+const exlyPath = path.join(__dirname, '../exly_homepage.html');
+if (fs.existsSync(exlyPath)) {
+    let exlyHtml = fs.readFileSync(exlyPath, 'utf8').replace(/\r\n/g, '\n');
+    function replaceExlySection(sectionName, newContent) {
+        let startMarker = `<!-- CMS_${sectionName}_START -->`;
+        let endMarker = `<!-- CMS_${sectionName}_END -->`;
+        if (sectionName === 'GRIEVANCE_DATA' || sectionName === 'MONTHLY_TREND_DATA') {
+            startMarker = `// CMS_${sectionName}_START`;
+            endMarker = `// CMS_${sectionName}_END`;
+        }
+        const startIndex = exlyHtml.indexOf(startMarker);
+        const endIndex = exlyHtml.indexOf(endMarker);
+        if (startIndex !== -1 && endIndex !== -1) {
+            const before = exlyHtml.substring(0, startIndex + startMarker.length);
+            const after = exlyHtml.substring(endIndex);
+            exlyHtml = before + "\n" + newContent + "\n" + after;
+        }
+    }
+    replaceExlySection('MONTHLY_DISPOSAL_TREND', monthlyTrendHtml);
+    replaceExlySection('ANNUAL_DISPOSAL_TREND', annualTrendHtml);
+    replaceExlySection('GRIEVANCE_CIRCULAR_NOTE', circularNoteHtml);
+    replaceExlySection('GRIEVANCE_DATA', grievanceDataHtml);
+    replaceExlySection('MONTHLY_TREND_DATA', monthlyTrendDataHtml);
+    safeWriteFileSync(exlyPath, exlyHtml, 'utf8');
+}
 
 // Compile navigation menu for all other HTML pages
 const navRegex = /([\t ]*)<li><a href="(?:\.\.\/)?pricing\.html"[^>]*>Service<\/a><\/li>\s*<li><a href="(?:\.\.\/)?about\.html"[^>]*>About Us<\/a><\/li>\s*<li><a href="(?:\.\.\/)?blogs\.html"[^>]*>Blogs<\/a><\/li>\s*<li><a href="(?:\.\.\/)?analytics\/index\.html"[^>]*>Analytics<\/a><\/li>/;
@@ -840,7 +986,8 @@ function updateAllPagesFooterRegistration() {
         name: "Intrinsic Value Equity Advisors",
         sebi_reg_no: "INH000009047",
         bse_enlistment_no: "5512",
-        validity: "Jan 31, 2027"
+        validity: "Jan 31, 2027",
+        gst_no: "27BEIPG3113B1Z6"
     };
 
     const compiledRegistration = `                <div class="footer-col-reg">
@@ -849,7 +996,8 @@ function updateAllPagesFooterRegistration() {
                         <span class="reg-label">Name:</span> <span data-field="footer.registration.name">${regConfig.name || ''}</span><br>
                         <span class="reg-label">SEBI Registration No:</span> <span data-field="footer.registration.sebi_reg_no">${regConfig.sebi_reg_no || ''}</span><br>
                         <span class="reg-label">BSE Enlistment No:</span> <span data-field="footer.registration.bse_enlistment_no">${regConfig.bse_enlistment_no || ''}</span><br>
-                        <span class="reg-label">Validity:</span> <span data-field="footer.registration.validity">${regConfig.validity || ''}</span>
+                        <span class="reg-label">Validity:</span> <span data-field="footer.registration.validity">${regConfig.validity || ''}</span><br>
+                        <span class="reg-label">GST No:</span> <span data-field="footer.registration.gst_no">${regConfig.gst_no || '27BEIPG3113B1Z6'}</span>
                     </p>
                 </div>`;
 
@@ -1346,7 +1494,8 @@ function updateLegalCompliancePages() {
             'tnc.html': 'tnc',
             'investorcharter.html': 'investorcharter',
             'payment.html': 'payment',
-            'Grievance Redressal.html': 'grievance_redressal'
+            'Grievance Redressal.html': 'grievance_redressal',
+            'grievance-redressal.html': 'grievance_redressal'
         };
 
         for (const [filename, docKey] of Object.entries(docMap)) {

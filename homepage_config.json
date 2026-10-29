@@ -782,7 +782,7 @@
                         "resolved": 0,
                         "pending_total": 0,
                         "pending_gt_3m": 0,
-                        "avg_res_time": 0
+                        "avg_res_time": "N/A"
                     },
                     "sebi": {
                         "pending_last": 0,
@@ -790,7 +790,7 @@
                         "resolved": 0,
                         "pending_total": 0,
                         "pending_gt_3m": 0,
-                        "avg_res_time": 0
+                        "avg_res_time": "N/A"
                     },
                     "other": {
                         "pending_last": 0,
@@ -798,7 +798,7 @@
                         "resolved": 0,
                         "pending_total": 0,
                         "pending_gt_3m": 0,
-                        "avg_res_time": 0
+                        "avg_res_time": "N/A"
                     }
                 },
                 "Jan": {
@@ -808,7 +808,7 @@
                         "resolved": 0,
                         "pending_total": 0,
                         "pending_gt_3m": 0,
-                        "avg_res_time": 0
+                        "avg_res_time": "N/A"
                     },
                     "sebi": {
                         "pending_last": 0,
@@ -816,7 +816,7 @@
                         "resolved": 0,
                         "pending_total": 0,
                         "pending_gt_3m": 0,
-                        "avg_res_time": 0
+                        "avg_res_time": "N/A"
                     },
                     "other": {
                         "pending_last": 0,
@@ -824,7 +824,7 @@
                         "resolved": 0,
                         "pending_total": 0,
                         "pending_gt_3m": 0,
-                        "avg_res_time": 0
+                        "avg_res_time": "N/A"
                     }
                 }
             }
@@ -834,7 +834,110 @@
         "sub_title": "Review our regulatory disclosures, client complaint statistics, and compliance audit history in accordance with SEBI guidelines.",
         "title_grievance": "Grievance Status",
         "title_audit": "Compliance Audit Status",
-        "audit_intro": "Disclosure with respect to compliance with Annual compliance audit requirement under Regulation 25(3) of SEBI (Research Analyst) Regulations, 2014 for last financial years are as under:"
+        "audit_intro": "Disclosure with respect to compliance with Annual compliance audit requirement under Regulation 25(3) of SEBI (Research Analyst) Regulations, 2014 for last financial years are as under:",
+        "monthly_disposal_trend": [
+            {
+                "month": "October 2025",
+                "carried_forward": 0,
+                "received": 0,
+                "resolved": 0,
+                "pending": 0
+            },
+            {
+                "month": "November 2025",
+                "carried_forward": 0,
+                "received": 0,
+                "resolved": 0,
+                "pending": 0
+            },
+            {
+                "month": "December 2025",
+                "carried_forward": 0,
+                "received": 0,
+                "resolved": 0,
+                "pending": 0
+            },
+            {
+                "month": "January 2026",
+                "carried_forward": 0,
+                "received": 0,
+                "resolved": 0,
+                "pending": 0
+            },
+            {
+                "month": "February 2026",
+                "carried_forward": 0,
+                "received": 0,
+                "resolved": 0,
+                "pending": 0
+            },
+            {
+                "month": "March 2026",
+                "carried_forward": 0,
+                "received": 0,
+                "resolved": 0,
+                "pending": 0
+            },
+            {
+                "month": "April 2026",
+                "carried_forward": 0,
+                "received": 0,
+                "resolved": 0,
+                "pending": 0
+            },
+            {
+                "month": "May 2026",
+                "carried_forward": 0,
+                "received": 0,
+                "resolved": 0,
+                "pending": 0
+            },
+            {
+                "month": "June 2026",
+                "carried_forward": 0,
+                "received": 0,
+                "resolved": 0,
+                "pending": 0
+            },
+            {
+                "month": "July 2026",
+                "carried_forward": 0,
+                "received": 0,
+                "resolved": 0,
+                "pending": 0
+            },
+            {
+                "month": "August 2026",
+                "carried_forward": 0,
+                "received": 0,
+                "resolved": 0,
+                "pending": 0
+            },
+            {
+                "month": "September 2026",
+                "carried_forward": 0,
+                "received": 0,
+                "resolved": 0,
+                "pending": 0
+            }
+        ],
+        "annual_disposal_trend": [
+            {
+                "year": "2024-25",
+                "carried_forward": 0,
+                "received": 0,
+                "resolved": 0,
+                "pending": 0
+            },
+            {
+                "year": "2025-26",
+                "carried_forward": 0,
+                "received": 0,
+                "resolved": 0,
+                "pending": 0
+            }
+        ],
+        "circular_note": "The compliant data is required to be updated every month by the 7th day of the succeeding month in accordance with SEBI Master Circular for Research Analyst."
     },
     "layout_styles": {},
     "portfolio": {

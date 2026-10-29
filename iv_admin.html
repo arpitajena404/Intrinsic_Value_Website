@@ -2009,9 +2009,13 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                                 </div>
                             </div>
                             <div class="iv-cms-row">
-                                <div class="iv-cms-group">
+                                <div class="iv-cms-group" style="width: 50%;">
                                     <label class="iv-cms-label">Validity</label>
                                     <input type="text" id="cms-footer-reg-validity" class="iv-cms-input" placeholder="Jan 31, 2027">
+                                </div>
+                                <div class="iv-cms-group" style="width: 50%;">
+                                    <label class="iv-cms-label">GST No.</label>
+                                    <input type="text" id="cms-footer-reg-gst" class="iv-cms-input" placeholder="27BEIPG3113B1Z6">
                                 </div>
                             </div>
                         </div>
@@ -2141,6 +2145,46 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                         <div id="cms-grievance-record-editor">
                             <!-- Populated by JS -->
                         </div>
+                    </div>
+
+                    <!-- Monthly Complaints Disposal Trend repeater -->
+                    <div class="iv-cms-repeater-container" style="margin-bottom: 24px;">
+                        <div class="iv-cms-repeater-header">
+                            <div>
+                                <span class="iv-cms-repeater-title">Trend of Monthly Disposal of Complaints</span>
+                                <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">(Automatic rolling 12 months: oldest month is removed when a new month is added)</div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button type="button" id="cms-monthly-trend-sync-btn" class="iv-cms-btn-add" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2);">
+                                    <i class="fa-solid fa-rotate"></i> Auto-Roll to Current 12 Months
+                                </button>
+                                <button type="button" id="cms-monthly-trend-add-btn" class="iv-cms-btn-add">
+                                    <i class="fa-solid fa-plus"></i> Add Month
+                                </button>
+                            </div>
+                        </div>
+                        <div id="cms-monthly-trend-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Annual Complaints Disposal Trend repeater -->
+                    <div class="iv-cms-repeater-container" style="margin-bottom: 24px;">
+                        <div class="iv-cms-repeater-header">
+                            <span class="iv-cms-repeater-title">Trend of Annual Disposal of Complaints</span>
+                            <button type="button" id="cms-annual-trend-add-btn" class="iv-cms-btn-add">
+                                <i class="fa-solid fa-plus"></i> Add Financial Year
+                            </button>
+                        </div>
+                        <div id="cms-annual-trend-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- SEBI Circular Compliance Note -->
+                    <div class="iv-cms-group" style="margin-bottom: 28px;">
+                        <label class="iv-cms-label">SEBI Circular Compliance Note</label>
+                        <textarea id="cms-compliance-circular-note" class="iv-cms-textarea" style="min-height: 60px;" placeholder="The compliant data is required to be updated every month by the 7th day of the succeeding month in accordance with SEBI Master Circular for Research Analyst."></textarea>
                     </div>
 
                     <h4 style="margin: 32px 0 16px 0; color: var(--text-primary); border-left: 3px solid var(--accent); padding-left: 10px;">Transparency & Compliance Headings</h4>
@@ -2699,7 +2743,7 @@ width="1" height="1" style="position:absolute;top:-9999px;left:-9999px;border:0;
                             <option value="privacypolicy">Privacy Policy (privacypolicy.html)</option>
                             <option value="tnc">Terms & Conditions / MITC (tnc.html)</option>
                             <option value="investorcharter">Investor Charter (investorcharter.html)</option>
-                            <option value="grievance_redressal">Grievance Redressal (Grievance Redressal.html)</option>
+                            <option value="grievance_redressal">Grievance Redressal (grievance-redressal.html)</option>
                             <option value="payment">Payment Information (payment.html)</option>
                         </select>
                     </div>

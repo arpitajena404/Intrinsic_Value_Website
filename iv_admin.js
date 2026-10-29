@@ -1006,7 +1006,7 @@
                             },
                             {
                                     "text": "Investor Grievance",
-                                    "url": "Legal&Compliance/Grievance Redressal.html"
+                                    "url": "Legal&Compliance/grievance-redressal.html"
                             },
                             {
                                     "text": "Investor Charter",
@@ -1462,6 +1462,8 @@
         if (regBseInput) regBseInput.value = cmsState.footer.registration.bse_enlistment_no || '5512';
         var regValidityInput = document.getElementById('cms-footer-reg-validity');
         if (regValidityInput) regValidityInput.value = cmsState.footer.registration.validity || 'Jan 31, 2027';
+        var regGstInput = document.getElementById('cms-footer-reg-gst');
+        if (regGstInput) regGstInput.value = cmsState.footer.registration.gst_no || '27BEIPG3113B1Z6';
 
         // Apps
         document.getElementById('cms-footer-play-store-url').value = cmsState.footer.apps?.play_store?.url || '';
@@ -1532,7 +1534,12 @@
         renderFooterQuickLinks();
         renderFooterImportantLinks();
         renderComplianceAudits();
+        renderMonthlyDisposalTrends();
+        renderAnnualDisposalTrends();
         renderGrievanceRecordEditor();
+        if (document.getElementById('cms-compliance-circular-note')) {
+            document.getElementById('cms-compliance-circular-note').value = cmsState.compliance?.circular_note || 'The compliant data is required to be updated every month by the 7th day of the succeeding month in accordance with SEBI Master Circular for Research Analyst.';
+        }
     }
 
     function populatePricingForms() {
@@ -1989,6 +1996,8 @@
         if (regBseInput) cmsState.footer.registration.bse_enlistment_no = regBseInput.value.trim();
         var regValidityInput = document.getElementById('cms-footer-reg-validity');
         if (regValidityInput) cmsState.footer.registration.validity = regValidityInput.value.trim();
+        var regGstInput = document.getElementById('cms-footer-reg-gst');
+        if (regGstInput) cmsState.footer.registration.gst_no = regGstInput.value.trim();
 
         // Apps
         cmsState.footer.apps = cmsState.footer.apps || {};
@@ -2023,6 +2032,9 @@
         cmsState.compliance.years = yearsVal.split(',').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
         cmsState.compliance.default_year = document.getElementById('cms-grievance-default-year').value;
         cmsState.compliance.default_month = document.getElementById('cms-grievance-default-month').value;
+        if (document.getElementById('cms-compliance-circular-note')) {
+            cmsState.compliance.circular_note = document.getElementById('cms-compliance-circular-note').value;
+        }
 
         var jsonText = JSON.stringify(cmsState, null, 4);
         var jsonDisplay = document.getElementById('cmsJsonDisplay');
@@ -2898,10 +2910,11 @@
                 resolved: 0,
                 pending_total: 0,
                 pending_gt_3m: 0,
-                avg_res_time: 0
+                avg_res_time: 'N/A'
             };
             
             var data = record[src];
+            var avgDisplay = (data.avg_res_time !== undefined && data.avg_res_time !== null && data.avg_res_time !== '' && data.avg_res_time !== 0 && data.avg_res_time !== '0') ? data.avg_res_time : 'N/A';
             
             html += `
                 <div class="cms-grievance-source-card" style="border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 12px; background: rgba(255,255,255,0.02);">
@@ -2931,7 +2944,7 @@
                         </div>
                         <div>
                            <label style="font-size:11px; color: var(--text-muted);">Avg Res Time (Days)</label>
-                           <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${data.avg_res_time}" oninput="updateGrievanceField('${year}', '${month}', '${src}', 'avg_res_time', this.value)">
+                           <input type="text" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${avgDisplay}" oninput="updateGrievanceField('${year}', '${month}', '${src}', 'avg_res_time', this.value)">
                         </div>
                     </div>
                 </div>
@@ -2947,7 +2960,156 @@
         cmsState.compliance.grievances[year] = cmsState.compliance.grievances[year] || {};
         cmsState.compliance.grievances[year][month] = cmsState.compliance.grievances[year][month] || {};
         cmsState.compliance.grievances[year][month][source] = cmsState.compliance.grievances[year][month][source] || {};
-        cmsState.compliance.grievances[year][month][source][field] = parseFloat(value) || 0;
+        if (field === 'avg_res_time') {
+            var trimmed = (value || '').trim();
+            cmsState.compliance.grievances[year][month][source][field] = (trimmed === '' || trimmed === '0') ? 'N/A' : trimmed;
+        } else {
+            cmsState.compliance.grievances[year][month][source][field] = parseFloat(value) || 0;
+        }
+    };
+
+    // 12.1. Trend of Monthly Disposal of Complaints repeater
+    function renderMonthlyDisposalTrends() {
+        var container = document.getElementById('cms-monthly-trend-list');
+        if (!container) return;
+        container.innerHTML = '';
+        (cmsState.compliance?.monthly_disposal_trend || []).forEach(function (item, index) {
+            var listLength = (cmsState.compliance?.monthly_disposal_trend || []).length;
+            var upDisabled = index === 0 ? 'disabled' : '';
+            var downDisabled = index === listLength - 1 ? 'disabled' : '';
+
+            var div = document.createElement('div');
+            div.className = 'iv-cms-repeater-item';
+            div.innerHTML = `
+                <div class="iv-cms-repeater-item-header">
+                    <span>#${index + 1}: ${escapeHtml(item.month || 'Month')}</span>
+                    <div class="iv-cms-repeater-actions">
+                        <button type="button" class="btn-move" ${upDisabled} onclick="moveMonthlyTrend(${index}, -1)"><i class="fa-solid fa-arrow-up"></i></button>
+                        <button type="button" class="btn-move" ${downDisabled} onclick="moveMonthlyTrend(${index}, 1)"><i class="fa-solid fa-arrow-down"></i></button>
+                        <button type="button" class="btn-delete" onclick="removeMonthlyTrend(${index})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="iv-cms-row" style="margin-bottom: 8px;">
+                    <div class="iv-cms-group" style="width: 100%;">
+                        <label class="iv-cms-label">Month Name</label>
+                        <input type="text" class="iv-cms-input" value="${escapeHtml(item.month || '')}" placeholder="e.g. October 2025" oninput="updateMonthlyTrend(${index}, 'month', this.value)">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                    <div>
+                        <label style="font-size:11px; color: var(--text-muted); display: block; margin-bottom: 4px;">Carried forward</label>
+                        <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${item.carried_forward ?? 0}" oninput="updateMonthlyTrend(${index}, 'carried_forward', this.value)">
+                    </div>
+                    <div>
+                        <label style="font-size:11px; color: var(--text-muted); display: block; margin-bottom: 4px;">Received</label>
+                        <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${item.received ?? 0}" oninput="updateMonthlyTrend(${index}, 'received', this.value)">
+                    </div>
+                    <div>
+                        <label style="font-size:11px; color: var(--text-muted); display: block; margin-bottom: 4px;">Resolved</label>
+                        <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${item.resolved ?? 0}" oninput="updateMonthlyTrend(${index}, 'resolved', this.value)">
+                    </div>
+                    <div>
+                        <label style="font-size:11px; color: var(--text-muted); display: block; margin-bottom: 4px;">Pending</label>
+                        <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${item.pending ?? 0}" oninput="updateMonthlyTrend(${index}, 'pending', this.value)">
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    window.removeMonthlyTrend = function (idx) {
+        cmsState.compliance.monthly_disposal_trend.splice(idx, 1);
+        renderMonthlyDisposalTrends();
+    };
+    window.updateMonthlyTrend = function (idx, field, val) {
+        if (field === 'month') {
+            cmsState.compliance.monthly_disposal_trend[idx][field] = val;
+        } else {
+            cmsState.compliance.monthly_disposal_trend[idx][field] = parseInt(val) || 0;
+        }
+    };
+    window.moveMonthlyTrend = function (idx, dir) {
+        var arr = cmsState.compliance.monthly_disposal_trend || [];
+        var target = idx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[idx];
+            arr[idx] = arr[target];
+            arr[target] = temp;
+            renderMonthlyDisposalTrends();
+        }
+    };
+
+    // 12.2. Trend of Annual Disposal of Complaints repeater
+    function renderAnnualDisposalTrends() {
+        var container = document.getElementById('cms-annual-trend-list');
+        if (!container) return;
+        container.innerHTML = '';
+        (cmsState.compliance?.annual_disposal_trend || []).forEach(function (item, index) {
+            var listLength = (cmsState.compliance?.annual_disposal_trend || []).length;
+            var upDisabled = index === 0 ? 'disabled' : '';
+            var downDisabled = index === listLength - 1 ? 'disabled' : '';
+
+            var div = document.createElement('div');
+            div.className = 'iv-cms-repeater-item';
+            div.innerHTML = `
+                <div class="iv-cms-repeater-item-header">
+                    <span>#${index + 1}: ${escapeHtml(item.year || 'Year')}</span>
+                    <div class="iv-cms-repeater-actions">
+                        <button type="button" class="btn-move" ${upDisabled} onclick="moveAnnualTrend(${index}, -1)"><i class="fa-solid fa-arrow-up"></i></button>
+                        <button type="button" class="btn-move" ${downDisabled} onclick="moveAnnualTrend(${index}, 1)"><i class="fa-solid fa-arrow-down"></i></button>
+                        <button type="button" class="btn-delete" onclick="removeAnnualTrend(${index})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="iv-cms-row" style="margin-bottom: 8px;">
+                    <div class="iv-cms-group" style="width: 100%;">
+                        <label class="iv-cms-label">Financial Year (e.g. 2024-25)</label>
+                        <input type="text" class="iv-cms-input" value="${escapeHtml(item.year || '')}" placeholder="e.g. 2024-25" oninput="updateAnnualTrend(${index}, 'year', this.value)">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                    <div>
+                        <label style="font-size:11px; color: var(--text-muted); display: block; margin-bottom: 4px;">Carried forward</label>
+                        <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${item.carried_forward ?? 0}" oninput="updateAnnualTrend(${index}, 'carried_forward', this.value)">
+                    </div>
+                    <div>
+                        <label style="font-size:11px; color: var(--text-muted); display: block; margin-bottom: 4px;">Received</label>
+                        <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${item.received ?? 0}" oninput="updateAnnualTrend(${index}, 'received', this.value)">
+                    </div>
+                    <div>
+                        <label style="font-size:11px; color: var(--text-muted); display: block; margin-bottom: 4px;">Resolved</label>
+                        <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${item.resolved ?? 0}" oninput="updateAnnualTrend(${index}, 'resolved', this.value)">
+                    </div>
+                    <div>
+                        <label style="font-size:11px; color: var(--text-muted); display: block; margin-bottom: 4px;">Pending</label>
+                        <input type="number" class="iv-cms-input" style="padding:6px 10px; font-size:12px;" value="${item.pending ?? 0}" oninput="updateAnnualTrend(${index}, 'pending', this.value)">
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    window.removeAnnualTrend = function (idx) {
+        cmsState.compliance.annual_disposal_trend.splice(idx, 1);
+        renderAnnualDisposalTrends();
+    };
+    window.updateAnnualTrend = function (idx, field, val) {
+        if (field === 'year') {
+            cmsState.compliance.annual_disposal_trend[idx][field] = val;
+        } else {
+            cmsState.compliance.annual_disposal_trend[idx][field] = parseInt(val) || 0;
+        }
+    };
+    window.moveAnnualTrend = function (idx, dir) {
+        var arr = cmsState.compliance.annual_disposal_trend || [];
+        var target = idx + dir;
+        if (target >= 0 && target < arr.length) {
+            var temp = arr[idx];
+            arr[idx] = arr[target];
+            arr[target] = temp;
+            renderAnnualDisposalTrends();
+        }
     };
 
     function initTabs() {
@@ -3442,6 +3604,112 @@
                     remarks: "N/A"
                 });
                 renderComplianceAudits();
+            });
+        }
+
+        function autoRollMonthlyTrends() {
+            var now = new Date();
+            var currentYear = now.getFullYear();
+            var currentMonthIdx = now.getMonth();
+            var prevMonthIdx = currentMonthIdx - 1;
+            if (prevMonthIdx < 0) {
+                prevMonthIdx = 11;
+                currentYear -= 1;
+            }
+            
+            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            var fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            
+            var rolling = [];
+            for (var i = 11; i >= 0; i--) {
+                var mIdx = prevMonthIdx - i;
+                var y = currentYear;
+                while (mIdx < 0) {
+                    mIdx += 12;
+                    y -= 1;
+                }
+                var fullName = fullMonthNames[mIdx];
+                var shortName = monthNames[mIdx];
+                var label = fullName + " " + y;
+                
+                var existing = (cmsState.compliance?.monthly_disposal_trend || []).find(function(it) {
+                    return it && it.month && it.month.trim().toLowerCase() === label.toLowerCase();
+                });
+                
+                var cf = existing ? (parseInt(existing.carried_forward) || 0) : 0;
+                var rec = existing ? (parseInt(existing.received) || 0) : 0;
+                var res = existing ? (parseInt(existing.resolved) || 0) : 0;
+                var pend = existing ? (parseInt(existing.pending) || 0) : 0;
+                
+                if (cf === 0 && rec === 0 && res === 0 && pend === 0) {
+                    var gYr = cmsState.compliance?.grievances?.[y.toString()];
+                    if (gYr && gYr[shortName]) {
+                        var d = gYr[shortName].direct || {};
+                        var s = gYr[shortName].sebi || {};
+                        var o = gYr[shortName].other || {};
+                        cf = (parseInt(d.pending_last) || 0) + (parseInt(s.pending_last) || 0) + (parseInt(o.pending_last) || 0);
+                        rec = (parseInt(d.received) || 0) + (parseInt(s.received) || 0) + (parseInt(o.received) || 0);
+                        res = (parseInt(d.resolved) || 0) + (parseInt(s.resolved) || 0) + (parseInt(o.resolved) || 0);
+                        pend = (parseInt(d.pending_total) || 0) + (parseInt(s.pending_total) || 0) + (parseInt(o.pending_total) || 0);
+                    }
+                }
+                
+                rolling.push({
+                    month: label,
+                    carried_forward: cf,
+                    received: rec,
+                    resolved: res,
+                    pending: pend
+                });
+            }
+            
+            cmsState.compliance = cmsState.compliance || {};
+            cmsState.compliance.monthly_disposal_trend = rolling;
+            renderMonthlyDisposalTrends();
+            showToast("Auto-synced rolling 12 months!");
+        }
+
+        var monthlyTrendSyncBtn = document.getElementById('cms-monthly-trend-sync-btn');
+        if (monthlyTrendSyncBtn) {
+            monthlyTrendSyncBtn.addEventListener('click', autoRollMonthlyTrends);
+        }
+
+        var monthlyTrendAddBtn = document.getElementById('cms-monthly-trend-add-btn');
+        if (monthlyTrendAddBtn) {
+            monthlyTrendAddBtn.addEventListener('click', function () {
+                cmsState.compliance = cmsState.compliance || {};
+                cmsState.compliance.monthly_disposal_trend = cmsState.compliance.monthly_disposal_trend || [];
+                
+                // If 12 or more months exist, automatically remove the oldest month (index 0)
+                if (cmsState.compliance.monthly_disposal_trend.length >= 12) {
+                    var removed = cmsState.compliance.monthly_disposal_trend.shift();
+                    showToast("Oldest month (" + (removed.month || "item") + ") removed to maintain 12 months.");
+                }
+                
+                cmsState.compliance.monthly_disposal_trend.push({
+                    month: "New Month",
+                    carried_forward: 0,
+                    received: 0,
+                    resolved: 0,
+                    pending: 0
+                });
+                renderMonthlyDisposalTrends();
+            });
+        }
+
+        var annualTrendAddBtn = document.getElementById('cms-annual-trend-add-btn');
+        if (annualTrendAddBtn) {
+            annualTrendAddBtn.addEventListener('click', function () {
+                cmsState.compliance = cmsState.compliance || {};
+                cmsState.compliance.annual_disposal_trend = cmsState.compliance.annual_disposal_trend || [];
+                cmsState.compliance.annual_disposal_trend.push({
+                    year: "2026-27",
+                    carried_forward: 0,
+                    received: 0,
+                    resolved: 0,
+                    pending: 0
+                });
+                renderAnnualDisposalTrends();
             });
         }
 
@@ -5236,7 +5504,7 @@
         'privacypolicy': 'Legal&Compliance/privacypolicy.html',
         'tnc': 'Legal&Compliance/tnc.html',
         'investorcharter': 'Legal&Compliance/investorcharter.html',
-        'grievance_redressal': 'Legal&Compliance/Grievance Redressal.html',
+        'grievance_redressal': 'Legal&Compliance/grievance-redressal.html',
         'payment': 'payment.html'
     };
 
