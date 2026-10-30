@@ -2737,7 +2737,7 @@
                     </div>
                     <div class="iv-cms-group" style="margin-bottom: 0; width: 40%;">
                         <label class="iv-cms-label">Remarks, If any</label>
-                        <input type="text" class="iv-cms-input" value="${escapeHtml(audit.remarks || '')}" placeholder="e.g. N/A" oninput="updateComplianceAudit(${index}, 'remarks', this.value)">
+                        <input type="text" class="iv-cms-input" value="${escapeHtml(audit.remarks || '')}" placeholder="e.g. Info@intrinsicvalueequity.in" oninput="updateComplianceAudit(${index}, 'remarks', this.value)">
                     </div>
                 </div>
             `;
@@ -3601,7 +3601,7 @@
                 cmsState.compliance.audits.push({
                     fy: "FY 2025-26",
                     status: "Conducted",
-                    remarks: "N/A"
+                    remarks: "Info@intrinsicvalueequity.in"
                 });
                 renderComplianceAudits();
             });

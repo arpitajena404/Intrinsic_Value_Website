@@ -587,7 +587,7 @@ const auditsHtml = (config.compliance?.audits || []).map((audit, idx) => {
                                             <td>${idx + 1}</td>
                                             <td>${audit.fy}</td>
                                             <td><span class="status-badge ${badgeClass}">${audit.status}</span></td>
-                                            <td>${audit.remarks || 'N/A'}</td>
+                                            <td>${(audit.remarks && audit.remarks.includes('@') && !audit.remarks.includes('<a')) ? `<a href="mailto:${audit.remarks}" style="color: var(--accent); text-decoration: underline;">${audit.remarks}</a>` : (audit.remarks || 'N/A')}</td>
                                         </tr>`;
 }).join('\n');
 replaceSection('REGULATORY_AUDITS', auditsHtml);
@@ -745,6 +745,7 @@ if (fs.existsSync(exlyPath)) {
     replaceExlySection('ANNUAL_DISPOSAL_TREND', annualTrendHtml);
     replaceExlySection('GRIEVANCE_CIRCULAR_NOTE', circularNoteHtml);
     replaceExlySection('GRIEVANCE_DATA', grievanceDataHtml);
+    replaceExlySection('REGULATORY_AUDITS', auditsHtml);
     replaceExlySection('MONTHLY_TREND_DATA', monthlyTrendDataHtml);
     safeWriteFileSync(exlyPath, exlyHtml, 'utf8');
 }
