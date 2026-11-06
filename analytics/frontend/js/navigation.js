@@ -116,7 +116,7 @@
     if (isFile) {
       return getAnalyticsRoot() + logoName;
     } else {
-      return getBasePath() + '/' + logoName;
+      return getBasePath() + '/' + logoName + '?v=2';
     }
   }
 
